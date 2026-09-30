@@ -42,6 +42,45 @@ law refined_constructor_is_fresh:
    == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
    : Result<S.Error,C.Checked>}
 
+# A let without an annotation infers its value, and inference has no type for a
+# constructor term: a binder refined to a constructor elaborates to one, as a
+# literal does. An annotation, or a term that is not a constructor, stands.
+law refined_value_needs_annotation:
+  for +token: S.Token
+  for +uses: List<&2,U32>
+  for +type_id: U32
+  for tag: U32
+  {K.expected(token,None{},C.Checked{C.Value{token,type_id,tag},type_id,uses})
+   == Fail{S.Invalid{"check","annotation-required",S.at(token)}}
+   : Result<S.Error,C.Checked>}
+
+law refined_construct_needs_annotation:
+  for +token: S.Token
+  for +fields: List<&2,C.Parameter>
+  for +args: List<&2,C.Term>
+  for +uses: List<&2,U32>
+  for +type_id: U32
+  for tag: U32
+  {K.expected(token,None{},C.Checked{C.Construct{token,type_id,tag,fields,args},type_id,uses})
+   == Fail{S.Invalid{"check","annotation-required",S.at(token)}}
+   : Result<S.Error,C.Checked>}
+
+law unrefined_binder_is_inferable:
+  for +token: S.Token
+  for +uses: List<&2,U32>
+  for +level: U32
+  for +type_id: U32
+  {K.expected(token,None{},C.Checked{C.Reference{token,level,type_id},type_id,uses})
+   == Done{C.Checked{C.Reference{token,level,type_id},type_id,uses}}
+   : Result<S.Error,C.Checked>}
+
+law annotation_admits_constructor:
+  for +token: S.Token
+  for tag: U32
+  {K.expected(token,Some{0},C.Checked{C.Value{token,0,tag},0,Nil{}})
+   == Done{C.Checked{C.Value{token,0,tag},0,Nil{}}}
+   : Result<S.Error,C.Checked>}
+
 law nearest_binding_wins:
   for +tail: List<&2,C.Binding>
   for +level: U32
@@ -91,3 +130,15 @@ law term_names_a_binder_or_a_declaration:
    == (Done{C.Binding{S.Token{"flip",at},0,1,0,True{},None{}}},Fail{S.Unsupported{"check","type-as-term",at}},
        Fail{S.Unsupported{"check","function-reference",at}},Fail{S.Invalid{"check","free-name",at}})
    : Result<S.Error,C.Binding> & Result<S.Error,C.Binding> & Result<S.Error,C.Binding> & Result<S.Error,C.Binding>}
+# The core budget is one unit per node, every copy of a shared default counted, and it stops when spent.
+law weight_counts_every_node:
+  for +token: S.Token
+  {K.weight(9n,[C.Case{token,0,0,[C.Branch{0,Nil{},C.Value{token,0,0}},C.Branch{1,Nil{},C.Value{token,0,0}}]}],9)
+   == 4
+   : U32}
+
+law weight_stops_when_spent:
+  for +token: S.Token
+  {K.weight(9n,[C.Case{token,0,0,[C.Branch{0,Nil{},C.Value{token,0,0}},C.Branch{1,Nil{},C.Value{token,0,0}}]}],4)
+   == 0
+   : U32}

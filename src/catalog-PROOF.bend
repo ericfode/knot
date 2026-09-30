@@ -27,3 +27,15 @@ def L.field_capability_is_not_acceptance(token,head,tail,rest):
 
 def L.type_positions_read_their_scope(at,here,ctors,body):
   {==}
+def L.empty_datatype(name,data):
+  {==}
+
+def L.promoted_datatype_is_rejected(): {==}
+
+def L.bare_datatype_name_binds(): {==}
+
+def L.later_datatype_is_no_datatype(): {==}
+
+def L.hidden_type_is_rejected(): {==}
+
+def L.unrelated_binder_hides_nothing(): {==}

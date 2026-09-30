@@ -1070,6 +1070,24 @@ budgets; it remains a failed run. A one-worker retry passed without changing
 any limit. All 33 context controls and eight semantic mutants pass, and the
 literal manifest command has zero blockers and no provider requests.
 
+## 2026-09-27 — nest review round 2: default regions and profile coverage
+
+Confirmed: the first nest gate missed affine reuse in unrefined defaults and
+unresolved bodies after an empty remainder; its nested-alias mutant exercised
+a different region. It also omitted the enum instruction whitelist for its own
+new modules. The branch's divided quota rejected linear-size matches, and two
+checked ground witnesses had general-law names. See the
+[round-2 packet](../tests/compiler-nest/receipts/LAW_REVIEW.md) and
+[dispositions](../tests/compiler-nest/receipts/REVIEW-2.md).
+
+Prevention: freeze positive and ill-formed bodies in positive, default and empty
+remainder regions; apply each selected profile's whitelist to every added module;
+pair expansion-resource negatives with deep/wide linear controls; distinguish
+quantified laws from normalization witnesses by name and recorded obligations.
+The repair gate adds the reviewer fixtures, seven semantic mutants and a fixed
+3,000-program seed comparison. Earlier failures remain evidence. Offline
+preflight reports context blockers; no provider result or style pass is claimed.
+
 ## 2026-09-27 — IO host review 2: sandbox aliases, empty effects and oracle faults
 
 The coordinator's three confirmed findings against `6051e37` are repaired;
@@ -1231,3 +1249,1024 @@ Prevention:
   not only with the name free.
 
 No elapsed time was measured.
+## 2026-09-28 — nest review round 3: binder grammar, ordered empty binders, header layout
+
+Confirmed: the round-2 matrix paths accepted dotted pattern binders the seed
+rejects, and the lexer accepted malformed names (`x.`, `a..b`, `a.1`) that the
+seed rejects everywhere. Missing arms under a live empty-typed binder became
+Invalid where the seed's check-efq accepts them, in multi-column, flat and field
+positions. Line-broken match and case headers became Invalid. See the
+[round-3 dispositions](../tests/compiler-nest/receipts/REVIEW-3.md).
+
+Prevention: derive name and binder rules from the seed's lexeme and pattern
+grammar, including the positions where it keeps dotted names (parameters,
+fields, erased lets). Model dead code by the seed's context order, which is the
+match frontier, not lexical level: a level-order rule accepts
+`f(p: P2, v: V)` with a missing arm on a field of `p`, which the seed rejects.
+Give the fuzzer atoms for every lexical and typing edge the change touches;
+the round-3 corpus reproduces all three defects on the pre-fix compiler
+(76 false acceptances, 32 false Invalid) and none after the repair.
+
+## 2026-09-28 — nest review round 4: dead split helpers, rebuilt-descendant recursion
+
+Confirmed:
+- The round-2 binary split left the round-1 n-ary helpers (`has_default`,
+  `signature`) and three laws over them in place. The laws were cited as
+  exhaustiveness evidence for a split that no longer calls them.
+- A recursive call on a variable-row field binder was Unsupported after an
+  earlier row nested into that field. The checker rebuilds a matched binder
+  from its fields, and the first-parameter descent rule accepted only a
+  reference. The seed accepts these calls; its comparison is structural.
+
+See the [round-4 dispositions](../tests/compiler-nest/receipts/REVIEW-4.md).
+
+Prevention:
+- When an algorithm is replaced, remove the superseded helpers and their laws
+  in the same change. Grep each law's subject for live callers before citing
+  the law as evidence.
+- When a lowering changes how a binder is represented (a reference against a
+  rebuilt constructor), rerun every rule that inspects checked terms. The
+  descent rule is one of them. Freeze a recursive fixture for each path by
+  which a variable row can reach its body: through the negative branch (a
+  reference) and through a positive branch (a rebuild).
+
+## 2026-09-28 — nest review round 5: general matrix laws left as ground witnesses
+
+Confirmed:
+- Two of the three requested matrix laws were proved only as ground
+  normalizations over one Flag catalog. The gap was disclosed, but it carried
+  over from round 1 through round 4.
+
+See the [round-5 dispositions](../tests/compiler-nest/receipts/REVIEW-5.md).
+The irrefutable-first-row law is now general
+(`src/lowering-LAWS.bend::irrefutable_first_row_selected`); the exhaustive law
+remains unmet, and its typing obstacle is recorded.
+
+Prevention:
+- Attempt a requested general law before substituting a witness. The general
+  proof needed three Bend idioms.
+  - A Data-kinded invariant (`Sigma<&2,&2,...>`, or a record type indexed by
+    values) lets a proof serve both branches of a split; `A & B` is affine.
+  - Continuations are passed explicitly to generic bind lemmas, because a
+    match cannot scrutinize a computed value.
+  - The induction hypothesis is passed as a function when the proof would
+    otherwise need mutually recursive definitions.
+- When a law's proof grows a module past the 48 KB composition bound, give it
+  its own LAWS/PROOF pair and manifest group. Import that pair from the gated
+  proof entry, so the existing gate still checks it.
+
+## 2026-09-28 — nest review round 6: detached constructor brace accepted
+
+Confirmed:
+- Knot accepted a space, comment or line break between a constructor name and
+  its `{`, which the seed rejects in patterns and bodies. The flat, body and
+  outer-pattern forms were already accepted on main. The round-3 header join
+  turned the line-break form into a regression and carried the gap into
+  nested and multi-scrutinee rows, which main had reported Unsupported. The
+  round-5 probes observed the defect, but REVIEW-5.md did not disposition it.
+
+See the [round-6 dispositions](../tests/compiler-nest/receipts/REVIEW-6.md).
+One offset predicate (`S.touches`) closes every position; the header join keeps
+offsets, so it can no longer bridge the gap.
+
+Prevention:
+- Before a change that joins, drops or reorders layout tokens lands, freeze
+  seed controls across the joined boundary for each token pair: pairs whose
+  spacing the seed distinguishes (a name and its `{`) and pairs whose spacing
+  it ignores (`f (x)`, `+ v`).
+- Adjacency is a property of offsets, not of neighbouring tokens. State it as
+  a predicate over spans, so that a later token rewrite cannot erase it.
+- Give each layout-sensitive token pair a spaced, commented and line-broken
+  fuzz atom, and disposition every probe observation in the round's report,
+  including observations outside the round's finding.
+
+## 2026-09-28 — nest review round 7: a `+` row made an affine let reusable
+
+Confirmed:
+- A `+` row on an alias of an affine let binder raised the let to reusable, so
+  `k = a; match k: case +y: both(y, y)` checked and ran where the seed reports
+  `consumed more than once`. `eb15da8` admitted the latest let as a
+  variable-only column, and that path reached a quantity rule written for
+  parameters. The same promotion also turned a `+` row on a let of a
+  `Type`-kind value into a false `Invalid check reusable-type`.
+
+See the [round-7 dispositions](../tests/compiler-nest/receipts/REVIEW-7.md).
+`alias_bound`, the quantity site both promotion paths reach, now passes a row's
+mark only to a lambda-case binder; `let_alias_keeps_quantity` and
+`parameter_alias_promotes` state the rule from both sides.
+
+Prevention:
+- When a change admits a new binder kind to an existing rule (here a let
+  binder to the variable-column alias path), state a law for that kind at the
+  rule's quantity or identity site in the same commit, with a companion law
+  for the old kind so an over-correction also fails.
+- Give each new binder kind a small seeded generator over its quantity and
+  row marks (the reviewer's let/alias generator found 63 programs in 1,500)
+  and run it against the parent commit to confirm it bites.
+- Freeze a `Type`-kind companion for every quantity rule: the reusable-kind
+  check is a second observable of the same promotion.
+
+## 2026-09-28 — nest review round 8: a `+` binder's kind was judged too early
+
+Confirmed:
+- A `+` row on a `Type`-kind binder that is destructured before any variable
+  use reported `Invalid check reusable-type`, while the seed accepts: a D4
+  false Invalid. It was present from the implementation commit `57a0c01`
+  through every review round, and round 7 froze the seed-rejected side (t2)
+  without its destructured twin. The seed judges the kind only where its
+  `match_flatten` turns a pending binder into a lambda. Knot judged it at the
+  promotion and at a field's binding.
+
+See the [round-8 dispositions](../tests/compiler-nest/receipts/REVIEW-8.md).
+The kind is now judged where the match frontier binds the binder: ahead of a
+matched level (`P.advance`) or at a leaf (`P.close`). Five whole-checker
+witnesses pin the binding sites.
+
+Prevention:
+- When a check mirrors a seed judgement, locate the seed's judgement site
+  first (here `match_flatten`'s `Lam` formation), and state the Knot rule at
+  the same site. Do not state it at the nearest convenient one.
+- Freeze each seed-rejected control with its seed-accepted twin that differs
+  by one step. `case +y: y` needs `case +y: match y: ...` beside it.
+- Draw kinds in the seeded generators: a `Data`-only generator (round 7's
+  let/alias) cannot see a kind rule.
+- A law's style interface is its whole statement, so a law that calls a
+  shared helper such as `token` enters that helper's caller context in full.
+  The round's first witnesses spelled raw tokens and overflowed the
+  perch-context budget for `token` (one extra commit). Build ground programs
+  from small named definitions, and run `tests/perch-context/check.py` before
+  committing new laws.
+
+## 2026-09-28 — nest review round 9: a let of a refined binder was accepted
+
+Confirmed:
+- An unannotated let of a binder that a positive branch had refined to a
+  constructor (`match z: case A{}: v = z; v`) was Checked, flat and in a
+  matrix, while the seed rejects it ("an annotated term (cannot infer)"): an
+  unsound acceptance. The flat form was already on main. The seed substitutes a
+  matched binder by its constructor term and has no inference rule for one;
+  Knot rejected only a literal constructor. The reviewer's fuzz found eight
+  programs in 3,534.
+- Commit `2ae8dca3` over-corrected: it rejected every dotted binder as
+  Invalid, but the seed accepts one that rebinds a name in scope, so seven
+  programs were a D4 false Invalid. A stopgap now reports every dotted binder
+  as Unsupported until the modules round brings the scope-aware rule.
+- Seven main-era probes with a line break inside call or constructor arguments,
+  or a second arm on an arm's line, were Invalid parse; they are Unsupported now.
+
+See the [round-9 dispositions](../tests/compiler-nest/receipts/REVIEW-9.md).
+`expected` rejects a checked `Value` or `Construct` when no annotation gives
+the type, which covers the literal and the refined binder with one rule.
+
+Prevention:
+- The fuzz generator drew a binder only as a bare body term or a scrutinee,
+  so a let of a matched binder was outside its vocabulary in every round.
+  When a rule names a syntactic position (a let's value), give the generator
+  that position for each binder kind (scrutinee, parameter, pattern binder)
+  and each form, and run it against the parent commit to see it bite: the
+  extended generator reports 36 false acceptances against `93579bb`.
+- State the term a rule depends on, not the surface form. The refinement
+  elaborates to a constructor term, so the rule belongs where a checked term
+  meets a missing annotation, not at each binder use.
+- When a change turns a false accept into a rejection (`2ae8dca3`), freeze the
+  seed-accepted twin in the same commit, as round 3 froze seed-rejected
+  controls. The twin of a dotted binder is the rebound one.
+- A round's SPEC is the Perch task text of the pattern-matrix groups. A
+  2.6 KB paragraph pushed the context of `src/matrix-LAWS.bend::flag` past the
+  60,000-byte state bound, which the perch-context gate found. Keep the SPEC
+  addition to what a reader needs (about 700 bytes) and put the evidence in
+  the round's review record. About 300 bytes of headroom remain.
+- Measure a classification change against the neighbouring gates before
+  widening it. The first line-break repair also closed all five of the
+  selfhost suite's reviewed D4 gaps and left four of its twenty judge controls
+  with nothing to run on. Confining it to the requested body arguments
+  restored all twenty.
+
+## 2026-09-28 — nest review round 10: a detached `+` between row columns was accepted
+
+Confirmed:
+- A `+` after a term in a pattern row that does not touch its binder
+  (`case a + b:`) was read as another column; the seed reads it as an infix
+  operator, so `a + b` is one term with too few patterns, and rejects it. The
+  same operator loop rejects a spaced marker after a let (`+ u : F = ..`), and
+  a return arrow split as `- >` is rejected too. Knot Checked, compiled and ran
+  all three: 57 of the 60 frozen seed-rejected programs, and 14 more in the
+  reviewer's edit grids. The first is branch-introduced (main stopped at
+  Unsupported match-scrutinees for multi-column rows, and the branch parses
+  through them); the other two were on main.
+- The same parse now reached seven main-era whitespace shapes (arguments
+  separated by whitespace, `++y`, a let split across lines, an arm body at its
+  case column) that the seed accepts and Knot reported Invalid: a D4 regression
+  in multi-scrutinee matches. They are Unsupported now.
+- The nest gates ignored KNOT_GATE_TIMEOUT_SCALE, so two failed with a harness
+  timeout under load 50 to 80.
+
+See the [round-10 dispositions](../tests/compiler-nest/receipts/REVIEW-10.md).
+
+Prevention:
+- State an adjacency rule once, for every token pair the seed reads as a unit,
+  and grep the parser for each. Round 6 froze `{` glued to a constructor name;
+  the same reading of `+`, `-` and `->` (`S.marks`, `S.touches`) waited for the
+  reviewer's one-character edit grids. `starts(tokens,"+")` and two separate
+  `-` and `>` tokens were the places it hid. Run such a grid as a gate: the
+  extended fuzz now reports 68 false acceptances against `5ef36ae6`.
+- A generator's atoms and separators must include the spaced form of every
+  glued token: `+ v` at a non-first column and ` + ` between columns were
+  outside the vocabulary in every round.
+- A rule that lives in one dispatcher and is re-tested in the next (Arms, then
+  RowTail) leaves the first test unobservable: its mutant cannot be killed.
+  Gate the mutant that can, and say so.
+- Edits to a registered gate script or to the runner stale
+  `docs/compiler-campaign/inventory/accepted.json` (it records their hashes):
+  run `census --check` before every commit that touches one, not only after the
+  last source edit. It failed the first full run of the round.
+- A mutant that edits a shared predicate changes all its users: the round-6
+  `touch-past-one` shifted `touches`, which now also decides the arrow, so it
+  dies at every def header. Prefer mutants at a call site, and re-run the older
+  mutants after widening a shared helper.
+- Put a classification's test where the rule lives. The first line-break
+  stopgap sat in `term_failure`, which every parse failure reaches, and moved
+  two round-3 mutant outcomes; in a helper for the let's `=` it moved none.
+- A context-bounded law group is a design constraint. Laws over positions with a
+  hypothesis and a cong proof cost two to three times a ground witness;
+  frontend-laws stands at 47,916 of 48,000 bytes and the five stopgap sites got
+  no laws. The next parser round needs a law file of its own.
+- Every gate that rebuilds lanes per mutant scales with the mutant count:
+  `nest-round10` takes 13 minutes under campaign load and 4 unloaded, so the
+  runner's per-gate limit is now 1,800 s.
+
+## 2026-09-29 — nest review round 11: rows in discarded bodies, `+D` binders, hidden type names
+
+Confirmed:
+- A match nested in a row body that no leaf selects was never pattern-validated:
+  an unknown constructor, a wrong field count, a bare constructor binder, a call
+  as a pattern and a wrong pattern count were Checked, evaluated and emitted.
+  The seed parses every row before it checks any body. The branch's `prepare`
+  ran where the checker reached a match, so the discarded body was never reached
+  (main reported Unsupported for these; the branch's multi-column rows moved the
+  count check from parse time to check time).
+- `+Flag` (a datatype declared earlier) as a pattern binder was accepted; the
+  seed reads `+D` as a quantified datatype and fails. A bare binder named after a
+  datatype then used as a type in the body was accepted; the seed has one
+  namespace, so the annotation names the binder. Both were branch-introduced for
+  variable rows, multi-column rows and nested fields, and main-era for lets,
+  parameters and type fields.
+- Seed-accepted multi-scrutinee layouts and a Nat literal in a later column were
+  Invalid where main stopped at Unsupported (D4).
+- No gate could tell a working row-width or field-count check from a deleted one.
+
+See the [round-11 dispositions](../tests/compiler-nest/receipts/REVIEW-11.md).
+
+Prevention:
+- A rule the seed applies at parse time applies to the whole tree, not to the
+  part the checker reaches. State it as an audit that walks discarded bodies too,
+  and give it lax controls (type errors, unbound names in a dead body are
+  accepted) so it does not over-reject.
+- State a name rule as a table, kind of name by kind of site, and generate from
+  the table: binder names from a datatype, a constructor, both, a name declared
+  later, a function and Base's names, at a row, a later column, a field, a nested
+  field, a let, a parameter and a type field. Constructors had a rule since round
+  3; datatypes had none until a reviewer tried `+Flag`.
+- A generator must be told to draw the accepted side of every class, and the gate
+  must check that it did (at least 50 seed-accepted and 50 seed-rejected programs
+  per family), or "0 false Invalid" says nothing. The first sweep also drew
+  constructor-named lets, the literals branch's rule: it reported 19 false
+  acceptances, all of that class. Exclude a rule you do not own by construction.
+- A token-mutation fuzz is the fastest way to find a layout gap the grids miss (it
+  found six shapes in its first 72,000 mutants, minutes of CPU). Build the
+  merge-base checker and label each false Invalid main-era or branch-introduced,
+  or the main-era noise (87 of 97 in the 60,000-mutant run) hides the signal.
+- Put a new check beside the functions older gates call, not inside them:
+  threading the earlier names through `G.parameters` broke the checker gate's
+  bounds program (its parameters `N0..` share a name with the datatype `N0`) and
+  moved the text a structural mutant anchors on. Run the older gates on an
+  exported snapshot before the first full run.
+- A declaration's Perch state (`matrix-LAWS::flag`) sat 50 bytes under its bound;
+  each helper reachable from it adds about 200 bytes (its interface and its
+  summarized note). Keep a group's task text to the contract and move per-round
+  evidence to a separate file (SPEC.md 14,727 to 9,120 bytes, ROUNDS.md).
+- Gates hash their inputs and fail if one changes during a run: run them in an
+  exported snapshot (rsync of `git ls-files`, `.toolchain` and `node_modules`
+  linked) while editing continues.
+- Replay the reviewers' own probe directories as a regression corpus: 48,517
+  programs, unique by content, classified by the seed once (cached) and by the
+  previous tip, the merge base and the new tree. It ranked the residual classes
+  in minutes (false acceptances 157, 104 and 57; seed-accepted Invalid 254, 951
+  and 115) and shows which are main-era.
+- "Every pair of adjacent tokens" is a finite search; run it exhaustively. A generator
+  that draws gaps at random found nothing new in header shapes until its alphabet held
+  a `(`; inserting eight gaps between every adjacent pair of forty-three bases found the
+  last false acceptance in minutes (a header joins its lines, and the seed never reads a
+  `(` that starts a line as a call). Keep the tool (`gapsearch.py`) and grow its bases
+  whenever a review names a token class the bases lack.
+- A stopgap that answers Unsupported for a seed-accepted layout must also say what the
+  seed does with the same tokens when the program is dead: the audit moved the width
+  check to every row, so a header that Knot read as one column and the seed as two turned
+  a benign acceptance into a false Invalid. Freeze the dead and live pair together.
+- A gap that follows a construct main did not parse looks branch-introduced when
+  it is only compared with main: main stopped at `Unsupported match-scrutinees`,
+  so every main-era gap after a multi-scrutinee header changed from Unsupported
+  to Invalid. Label a difference by the construct before it as well as by main's
+  answer, and freeze the gap once instead of recounting it.
+
+## 2026-09-29 — nest review round 12: term suffixes, first-row marks, a shared oracle file
+
+Confirmed:
+- A term suffix after a complete term (an infix operator, a chained call, an index,
+  an offload `!(`) and a `+x0` term were Invalid in a discarded row of a two-scrutinee
+  match, where the merge base answered Unsupported. Round 11 had counted "the one
+  program" of the probe roots; the class is everything `parse_term_ops` reads after a
+  term (its call, index, offload, lambda and infix table), `+name`, and a line that
+  starts with one of them, at every site a term ends. A live row is seed-accepted too
+  when the program defines the operator's target, so Invalid was wrong there as well.
+- A `+` on a field of the first row that starts a constructor was ignored: the seed's
+  `match_flatten` builds the split's field binders from that row, so every row below the
+  split sees the mark; Knot let each row promote its own alias, and rows separated by an
+  earlier constructor column never saw it (`Invalid check affine-reuse`).
+- `nest-round11` and `nest-sweep11` replay one oracle, which rewrote the same wrapper
+  files with a truncating write: a concurrent reader saw an empty file and the gate failed
+  in its first seconds (5 of 12 paired starts).
+
+See the [round-12 dispositions](../tests/compiler-nest/receipts/REVIEW-12.md).
+
+Prevention:
+- Enumerate a class from the seed's function, not from probe hits. The list of forms a
+  parser rule stops at is the switch in `parse_term_ops`; write it out (call, index,
+  offload, lambda, every `INFIX` entry) and draw each at every site and gap before
+  reporting "one program".
+- Freeze the dead twin of every Invalid pin that stops at a term. Round 10 pinned
+  `two(a + b)` Invalid because the seed rejects it, but the seed rejects it for its type,
+  and accepts the same text in a discarded row or with a defined target; a parse-level
+  Invalid needs a rejection the seed makes before it knows which rows it keeps.
+- Port a seed algorithm's shape, not its symptom. The mark reaches the field through the
+  split, so a generator that puts `+` in every row and slot of a fielded match, with a
+  catch-all row, found the class in one run (7 of its 1,800 programs are false Invalid on the
+  round-11 tip; its 1,200 suffix programs add 336).
+- Write a token predicate head first. Older laws normalize over an abstract tail; a
+  predicate that inspects the second token before deciding on the first stops them
+  reducing, and the anchors of older mutants pin the order of branches. Test both before
+  the first full run: run every mutant of every gate at once (about three minutes) instead
+  of learning one moved anchor per ten-minute gate run.
+- Gates that share an oracle must share no writable path: publish by rename, and prove it
+  by holding a handle across a second publish (deterministic), not by timing a race.
+- A group's composition cap counts interface bytes: each new definition costs 60 to 90
+  bytes, and a law block of 1.5 kilobytes put `pattern-matrix-laws` at 48,667 of 48,000.
+  Run the manifest preflight before writing the laws, and drop what the fixtures and
+  mutants already pin.
+- Token mutation of the frozen fixtures is still the discovery tool (it found `+(a)` and
+  `<=` at a let's column); label its false Invalid by the construct before it, and count
+  a number in a commit message with a command (a message said 14 fixtures; there were nine).
+
+## 2026-09-28 — prechecks: seven advisory rules for claim-against-evidence review
+
+Date / scope / source revision: 2026-09-28, the pre-review suite of [docs/prechecks.md](prechecks.md), branch
+`campaign/prechecks` on main `43a394a4`. Rules: `.perch/rules/prechecks.yaml`, sha256 prefix `c2085179a50a7b64` at the
+time of writing (the file is the identity; this prefix is not recomputed).
+
+Waste addressed: about 72 of 1,100 review findings (the mined classes doc-prose-vs-code-drift, prose-vs-authoritative-text,
+outcome-table-vs-d4-and-bounds, contract-clause-contradicted-by-change, required-law-unmet-or-unrecorded, and the Perch halves
+of oracle-from-implementation and mutant-kill-credit) were claims that a document made and the code or diff contradicted.
+Reviewers found them by reading; the deterministic checks cannot, because the claim is prose.
+
+Rule + model: `claim-holds-against-evidence`, `passages-agree`, `outcome-follows-d4`, `clause-vs-delta`,
+`expectation-independent`, `kill-is-semantic`, `required-laws-met`; each `each: file`, `min: 80`, `gate: false`, reading only its
+own packet directory under `.local/prechecks/packets/`. No model was asked: requested and resolved model are unknown.
+
+Judgment: **blocked**. Live calibration needs the main checkout's credentials, which no workflow has; no probability exists,
+and none is claimed. The built-in `docs` category selects zero checks on a packet, so it cannot serve as the baseline arm.
+
+Change and why: the rules are new and advisory. A deterministic builder selects claims by mechanical triggers and ranks the
+evidence that decides them; a stubbed-provider wiring test proves that each packet selects exactly its own rule, that an
+advisory verdict exits 3 and that unrelated files select nothing; a live runner (dry run by default, main checkout only) is
+written and has not been run.
+
+Clean / broken / held-out evidence: 22 calibration packets under `tests/prechecks/perch-controls/` (every rule has a broken
+control; gaps are documented with reasons). Two disclosed exposures: vm-spec `5517f263` moved from held-out to dev when its
+passages were read to fix the P3 builder, and one held-out literals finding was printed during orientation and used for nothing.
+
+Remaining uncertainty / next trigger: the coordinator runs `node scripts/prechecks-perch-run.mjs --controls --live` from the main
+checkout, records model, probabilities and hashes here, freezes the rule text if every broken packet is at or above 0.8 and every
+clean one below, then runs the held-out packets. A rule that does not separate is rewritten or narrowed, never floor-raised.
+Selection recall is bounded (two calibration defects are not reached by any builder); replay measures it.
+
+## 2026-09-29 — prechecks runner: the cap, the staging and the controls, found by the fix-round review
+
+Date / scope / source revision: 2026-09-29, `scripts/prechecks-perch-run.mjs` and the packet builder of the pre-review suite
+([docs/prechecks.md](prechecks.md)), branch `campaign/prechecks`; found offline by the speed-scope reviewer with dry runs (zero requests).
+
+Waste addressed: the runner had never run live, and its first live use would have spent the coordinator's calibration and production
+runs on packets chosen by path order. Over the replay's 7,949 packets for 71 heads a default plan dropped 5,135 (65%) and asked only
+`claim-holds-against-evidence` on 63 of 71 heads (`outcome-follows-d4` on 1 of 49), and 11 of the 33 packets labelled broken were never
+asked; staged calibration controls leaked into the next production run (22 extra requests each time); a packet directory built
+anywhere else (`--out <dir>`) was never asked; a working-copy build carried HEAD's name and a hash HEAD does not have. The calibration
+itself (`--controls`) is exempt from the cap and would never have shown the first defect.
+
+Rule + model: no rule changed (the seven advisory `gate: false` rules of `.perch/rules/prechecks.yaml`); no model was asked.
+
+Judgment: **blocked**, unchanged: live calibration needs the main checkout's credentials. No probability exists and none is claimed.
+
+Change and why: the cap is per rule and per (increment, head) as each packet's header names them, and it is one number shared with the
+builder (`scripts/prechecks/packets/limits.json`), with the skipped packets counted by rule; packets outside the rules' glob are staged
+into `.local/prechecks/packets/staged/` before they are asked (the dry run says so); staged controls are skipped by production plans
+and removed after a live calibration; snapshot builds are labelled `<HEAD>+worktree.<tree>`. The stubbed-provider wiring test asserts each
+of them (it proves plumbing, never calibration).
+
+Clean / broken / held-out evidence: unchanged (22 calibration packets under `tests/prechecks/perch-controls/`).
+
+Remaining uncertainty / next trigger: what would have prevented the waste is a dry run over one real built increment that counted asked
+and skipped packets per rule before the runner was trusted; it was run in this round (zero requests): vm-spec `d2fe0f20` builds 130
+packets in six rules, the previous plan asked 40 of them (all one rule) and the fixed plan asks all 130 (40, 33, 14, 40, 2, 1 by rule); over
+the replay's 7,949 packets it asks all of them. The coordinator's first `--live` run should start with the same dry run on its own packets
+and read the per-rule counts.
+
+## 2026-09-28 — Live review of the compiler-campaign backlog (`185b7d5..a6367eb9`)
+
+Date / scope / source revision: 2026-09-28 (receipts UTC 2026-09-29T04:50:55Z to
+05:17:21Z), all 490 Bend files changed on `main` since the campaign charter;
+main stayed at `a6367eb9f434d0123ea809e81f63a853012a9fe4` throughout. Live
+commands ran from the main checkout, no tracked file there was touched, no code
+was changed. Semantic: `npm run lint -- <file>` per file (every parsed
+declaration, all rules); style: rubric v8 through the manifest groups that select
+a changed file in full, explicit groups for research and harness files, and one
+group per fixture suite. Results, tables and per-declaration style rows:
+[campaign-backlog-2026-09-28](perch-execution/campaign-backlog-2026-09-28/README.md);
+every finding: [ledger](perch-execution/campaign-backlog-2026-09-28/findings-ledger.md).
+
+Evidence links and usage receipt IDs: 490 semantic and 28 style receipts, one id
+per run in [receipts.tsv](perch-execution/campaign-backlog-2026-09-28/receipts.tsv)
+(the ignored `.perch/usage/` files stay local).
+
+Waste or missed behavior / measured effort: none missed. 13,629 provider
+requests (9,074 semantic, 4,555 style), no authentication, quota or provider
+failure. First to last receipt 26 min 26 s of wall clock including adjudication
+pauses; time spent on deterministic evidence is not separated.
+
+Rule + hash / requested and resolved model: semantic `rules_sha256`
+`7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506` (13 source
+rules and the built-in questions), Bend parser
+`bend-2.0.29-574b6d3-observer-v3+law-template-arity`; style rubric v8
+`b0747948ceadd3c10f48634adeccc2c880d944a9e63b1f6906d6121a68f4d693`, endpoint sha
+`17abdbd0cf748030a25a6c7693461b98ac2889b23590f11c185652ec125830e9`. Requested
+`jev-latest`, resolved `jev-1.13.0` in every provider response of this run.
+
+Judgment: **confirmed defects 0.** 246 semantic findings: 219 false-positive,
+12 duplicate (9 `lint` mirrors of custom-rule breaks, 3 restatements), 12
+unresolved (advisory refactor observations, no behaviour claim), 3 confirmed as
+true positives on deliberately invalid fixtures whose label names the intended
+rejection (`wrong-type-arg.main` type_confusion, `rigid-domain-mismatch.compose`
+wrong_order, `result-missing-fail.opened` bend-effect-boundary); these are not
+defects. Precision over adjudicated findings for jev-1.13.0: custom
+`bend-machine-arithmetic` 0 confirmed of 46 deduplicated (p 0.81 to 0.86, floor
+0.80; a text check found no arithmetic in any flagged declaration; its question,
+unlike the other Bend rules, has no "if none, this rule holds" clause); built-in
+`does_not_do_what_it_claims` 0 confirmed of 81 false positives (2 duplicates,
+p 0.71 to 0.92, 53 on `{==}` law fills). Fill-class findings (74 in five proof
+entries) are refuted by the pinned seed: every entry prints `All terms check.`,
+every law has its fill, and one wrong law under the same fill is rejected in each
+entry. This repeats the `L.put_empty` false positive of 2026-09-27 (p .78) at
+scale despite the paired law being supplied. The two `integer_overflow` flags
+(`wasm.allocate`, data-lifetime `allocate`) are guarded (catalog cap of 256
+fields; explicit size/live/id guards, boundary probes and a mutant). The
+adaptive-runtime `offer`/`publish` flags disagree with 186 independent phase
+observations and 7 killed mutants. `count_ceiling_preserves_state` states only
+`Fail{3}`; the composed property holds (probe plus mutant), so the code is right
+and only the law name outruns its statement.
+
+Change and why: none to code, rules, floors or the rubric. Retain. The task
+forbade fixes, and repeated false positives are triggers for review, not
+automatic edits.
+
+Clean / broken / held-out evidence and deterministic checks: not a calibration
+run. Deterministic checks: seed proofs of the five changed proof entries, five
+wrong-law mutants, two scratch boundary probes with mutants, one composed probe
+with mutant, the adaptive-runtime CPU gate (8 laws, 62 commands, 186 phase
+observations, 7 mutants killed), read-only verify runs of eight fixture suites
+(identical to their frozen expectations) and `--check-only` on every flagged
+fixture (60 accepted, 36 rejected). Style: all 14 explicit compositions miss the
+payoff target (7 below, 7 uncertain) although 11 meet memetic; 29 of 101 changed
+compiler declarations meet all five role-scaled targets; 761 of 3,934 fixture
+declarations do. No rewrite and no pass is claimed. The payoff miss on
+`recursion-laws` (8%, seed-accepted proofs) is recorded once as an unresolved
+calibration observation, possibly tied to the interface-only rule against
+inferring proof execution.
+
+Remaining uncertainty / next trigger: 44 fixtures rejected by the pinned parser
+(seed also rejects) have zero coverage, and 7 datatype-only files have no
+executable declaration (semantic not applicable, style-rated on their datatypes); three
+generated stress fixtures (`deep-call`, `deep-stack`, `scale-catalog`) exceed a
+style context. `src/SPEC.md` (20,417 bytes) is over the 16 KB task cap, so
+Galaxy brain stays advisory in 10 of 17 manifest groups. Fixture suite gates
+for `tests/compiler-recursion` and `tests/subsets` were not re-run. Next
+maintenance review: (1) propose skipping built-in defect, refactor and docs
+questions for `{==}` law fills, or supplying the seed's acceptance as context;
+(2) append the "holds when no arithmetic" clause to `bend-machine-arithmetic`
+and re-check with clean/broken/held-out controls; consider excluding
+`tests/**/fixtures/**` from source rules; never raise a floor to hide noise.
+Prevention for the next backlog review: run law-fill files with a reviewed
+noise filter, and give the coordinator a fixture list up front so parse
+rejections are planned rather than discovered.
+
+## 2026-09-28 — `bend-machine-arithmetic`: applicability sentence, concrete shapes, floor 0.70
+
+Date / scope / source revision: 2026-09-28, branch `perch/arithmetic-rule`
+(stacked on `perch/backlog-review`, base `a6367eb9`). Follows the user's
+instruction that Perch rules may be edited to do a better job; one rule changed,
+no adapter or built-in change. Trigger: 46 adjudicated false positives in the
+[backlog review](perch-execution/campaign-backlog-2026-09-28/README.md), plus the
+2026-09-26 constructor-only `mixed-types.main` false positive at 0.81 and the
+earlier arithmetic-free "release wrapper" scores of 0.70 to 0.76.
+
+Evidence links and usage receipt IDs: [controls, labels and scores](../tests/perch-arithmetic/README.md)
+(`results-2026-09-28.json`); local receipts under the worktree's ignored
+`.perch/usage/` from 2026-09-29T05:2xZ to 05:5xZ.
+
+Waste or missed behavior / measured effort: the old question scored declarations
+with no arithmetic at 0.43 to 0.76 (constructor-only, match-only, string/IO
+`main`, type declarations, `{==}` fills) and real unguarded overflow at 0.31 to
+0.48, so it ranked them inverted and its floor of 0.80 was crossed only by the
+former. Effort not separately timed.
+
+Rule + hash / requested and resolved model: `bend-machine-arithmetic`; old rule
+set `7879db5b57067b4f0237cd80da969cd1e79adbd61fda600351f6bfd6d45f0506`, edited
+question at the old floor `b5ed452ac6007f98d3bd46d93a3b2b2158b53b0826214498dadb19fbe182eaad`,
+final (floor 0.70) `ccbc155dbc8f228cc73ee97966f27f46600e752faaa58f7ea4787970bd352a4c`.
+Requested `jev-latest`, resolved `jev-1.13.0`.
+
+Judgment: confirmed noisy rule (a recurrence, not a one-off). The other Bend
+rules already end with an "if none, this rule holds" applicability sentence; this
+one alone did not, which explains why only it inverted.
+
+Change and why: (1) the question now states its applicability (arithmetic or
+Nat/U32 conversion producing a size, bound, index, count, offset or source
+position; otherwise the rule holds, listing constructors, matches, string/IO calls,
+type and law declarations and law fills), names three violation shapes (unordered
+subtraction as a count, a sum or product compared against a limit, a masked index
+as a bounds check) and exempts guarded arithmetic; (2) the floor moves from 0.80
+to 0.70 because the controls now separate, not to hide noise. Rule stays advisory.
+`perch.yaml` ignores `tests/perch-arithmetic/**` so scans skip the deliberately
+broken controls. One wording, not iterated after scoring.
+
+Clean / broken / held-out evidence and deterministic checks: 9 broken and 14
+clean declarations (6 clean with arithmetic, 8 without, including two `{==}`
+fills), all seed-valid; the held-out file was written before the edited question
+was scored and scored once. Old question: broken 0.31 to 0.48 (none flagged),
+clean 0.43 to 0.76. Edited: broken 0.61 to 0.81 (6 of 9 at or above 0.70; `slot`,
+`row_offset`, `align_up` at 0.63 to 0.65 are missed), clean 0.05 to 0.17 (none
+flagged), gap at least 0.44. On the 46 production false positives: 0.81 to 0.85
+before, 0.05 to 0.12 after. On 218 declarations of `wasm`, `scope`, `check`,
+`patterns`, `parse`, data-lifetime `model` and adaptive `frontier`: at most 0.57,
+none at or above 0.60; the top scores are the guarded `allocate`/`alloc`
+declarations adjudicated as guarded earlier. Offline gates: 168 tests and the
+eight-rule wiring check pass; `perch rules list` shows the edited text.
+
+Remaining uncertainty / next trigger: 23 controls are not an accuracy claim; three
+broken shapes stay below the floor. Re-check on the next backlog review and look
+at any production declaration at or above 0.70 as a candidate, not a verdict.
+Deferred, not done: the 74 built-in `does_not_do_what_it_claims`, `dead_code` and
+`docs` flags on `{==}` law fills. A deterministic skip for `bend_law_fill` units
+belongs in the installer's check flow (`unit.part && ...`), but the 2026-09-27
+paired-law repair deliberately made built-in proof requests carry the law and its
+tests assert those requests, so the change needs its own decision, controls and
+cache-identity note rather than a rule edit. Prevention: give every source rule an
+explicit applicability sentence and include a no-arithmetic control before
+accepting its floor.
+
+## 2026-09-29 — prechecks rules: first live calibration
+
+Date / scope / source revision: 2026-09-29. The seven advisory prechecks rules (`.perch/rules/prechecks.yaml`) on main
+`46f2cdd4`, asked from the main checkout with `node scripts/prechecks-perch-run.mjs --live --controls` over the 22
+calibration packets in `tests/prechecks/perch-controls/`. That is 18 expected broken (15 dev, 3 held-out) and 4
+expected clean. 22 requests; 4.5 s wall.
+Evidence: the runner's report (scratchpad `prechecks/calibration-live-1.json`) and the wrapper receipts under
+`.perch/usage/`.
+Rule / model: the rules as merged; the model is the configured default (identity in the receipts).
+Result: at the 0.80 floor, 2 of 18 broken controls are flagged (claim-holds 0.89, outcome-follows-d4 0.84), and 0 of 4
+clean controls. Pooled separation is weak: broken 0.28 to 0.89 (median 0.57), clean 0.25 to 0.70 (median 0.44), AUC
+0.66. Per rule:
+- kill-is-semantic separates: broken 0.68 and 0.70 against clean 0.30.
+- outcome-follows-d4 separates: broken 0.76, 0.76 and 0.84 against clean 0.57.
+- claim-holds-against-evidence is marginal: broken 0.75 and 0.89 against clean 0.70.
+- passages-agree does not separate: broken 0.28 and 0.29 against clean 0.25.
+- clause-vs-delta (0.28 to 0.48), required-laws-met (0.39 to 0.55) and expectation-independent (0.60 and 0.69) have no
+  clean control. The first two never approach the floor on their broken controls.
+Judgment: uncalibrated. Every rule stays `gate: false`, and none is promoted into the pipeline.
+Change: none in this entry.
+Next trigger: narrow the questions as the 2026-09-28 bend-machine-arithmetic repair did: an applicability sentence,
+concrete violation shapes and explicit exemptions. Add clean controls to every rule (at least 3 each) and a held-out
+clean set, rerun, and set floors only from separated controls. Retire passages-agree if a rewrite still cannot separate.
+
+## 2026-09-29 — prechecks rules: a rebuilt calibration set, narrowed questions, no floor yet
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, branch `perch/prechecks-calibration` from main `82d79f4a`.
+- Rules: the seven advisory rules of `.perch/rules/prechecks.yaml`. The file sha256 was `c2085179…` before this work and is `151f266a…` for the frozen texts.
+- Rule identity: each rule's identity is the sha256 of its parsed object (name, where, each, min, gate, ensure), first 12 hex, given per run in the tables below.
+- Calibration set: `tests/prechecks/perch-controls/`. Its `cases.json` sha256 was `778c7a7a…` when the held-out labels were committed (`afd38d23`).
+
+Evidence links and usage receipt IDs:
+- [`results-2026-09-29.json`](../tests/prechecks/perch-controls/results-2026-09-29.json) holds every run's identities (rule file, per-rule hashes, the receipts' combined `rules_sha256`) and per-control probabilities. The [controls README](../tests/prechecks/perch-controls/README.md) holds the labels and the retired controls.
+- Receipts: 212 `check` receipts in the main checkout's `.perch/usage/`, 2026-09-29T15:31Z to 16:27Z. Every one completed with a verdict; none failed.
+- How the runs were made: each run was asked from the main checkout by overlaying this branch's rules, runner and controls. The script refused to overlay paths that were already modified, and after each run it restored the working copy and compared it with a status and HEAD snapshot (all nine matched). Nothing was committed there.
+- Main moved from `82d79f4a` to `c853cc5a` between run 8 and the held-out run (a gate-timeout change touching no Perch or prechecks file); each run's before and after snapshots matched.
+
+Waste or missed behavior / measured effort: the first live calibration (22 controls) was partly measuring its own labels.
+- Reading every packet against its rule offline found 12 of 22 controls that could not carry their label:
+  - all four clause-vs-delta controls: the text anchors matched incidental words, and no packet shows a violating hunk;
+  - all three required-laws-met controls: their `required_laws` list has no verbatim source, since one item first appears in the commit that added the controls;
+  - the kill-is-semantic held-out excerpt, which shows no kill predicate;
+  - two outcome-follows-d4 controls whose stated defect is not in the packet;
+  - two claim-holds controls whose label rested on unshown evidence.
+- One control was relabelled. The kill-is-semantic "clean" vm-model `07e6db73` credits a crashed fuel control as a kill in `harness_runs`, and `KNOWN_EXITS` admits exit 7, HarnessBound. So the first entry's "kill-is-semantic separates (0.68/0.70 against 0.30)" rested on a mislabelled clean.
+- The first calibration's model was requested `jev-latest`, resolved `jev-1.13.0`; its receipts' `rules_sha256` is `5d18aced…`.
+- Effort: the live runs took about a minute of provider time in all. The audit and candidate search ran as read-only agents and was not separately timed.
+
+Rule + hash / requested and resolved model: requested `jev-latest`, resolved `jev-1.13.0` for all 212 requests; Perch 0.3.5. The per-rule hashes are in the tables.
+
+Judgment: unresolved (uncalibrated) for all seven rules. No rule reached the pre-committed dev margin, so every rule keeps `min: 80` and `gate: false`.
+
+Change and why:
+1. **Calibration set.**
+   - Now 66 dev controls (every rule has 4 or 5 broken and 4 to 6 clean) and 25 held-out.
+   - 12 controls are retired, with reasons, in `specs.json` and `cases.json`, and one is relabelled.
+   - The packets are the unmodified builders' output at real campaign commits, or verbatim excerpts where the builders miss the deciding lines: 9 of 66 dev and 7 of 25 held-out.
+   - Each label comes from the packet text alone: broken when the packet shows the violation, clean when it shows the property holding. Candidates that turned on unshown evidence or a judgment call were excluded.
+   - Read-only agents found the candidates in packet pools built from about 60 campaign heads, and each dev label was re-read before it was committed.
+2. **Questions.** Each rule now has an applicability sentence, concrete violation shapes, explicit exemptions, and a missing-evidence clause scoped to the evidence that decides an applicable claim.
+   - At most two rules were rewritten per iteration, each had at most one revision, and no identifier from a dev packet appears in a rule.
+   - outcome-follows-d4's exemptions are a class conflict that no exemption excuses, a bound that must itself be Exhausted, a divergence that a decision row documents, and a recorded upstream deviation.
+   - kill-is-semantic now asks for a trace of what a crash, timeout or harness limit records, and of whether the kill predicate would count it.
+3. **Runner and wiring test.**
+   - `prechecks-perch-run.mjs` uses each rule's own floor with Perch's strict `>` (it used a fixed 0.8 with `>=`), reports separation per rule, and adds `--split dev|held-out`. A `--controls` dry run no longer leaves staged controls.
+   - The wiring test pins each rule's floor in an explicit map (all 80 today), so a calibrated floor must edit the test beside its evidence; `gate: false` is still asserted. It requires at least 3 dev controls of each label per rule, and allows a held-out control of either label or a documented gap per cell.
+
+Pre-commitments, verbatim, written before any held-out packet was labelled:
+- "A floor is set only where the dev gap (lowest broken minus highest clean) is >= 0.10, placed at the integer percentage nearest the middle of the gap; confirmed only if held-out separates at that floor."
+- "Each rule freezes with its final rewrite, unless the original text rank-separated on the identical control set and the final does not; then the original freezes and both are logged."
+- "Uncalibrated rules keep min 80 (unchanged); the rewritten text is the deliverable."
+
+The 0.10 margin comes from measured noise: ten controls whose packet body did not change moved at most 0.04 between the first calibration and the baseline run.
+
+Clean / broken / held-out evidence and deterministic checks:
+- Summary per rule:
+  - Runs: the baseline is the original text on the dev set; the final is the frozen text on the dev set; the held-out run is asked once.
+  - B and C are the broken and clean ranges, and the gap is the lowest broken minus the highest clean.
+
+| rule | baseline dev | final dev | held-out |
+|---|---|---|---|
+| claim-holds-against-evidence | B .74–.88, C .14–.67, gap .07 | B .60–.84, C .10–.55, gap .05 | B .69, .89; C .23, .33 |
+| passages-agree | B .25–.65, C .12–.25, AUC .98 | B .24–.53, C .13–.29, AUC .94 | B .34; C .23, .33 |
+| outcome-follows-d4 | B .59–.90, C .39–.68, gap −.09 | B .67–.83, C .09–.61, gap .06 | no broken; C .16, .28, .37 |
+| clause-vs-delta | B .48–.71, C .20–.37 (9 controls) | B .45–.62, C .16–.54, gap −.09 | no broken; C .10, .25, .64, .67 |
+| expectation-independent | B .59–.69, C .23–.55, gap .04 | B .56–.68, C .27–.55, gap .01 | B .51, .73; C .44, .58 |
+| kill-is-semantic | B .27–.75, C .19–.36, AUC .90 | B .51–.83, C .30–.55, AUC .96 | B .39, .85; C .38, .50 |
+| required-laws-met | B .55–.92, C .13–.56 | B .58–.86, C .19–.70 | B .85; C .12, .76 |
+
+- **What held:**
+  - The narrowing clearly helped outcome-follows-d4, whose exemptions hold on every held-out clean (the D20 excerpt is at .16), and kill-is-semantic, whose tracing lifted the timeout and harness-limit controls from .29/.55 to .73/.83.
+  - claim-holds-against-evidence ranks every broken above every clean in the baseline, the final dev run and held-out, but its dev gaps (.07, .05) are within noise.
+- **What did not:**
+  - The other rewrites held or slipped within noise.
+  - passages-agree ranks well, but its probabilities sit below Perch's 0.5 floor minimum.
+  - clause-vs-delta treats the builder's "clause at base, reworded or removed by this branch" header as a trigger. Base-clause clean controls score .50–.67 on dev and held-out, whatever the text says.
+  - required-laws-met never separated its same-evidence pair (nest `5374d928`, broken/clean): .55/.55 at baseline, .35/.40 after the rewrite, .58/.68 after the revision. It still reads a recorded open obligation correctly (held-out clean .12).
+- **Offline gates:**
+  - `npm run -s prechecks:verify` passes: 223 unit tests, 32 semantic mutants, and wiring for 7 rules and 91 packets. It ran with the main checkout's `.toolchain` symlinked into the worktree, as the campaign worktrees do; without it the C1 end-to-end tests skip, and the gate refuses the skipped pinning test.
+  - `npm run -s lint:verify` passes: 168 tests.
+  - `npm run -s census:check` passes.
+
+Per-control probabilities (dev columns are runs with the rule text named by its hash; empty means not asked):
+
+`claim-holds-against-evidence` (per-rule hash by run: base `881967a605a0`, r4 `abdde60729a1`, held-out `abdde60729a1`):
+
+| control | label | base | r4 | held-out |
+|---|---|---|---|---|
+| bootstrap-dc76dac3-eight-mutants | broken | 0.84 | 0.64 |  |
+| generics-19a534d3-all-17-erasure | broken | 0.87 | 0.84 |  |
+| vm-core-f54d97ad-unsupported-cause | broken | 0.88 | 0.79 |  |
+| vm-spec-d2fe0f20-bench | broken | 0.78 | 0.60 |  |
+| vm-spec-e14d8581-excused-bound | broken | 0.74 | 0.65 |  |
+| fields-wasm-3868b119-heap-sections | clean | 0.63 | 0.55 |  |
+| gpu-2-e485e6d2-wgsl-typecheck | clean | 0.67 | 0.45 |  |
+| harness-2-f53f937c-wasm-memories | clean | 0.14 | 0.10 |  |
+| io-host-963a7594-env-confined | clean | 0.30 | 0.21 |  |
+| modules-0111f133-case-alias | clean | 0.41 | 0.27 |  |
+| modules-bbff6371-binder-walk-bound | held-out broken |  |  | 0.89 |
+| nest-384acc6e-partitioned-matrix-budget | held-out broken |  |  | 0.69 |
+| literals-943104f8-census-feature-exception | held-out clean |  |  | 0.23 |
+| nest-99053a70-concrete-normalization-witnesses | held-out clean |  |  | 0.33 |
+
+`passages-agree` (per-rule hash by run: base `4f332b4a9724`, r1 `5b2e8e0119c2`, r1b `18f69f072e63`, held-out `18f69f072e63`):
+
+| control | label | base | r1 | r1b | held-out |
+|---|---|---|---|---|---|
+| descent-2-75e1ac69-other-parameter | broken | 0.62 | 0.67 | 0.50 |  |
+| generics-78c4942e-return-type-application | broken | 0.35 | 0.44 | 0.41 |  |
+| vm-core-a5e2ffa8-vm-expected-goldens | broken | 0.65 | 0.56 | 0.46 |  |
+| vm-spec-94bc3d57-d20 | broken | 0.25 | 0.25 | 0.24 |  |
+| vm-spec-d2fe0f20-drop-operands | broken | 0.32 | 0.29 | 0.53 |  |
+| opt-1-34d75984-non-tail | clean | 0.17 | 0.16 | 0.20 |  |
+| recursion-624228e5-other-parameter | clean | 0.13 | 0.13 | 0.13 |  |
+| vm-core-b2aab0f5-vm-expected-goldens | clean | 0.21 | 0.13 | 0.24 |  |
+| vm-spec-a0fd6e00-d20 | clean | 0.25 | 0.24 | 0.22 |  |
+| vm-spec-e14d8581-drop-operands | clean | 0.12 | 0.08 | 0.29 |  |
+| vm-core-6f78bd27-check-spec-run-control-count | held-out broken |  |  |  | 0.34 |
+| nest-384acc6e-parameter-type-code-retained | held-out clean |  |  |  | 0.23 |
+| vm-model-37e69a30-model-counts-match-spec | held-out clean |  |  |  | 0.33 |
+
+`outcome-follows-d4` (per-rule hash by run: base `64e52d37dbe3`, r2 `4b269fed1761`, r2b `f9906937e0c4`, held-out `f9906937e0c4`):
+
+| control | label | base | r2 | r2b | held-out |
+|---|---|---|---|---|---|
+| vm-spec-94bc3d57-image-size-frozen | broken | 0.59 | 0.17 | 0.79 |  |
+| vm-spec-d2fe0f20-scalar-result | broken | 0.83 | 0.61 | 0.72 |  |
+| vm-spec-e14d8581-expected-bound | broken | 0.90 | 0.74 | 0.83 |  |
+| vm-spec-e14d8581-result-u32 | broken | 0.76 | 0.57 | 0.67 |  |
+| generics-19a534d3-boundaries | clean | 0.68 | 0.31 | 0.28 |  |
+| literals-3246fa3d-resource-guards | clean | 0.48 | 0.25 | 0.25 |  |
+| opt-1-34d75984-deep-call-exhausted | clean | 0.52 | 0.19 | 0.21 |  |
+| vm-spec-63e63203 | clean | 0.57 | 0.47 | 0.61 |  |
+| vm-spec-63e63203-image-size-frozen | clean | 0.39 | 0.09 | 0.09 |  |
+| literals-943104f8-file-failures-and-path-identity | held-out clean |  |  |  | 0.28 |
+| nest-384acc6e-wasm-call-stack-arena-exhausted | held-out clean |  |  |  | 0.37 |
+| vm-spec-cea554ab-d20-non-scalar-output | held-out clean |  |  |  | 0.16 |
+
+`clause-vs-delta` (per-rule hash by run: base `03d308810615`, r3 `c7eb74706322`, r3b `4e4fbf300b61`, held-out `4e4fbf300b61`):
+
+| control | label | base | r3 | r3b | held-out |
+|---|---|---|---|---|---|
+| closures-a1d68911-only-allocator-appended | broken | 0.48 | 0.46 | 0.45 |  |
+| descent-2-75e1ac69-conservative-classification | broken | 0.57 | 0.44 | 0.45 |  |
+| generics-78c4942e-classify2-pins-unchanged | broken | 0.68 | 0.48 | 0.49 |  |
+| harness-2-364d427e-judge-reads-only-recorded | broken | 0.71 | 0.59 | 0.62 |  |
+| closures-a1d68911-dispatchers-appended | clean | 0.37 | 0.27 | 0.30 |  |
+| fields-wasm-3868b119-only-unreachable-guard | clean | 0.30 | 0.18 | 0.19 |  |
+| harness-2-364d427e-fixed-57-native | clean |  | 0.50 | 0.54 |  |
+| harness-2-364d427e-held-to-files | clean | 0.20 | 0.15 | 0.16 |  |
+| nest-eb15da85-empty-case-whitelist | clean | 0.36 | 0.25 | 0.24 |  |
+| vm-spec-a0fd6e00-unsupported-never-a-bound | clean | 0.28 | 0.21 | 0.20 |  |
+| generics-edfad8b9-parameter-mutant-anchor | held-out clean |  |  |  | 0.25 |
+| modules-7ac90164-census-sole-exception | held-out clean |  |  |  | 0.10 |
+| nest-384acc6e-base-mvp-reworded | held-out clean |  |  |  | 0.67 |
+| nest-47172493-base-guard-reworded | held-out clean |  |  |  | 0.64 |
+
+`expectation-independent` (per-rule hash by run: base `56169c0bdff7`, r3 `cd037a4c7e39`, r3b `874666971a9c`, held-out `874666971a9c`):
+
+| control | label | base | r3 | r3b | held-out |
+|---|---|---|---|---|---|
+| vm-core-a5e2ffa8-control-jobs | broken | 0.59 | 0.57 | 0.56 |  |
+| vm-core-b2aab0f5-control-jobs | broken | 0.65 | 0.57 | 0.58 |  |
+| vm-core-f54d97ad-control-jobs | broken | 0.69 | 0.69 | 0.68 |  |
+| vm-spec-d2fe0f20-vm-expectation | broken | 0.60 | 0.55 | 0.60 |  |
+| closures-a1d68911-seed-regression | clean | 0.23 | 0.25 | 0.27 |  |
+| vm-model-07e6db73-fuel-runs-literal | clean | 0.44 | 0.63 | 0.55 |  |
+| vm-model-07e6db73-sweep-reference-codec | clean | 0.41 | 0.40 | 0.38 |  |
+| vm-spec-e14d8581-vm-expectation-seed-compared | clean | 0.55 | 0.36 | 0.41 |  |
+| vm-core-6f78bd27-control-jobs-want | held-out broken |  |  |  | 0.51 |
+| vm-core-dcc7c095-limit-word-jobs-want | held-out broken |  |  |  | 0.73 |
+| vm-model-37e69a30-fuel-runs-literal | held-out clean |  |  |  | 0.44 |
+| vm-spec-cea554ab-vm-expectation | held-out clean |  |  |  | 0.58 |
+
+`kill-is-semantic` (per-rule hash by run: base `df529c2f4f3e`, r1 `d8d6442d3ae6`, r1b `3f5388b351be`, held-out `3f5388b351be`):
+
+| control | label | base | r1 | r1b | held-out |
+|---|---|---|---|---|---|
+| vm-model-07e6db73-harness-bound-kill | broken | 0.29 | 0.78 | 0.73 |  |
+| vm-model-07e6db73-kills | broken | 0.27 | 0.45 | 0.51 |  |
+| vm-spec-63e63203-source-mutants-timeout | broken | 0.55 | 0.80 | 0.83 |  |
+| vm-spec-97c1da13-source-mutants-raw-diff | broken | 0.75 | 0.62 | 0.67 |  |
+| vm-spec-d2fe0f20-source-mutants | broken | 0.64 | 0.72 | 0.77 |  |
+| classify-2-7b85b8aa-specific-wrong-classification | clean | 0.27 | 0.35 | 0.39 |  |
+| descent-2-75e1ac69-semantic-wrong-exit | clean | 0.23 | 0.22 | 0.30 |  |
+| fields-wasm-3868b119-wrong-enum-result | clean | 0.19 | 0.22 | 0.32 |  |
+| generics-78c4942e-exit-0-2-3 | clean | 0.25 | 0.56 | 0.55 |  |
+| recursion-624228e5-fixed-observation | clean | 0.36 | 0.36 | 0.35 |  |
+| vm-model-19cf7d8f-harness-fuel-ignored | held-out broken |  |  |  | 0.39 |
+| vm-spec-cea554ab-source-mutants | held-out broken |  |  |  | 0.85 |
+| vm-core-6f78bd27-wat-mutant-loop | held-out clean |  |  |  | 0.38 |
+| vm-spec-cea554ab-codec-mutants-helpers | held-out clean |  |  |  | 0.50 |
+
+`required-laws-met` (per-rule hash by run: base `566039591f0b`, r2 `2690e266a27d`, r2b `e62830b3907f`, held-out `e62830b3907f`):
+
+| control | label | base | r2 | r2b | held-out |
+|---|---|---|---|---|---|
+| nest-5374d928-unmet-laws | broken | 0.55 | 0.35 | 0.58 |  |
+| nest-c500d7d5-unmet-exhaustive | broken | 0.61 | 0.55 | 0.72 |  |
+| nest-eb15da85-unmet-laws | broken | 0.60 | 0.49 | 0.70 |  |
+| vm-model-07e6db73-symbolic-tail | broken | 0.92 | 0.90 | 0.86 |  |
+| closures-a1d68911-spec-laws | clean | 0.44 | 0.47 | 0.52 |  |
+| fields-wasm-3868b119-proof-boundary | clean | 0.13 | 0.21 | 0.30 |  |
+| generics-78c4942e-proof-boundary | clean | 0.56 | 0.53 | 0.70 |  |
+| nest-5374d928-proof-scope | clean | 0.55 | 0.40 | 0.68 |  |
+| nest-57a0c01d-principal-law | clean | 0.28 | 0.12 | 0.19 |  |
+| vm-model-19cf7d8f-proof-entries | held-out broken |  |  |  | 0.85 |
+| generics-edfad8b9-proof-boundary | held-out clean |  |  |  | 0.76 |
+| nest-384acc6e-unmet-laws-recorded | held-out clean |  |  |  | 0.12 |
+
+Remaining uncertainty / next trigger:
+- **claim-holds-against-evidence** is the nearest to a floor. It separates on the baseline dev run, the final dev run and held-out, and a floor in 57–59 separates both the final dev set and held-out. The dev margin is inside noise, though, so the next step is more dev controls, not a floor.
+- **outcome-follows-d4:** its dev gap is held open by one clean control, `vm-spec-63e63203`, at .61. That label depends on the decision-row exemption while the D20 row is not in the packet. Adjudicate it before the next run; excluding it now, after the scores, would be post hoc. The held-out labeller excluded all 127 vm-spec and vm-core outcome packets for the same reason. The builder should attach every decision row a packet cites.
+- **Held-out gaps:**
+  - clause-vs-delta has no held-out broken anywhere: a structural scan of 1,052 packets found none.
+  - outcome-follows-d4's only held-out broken candidate was excluded before scoring. An explicitly unmet case that reports Unsupported beside a frozen seed Invalid reads as broken under the frozen text but conforms to D4. The class-conflict clause needs an exemption for a recorded unmet target.
+- **passages-agree** is not retired, although the previous entry's trigger said to retire it if a rewrite could not separate. It ranks broken over clean on dev (AUC .94) and held-out; the binding constraint is Perch's 0.5 floor minimum, not the question.
+- **Held-out is thin.** 1 to 4 controls per rule, many of them excerpts, so these scores are exploratory. The kill-is-semantic and outcome-follows-d4 revisions were each motivated by single dev packets.
+- **Builder recall defects** found by the audit; they belong to a separate builder task, not this change:
+  - the law regex drops laws whose binders span lines;
+  - obligations are read only from `src/SPEC.md` headings;
+  - the kill selector never attaches `run`, `kills` or the meaning of an exit code;
+  - the clause selector misses emitter hunks and JSON whitelists;
+  - the outcome builder attaches only the D4 and D16 rows;
+  - the 12 KB cut removes deciding lines in many vm packets.
+- **Exposures:**
+  - The replay's held-out finding titles were printed while orienting; one held-out claim-holds control was seeded from such a pointer.
+  - An agent's `git grep` printed nest `99053a70` contract lines, so that head was excluded for clause-vs-delta and required-laws-met.
+  - Two agents printed held-out head names.
+  - Dev keeps the post-cutoff vm-spec tip `63e63203` and vm-model `07e6db73` (reviewed 18:37Z), as the design did.
+  - The two post-review tips `60e80693` and `2c1f3d70` were reserved for held-out before any search.
+
+## 2026-09-29 — Encoded-state cap: the tool's limit was shaping the source
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `fitInterfaceContext` in `scripts/perch-context-interfaces.mjs`, branch `campaign/perch-cap` from main `88f02bf1`. Measured on the motivating tree `campaign/literals-integ` at `6617f09b` (it contains `8ea6faf`), exported with `git archive` into scratch and given the changed tool there. Nothing on that branch was edited.
+
+Evidence links and usage receipt IDs:
+- `8ea6faf` ("Fit check.bend::run under the Perch state cap"): its message records `tests/perch-context` failing on `check.bend::run` at 64,553 bytes against the 60,000-byte state bound (the measure counts the 104 to 113 declarations `run` reaches, at about 320 bytes each with their notes), and the four changes made to fit.
+- Those changes, across `8ea6faf`, `84c24df8` and `39f7b778`: the two `C.exhausted` uses in `check.bend` spelled out, the rows of `run` reordered, one local `then`, and the tasks of three groups swapped for verbatim excerpts. The originals are `research/compiler-fields/SPEC.md` (`checking`), `tests/compiler-modules/SPEC.md` (`module-loading`) and `tests/compiler-nest/SPEC.md` (`pattern-matrix-laws` and `pattern-matrix-proofs`). Their owners had not signed off the excerpts.
+- The measured margin was 59 bytes (`run` is 59,941 at the branch tip; three other units sit at 59,935 to 59,950).
+- No provider was involved and no `.perch/usage` receipt exists. The controls and mutants are in `tests/perch-context/`; the contract is in its `CONTRACT.md` items 10 to 14.
+
+Waste or missed behavior / measured effort (or unknown): the fitting had two tiers (full body, interface summary) and then threw. The encoded-state bound counts task and metadata, so a tree that adds one row, or restores a task of a few KB, fails the `perch-context` gate. On the branch the only way to pass was to change correct code and task files to fit a tool limit, which AGENTS.md forbids ("never change correct code to satisfy a model"). The measure-and-reshape rounds were not timed: unknown.
+
+Rule + hash / requested and resolved model (or unknown): none; offline tooling, no model asked. Rubric v8 (`b0747948…`) and every target are unchanged.
+
+Judgment: confirmed. A structural tooling defect, not a model finding.
+
+Change and why:
+- A third tier: when the interface tier is exhausted, each collaborator entry left becomes `{path, name, representation: "names-only"}`, largest saving first, then path, then name, until the state fits. That covers an interface summary and a body that the interface tier kept because its interface was no smaller. A signature is not kept: on `run` 103 of 105 interfaces are one line and keeping only the first line saves 337 of 13,357 bytes.
+- The names tier's saving is the exact drop in encoded bytes; a cut that cannot shrink the state is skipped.
+- Each cut keeps one `summarized` row with reason `context-state-names-only`, and `context_notes` gains `names_only: {count, note}`, so the judge is told which context was cut. Neither exists when nothing is cut.
+- The primary source, the task, datatypes and laws are never shortened. The error after the tier reports the bytes that remain, per part. Both caps are unchanged.
+- The names tier breaks ties by code point (path, then name), so its choice does not depend on the process locale. The interface tier's tie-break is unchanged: it still uses `localeCompare`, so among exactly equal savings its choice follows the locale (`da_DK` orders `Zed` before `zed`). It was left alone so that every state that fits today stays byte-identical by construction. Measured in scratch and not applied: the same code-point tie-break on the interface tier moves no state of the compiler manifest on main (974 of 974 identical) or of `literals-integ` as it stands (2,749 of 2,749), so it is a safe follow-up, though not a proof for every tree.
+- Not done, by decision: cutting datatypes or laws (CONTRACT item 1 keeps the type closure whole), setting `truncated` or a role-context gap (that would make the advisory tier a structural blocker), and adding fields to the preflight report (that would move existing receipts).
+
+Clean / broken / held-out evidence and deterministic checks:
+- Byte identity. Over the whole compiler manifest on main, all 957 declaration states and 17 composition states have the same hash before and after (974 of 974); four of those units use the interface tier. The official `--preflight --manifest … --output` receipt is byte-identical (722,704 bytes, sha256 `044303f7…`). On `literals-integ` as it stands, 2,713 declaration and 36 composition states are identical (2,749 of 2,749).
+- `check.bend::run`, three ways (the old tool throws in (b) and (c)):
+
+  | tree | raw | after every interface | fitted | names-only |
+  | --- | --- | --- | --- | --- |
+  | (a) branch as it is | 68,192 | 60,520 (the fit returns earlier, at 59,941) | 59,941 | 0 |
+  | (b) `C.exhausted(C.Checked,token)` restored at both uses | 68,447 | 60,784 | 59,834 | 4 |
+  | (c) and the three original tasks restored | 73,295 | 65,632 | 59,881 | 27 |
+
+- Which units need the tier. In (b), one of 2,713: `run`. In (c), 53: `checking` 1 (`run`, 27 cuts), `pattern-matrix-laws` 40 (12 to 40 cuts, 2,721 to 8,146 bytes over before), `pattern-matrix-proofs` 11 (13 to 19 cuts), `module-loading` 1 (`load.bend::body`, 15). Every one fits; the largest state is 59,979.
+- Compositions. The three largest are `literal-source-machine` 47,639, `checking` 47,311 and `pattern-matrix-proofs` 46,848 of 48,000, in (b) and (c) alike. The composition bound counts source bytes only and the task is not source, so restoring the original tasks cannot make a group unavailable, and none is. The margins are 361, 689 and 1,152 bytes. The split of the matrix group in `39f7b778` (its union was 51,860 bytes against 48,000) is already the honest fix for that bound, and it stays.
+- Gates. `npm run -s gates` on the final tree passes 20 of 20. Its receipt classes equal those of the run on main: 65 identical, 21 volatile-only and 2 semantic, and the two semantic ones are bootstrap `progress.json` and `reference.json`, already semantic on main. The `perch-context` receipt is volatile-only (key order); only its input digests, lists and test count moved.
+- Controls and mutants. Seven controls (forty in all) and five mutants (thirteen in all) are killed by assertion: marker dropped, primary source shortened, tier skipped, tie-break dropped (the choice then depends on the order the entries were filled in) and row not recorded. The order control includes a tie between `Pa` and `pa`, which code point and most locales order differently; the tests pass under the default, `en_US.UTF-8` and `da_DK.UTF-8`. Held-out: the three generated stress inputs the backlog listed as too large. Before, all three threw at the interface tier. Now `deep-call.bend` fits (252 declarations), `deep-stack.bend`'s 162 declarations fit (its composition is over 48,000 as a file, which is a separate bound), and `scale-catalog/main.bend` still fails, correctly: 723 collaborators (720 cut), a collaborator list of 81,057 bytes and 85,393 bytes of datatypes, laws and notes retained.
+
+Remaining uncertainty / next trigger:
+- How the judge rates a declaration whose collaborators are only names is not calibrated, so the tier stays advisory. Its rows show in receipts as `context-state-names-only`; no live review of a names-only state was made.
+- The tier can fail although the primary source, the task and the names alone would fit, because datatypes, laws and notes are kept whole. `run` carries 8,200 bytes of datatypes and 6,147 bytes of `unresolved` notes. Compacting the notes would help, but it changes every state, so it needs its own measured increment.
+- The coordinator applies the reverts on `literals-integ` after this merges. 53 units will then carry names-only rows, and a live review of a few of them is the first calibration evidence to collect.
+- The composition margins above are thin. If a merge pushes a group over 48,000, the smallest honest fix is a smaller selected group, not a change to source.
+
+
+## 2026-09-29 — perch-cap round 1: canonical complete names-only states
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `e02a06b1`; `scripts/perch-context-interfaces.mjs` and its offline controls.
+Evidence links and usage receipt IDs: confirmed locale witness in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; additive requirements frozen in `2a3f4f82` ([round-1 expectations](../tests/perch-context/round1-expectations.json)); [production-hash control](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): existing tests compared cut order without exercising locale-sensitive interface-row insertion. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider or live Perch call; rubric unchanged.
+Judgment: confirmed. Equal cuts still had different complete state hashes.
+Change and why: canonicalize summary rows only after both earlier returns, and after adding each names-only row. Compare Unicode scalar sequences rather than UTF-16 code units. Existing early-return states are preserved.
+Clean / broken / held-out evidence and deterministic checks: 54 offline tests pass (40 existing controls, 13 existing semantic mutants, one new complete-state locale control). The new fixture passes the pinned seed checker. Both locales encode 59,829 bytes with SHA-256 `a3713c8ccedd645eee88edd3620dc032ee1c7b5d3d616d7247c7df46a5dc9d7c`; production `prepareStyleTargets` reports the same hash. Full gate execution follows the boundary repair.
+Remaining uncertainty / next trigger: the confirmed minimum-boundary finding and exact-saving defect remain for this review round. Names-only judge calibration remains unmeasured and advisory.
+
+
+## 2026-09-29 — perch-cap round 1: exact savings and scalar ties
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `db6035e2`.
+Evidence links and usage receipt IDs: review's `independent-context.mjs` in `/private/tmp/knot-codex/perch-cap/scratch/`; [additive independent whole-state controls](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): a one-byte saving omitted by the old formula caused an unnecessary second signature cut. UTF-16 comparison contradicted the documented scalar order. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): offline tooling only; rubric and provider configuration unchanged.
+Judgment: confirmed for both minor semantic findings.
+Change and why: rank the complete encoded saving, including byte/count digits and array commas; recompute after each cut. The first warning's common setup cost is accounted for. Use the scalar comparator already established by the locale fix.
+Clean / broken / held-out evidence and deterministic checks: 59 offline context tests pass: 40 original controls, three additive controls, and 16 semantic mutants. Independent projections pin a one-cut exact-cap witness and a ranking change after the first cut. The Unicode witness chooses U+E000 before U+10000. Three new mutants separately break summary collation, counter savings and scalar comparison; all are killed by assertions. Existing frozen expectations remain unchanged; the tier-skipping mutant is re-expressed at the new loop with its same witness.
+Remaining uncertainty / next trigger: the minimum-boundary finding remains for the next commit. Full gates and the complete additive gate registration follow that repair; no live calibration is claimed.
+
+
+## 2026-09-29 — perch-cap round 1: restore the required failure boundary
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `f12e1054`; contract amendment before the boundary implementation.
+Evidence links and usage receipt IDs: the second confirmed finding in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; executor prompt `perch-cap.md:28`; [additive expectations](../tests/perch-context/round1-expectations.json). The new controls independently reproduce the 66,659-byte rejection on the seed-accepted 400-datatype witness and a 61,649-byte rejection on a seed-accepted type/law witness.
+Waste or missed behavior / measured effort (or unknown): the prior local contract substituted exhaustion of collaborator entries for the prompt's primary/task/names minimum. The retained metadata was not tested at that boundary. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider call; all witnesses run on pinned seed Bend 2.0.29 at `574b6d3` with telemetry disabled.
+Judgment: confirmed. No D1–D26 decision or standing coordinator ruling accepts the broader failure condition.
+Change and why: amend CONTRACT items 10 and 12–14 to restore the original prompt and preserve honest type/law evidence. Compact metadata before omitting contract text. Any unavoidable omitted contract stays complete in provenance, has its qualified name and explicit reason, and withholds qualification through truncation. Existing JSON pins and compiler assertions remain unchanged.
+Clean / broken / held-out evidence and deterministic checks: seed checks succeed for the new boundary witnesses; the two acceptance controls intentionally fail before implementation with the exact oversize errors above. Ordinary early-return states and type closure controls stay binding.
+Remaining uncertainty / next trigger: execute the boundary repair against these already-fixed requirements, register all additive controls/mutants and run every deterministic gate. Names-only calibration remains coordinator-only and unmeasured.
+
+
+## 2026-09-29 — perch-cap round 1: fit the literal minimum with honest contract limits
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after contract amendment `9e91a4a7`.
+Evidence links and usage receipt IDs: [fixed round-1 controls](../tests/perch-context/round1-expectations.json) and [independent assertions](../tests/perch-context-round1.test.mjs). Local logs are `.local/perch-cap/review-round1/`.
+Waste or missed behavior / measured effort (or unknown): the former last tier exhausted helpers while retained metadata still forced failure. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): unchanged rubric; no model, provider or live Perch call.
+Judgment: confirmed and repaired.
+Change and why: compact source locations and duplicate audit rows first, retaining complete metadata and a visible digest. The 400-datatype witness keeps all type/law source. Contract text that still cannot fit becomes explicitly marked names, with complete omitted entries and file hashes in provenance, contract-limit reasons, and truncation in provenance/state. Metadata/import compaction cannot grant complete-context qualification. At the literal minimum per-entry names-only markers suffice; optional notes/digests cannot move the failure boundary. Primary and task never change.
+Clean / broken / held-out evidence and deterministic checks: all 65 offline context tests pass: 47 controls and 18 assertion-killed semantic mutants. Seed checks pass for the locale, datatype and two type/law fixtures. Exact minimum fits; one byte below fails with the new required-minimum diagnostic. Main's 957 declaration and 17 composition hashes match the base (974/974). `gates:verify` passes 20 tests; `lint:verify` previously passed 192 tests plus eight law-rule wiring controls and runs again in the full gate. Offline catalog lists 57 rules with dotenv loading disabled; an initial guard deliberately blocked the CLI's unconditional environment-loader entry before any file read.
+Remaining uncertainty / next trigger: full registered gates and owned receipt refresh follow this implementation checkpoint. Judge calibration remains unmeasured; required contract cuts are structural limits, and ordinary collaborator cuts remain advisory.
+
+
+## 2026-09-29 — perch-cap checkpoint: refresh generated census dependencies
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, implementation `32af13bb`.
+Evidence links and usage receipt IDs: first full gate attempt `.local/gates/run-n1fcd36r/`; census logs and `census-check.log` under `.local/perch-cap/review-round1/`.
+Waste or missed behavior / measured effort (or unknown): expanded `tests/perch-context/check.py` changed its generated census input hash. The first full run correctly refused the stale inventory. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no Perch model; deterministic census only.
+Judgment: confirmed stale generated evidence.
+Change and why: `npm run -s census` updates exactly the check.py SHA-256 in `inventory/accepted.json` and that inventory's dependent SHA-256 in `inventory/selfhost.json`. No census policy, classification, fixture outcome or compiler expectation changes.
+Clean / broken / held-out evidence and deterministic checks: inspect the two one-line diffs; `npm run -s census:check` exits 0 on the refreshed artifacts.
+Remaining uncertainty / next trigger: run the complete gate command again. Prevention: after changing the context gate's check.py, regenerate and check census inventories before exporting a full gate run.
+
+
+## 2026-09-29 — perch-cap receipt-refresh correction
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, receipt checkpoint `a822604d`.
+Evidence links and usage receipt IDs: retained normalized context receipt from `.local/gates/run-n1fcd36r/normalized/tests/perch-context/receipts/context.json`.
+Waste or missed behavior / measured effort (or unknown): the runner had removed its scratch source before the refresh lookup. The shell continued after that failed lookup and committed the older local receipt. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no model call; deterministic receipt handling.
+Judgment: confirmed operator error; the prior commit's input-validation claim is superseded here.
+Change and why: copy the retained fresh normalized receipt only after its 65-test status and every input SHA-256 match the current worktree. Keep the earlier commit and correct it in a new one.
+Clean / broken / held-out evidence and deterministic checks: all recorded input hashes now match; 47 controls and 18 mutants passed in the exported gate. Compiler group observations remain unchanged.
+Remaining uncertainty / next trigger: run the complete gate command against the refreshed census and context receipt. Prevention: use `set -e` for dependent validation/commit commands and the retained normalized path after gate cleanup.
+
+
+## 2026-09-29 — perch-cap round 1: final deterministic disposition
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, executable inputs at `8a265822`; evidence-only commits follow.
+Evidence links and usage receipt IDs: [full report](compiler-campaign/perch-cap-review-round1.md), [exact gate/measurement artifact](compiler-campaign/perch-cap-review-round1-measurements.json), `.local/gates/run-_a32vyij/summary.json`.
+Waste or missed behavior / measured effort (or unknown): final full gate execution measured 450.800934 seconds; no repair-effort estimate is inferred from it.
+Rule + hash / requested and resolved model (or unknown): rubric unchanged; 0 provider/live Perch requests.
+Judgment: both major and all four minor r0 findings fixed; none disputed.
+Change and why: complete-state canonicalization, exact recomputed savings/scalar ties, original minimum boundary with honest contract limits, and reproducible Bun/scratch-HEAD selection.
+Clean / broken / held-out evidence and deterministic checks: 20/20 registered gates exit 0; context 47 controls/18 mutants; lint 192 tests/8 law rules; wrapper verification 20 tests; catalog 57 rules. All 974 main manifest hashes and the complete preflight receipt are byte-identical. Final receipt classes are 65 identical, 21 volatile-only and 2 bootstrap semantic; only the owned context receipt is refreshed.
+Remaining uncertainty / next trigger: coordinator integration, shared bootstrap receipt refresh, motivating-branch reconciliation and live calibration. Contract omissions withhold qualification; ordinary names-only contexts remain advisory.
+
+
+### 2026-09-29 / perch-cap pre-review C3 / prior head 591d451d
+
+- Evidence links and usage receipt IDs: executor condition `24d9a4ea7e06181d0715`; `tests/perch-context/check.py` differed from base `88f02bf1`; the previous coverage is in `compiler-campaign/perch-cap-review-round1.md`.
+- Waste or missed behavior / measured effort: unknown. Additive tests were wired through a frozen runner without coordinator authorization. A commit message cannot authorize that edit.
+- Rule + hash / requested and resolved model: deterministic `C3.frozen-edit`; no provider or live Perch call.
+- Judgment: confirmed. Restore the frozen runner byte-for-byte instead of seeking an exception.
+- Change and why: isolate the unchanged seven round-1 controls and five mutants in the additive `perch-cap` gate and its own receipt. Keep the original context gate, expectations and all regression witnesses binding; generic receipt counting needs no existing-branch edit.
+- Clean / broken / held-out evidence and deterministic checks: the restored context gate passes 40 controls and 13 assertion-killed mutants; the additive gate passes seven controls and five assertion-killed mutants. Both remain selected by `lint:verify`. Full gates pass 21/21, exit 0 (430.961106 seconds); gates:verify passes 20 tests, lint:verify passes 192 tests and eight law-rule controls, and the guarded rule catalog lists 57 rules. Exact per-gate counts are in compiler-campaign/perch-cap-precheck-fix.md.
+- Remaining uncertainty / next trigger: names-only judge calibration remains unmeasured and advisory. Future review additions use a new gate entry and receipt rather than editing a frozen runner; any necessary nonadditive change remains a coordinator decision.
+
+
+## 2026-09-29 — nest round 13: missed D4 classes and default-copy cost
+
+[REVIEW-13](../tests/compiler-nest/receipts/REVIEW-13.md) records three confirmed false-Invalid families that the
+previous generator excluded, and an exponential core-reader cost that the matrix-visit counter did not bound.
+The fixes freeze the seed first, use one operator/term-form vocabulary, draw those families in fuzz12, and bound
+every default copy at 65,536 core nodes. The class grid and zoo remain independent precision controls. The two
+D21 general laws remain open; budget exhaustion is no source rejection. Live Perch was not called.
+
+Mutation procedure: type-check the implementation before testing a proof failure, and require the failure in the
+law file. `falsify.py` now commits that procedure for rounds 12 and 13. A new brace-only mutant initially used affine
+U32 fields twice, then targeted `touch-pattern-inner-space` (a valid inner space, so it survived). Reusable fields
+and the frozen `w1-flat-space` witness (`On {}`, seed-rejected) produce the intended semantic kill in both lanes.
+Choose the seed-rejected gap witness before building the mutant; preserve a separate valid touching-brace control.
+The original round-6 shifted predicate still fails at the return arrow; the new call-site mutant avoids that side effect.
+
+Census approval records every declaration separately. The corpus-budget driver reports Unsupported `src` files
+separately, rather than treating a lexer/parser stop as proof that a compiler-sized core fits. Per-file style preflight
+blockers remain distinct from the complete manifest groups; no style axis is rated by an offline preflight.
+
+## 2026-09-29 — nest prechecks: source events and mutation isolation
+
+[REVIEW-14](../tests/compiler-nest/receipts/REVIEW-14.md) fixes the public parser's
+constructor-pattern declaration-order false acceptance with the catalog's event
+rule. Constructor expressions retain forward references. Ten sources were frozen
+from the seed before the repair; the new gate checks both lanes, all five phases,
+artifact preservation and three type-correct semantic mutants. This is bounded
+regression evidence; the two general D21 lowering obligations remain open.
+
+Check every mutation anchor before building any lane. The first new-gate attempt
+reached mutation setup after fixture replay, then found a shared substring in both
+constructor and datatype event rules. The gate now validates all unique anchors
+up front and names the full constructor-event call.
+
+Adding an earlier validation layer can mask an existing semantic mutant. The first
+full run rejected the audit-skips-bodies witness in parse.events before the mutated
+matrix audit ran. The repair retains the standalone parse audit; checked execution
+uses the syntax state machine then the comprehensive checker. The immutable witness,
+expectation, diagnostic and mutant remain. Three affected checker mutants type-check
+and produce six semantic kills in the native and Bun lanes. Choose each CLI's
+validation authority before duplicating a rule across phases.
+
+Imported full bodies also exceeded the bounded manifest's composition cap. Import
+interfaces and each collaborator's existing full-body group retain complete bounded
+coverage without changing the cap or targets. File preflight still reports its
+truncation, composition and task limits. Offline structural coverage is neither a
+style rating nor semantic acceptance. No live Perch calls occurred.

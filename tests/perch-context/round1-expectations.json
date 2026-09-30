@@ -1,0 +1,26 @@
+{
+  "basis": "Literal controls fixed before review-round-1 repairs; confirmed findings at e02a06b1. Existing expectations.json and review-expectations.json remain frozen.",
+  "controls": [
+    "review round 1: names-only complete states and hashes agree across process locales",
+    "review round 1: savings include byte counters and are recomputed after each cut",
+    "review round 1: equal savings compare Unicode scalar sequences",
+    "review round 1: the seed-accepted datatype boundary keeps complete type and law text",
+    "review round 1: unavoidable contract omissions remain explicit and cannot qualify",
+    "review round 1: only the required names minimum can cause a fitting failure",
+    "review round 1: oversized audit metadata retains complete provenance"
+  ],
+  "mutants": [
+    "names-only-summary-order-locale-dependent",
+    "names-only-saving-ignores-counters",
+    "names-only-tie-break-uses-utf16",
+    "names-only-required-minimum-skipped",
+    "names-only-contract-omission-unmarked"
+  ],
+  "locales": ["en_US.UTF-8", "da_DK.UTF-8"],
+  "state_byte_limit": 60000,
+  "composition_byte_limit": 48000,
+  "seed": "bend-2.0.29-574b6d3",
+  "seed_boundary_datatypes": 400,
+  "seed_boundary_task_bytes": 16000,
+  "minimum_contract": "Never shorten primary source or task. Preserve complete type/law text whenever it fits after metadata compaction. If required contract text must be omitted, retain its qualified name, hash-pinned provenance and explicit truncation; qualification stays unavailable. Throw only if the primary, task and complete names-only state exceed the encoded-state cap."
+}

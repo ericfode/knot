@@ -22,7 +22,20 @@ On macOS the runner resolves the toolchain clang once (`xcrun --find clang`) and
 passes it to every gate as `CC`, unless the caller set `CC`. The seed probes
 `$CC` before `clang`. The `/usr/bin/clang` shim intermittently printed nothing
 under parallel load, which the seed reported as "found no clang". The resolved
-binary is the same compiler the shim forwards to.
+binary is the same compiler the shim forwards to. Some gate programs rebuild
+their own environment for seed and mutant builds, keeping `PATH` but dropping
+`CC` and `SDKROOT`, so the runner also puts a `clang` wrapper first on `PATH`.
+The wrapper runs the resolved compiler and supplies the SDK when it is missing,
+which keeps those paths off the shim. `test_runner` pins it with a trimmed
+environment.
+
+The same message also appears under heavy host load with the real compiler on
+PATH: the seed's `spawnSync` probe returns nothing. It is a host fault, not an
+assertion, so the runner reruns a gate once when the gate failed and its output
+contains `bend needs clang`. The result records the first attempt under
+`retried` (its logs keep the `.retry` suffix on the second attempt), and the
+normalized summary leaves `retried` out, so a retried pass normalizes like a
+clean one. A gate that fails twice stays failed. Other failures are never retried.
 
 Harness wall-clock guards inside the gate scripts (the seed-build and CLI
 `run()` timeouts) scale with `KNOT_GATE_TIMEOUT_SCALE`. The runner sets it to 4
@@ -35,6 +48,45 @@ Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
+this branch retains the main gates and appends `nest`, `nest-review`,
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9`, `nest-round10`, `nest-round11`, `nest-sweep11`, `nest-round12` and `nest-round13`. `nest-review` checks the round-2 reviewer
+repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
+comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
+empty binders, line-broken headers), `nest-round4` the round-4 recursion
+through rebuilt strict descendants and `nest-round6` the round-6 detached
+braces (a space, comment or line break between a constructor name and its
+`{`) and `nest-round7` the round-7 let promotions (a `+` row never raises a
+let binder's quantity) with the reviewer's 1,500-program let/alias generator
+and `nest-round8` the round-8 Type-kind promotions (a `+` binder's kind is
+judged where the match frontier binds it) with the reviewer's 3,000-program
+Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
+unannotated let of a binder that a positive branch refined to a constructor
+needs an annotation), the dotted-binder stopgap (every dotted binder is
+Unsupported) and the line-break stopgap (a line break in call or constructor
+arguments, or a second arm on an arm's line, is Unsupported), and
+`nest-round10` the round-10 glue rules (a `+` or `-` marker and a return arrow
+are read touching what follows: a spaced `+` between row columns, a spaced
+marker after a let and a split `->` are rejected, while a marker first in a body
+and a promotion that starts a row or follows a comma stay spaced) and the
+whitespace stopgaps (arguments separated by whitespace alone, `++y`, a let
+split across lines and an arm body at its `case` column are Unsupported), and
+`nest-round11` the round-11 audit (every row of every match is validated, in a
+discarded body too), the binder name rule (`+` names no earlier datatype), the
+hidden type name (a binder hides a datatype of its name from later types) and the
+layouts the parser answers Unsupported, with `nest-sweep11` running its parser
+mutants and `fuzz11.py`, 6,100 fixed-seed programs compared with the seed, each in
+both compiler lanes with its own semantic mutants, and `nest-round12` the round-12 first-row marks (a `+` on a field of
+the first row that starts a constructor marks that field in every row below its split), the term suffixes (an operator,
+a call, an index, an offload, a lambda after a term, and `+name` as a term, are Unsupported wherever a term ends) and
+the oracle's atomic wrapper writes, with 26 semantic mutants and `fuzz12.py`, 3,000 fixed-seed programs compared with
+the seed, and `nest-round13` the round-13 vocabulary and precision (an operator token that continues a term is
+`Unsupported parse operator`, another unmodeled form `term-form`; a spaced `+` or `-` after a let's value is Invalid only
+for the marker gap; `+name`, a glued `x+y` and a hole after an expression argument, and a body or statement that starts
+with a bracket, a numeral or a hole at another column, are Unsupported) and the core budget (a match's core may not exceed
+65,536 nodes, every copy counted), with 208 seed-frozen fixtures, the reviewer's 684-cell class grid and 64-form zoo
+in both lanes, 27 semantic mutants and the classification of the Bun lane's own fault on a large module as Exhausted
+(host). `fuzz12.py` now also draws the forms of both findings. The nest gates scale their
+harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. `census:test` runs `npm run -s census:test`
@@ -55,7 +107,21 @@ delta ([IO-ABI.md](IO-ABI.md#knot-io-2-delta)). Its counts record the foreign
 reference, seed-witness, read, parity and mutant totals; it writes
 `tests/compiler-io-abi-2/receipts/{host,reference}.json`.
 
+Since then the perch-cap increment, the names-only tier of the encoded-state fitting, has
+added seven controls and five mutants to the Perch context gate (40 controls and 13
+mutants in all); its expectations are items 10 to 14 of the
+[context contract](../../tests/perch-context/CONTRACT.md).
+
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
+
+`nest-precheck` replays ten seed-frozen precheck probes and declaration-order
+controls through the parser, checker, evaluator and both emitters in both
+compiler lanes. A constructor pattern resolves at its source declaration event
+before `Parsed` is exposed; constructor expressions retain forward references.
+It also preserves the standing operator and dotted-binder prefix rulings,
+checks rejected compilation preserves existing artifacts, and kills three
+type-correct semantic mutants in both lanes. It writes only the owned
+`tests/compiler-nest/receipts/precheck.json`.
 
 - It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
 - It then runs Knot's `check-cli` and `eval-cli` on each case.
@@ -67,6 +133,11 @@ The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/
 - The gate writes only `tests/compiler-selfhost/receipts/selfhost.json`.
 - An increment that lands a need flips it in `expectations.json`, and the gate
   then holds that increment to its cases.
+
+The prechecks suite's own verification (`npm run -s prechecks:verify`: its unit tests against synthetic clean and broken repositories, its semantic mutants and the Perch wiring test for its seven advisory rules, receipt `tests/prechecks/receipts/prechecks.json`) is deliberately not a registered gate: it takes 150 to 390 seconds, and every increment's full gate run would pay for it while only a change to `scripts/prechecks/` or `tests/prechecks/` can affect it. Run it whenever either changes; the coordinator runs it before merging such a change. The suite itself is not a gate either: `npm run -s prechecks` reports conditions for the
+implementer and the reviewers and is not part of `npm run gates`. Its historical controls (accepted tips as clean controls, confirmed
+regressions as broken ones) run with `python3 scripts/prechecks/replay.py` in a checkout that has the campaign history, because the
+gate's export has none.
 
 Semantic receipt drift is reported but does **not** fail the check. It does not
 make the current execution fail an unchanged assertion.
@@ -83,7 +154,8 @@ Full stdout/stderr logs, `snapshot.json`, `dependencies.json`, normalized
 receipts, and unified semantic diffs remain alongside the summary. Scratch
 sources, build products, and dependency caches are removed by default;
 `--keep-scratch` retains them. `--timeout` sets a per-gate wall limit (default
-900 seconds); timeout kills that process group and records `exhausted`.
+1,800 seconds; 900 let the eight nest gates, each rebuilding its lanes, exhaust
+under campaign load); timeout kills that process group and records `exhausted`.
 
 To compare two runs of unchanged inputs, compare their entire `normalized`
 objects, or byte-compare their `normalized/` receipt trees. Real timings and run
@@ -244,3 +316,52 @@ independent completion record. Keep the compiler's Invalid, Unsupported,
 Exhausted, host and internal observations intact inside the retained evidence;
 wrapper process failures are a separate summary status, never a judgment of
 the source language.
+
+
+## perch-cap review round 1 (2026-09-29)
+
+The additive round-1 controls are frozen separately in
+`tests/perch-context/round1-expectations.json`; the earlier frozen JSON rows stay
+unchanged. The current `perch-context` gate runs 47 controls and 18 semantic
+mutants (65 tests), the complete seed signature control, and two byte-identical
+compiler-manifest preflights. Seven new controls cover complete state hashes
+across locales, exact recomputed savings, Unicode scalar ties, the seed-accepted
+400-datatype boundary, explicit contract omissions, the exact required names
+minimum and one byte below it, and oversized audit/import metadata. Five new
+mutants separately break summary order, counter savings, scalar comparison,
+minimum fitting and contract truncation. Existing mutants retain their witnesses
+at the repaired mutation sites. No compiler assertion or rubric changes.
+
+Use the frozen io-host observation's Bun **1.3.14**. On this host it is installed
+at `/Users/ericfode/.bun/bin/bun`; select that directory first on PATH and verify
+`bun --version` before the gate run. Bun 1.3.11 is a different frozen observation,
+not a reason to amend io-host's expectations. Scratch `lint:rules` also needs a
+committed HEAD; bind the archive's commit using a read-only object alternate,
+then `git update-ref HEAD <archived-commit>` inside the scratch export. Keep
+telemetry disabled and environment-file loading disabled for this offline
+catalog command. See the round-1 verification report for the execution recipe.
+
+
+Perch-context checkpoint procedure: when `tests/perch-context/check.py` changes,
+run `npm run -s census` and `npm run -s census:check` before the full gate export.
+Review the generated input hashes in `inventory/accepted.json` and the dependent
+hash in `inventory/selfhost.json`; this refresh changes no census policy or
+compiler expectations. Refresh only the owned context receipt after fresh
+execution, and leave unrelated gate receipts for the coordinator.
+
+## perch-cap frozen-runner correction (2026-09-29)
+
+Pre-review C3 requires `tests/perch-context/check.py` to remain byte-identical
+to the campaign base `88f02bf1`. The added review-round-1 coverage now runs in
+the separate `perch-cap` gate, appended to the registry and required-name set.
+Its entry is `python3 -B tests/perch-context/check-round1.py`; its owned output
+is `tests/perch-context/receipts/round1.json`. Generic receipt counting reads
+the fixture and mutant arrays without changing any existing gate branch.
+
+The restored `perch-context` gate retains 40 controls, 13 mutants, the seed
+signature check and two identical manifest preflights. The additive gate holds
+the unchanged round-1 expectations: seven controls and five assertion-killed
+mutants, 12 tests. The combined coverage remains 47 controls and 18 mutants.
+Both test families also run under `lint:verify`; no mutation witness or frozen
+expectation is removed. The registry now contains 21 gates. The earlier
+20-gate executions above remain historical evidence of their recorded revisions.

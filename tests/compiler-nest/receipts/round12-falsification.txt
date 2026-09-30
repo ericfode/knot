@@ -1,0 +1,13 @@
+# Round-12 witness laws: each mutation is one replacement in a copy of src/; the named proof entry is checked with the pinned seed
+# and must fail. `first failing law` is where the seed stops; it is the named law unless another law of the same file fails first.
+
+marked-promotes-every-field  matrix-PROOF.bend  law matrix-LAWS.unmarked_first_row_witness           first failing law: matrix-LAWS.unmarked_first_row_witness
+marked-never-promotes        matrix-PROOF.bend  law matrix-LAWS.first_row_marks_witness              first failing law: matrix-LAWS.first_row_marks_witness
+bang-without-paren           PROOF.bend         law LAWS.suffix_witness                              first failing law: LAWS.suffix_witness
+continuation-needs-no-bang   PROOF.bend         law LAWS.continues_witness                           first failing law: LAWS.continues_witness
+every-name-a-lambda          PROOF.bend         law LAWS.lambda_witness                              first failing law: LAWS.lambda_witness
+erased-term-unsupported      PROOF.bend         law LAWS.promoted_term_witness                       first failing law: LAWS.promoted_term_witness
+body-suffix-invalid          PROOF.bend         law LAWS.suffix_ends_a_body                          first failing law: LAWS.suffix_ends_a_body
+marker-an-operator           PROOF.bend         law LAWS.marker_ends_no_body                         first failing law: LAWS.suffix_witness  (an earlier law of the file fails first)
+let-suffix-invalid           PROOF.bend         law LAWS.suffix_ends_a_let                           first failing law: LAWS.suffix_ends_a_let
+promoted-term-invalid        PROOF.bend         law LAWS.promoted_term_is_unsupported                first failing law: LAWS.promoted_term_is_unsupported

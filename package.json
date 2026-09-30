@@ -19,6 +19,12 @@
     "bench:compare": "node bench/compare.mjs",
     "bench:baseline": "node bench/run.mjs --baseline",
     "bench:verify": "node --test bench/tests/*.test.mjs && node bench/tests/smoke.mjs",
+    "prechecks": "python3 -B scripts/prechecks/run.py",
+    "prechecks:verify": "python3 -B tests/prechecks/check.py",
+    "prechecks:test": "python3 -B -m unittest discover -s scripts/prechecks/tests -t scripts/prechecks -p 'test_*.py'",
+    "prechecks:perch": "node scripts/prechecks-perch-run.mjs",
+    "prechecks:packets": "python3 -B scripts/prechecks/packets/build.py",
+    "prechecks:replay": "python3 -B scripts/prechecks/replay.py",
     "perch": "node scripts/perch-workflow.mjs",
     "lint": "node scripts/perch-workflow.mjs check",
     "lint:scan": "node scripts/perch-workflow.mjs scan",
@@ -32,7 +38,7 @@
     "review:laya": ".local/perch-laya/venv/bin/python scripts/laya-review.py",
     "review:kev": ".local/kev/repo/.venv/bin/python scripts/kev-review.py",
     "review:julia": ".local/julia/repo/.venv/bin/python scripts/julia-review.py",
-    "lint:verify": "node --test tests/perch-workflow.test.mjs tests/perch-incremental.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs tests/perch-style.test.mjs tests/perch-potential.test.mjs tests/perch-style-role.test.mjs tests/perch-style-preflight.test.mjs tests/perch-style-manifest.test.mjs tests/perch-style-manifest-mutants.test.mjs tests/perch-style-campaign.test.mjs tests/perch-context.test.mjs tests/perch-context-integration.test.mjs tests/perch-context-mutants.test.mjs && node scripts/check-law-rule-wiring.mjs",
+    "lint:verify": "node --test tests/perch-workflow.test.mjs tests/perch-incremental.test.mjs tests/perch-bend-parser.test.mjs tests/perch-bend-integration.test.mjs tests/perch-source-rules.test.mjs tests/perch-style.test.mjs tests/perch-potential.test.mjs tests/perch-style-role.test.mjs tests/perch-style-preflight.test.mjs tests/perch-style-manifest.test.mjs tests/perch-style-manifest-mutants.test.mjs tests/perch-style-campaign.test.mjs tests/perch-context.test.mjs tests/perch-context-integration.test.mjs tests/perch-context-mutants.test.mjs tests/perch-context-round1.test.mjs tests/perch-context-round1-mutants.test.mjs && node scripts/check-law-rule-wiring.mjs",
     "postinstall": "node scripts/install-perch-bend.mjs"
   },
   "devDependencies": {

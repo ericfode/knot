@@ -1,0 +1,20 @@
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/syntax.bend::touches src/parse.bend::run src/parse.bend::header src/LAWS.bend::touches_witness src/LAWS.bend::touching_brace src/LAWS.bend::detached_brace src/LAWS.bend::joined_brace_witness
+Style preflight (offline, 0 provider requests): 7 declarations in 3 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (10448 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 0 {}.
+Supporting role impossible (incomplete role context): 0 {}.
+Composition (required always): unavailable [unresolved_composition_context]; 32638/48000 bytes; unresolved {"collaborator-not-in-group":4}.
+(exit 3)
+
+# node scripts/perch-style.mjs --preflight --task=tests/compiler-nest/SPEC.md src/syntax.bend src/parse.bend src/LAWS.bend src/PROOF.bend
+Style preflight (offline, 0 provider requests): 102 declarations in 4 files; parser bend-2.0.29-574b6d3-observer-v3+law-template-arity.
+Task: task-file (10448 bytes).
+Truncated contexts (Anticipation/Payoff unavailable, cannot pass): 5 {"caller-or-byte-limit":3,"context-file-limit":2}.
+Supporting role impossible (incomplete role context): 5 {"context-file-limit":2,"truncated-context":5}.
+Composition (required always): available; 40355/48000 bytes; unresolved {}.
+truncated: src/syntax.bend::Token caller-or-byte-limit
+truncated: src/parse.bend::Parsed context-file-limit
+truncated: src/parse.bend::Mode context-file-limit
+truncated: src/parse.bend::invalid caller-or-byte-limit
+truncated: src/parse.bend::unsupported caller-or-byte-limit
+(exit 3)

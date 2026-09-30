@@ -1,0 +1,21 @@
+type Flag is Data:
+  Off{}
+  On{}
+
+type Q is Data:
+  Q0{}
+  Q1{}
+  Q2{}
+  Q3{}
+  Q4{}
+
+def f(a: Q, b: Q, c: Q, d: Q) -> Flag:
+  match a b c d:
+    case Q0{} _ _ _: On{}
+    case _ Q0{} _ _: Off{}
+    case _ _ Q0{} _: On{}
+    case _ _ _ Q0{}: Off{}
+    case _ _ _ _: On{}
+
+def main() -> Flag:
+  f(Q1{}, Q1{}, Q1{}, Q1{})

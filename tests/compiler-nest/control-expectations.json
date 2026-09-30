@@ -1,0 +1,90 @@
+{
+  "basis": "Pinned seed and literal reviewed resource outcomes, fixed before Knot control execution.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "fixtures": {
+    "tree-arena": {
+      "file": "tests/compiler-nest/controls/tree-arena.bend",
+      "sha256": "0f03ff2c01a559805fc426aa42debe59e63b53962de70020ab2e6cda915111b7",
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/controls/tree-arena.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "shallow_seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          ".local/nest/tree-shallow.bend"
+        ],
+        "exit": 0,
+        "stdout": "../../tests/compiler-nest/controls/tree-arena.On{}\n",
+        "stderr": ""
+      },
+      "expectations": {
+        "shallow": {
+          "eval": "Evaluated\t0\t1\tOn{}",
+          "wasm": 1
+        },
+        "main": {
+          "eval": "Evaluated\t0\t1\tOn{}",
+          "wasm_exit": 4,
+          "wasm_diagnostic": "Exhausted\twasm\tarena-overflow"
+        }
+      },
+      "literal_cost": {
+        "deep_height": 12,
+        "deep_leaf_cells": 4096,
+        "deep_fork_cells": 4095,
+        "depth_cells_bytes": 100,
+        "tree_cells_bytes": 81908,
+        "arena_bytes": 65536,
+        "shallow_height": 4,
+        "shallow_total_bytes": 344
+      }
+    },
+    "nested-alias-affine": {
+      "file": "tests/compiler-nest/controls/nested-alias-affine.bend",
+      "sha256": "63f027e14ac1ce27ab0748cad69357b887d9be310b5a4cb5f0c04392c81e9cc3",
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/controls/nested-alias-affine.bend",
+          "--check-only"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : _\n- observed : _ (consumed more than once)\nContext:\n- _11 : Flag<> - On{}\nLocation: read\n20 |   match x:\n21>|     case Box{Pair{On{}, _}}: Off{}\n   |                         ^\n22 |     case Box{p}: both(right(p), right(p))\n"
+      },
+      "expectations": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+        "seed_contains": "consumed more than once"
+      }
+    },
+    "matrix-work": {
+      "file": "tests/compiler-nest/controls/matrix-work.bend",
+      "sha256": "43999b7f6b73c394fbfe20d88f259dc8c5e4246708b55c2f74219cd627ebb6f5",
+      "seed": {
+        "command": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "tests/compiler-nest/controls/matrix-work.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "expectations": {
+        "exit": 4,
+        "diagnostic": "Exhausted\tcheck\tbudget\t",
+        "matrix_work_limit": 4096
+      }
+    }
+  }
+}

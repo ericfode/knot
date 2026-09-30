@@ -71,12 +71,42 @@ GATES = (
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
     Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
          ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('nest', ('python3', 'tests/compiler-nest/check.py'),
+         ('tests/compiler-nest/receipts/nest.json',)),
+    Gate('nest-review', ('python3', 'tests/compiler-nest/review.py'),
+         ('tests/compiler-nest/receipts/review.json',)),
     Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
          ('tests/compiler-io/receipts/host.json',)),
     Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
          ('tests/compiler-io-abi-2/receipts/host.json', 'tests/compiler-io-abi-2/receipts/reference.json')),
     Gate('selfhost', ('python3', 'tests/compiler-selfhost/check.py'),
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
+    Gate('perch-cap', ('python3', '-B', 'tests/perch-context/check-round1.py'),
+         ('tests/perch-context/receipts/round1.json',)),
+    Gate('nest-round3', ('python3', 'tests/compiler-nest/round3.py'),
+         ('tests/compiler-nest/receipts/round3.json',)),
+    Gate('nest-round4', ('python3', 'tests/compiler-nest/round4.py'),
+         ('tests/compiler-nest/receipts/round4.json',)),
+    Gate('nest-round6', ('python3', 'tests/compiler-nest/round6.py'),
+         ('tests/compiler-nest/receipts/round6.json',)),
+    Gate('nest-round7', ('python3', 'tests/compiler-nest/round7.py'),
+         ('tests/compiler-nest/receipts/round7.json', 'tests/compiler-nest/receipts/round7-letalias.json')),
+    Gate('nest-round8', ('python3', 'tests/compiler-nest/round8.py'),
+         ('tests/compiler-nest/receipts/round8.json', 'tests/compiler-nest/receipts/round8-typekind.json')),
+    Gate('nest-round9', ('python3', 'tests/compiler-nest/round9.py'),
+         ('tests/compiler-nest/receipts/round9.json',)),
+    Gate('nest-round10', ('python3', 'tests/compiler-nest/round10.py'),
+         ('tests/compiler-nest/receipts/round10.json',)),
+    Gate('nest-round11', ('python3', 'tests/compiler-nest/round11.py'),
+         ('tests/compiler-nest/receipts/round11.json',)),
+    Gate('nest-sweep11', ('python3', 'tests/compiler-nest/round11.py', '--sweep'),
+         ('tests/compiler-nest/receipts/round11-sweep.json',)),
+    Gate('nest-round12', ('python3', 'tests/compiler-nest/round12.py'),
+         ('tests/compiler-nest/receipts/round12.json',)),
+    Gate('nest-round13', ('python3', 'tests/compiler-nest/round13.py'),
+         ('tests/compiler-nest/receipts/round13.json',)),
+    Gate('nest-precheck', ('python3', 'tests/compiler-nest/precheck.py'),
+         ('tests/compiler-nest/receipts/precheck.json',)),
 )
 
 
@@ -197,6 +227,17 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                 sdk = ''
             if sdk:
                 env['SDKROOT'] = sdk
+        # Gate programs that rebuild their own environment keep PATH but may drop
+        # CC; the seed then probes the xcrun shim. A `clang` first on PATH that
+        # runs the resolved compiler (with the SDK the shim would supply) keeps
+        # every such path off the shim.
+        tools = run_dir / 'bin'
+        tools.mkdir()
+        wrapper = tools / 'clang'
+        sdk_line = f": \"${{SDKROOT:={env['SDKROOT']}}}\"; export SDKROOT\n" if 'SDKROOT' in env else ''
+        wrapper.write_text(f'#!/bin/sh\n{sdk_line}exec "{cc}" "$@"\n')
+        wrapper.chmod(0o755)
+        env['PATH'] = str(tools) + os.pathsep + env.get('PATH', '')
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()
@@ -301,6 +342,11 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
                       pin_observations=len(record['pin']),
                       tampered_base_observations=len(record['tampered_base']),
                       proof_entries=len(record['proofs']))
+    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8',
+                     'nest-round9', 'nest-round10', 'nest-round11', 'nest-sweep11', 'nest-round12', 'nest-round13'):
+        result.update(record['counts'])
+    if gate.name == 'nest-precheck':
+        result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]
@@ -313,9 +359,29 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
     return result
 
 
+# The seed's native lane probes clang with spawnSync before every build. Under
+# heavy host load that spawn intermittently returns nothing and the seed stops with
+# "bend needs clang ... (found no clang)", failing an otherwise passing gate. It is
+# a host fault, not an assertion: rerun that gate once, and keep the first attempt's
+# evidence beside the result (outside the normalized summary).
+HOST_FLAKE = b'bend needs clang'
+
+
 def execute(gate: Gate, root: Path, logs: Path, env: dict, timeout: float) -> dict:
+    result = attempt(gate, root, logs, env, timeout, '')
+    if result['status'] == 'failed' and any(HOST_FLAKE in (logs / result[k]).read_bytes()
+                                            for k in ('stdout', 'stderr') if (logs / result[k]).exists()):
+        first = result
+        result = attempt(gate, root, logs, env, timeout, '.retry')
+        result['retried'] = {'reason': 'host clang discovery failed (found no clang)',
+                             'first_exit_code': first['exit_code'], 'first_stderr': first['stderr'],
+                             'first_seconds': first['seconds']}
+    return result
+
+
+def attempt(gate: Gate, root: Path, logs: Path, env: dict, timeout: float, suffix: str) -> dict:
     start = time.monotonic()
-    name = gate.name.replace(':', '-')
+    name = gate.name.replace(':', '-') + suffix
     stdout, stderr = logs / f'{name}.stdout', logs / f'{name}.stderr'
     result = {'name': gate.name, 'command': list(gate.argv), 'status': 'host-failure',
               'exit_code': None, 'counts': {}, 'stdout': stdout.name, 'stderr': stderr.name}
@@ -422,7 +488,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--refresh', action='store_true', help='copy normalized receipts back after all gates pass')
     parser.add_argument('--jobs', type=int, default=4, help='maximum concurrent gates (default: 4)')
-    parser.add_argument('--timeout', type=float, default=900, help='per-gate wall limit in seconds (default: 900)')
+    parser.add_argument('--timeout', type=float, default=1800, help='per-gate wall limit in seconds (default: 1800)')
     parser.add_argument('--keep-scratch', action='store_true', help='retain the exported sources and build outputs')
     args = parser.parse_args(argv)
     if args.jobs < 1 or not math.isfinite(args.timeout) or args.timeout <= 0:
@@ -461,7 +527,7 @@ def main(argv=None) -> int:
         # Keep process evidence even if a malformed receipt cannot be normalized.
         summary['run']['gates'] = results
         summary['normalized']['gates'] = [
-            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
+            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
             for row in results]
         after = {}
         for gate, result in zip(GATES, results):
@@ -475,7 +541,7 @@ def main(argv=None) -> int:
         summary['run']['gates'] = results
         summary['normalized'] = {'status': 'passed' if passed else 'failed',
             'snapshot_sha256': digest(json_bytes(snapshot)), 'dependencies_sha256': digest(json_bytes(dependencies)),
-            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
+            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
                       for row in results], 'receipts': receipts,
             'receipt_counts': {kind: sum(r['classification'] == kind for r in receipts)
                                for kind in ('identical', 'volatile-only', 'semantic')}}

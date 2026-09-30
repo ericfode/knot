@@ -5,6 +5,7 @@ import io
 import json
 import os
 from pathlib import Path
+import subprocess
 import sys
 import tempfile
 import time
@@ -243,6 +244,48 @@ class ExecutionTests(unittest.TestCase):
             self.assertEqual('passed', good['status'])
             self.assertEqual({'tests': 3, 'law_rules': 8}, good['counts'])
 
+    def test_host_clang_flake_is_retried_once(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            env = dict(os.environ, BEND_NO_TELEMETRY='1')
+            marker = root / 'attempts'
+            flaky = ('import sys, pathlib; p = pathlib.Path(sys.argv[1]); n = int(p.read_text()) if p.exists() else 0; '
+                     'p.write_text(str(n + 1)); '
+                     '(print("# pass 3\\nPASS: eight law rules;"), sys.exit(0)) if n else '
+                     '(print("Error: bend needs clang 14 or newer to build binaries (found no clang)", file=sys.stderr), sys.exit(1))')
+            good = run.execute(run.Gate('lint', (sys.executable, '-c', flaky, str(marker))), root, root, env, 5)
+            self.assertEqual('passed', good['status'])
+            self.assertEqual(1, good['retried']['first_exit_code'])
+            self.assertEqual('2', marker.read_text())
+            # Twice flaky stays failed, with both attempts' evidence.
+            always = ('import sys; print("bend needs clang 14 (found no clang)", file=sys.stderr); sys.exit(1)')
+            bad = run.execute(run.Gate('always', (sys.executable, '-c', always)), root, root, env, 5)
+            self.assertEqual('failed', bad['status'])
+            self.assertIn('retried', bad)
+            # Any other failure is never retried.
+            other = run.execute(run.Gate('other', (sys.executable, '-c', 'raise SystemExit(3)')), root, root, env, 5)
+            self.assertEqual('failed', other['status'])
+            self.assertNotIn('retried', other)
+
+    def test_clang_on_path_survives_a_trimmed_environment(self):
+        # A gate program that rebuilds its environment keeps PATH but may drop CC
+        # and SDKROOT; `clang` must still be the resolved compiler with its SDK.
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            fake = root / 'real-clang'
+            fake.write_text('#!/bin/sh\necho "clang version 99 sdk=$SDKROOT"\n')
+            fake.chmod(0o755)
+            run_dir = root / 'run'
+            run_dir.mkdir()
+            with patch.object(run, 'host_cc', return_value=str(fake)), \
+                 patch.object(run, 'copy_cache', lambda *a, **k: None), \
+                 patch.dict(os.environ, {'SDKROOT': '/fake/sdk'}):
+                env, _ = run.environment(run_dir)
+            self.assertEqual(str(fake), env['CC'])
+            trimmed = {'PATH': env['PATH']}
+            out = subprocess.run(['clang', '--version'], env=trimmed, capture_output=True, text=True).stdout
+            self.assertEqual('clang version 99 sdk=/fake/sdk', out.strip())
+
     def test_dependency_order_parallelism_and_blocked_consumer(self):
         starts, ends = {}, {}
         overlap = threading.Barrier(2)
@@ -269,8 +312,10 @@ class ExecutionTests(unittest.TestCase):
         self.assertLessEqual({'frontend', 'checker', 'structural', 'fields', 'wasm', 'wasm-trust',
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
                               'recursion', 'fields-wasm', 'census', 'census:test', 'lint:verify', 'perch-context',
-                              'bootstrap', 'classification', 'io-host', 'io-abi-2',
-                              'selfhost', 'modules'}, set(names))
+                              'bootstrap', 'classification', 'io-host', 'io-abi-2', 'selfhost', 'modules',
+                              'nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7',
+                              'nest-round8', 'nest-round9', 'nest-round10', 'nest-round11',
+                              'nest-sweep11', 'nest-round12', 'nest-round13', 'nest-precheck', 'perch-cap'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
@@ -353,6 +398,19 @@ class SemanticMutantTests(unittest.TestCase):
             broken = mutant.schedule(gates, worker, 2)
         self.assertEqual('blocked', control[1]['status'])
         self.assertEqual('passed', broken[1]['status'])
+
+
+class HarnessTimeoutTests(unittest.TestCase):
+    def test_nest_guards_scale_with_the_runner_variable(self):
+        # The runner sets KNOT_GATE_TIMEOUT_SCALE for the hang guards inside gate
+        # scripts; a script that ignores it fails spuriously under campaign load.
+        code = ("import sys; sys.path.insert(0, 'tests/compiler-nest'); import check, regen; "
+                "print(check.run.__defaults__[0], regen.TIMEOUT)")
+        for scale, want in (('1', '120.0 60.0'), ('1000', '120000.0 60000.0')):
+            with self.subTest(scale=scale):
+                got = subprocess.run([sys.executable, '-B', '-c', code], cwd=HERE.parents[1], text=True,
+                                     capture_output=True, env={**os.environ, 'KNOT_GATE_TIMEOUT_SCALE': scale})
+                self.assertEqual((0, want), (got.returncode, got.stdout.strip()), got.stderr)
 
 
 if __name__ == '__main__':

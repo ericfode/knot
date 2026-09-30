@@ -1,0 +1,87 @@
+# Round-10 law falsification and mutant characterization (nest review round 10)
+# Base: 987778f4. Each mutation is one replacement in a copy of src/.
+# Law check: bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts <copy>/PROOF.bend.
+# The seed stops at the first failing term, and each mutation is chosen so that term is the named law.
+
+marks-without-name-test (syntax.bend): falsified LAWS.marks_witness  [PROOF.bend]
+marks-by-name-only (syntax.bend): falsified LAWS.marks_witness  [PROOF.bend]
+promotes-ignores-gap (parse.bend): falsified LAWS.detached_plus  [PROOF.bend]
+row-tail-ignores-gap (parse.bend): falsified LAWS.detached_plus  [PROOF.bend]
+marker-gap-ignored (parse.bend): falsified LAWS.detached_marker  [PROOF.bend]
+first-marker-must-touch (parse.bend): falsified LAWS.first_marker  [PROOF.bend]
+arrow-gap-ignored (parse.bend): falsified LAWS.split_arrow  [PROOF.bend]
+arrow-never-touches (parse.bend): falsified LAWS.return_type_application  [PROOF.bend]
+
+# The laws are ground witnesses, so each mutation moves their normal form. The flag's plumbing at BindingTail is not
+# observable to detached_marker (it calls BodyAt with the flag directly); the every-statement-first mutant and the marker
+# fixtures pin it. The finding-3 stopgaps have no laws (context budget), so they have no falsification row.
+
+# Behaviour of the gate mutations on the 152 frozen fixtures and the 3,000-program fuzz generator
+# (native checker built from the mutated copy; wrong = fixtures whose reviewed outcome changes;
+#  the unmutated checker reports 0 wrong fixtures, 0 false acceptances and 0 false Invalid)
+ignore-plus-gap (parse.bend): witness rowplus-second-spaced
+  wrong fixtures (46): argspace-operator-fields, rowplus-comment-glued-newline, rowplus-comment-newline, rowplus-comment-space-newline, rowplus-ctor-spaced, rowplus-nl-spaced, rowplus-plus-plus, rowplus-plus-wild-spaced, rowplus-repro-column-fields, rowplus-repro-column, rowplus-second-plus-space-after, rowplus-second-spaced, rowplus-three-cols-both, rowplus-three-cols-last, rowplus-three-cols-mid, rowplus-wild-spaced, rowtok-after-a-b, rowtok-after-a-wild, rowtok-after-a1-b, rowtok-after-a1-wild, rowtok-after-ctor-b, rowtok-after-ctor-wild, rowtok-after-promo-b, rowtok-after-promo-wild, rowtok-after-wild-b, rowtok-after-wild-wild, rowtok-newline-a-b, rowtok-newline-a-wild, rowtok-newline-a1-b, rowtok-newline-a1-wild, rowtok-newline-ctor-b, rowtok-newline-ctor-wild, rowtok-newline-promo-b, rowtok-newline-promo-wild, rowtok-newline-wild-b, rowtok-newline-wild-wild, rowtok-spaced-a-b, rowtok-spaced-a-wild, rowtok-spaced-a1-b, rowtok-spaced-a1-wild ...
+  generator: knot {'Invalid': 2430, 'Accepted': 233, 'Unsupported': 337}, false acceptances 12, false Invalid 0
+ignore-plus-gap-later-column (parse.bend): witness rowplus-three-cols-last
+  wrong fixtures (1): rowplus-three-cols-last
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+mark-a-line-break (syntax.bend): witness marker-plus-newline
+  wrong fixtures (2): marker-plus-newline, rowplus-plus-plus
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+touch-leading-promotion (parse.bend): witness rowplus-first-spaced
+  wrong fixtures (13): plusplus-flat, plusplus-multi, plusplus-repro, plusplus-spaced-flat, plusplus-triple-flat, rowplus-comma-nospace-spaced-plus, rowplus-comma-spaced, rowplus-field-spaced-plus, rowplus-field-spaced-then-column, rowplus-first-column-spaced-flat, rowplus-first-promo-then-ctor, rowplus-first-spaced-wild, rowplus-first-spaced
+  generator: knot {'Invalid': 2067, 'Unsupported': 752, 'Accepted': 181}, false acceptances 0, false Invalid 0
+ignore-marker-gap (parse.bend): witness marker-repro
+  wrong fixtures (12): marker-after-call-value, marker-after-constructor-value, marker-arm-later, marker-erased-then-plus-spaced, marker-minus-spaced-typed, marker-minus-spaced-untyped, marker-plus-newline, marker-plus-spaced-after-untyped, marker-plus-spaced-typed, marker-plus-spaced-untyped, marker-repro, marker-third-statement
+  generator: knot {'Invalid': 2376, 'Accepted': 273, 'Unsupported': 351}, false acceptances 52, false Invalid 0
+every-statement-first (parse.bend): witness marker-third-statement
+  wrong fixtures (12): marker-after-call-value, marker-after-constructor-value, marker-arm-later, marker-erased-then-plus-spaced, marker-minus-spaced-typed, marker-minus-spaced-untyped, marker-plus-newline, marker-plus-spaced-after-untyped, marker-plus-spaced-typed, marker-plus-spaced-untyped, marker-repro, marker-third-statement
+  generator: knot {'Invalid': 2376, 'Accepted': 273, 'Unsupported': 351}, false acceptances 52, false Invalid 0
+touch-first-marker (parse.bend): witness marker-first-plus-spaced-typed
+  wrong fixtures (15): letsplit-before-eq-marker, letsplit-erased-marker, letsplit-marker-arm, letsplit-marker-flat, letsplit-marker-multi, marker-arm-first, marker-first-minus-spaced-typed, marker-first-minus-spaced-untyped, marker-first-plus-double-space, marker-first-plus-spaced-tight-colon, marker-first-plus-spaced-typed, marker-first-plus-spaced-untyped, plusplus-erased-let, plusplus-let, plusplus-spaced-let
+  generator: knot {'Invalid': 2495, 'Accepted': 200, 'Unsupported': 305}, false acceptances 0, false Invalid 21
+ignore-arrow-gap (parse.bend): witness arrow-repro
+  wrong fixtures (6): arrow-empty-params, arrow-repro, arrow-split-main, arrow-three-spaces, arrow-two-spaces, arrow-type-application
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+touch-arrow-type (parse.bend): witness arrow-glued
+  wrong fixtures (146): argspace-call-flat, argspace-call-multi, argspace-equals-call, argspace-fields-flat, argspace-fields-multi, argspace-nested-call, argspace-operator-call, argspace-operator-fields, argspace-promoted-call, argspace-promoted-fields, argspace-repro-call, argspace-repro-fields, arrow-glued, arrow-tight-after, arrow-tight-before, arrow-tight-both, bodycol-arm-flat, bodycol-arm-multi, bodycol-below-col0, bodycol-below-flat, bodycol-empty-arm-dedent, bodycol-empty-arm, bodycol-last-arm, bodycol-let, bodycol-multi-var, bodycol-nested, letsplit-after-eq-flat, letsplit-after-eq-junk, letsplit-after-eq-multi, letsplit-after-eq-untyped, letsplit-before-eq-flat, letsplit-before-eq-junk, letsplit-before-eq-marker, letsplit-before-eq-multi, letsplit-erased-marker, letsplit-marker-arm, letsplit-marker-flat, letsplit-marker-multi, marker-after-call-value, marker-after-constructor-value ...
+  generator: knot {'Invalid': 3000}, false acceptances 0, false Invalid 221
+argument-whitespace-invalid (parse.bend): witness argspace-call-flat
+  wrong fixtures (8): argspace-call-flat, argspace-call-multi, argspace-fields-flat, argspace-fields-multi, argspace-nested-call, argspace-promoted-fields, argspace-repro-call, argspace-repro-fields
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+repeated-promotion-invalid (parse.bend): witness plusplus-flat
+  wrong fixtures (7): plusplus-flat, plusplus-let, plusplus-multi, plusplus-repro, plusplus-spaced-flat, plusplus-spaced-let, plusplus-triple-flat
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+marker-line-break-invalid (parse.bend): witness letsplit-marker-flat
+  wrong fixtures (4): letsplit-erased-marker, letsplit-marker-arm, letsplit-marker-flat, letsplit-marker-multi
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+value-line-break-invalid (parse.bend): witness letsplit-after-eq-flat
+  wrong fixtures (3): letsplit-after-eq-flat, letsplit-after-eq-multi, letsplit-after-eq-untyped
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+equals-line-break-invalid (parse.bend): witness letsplit-before-eq-flat
+  wrong fixtures (3): letsplit-before-eq-flat, letsplit-before-eq-marker, letsplit-before-eq-multi
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+typed-equals-line-break-invalid (parse.bend): witness letsplit-before-eq-flat
+  wrong fixtures (4): letsplit-after-eq-flat, letsplit-after-eq-multi, letsplit-before-eq-flat, letsplit-before-eq-multi
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+marker-equals-line-break-invalid (parse.bend): witness letsplit-before-eq-marker
+  wrong fixtures (2): letsplit-after-eq-untyped, letsplit-before-eq-marker
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+promoted-call-argument (parse.bend): witness argspace-promoted-call
+  wrong fixtures (1): argspace-promoted-call
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+line-break-before-any-name (parse.bend): witness letsplit-after-eq-junk
+  wrong fixtures (1): letsplit-after-eq-junk
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+line-break-before-any-token (parse.bend): witness letsplit-before-eq-junk
+  wrong fixtures (1): letsplit-before-eq-junk
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+erased-repeated-promotion (parse.bend): witness plusplus-erased-let
+  wrong fixtures (1): plusplus-erased-let
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+arm-body-layout-invalid (parse.bend): witness bodycol-arm-flat
+  wrong fixtures (7): bodycol-arm-flat, bodycol-arm-multi, bodycol-below-col0, bodycol-below-flat, bodycol-last-arm, bodycol-let, bodycol-multi-var
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0
+body-layout-any-token (parse.bend): witness bodycol-empty-arm
+  wrong fixtures (2): bodycol-empty-arm-dedent, bodycol-empty-arm
+  generator: knot {'Invalid': 2461, 'Accepted': 221, 'Unsupported': 318}, false acceptances 0, false Invalid 0

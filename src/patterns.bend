@@ -36,12 +36,10 @@ def fields(nodes: List<&2,S.Node>, parameters: List<&2,C.Parameter>, +parent: U3
   match nodes parameters:
     case Nil{} Nil{}: Done{Fields{scope,Nil{},Nil{}}}
     case Con{node,+tail} Con{C.Parameter{name,+q,+type_id},+rest}:
-      binder(node,+token => mark =>
-        +actual = quantity(q,parent,mark)
-        S.bind(C.Datatype,Fields,G.type_at(types,type_id),definition =>
-          S.bind(Unit,Fields,G.quantity(token,actual,definition),u =>
-            add(scope,token,actual,type_id,bound => binding => term =>
-              S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)})))))
+      binder(node,+token => +mark =>
+        S.bind(Unit,Fields,G.promotion(types,token,U32.is_eq(mark,2)),u =>
+          add(scope,token,quantity(q,parent,mark),type_id,bound => binding => term =>
+            S.bind(Fields,Fields,fields(tail,rest,parent,types,bound,origin),remaining => Done{prepend(binding,term,remaining)}))))
     case _ _: C.invalid(Fields,"pattern-arity",origin)
 
 def value(+token: S.Token, +type_id: U32, +tag: U32, parameters: List<&2,C.Parameter>, args: List<&2,C.Term>) -> C.Term:
@@ -62,9 +60,35 @@ def open_fields(binding: C.Binding, +scope: E.Scope, +tag: U32, +nodes: List<&2,
     case C.Binding{+token,+level,q,+type_id,param,known}:
       S.bind(Fields,Fields,fields(nodes,params,q,types,E.branch(scope,level,tag),token),result => Done{finish(result,token,level,type_id,tag,params)})
 
+# A `+` mark may raise a frontier binder past its type's kind. As in the seed,
+# the kind is judged only where the frontier binds the binder: on leaving it
+# undestructured, ahead of a matched level (advance) or at a body that is not
+# a match (close). A binder destructured first is never bound; its fields are.
+def kind(binding: C.Binding, types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match binding:
+    case C.Binding{token,level,q,type_id,param,known}:
+      S.bind(C.Datatype,Unit,G.type_at(types,type_id),definition => G.quantity(token,q,definition))
+
+def bound(levels: List<&2,U32>, +bindings: List<&2,C.Binding>, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match levels:
+    case Nil{}: Done{Unit{}}
+    case Con{level,tail}:
+      S.bind(C.Binding,Unit,E.find_level(bindings,level),binding =>
+        S.bind(Unit,Unit,kind(binding,types),u => bound(tail,bindings,types)))
+
+def advance(scope: E.Scope, +level: U32, +types: List<&2,C.Datatype>) -> Result<S.Error,Unit>:
+  match scope:
+    case E.Scope{+bindings,next,open,live,smaller}: bound(E.ahead(open,level),bindings,types)
+
+def close(scope: E.Scope, +types: List<&2,C.Datatype>) -> Result<S.Error,E.Scope>:
+  match scope:
+    case E.Scope{+bindings,next,open,live,smaller}:
+      S.bind(Unit,E.Scope,bound(open,bindings,types),u => Done{E.Scope{bindings,next,Nil{},live,smaller}})
+
 def branch(+scope: E.Scope, +level: U32, reference: G.ConstructorRef, node: S.Node, +types: List<&2,C.Datatype>) -> Result<S.Error,Fields>:
   match scope reference node:
     case E.Scope{bindings,next,open,live,smaller} G.ConstructorRef{+type_id,+tag} S.Constructor{token,+args}:
-      S.bind(List<&2,C.Parameter>,Fields,G.field_signature(G.ConstructorRef{type_id,tag},types),+params =>
-        S.bind(C.Binding,Fields,E.find_level(bindings,level),binding => open_fields(binding,scope,tag,args,params,types)))
+      S.bind(Unit,Fields,advance(scope,level,types),u =>
+        S.bind(List<&2,C.Parameter>,Fields,G.field_signature(G.ConstructorRef{type_id,tag},types),+params =>
+          S.bind(C.Binding,Fields,E.find_level(bindings,level),binding => open_fields(binding,scope,tag,args,params,types))))
     case _ _ _: C.internal(Fields,"branch-pattern")

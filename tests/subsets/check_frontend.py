@@ -44,7 +44,14 @@ def successful(argv):
     return result
 
 
-def classified(actual, expected):
+def classified(actual, expected, phase="parse"):
+    if expected["exit"] == 0:
+        require(actual["exit"] == 0 and actual["stderr"] == "", actual)
+        if phase in ("parse", "eval"):
+            require(actual["stdout"].strip() == expected[phase + "_stdout"], actual)
+        else:
+            require(actual["stdout"].startswith("Checked\n" if phase == "check" else "Built\t"), actual)
+        return
     require(actual['exit'] == expected['exit'], actual)
     require(actual['stdout'] == '', actual)
     require(actual['stderr'].strip() == expected['diagnostic'], actual)
@@ -99,17 +106,21 @@ def classification(record, manifest, lanes, source_paths):
                     artifact.write_bytes(b'prior artifact\n')
                     arguments.append(artifact)
                 actual = run([*command, *arguments])
-                classified(actual, case['knot'])
+                classified(actual, case['knot'], phase)
                 if phase == 'compile':
-                    require(artifact.read_bytes() == b'prior artifact\n', actual)
+                    if case['knot']['exit'] == 0:
+                        executed = successful(['node', ROOT / 'scripts/run-wasm.mjs', artifact, 'main'])
+                        require(json.loads(executed['stdout'])['result'] == case['knot']['wasm_tag'], executed)
+                    else:
+                        require(artifact.read_bytes() == b'prior artifact\n', actual)
                 record['downstream'].append({'phase': phase, 'lane': lane, 'file': case['file'],
-                                              'output_preserved': phase == 'compile', **actual})
+                                              'output_preserved': phase == 'compile' and case['knot']['exit'] != 0, **actual})
 
     record['mutants'] = []
     mutations = [
         ('generic-invalid', 'unsupported(tokens,"generic-datatype")',
          'invalid(tokens,"generic-datatype")', 'generic'),
-        ('match-invalid', 'unsupported(tokens,"match-scrutinees")',
+        ('match-invalid', 'run(n,MatchTail{token,columns(value,more),column},rest)',
          'invalid(tokens,"match-scrutinees")', 'match'),
         ('template-invalid', 'unsupported(ts,"template-binder")',
          'invalid(ts,"template-binder")', 'template'),
@@ -137,9 +148,12 @@ def classification(record, manifest, lanes, source_paths):
         built = successful([SEED, directory / 'parse-cli.bend', '-o', output])
         case = next(c for c in manifest['cases'] if Path(c['file']).stem == witness)
         actual = run(['bun', output, HERE / case['file']])
-        require(actual['exit'] == (2 if case['knot']['exit'] == 3 else 3), actual)
-        require(actual['stdout'] == '' and
-                actual['stderr'].split('\t', 1)[1] == case['knot']['diagnostic'].split('\t', 1)[1] + '\n', actual)
+        require(actual['exit'] == (3 if case['knot']['exit'] == 2 else 2), actual)
+        if case['knot']['exit'] == 0:
+            require(actual['stdout'] == '' and actual['stderr'].startswith('Invalid\tparse\tmatch-scrutinees\t'), actual)
+        else:
+            require(actual['stdout'] == '' and
+                    actual['stderr'].split('\t', 1)[1] == case['knot']['diagnostic'].split('\t', 1)[1] + '\n', actual)
         record['mutants'].append({'name': label, 'before': before, 'after': after,
                                   'typecheck': checked, 'build': built,
                                   'mutated_sha256': digest(target), 'witness': case['file'],
@@ -279,7 +293,7 @@ def main():
               f"and four semantic mutants; "
               f"{len(record['classification']['fixtures'])} classification fixtures in two lanes, "
               f"{len(record['classification']['mutants'])} classification mutants, "
-              f"{len(record['classification']['downstream'])} downstream rejection observations")
+              f"{len(record['classification']['downstream'])} downstream observations")
     except Exception as error:
         record['status'] = 'failed'
         record['failure'] = str(error)

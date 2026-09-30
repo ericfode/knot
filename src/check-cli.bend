@@ -23,8 +23,9 @@ def show_parse(depth: Nat, result: Result<S.Error,P.Parsed>) -> IO(Unit):
     case Fail{+e}: IO.die(Unit,D.status(e),D.error(e))
     case Done{P.Parsed{value,rest}}: show_check(R.check_file(depth,value))
 
+# The checker validates declaration events together with arity, types and quantities.
 def source(characters: Nat, depth: Nat, text: String) -> IO(Unit):
-  show_parse(depth,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(characters,text),tokens => P.parse(512n,tokens)))
+  show_parse(depth,S.bind(List<&2,S.Token>,P.Parsed,L.tokenize(characters,text),tokens => P.run(512n,P.Book{},tokens)))
 
 def read_result(characters: Nat, depth: Nat, result: Result<&1,&1,U32 & String,String>) -> IO(Unit):
   match result:

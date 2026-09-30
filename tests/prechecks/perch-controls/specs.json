@@ -1,0 +1,2161 @@
+{
+ "note": "Calibration controls for .perch/rules/prechecks.yaml, rebuilt 2026-09-29 (perch/prechecks-calibration). Dev controls are builder output (or verbatim excerpts where the builder's selection misses the deciding lines, marked manual-excerpt) at real campaign commits, chosen by anchors and labelled from the packet text alone: broken when the packet shows the violation, clean when it shows the property holding. Candidates whose verdict turned on unshown evidence or a judgment call were excluded. Retired controls are listed with the reason.",
+ "controls": [
+  {
+   "id": "vm-spec-d2fe0f20-bench",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "the bench sources and baselines unchanged",
+    "def check_bench"
+   ],
+   "note": "SPEC section 12 promises the bench sources and baselines unchanged; the deciding code is check_bench (design table, dev)."
+  },
+  {
+   "id": "vm-spec-e14d8581-result-u32",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "anchors": [
+    "result-u32"
+   ],
+   "note": "result-u32 frozen as HostFailure scalar-result although the seed succeeds; D4 wants Unsupported (blocking, design table, dev)."
+  },
+  {
+   "id": "vm-spec-63e63203",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "63e63203",
+   "base": "454bf305",
+   "anchors": [
+    "result-u32"
+   ],
+   "note": "The vm-spec tip, after result-u32 became Unsupported invoke result-type (design table, clean)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-vm-expectation",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "def vm_expectation"
+   ],
+   "note": "check-spec.py:474-477 derives an expected value from eval-cli (design table, dev)."
+  },
+  {
+   "id": "vm-core-f54d97ad-control-jobs",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "f54d97ad",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "want"
+   ],
+   "note": "check-core.py:501-535 control_jobs derives want from the VM's own output (design table, dev)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-source-mutants",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "source_mutants"
+   ],
+   "note": "source_mutants credits a kill without requiring a semantic observation (design table, dev)."
+  },
+  {
+   "id": "vm-model-07e6db73-kills",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "kill"
+   ],
+   "note": "Relabelled clean -> broken on 2026-09-29. harness_runs (lines 553-560) credits every fuel control that stops agreeing, a crashed or timed-out audit run included, and never applies well_formed; harness_faults removes only four torn-image refusals. The first live run scored it 0.30 as a clean control. (Outside the packet, KNOWN_EXITS also admits exit 7, HarnessBound, which the excerpt control vm-model-07e6db73-harness-bound-kill shows.)"
+  },
+  {
+   "id": "vm-spec-94bc3d57-d20",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "94bc3d57",
+   "anchors": [
+    "Term `D20`"
+   ],
+   "note": "tests/compiler-io/FIXTURES.md:100-122 against the D20 row (design table, dev)."
+  },
+  {
+   "id": "vm-spec-a0fd6e00-d20",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "a0fd6e00",
+   "anchors": [
+    "Term `D20`"
+   ],
+   "note": "After a0fd6e00 states D20's program-value rule in the io fixtures' precondition (design table, clean)."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-drop-operands",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       333,
+       336
+      ],
+      "note": "section 6, intrinsics"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       470,
+       476
+      ],
+      "note": "section 9, the append primitive"
+     }
+    ]
+   },
+   "note": "SPEC section 6 says an intrinsic drops its operands; section 9 says b's cells are moved (design table, dev). The builder's term selector does not reach it, so the packet is an excerpt of the two passages."
+  },
+  {
+   "id": "vm-spec-e14d8581-excused-bound",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "anchors": [
+    "vm/SPEC.md:585-587",
+    "'basis': 'seed', 'eval_lane': 'Exhausted'}"
+   ],
+   "note": "SPEC says a lane is excused only by a documented bound and its receipt must name the bound, the budget and the boundary reached; the shown vm_expectation records only 'eval_lane': 'Exhausted' and checks classify(ev) == 'Exhausted', with no bound, budget or boundary."
+  },
+  {
+   "id": "vm-core-f54d97ad-unsupported-cause",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "f54d97ad",
+   "anchors": [
+    "test build confirms every Exhausted and Unsupported cause",
+    "require(state['outcome'] == 'Unsupported', f'{name}: dump {state}')"
+   ],
+   "note": "CORE.md says the test build confirms every Exhausted and Unsupported cause; the shown main compares the test-build dump's cause for Exhausted goldens but only the outcome for Unsupported ones (the cause is compared on the real host's stderr).",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ]
+  },
+  {
+   "id": "bootstrap-dc76dac3-eight-mutants",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "bootstrap",
+   "head": "dc76dac3",
+   "anchors": [
+    "All eight mutants must be rejected:",
+    "result.append({'name': label, 'applicable': False})"
+   ],
+   "note": "README says all eight mutants must be rejected; the shown mutants() marks the eighth not applicable and skips it when no stage is not-run, an exemption the claim does not name."
+  },
+  {
+   "id": "generics-19a534d3-all-17-erasure",
+   "rule": "claim-holds-against-evidence",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "generics",
+   "head": "19a534d3",
+   "anchors": [
+    "fills all 17 erasure",
+    "def L.empty_family(token,q,kind,params,generic): {==}"
+   ],
+   "note": "SPEC says type-erasure-PROOF.bend fills all 17 erasure laws; the whole new file is shown and fills 18 laws of the one imported law module (empty_family is the new one)."
+  },
+  {
+   "id": "harness-2-f53f937c-wasm-memories",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "harness-2",
+   "head": "f53f937c",
+   "anchors": [
+    "walks the whole import",
+    "def wasm_memories(data: bytes)"
+   ],
+   "note": "The claim says wasm_memories walks the whole import and memory sections; the whole function is shown iterating every entry of both sections and requiring the cursor to land on each section end."
+  },
+  {
+   "id": "io-host-963a7594-env-confined",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "io-host",
+   "head": "963a7594",
+   "anchors": [
+    "component under a case-insensitive comparison",
+    "function confined(name)"
+   ],
+   "note": "runIO is shown whole: the root is the realpath of an existing directory, open is the only path-taking import, and confined() refuses absolute paths, '..' and any component whose lowercase is .env or starts with .env."
+  },
+  {
+   "id": "fields-wasm-3868b119-heap-sections",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "fields-wasm",
+   "head": "3868b119",
+   "anchors": [
+    "mutable i32 bump starts at zero",
+    "def heap_sections"
+   ],
+   "note": "Section order 1,3,5,6,7,10, one page min=max=1, and a mutable i32 bump at zero are each visible in the emitter and in check.py's requires; the allocator returns the pre-increment bump."
+  },
+  {
+   "id": "modules-0111f133-case-alias",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "modules",
+   "head": "0111f133",
+   "anchors": [
+    "tests/compiler-modules/README.md:60-61",
+    "'Review case-alias probe requires a case-insensitive filesystem')"
+   ],
+   "note": "One sentence, and the require that enforces it (samefile of canonical and alias, with the matching message) is shown."
+  },
+  {
+   "id": "gpu-2-e485e6d2-wgsl-typecheck",
+   "rule": "claim-holds-against-evidence",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "gpu-2",
+   "head": "e485e6d2",
+   "anchors": [
+    "WGSL mutants must typecheck. Only real-device mismatches kill WGSL mutants;",
+    "if(validationOnly) {report.status='validation-only';return;}"
+   ],
+   "note": "Every mutant is typechecked before any run, the null backend returns before the mutant loop with killed:false, and only an ObservationMismatch on a non-fallback device is a kill; all shown."
+  },
+  {
+   "id": "descent-2-75e1ac69-other-parameter",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "descent-2",
+   "head": "75e1ac69",
+   "upstream": [
+    "nest=campaign/nest"
+   ],
+   "anchors": [
+    "Term `other-parameter`"
+   ],
+   "note": "The branch's own passage says Knot now reports `other-parameter` as `Invalid check recursive-call` (and its commit list says the assertion was migrated to Invalid), while the recursion README and LAW_REVIEW shown beside it still give the superseded outcome `Unsupported check recursive-call` for the same fixture, unlabelled. An outcome class that differs between passages, and a superseded value kept beside the current one, are both visible in the packet."
+  },
+  {
+   "id": "generics-78c4942e-return-type-application",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "generics",
+   "head": "78c4942e",
+   "anchors": [
+    "Term `return_type_application`"
+   ],
+   "note": "All passages are the branch's own Claim text. CLASSIFICATION.md:158 (line 8, section 'Generics supersession \u2014 2026-09-28') says in the present tense that the laws `return_type_application` and `binding_type_application` 'also conflict with generic type applications'. CLASSIFICATION.md:166 (line 9, section 'Proposed classify-2 supersession (awaiting authorization)') and README:122 ('The proposal (not committed; ... needs the coordinator's authorization)') present their restatement and retirement as pending. Meanwhile the normative SPEC:109 (line 5) states the change as done ('now states', 'is retired'). One passage asserts as current what the others say is not yet provided. Same text at 19a534d3 (0036); same root cause as the type-application proposal, but different passages and a different term. Outside the packet, and only as a check that this is not a cut artifact: `binding_type_application` is already gone from src/*.bend at both heads, and CLASSIFICATION.md:158's next sentence says 'They are unchanged here and await the coordinator's decision', so the 'awaiting' text is the stale side."
+  },
+  {
+   "id": "vm-core-a5e2ffa8-vm-expected-goldens",
+   "rule": "passages-agree",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "a5e2ffa8",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "Term `vm-expected.json`"
+   ],
+   "note": "Two passages the branch changed, in its own Claim section, give different numbers for the same set: the gate description says 78 golden images run with their vm-expected.json outputs, while the gate evidence says all 86. The spec shown as Evidence says 86 sources and enumerates 86, so 78 is a superseded count. A number differing between two passages is the rule's first listed shape. git show confirms GATES.md:81 reads '78' in full at a5e2ffa8, so this is not a cut. The branch's commit subject was 'update CORE.md counts'."
+  },
+  {
+   "id": "vm-spec-e14d8581-drop-operands",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       358,
+       362
+      ],
+      "note": "section 6, intrinsics"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       525,
+       536
+      ],
+      "note": "section 9, prim ownership and the append primitive"
+     }
+    ]
+   },
+   "note": "The same two passages as the broken excerpt, one head later, after the repair: section 6 now excepts an operand the prim moves into its result, and section 9 names exactly which operand moves (append's b; the conversions' word) and which is dropped (a). Drop, move and allocation order agree across both passages. pair_with names the existing control spec id vm-spec-d2fe0f20-drop-operands (file broken-vm-spec-d2fe0f20-drop-operands.md)."
+  },
+  {
+   "id": "vm-core-b2aab0f5-vm-expected-goldens",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-core",
+   "head": "b2aab0f5",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "Term `vm-expected.json`"
+   ],
+   "note": "The repaired head of the same increment, with the same anchor: the gate description, the gate evidence and the spec all say 91, and the spec's category list adds up to 91. The long \u00a712 paragraph (SPEC.md:711) is the same text as in the accepted clean D20 control, and it states no golden total that could conflict. This is a true repair pair with the a5e2ffa8 packet. The earlier head acbc88b3/0014 is also clean (78/78/78)."
+  },
+  {
+   "id": "recursion-624228e5-other-parameter",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "recursion",
+   "head": "624228e5",
+   "anchors": [
+    "Term `other-parameter`"
+   ],
+   "note": "At the recursion head both passages give `other-parameter` the same outcome (Unsupported check recursive-call). LAW_REVIEW's 'seven Unsupported fixture outcomes' matches the README's list of exactly seven fixtures, and both put the fuel limit at 600. This is the contrast partner of the descent-2 packet, where the same README line sits beside the new Invalid rule."
+  },
+  {
+   "id": "opt-1-34d75984-non-tail",
+   "rule": "passages-agree",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "opt-1",
+   "head": "34d75984",
+   "anchors": [
+    "Term `non-tail`"
+   ],
+   "note": "The fixture table lists six fixtures whose calls sum to 3+9+3+5+1+3 = 24, which is exactly the README's 'Six primary fixtures fixed 24 literal/seed calls', and the fixture names match. SPEC and LAW_REVIEW agree on the tail/non-tail instruction rule. The packet shows the numeric and rule overlap agreeing."
+  },
+  {
+   "id": "vm-spec-d2fe0f20-scalar-result",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "d2fe0f20",
+   "anchors": [
+    "`HostFailure invoke scalar-result` for one anywhere in the tree"
+   ],
+   "note": "Section 8 refuses every U32, Char or String Book result as HostFailure. Section 11's opener reserves HostFailure for malformed images and unknown ids, and gives Unsupported to what Knot does not handle, which is the D4 class for this capability gap (neither eval-cli nor the VM has a describe spelling). The knot-vm-1 row of documented bounds names no describe or scalar-result bound, so the refusal also stands outside every documented bound. It is the replay pointer's defect ('section 8's HostFailure for scalar results contradicts section 11'). The Invalid-parse admission (L126-128) is also present."
+  },
+  {
+   "id": "vm-spec-e14d8581-expected-bound",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "anchors": [
+    "scalar-result` outside the Book-describe domain (`result-u32`), each justified in",
+    "vm/SPEC.md:609-621"
+   ],
+   "note": "The frozen vm-expected rows put result-u32's `HostFailure invoke scalar-result` in bounds.json next to the Exhausted NatRange bounds, so a non-Exhausted capability refusal counts as a documented bound, where D4 and section 11's opener require Unsupported. The same Claim then records Knot's check-cli and eval-cli refusing a seed-run IO program as Invalid, and says D4 requires Unsupported. Two independent violations appear in the Claim itself."
+  },
+  {
+   "id": "vm-spec-94bc3d57-image-size-frozen",
+   "rule": "outcome-follows-d4",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "94bc3d57",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       232,
+       234
+      ]
+     },
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       245,
+       246
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       73,
+       73
+      ],
+      "note": "decision row D4"
+     },
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       85,
+       85
+      ],
+      "note": "decision row D16"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       877,
+       906
+      ],
+      "note": "frozen refusal expectations for image bytes"
+     }
+    ]
+   },
+   "note": "The SPEC gives an oversize image the class Exhausted (cause image-size), but the frozen expectation code freezes the three oversize controls as `HostFailure image: exhausted image-size`. One case has two outcome classes, which is the rule's 'frozen code freezes HostFailure where the SPEC says Exhausted' shape. It is the defect the 5517f263 control describes but does not show, here at a dev head (identical text at a0fd6e00 and the other pre-63e63203 heads) with no D20 or Invalid-parse text in the packet."
+  },
+  {
+   "id": "opt-1-34d75984-deep-call-exhausted",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "opt-1",
+   "head": "34d75984",
+   "anchors": [
+    "tests/compiler-opt/SPEC.md:70-71",
+    "The existing `deep-call` evaluator parser limit remains an explicit Exhausted"
+   ],
+   "note": "This is a seed-succeeds, Knot-refuses row handled as the rule asks. The frozen code requires the seed's reference call to succeed (L139) and the evaluator to stop on its budget with a diagnostic (L151-152). The SPEC names that stop as the documented deep-call evaluator parser limit, recorded as Exhausted and never relabelled Invalid or Unsupported (L7, L19, L75). All the sources give the same class. Trap: the evidence also says arena-overflow 'may become a successful value' while the fields-wasm code requires its diagnostic; those are different gates, not a class conflict."
+  },
+  {
+   "id": "generics-19a534d3-boundaries",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "generics",
+   "head": "19a534d3",
+   "anchors": [
+    "research/compiler-generics/SPEC.md:66-69",
+    "Empty type-argument lists are Invalid, like the seed"
+   ],
+   "note": "Every form the generics increment cannot handle yet is listed as Unsupported, with specific codes, as D4 requires. The one Invalid verdict, for empty type-argument lists, is tied to the seed's own rejection ('like the seed'), so it is not a capability gap reported as Invalid. The claim's classes agree with D4 throughout."
+  },
+  {
+   "id": "literals-3246fa3d-resource-guards",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "literals",
+   "head": "3246fa3d",
+   "upstream": [
+    "modules=campaign/modules"
+   ],
+   "anchors": [
+    "Resource guards are Exhausted, not Invalid"
+   ],
+   "note": "The literals Wasm profile's resource guards are Exhausted and explicitly not Invalid, which matches the outcomes section and the checker-bounds section ('Exceeding any of these bounds is exhaustion'). Other runtime traps are host failures, not source verdicts. It is the 'every resource limit is Exhausted' clause holding, with no contrary source."
+  },
+  {
+   "id": "vm-spec-63e63203-image-size-frozen",
+   "rule": "outcome-follows-d4",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "63e63203",
+   "base": "454bf305",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       253,
+       255
+      ]
+     },
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       267,
+       268
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       73,
+       73
+      ],
+      "note": "decision row D4"
+     },
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       85,
+       85
+      ],
+      "note": "decision row D16"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1107,
+       1140
+      ],
+      "note": "frozen refusal expectations for image bytes"
+     }
+    ]
+   },
+   "note": "SPEC, D16 and the frozen code agree on every image case shown. Oversize images are Exhausted kind 2 with cause image-size, D16 lists the section 4 image limits under kind 2, and the code freezes 'Exhausted 2 image-size' for the three oversize controls and 'HostFailure image' for the malformed ones. This is the repaired counterpart of vm-spec-94bc3d57-image-size-frozen, with the same excerpt layout, and has no D20 or Invalid-parse text."
+  },
+  {
+   "id": "generics-78c4942e-classify2-pins-unchanged",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "generics",
+   "head": "78c4942e",
+   "anchors": [
+    "They are unchanged here",
+    "-law binding_type_application:"
+   ],
+   "note": "The only head-clause broken found: the README says the classify-2 Name<...> pins are unchanged here and only proposes a supersession. The src/LAWS.bend hunk rewrites the return-type pin from Unsupported type-application to a TypedResult equality and deletes the binding_type_application law, and the gate hunk retires all three pinned type-application mutants. The clause names no such change as made, so the shown hunks contradict it."
+  },
+  {
+   "id": "closures-a1d68911-only-allocator-appended",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "closures",
+   "head": "a1d68911",
+   "anchors": [
+    "only the allocator is appended",
+    "List.append(&2,C.Function,originals,generated)"
+   ],
+   "note": "The quoted clause is the base SPEC's promise that only the allocator is appended to the original functions. The packet's own code hunk (closure.bend prepare) appends a list of generated per-arrow dispatcher functions after the originals, and entry gates exports on index < exports to hide them, so the change adds appended functions the clause excludes. The clause does not list that delta; only the branch's rewording (also shown) does, which is exactly the contract-changed-under-the-same-name shape. Same-head contrast (different clause, same code): closures-a1d68911-dispatchers-appended (0031) is the head SPEC wording that names the delta and is clean."
+  },
+  {
+   "id": "harness-2-364d427e-judge-reads-only-recorded",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "harness-2",
+   "head": "364d427e",
+   "anchors": [
+    "`judge()` reads only recorded fields.",
+    "fixed = {CONTRACT: contract.read_bytes()"
+   ],
+   "note": "Base-clause packet whose code hunk realizes the forbidden delta: the base README promised judge() reads only recorded fields, and the shown judge now reads src/CONTRACT.json and manifest.json from disk and adds verdicts derived from them. The quoted clause does not list that delta; only the branch's own rewording (also shown) does. Same claim also at harness-2 f53f937c/0036 and vm-spec 63e63203/0038 (merged); use one. Same-head contrast (different clause, same code): harness-2-364d427e-held-to-files (0008) is clean."
+  },
+  {
+   "id": "descent-2-75e1ac69-conservative-classification",
+   "rule": "clause-vs-delta",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "descent-2",
+   "head": "75e1ac69",
+   "anchors": [
+    "Knot's requested conservative classification stays unchanged.",
+    "'revision must replace the historical conservative outcome'"
+   ],
+   "note": "Base-clause packet: the base recursion SPEC promised the conservative classification stays unchanged, and the shown code deletes the law that encoded it, empties the nest gate's conservative UNMET set, and adds revise(), which requires each historical conservative (exit 3) outcome to be replaced by the refrozen decision. Medium: the clause is qualified 'at this pin', and the check.bend hunk that changes the classifier itself is not in this packet.",
+   "upstream": [
+    "nest=campaign/nest"
+   ]
+  },
+  {
+   "id": "closures-a1d68911-dispatchers-appended",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "closures",
+   "head": "a1d68911",
+   "anchors": [
+    "Closure dispatchers and the allocator are appended and unexported",
+    "List.append(&2,C.Function,originals,generated)"
+   ],
+   "note": "Same head and same code as the broken pair, but this is the head SPEC clause, which itself names the delta: dispatchers and the allocator are appended and unexported. The shown prepare keeps the rewritten originals first (unchanged indices) and appends the generated dispatchers; entry exports a function only when index < exports, so the originals keep their exports and the appended functions are hidden. No shown hunk contradicts any sentence; the host precondition is untouched. Same-head contrast (different clause, same code) to the broken closures-a1d68911-only-allocator-appended (0014); not a same-claim pair."
+  },
+  {
+   "id": "harness-2-364d427e-held-to-files",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "harness-2",
+   "head": "364d427e",
+   "anchors": [
+    "held to the files, never to the receipt's own copy",
+    "def contract_problems"
+   ],
+   "note": "Head clause over the same judge rewrite as the broken pair: every listed field (argv, maxima, output_bytes, module loading, entry/root/target, Node, seed) is compared against values derived from src/CONTRACT.json and the manifest, never against the receipt's copy, and whether an audit is due comes from auditing(contract). The hunks touch exactly the clause's subject and enforce it; nothing shown contradicts a sentence. Same-head contrast (different clause, same code) to the broken harness-2-364d427e-judge-reads-only-recorded (0033); not a same-claim pair."
+  },
+  {
+   "id": "nest-eb15da85-empty-case-whitelist",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "eb15da85",
+   "anchors": [
+    "it has no domain-valid execution. The enum whitelist is unchanged",
+    "gate.require('unreachable' not in ops and 'i32.const' in ops, ops)"
+   ],
+   "note": "The hunks touch exactly the clause's subject and add checks that keep it: every accepted enum-profile module (nest and review fixtures) is passed through the whitelist checker, an empty-type fixture compiled under the enum profile must contain i32.const and no unreachable, and a mutant that switches the empty-case encoding to unreachable must be killed by the whitelist. No shown hunk edits the whitelist or emits unreachable. This is the repaired state of the 57a0c01d defect (enum emitting unreachable), whose own emitter hunk no 57a0c01d packet carries, so no broken pair exists."
+  },
+  {
+   "id": "fields-wasm-3868b119-only-unreachable-guard",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "fields-wasm",
+   "head": "3868b119",
+   "anchors": [
+    "unsigned size > 65536 - bump; only unreachable in the profile",
+    "arena is the only unreachable"
+   ],
+   "note": "The increment that introduced the guard clause: the only unreachable the shown emitter produces is inside the allocator's size check (i32.sub, i32.gt_u, if, unreachable, end), and the added gate requires exactly one unreachable per heap module and none otherwise, with the enum instruction set unchanged. The hunks touch the clause's subject and add a check that keeps it. Same clause text is the base guard that nest 57a0c01d and closures a1d68911 later reworded, but neither of those packets shows a new unreachable being emitted, so no broken pair exists."
+  },
+  {
+   "id": "vm-spec-a0fd6e00-unsupported-never-a-bound",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "a0fd6e00",
+   "anchors": [
+    "a recorded capability gap, never a bound",
+    "a bound cannot stand in for Unsupported"
+   ],
+   "note": "Unsupported arises only from the describe-domain capability gap and is refused if a bound is listed for it; a bound always yields Exhausted with a kind; and a frozen control (bound-for-unsupported) exercises the substitution. The added gate enforces the clause and nothing shown turns a bound into Unsupported. Every vm/ hunk is added code, so this is the adds-a-check-that-keeps-it clean shape."
+  },
+  {
+   "id": "vm-core-a5e2ffa8-control-jobs",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "a5e2ffa8",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       55,
+       61
+      ],
+      "note": "refusal codes"
+     },
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       199,
+       202
+      ],
+      "note": "mutants"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       543,
+       556
+      ],
+      "note": "malformed controls: reference and VM runs"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       605,
+       623
+      ],
+      "note": "mutant jobs and their wants"
+     }
+    ]
+   },
+   "note": "The want used to judge mutants on the malformed controls is the unmutated VM's own exit, stdout and stderr (got comes from host(module, ...)). Only its refusal code was compared with the reference codec. That is an expectation copied from the implementation's output, while the claim names the reference codec as the source of every refusal. It is the same defect as the existing f54d97ad control, at a later head, where goldens_jobs was already moved to vm-expected.json (expected_run) and control_jobs was not; git log -S shows control_jobs unchanged through the campaign/vm-core tip. Manual excerpt: the pool packet a5e2ffa8/0004 is truncated before these lines."
+  },
+  {
+   "id": "vm-core-b2aab0f5-control-jobs",
+   "rule": "expectation-independent",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "b2aab0f5",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       55,
+       61
+      ],
+      "note": "refusal codes"
+     },
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       241,
+       244
+      ],
+      "note": "mutants"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       610,
+       623
+      ],
+      "note": "malformed controls: reference and VM runs"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       702,
+       730
+      ],
+      "note": "mutant jobs and their wants"
+     }
+    ]
+   },
+   "note": "The same VM-output want for the control group appears at b2aab0f5, beside wants that are frozen (vm-expected rows, admitted 'expect', invocation rows), which makes the contrast visible inside one packet. It is not independent of the a5e2ffa8 excerpt and the f54d97ad control (one defect). Manual excerpt: the pool packet b2aab0f5/0004 is truncated before these lines."
+  },
+  {
+   "id": "vm-spec-e14d8581-vm-expectation-seed-compared",
+   "rule": "expectation-independent",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "e14d8581",
+   "anchors": [
+    "def vm_expectation"
+   ],
+   "note": "Every branch of the expectation is visibly seed-derived or seed-checked. The Program branch copies the seed's stdout. The Exhausted branch renders the seed's value. The eval-cli branch adopts eval-cli's describe line only after require(tree == value) compares it with the seed's value. This is the repair (e3f6bc8e, 'Require eval-cli to agree with the seed before it supplies a VM expectation') of the existing d2fe0f20 broken control, same function and anchor. The other GATES/D18 sentences are coverage counts or profile statements; none names a different source."
+  },
+  {
+   "id": "closures-a1d68911-seed-regression",
+   "rule": "expectation-independent",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "closures",
+   "head": "a1d68911",
+   "anchors": [
+    "def seed_regression"
+   ],
+   "note": "The expected record is a frozen seed observation whose argv must be the pinned SEED on the fixture itself. The gate re-runs the seed and requires byte equality, then requires the frozen call result to equal what the seed printed. No value comes from the compiler under test, which is what the claim (the pinned seed as the source of the frozen closure expectations) says."
+  },
+  {
+   "id": "vm-model-07e6db73-fuel-runs-literal",
+   "rule": "expectation-independent",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "def fuel_runs"
+   ],
+   "note": "The fuel expectations are literals derived from SPEC section 7 in the gate itself: fuel 0 is Exhausted vm 1 fuel for every golden, and value-on at fuel 1 evaluates On{}. Nothing is computed from the model's output. A literal derived from the specification is an independent derivation under the rule's first sentence, and the claim's 'literal fuel controls' names exactly that source."
+  },
+  {
+   "id": "vm-model-07e6db73-sweep-reference-codec",
+   "rule": "expectation-independent",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "docs/compiler-campaign/GATES.md",
+      "lines": [
+       101,
+       103
+      ],
+      "note": "vm-model gate: soundness sweep"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       87,
+       98
+      ],
+      "note": "check-spec's reference codec and evaluator"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       767,
+       816
+      ],
+      "note": "reference_verdicts and sweep_runs"
+     }
+    ]
+   },
+   "note": "The sweep's want is the reference codec's verdict (check-spec's rejected) on each single-word mutation, computed independently of the Bend model's sweep binary, whose per-mutation line is then compared with it. This is exactly the claim's source. It is a manual excerpt, because the expectation builder does not select sweep_runs at 07e6db73."
+  },
+  {
+   "id": "vm-spec-97c1da13-source-mutants-raw-diff",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "97c1da13",
+   "anchors": [
+    "def source_mutants",
+    "killed = got['seed'] != case['seed'] and got['eval'] != case['eval']"
+   ],
+   "note": "source_mutants credits a kill whenever both lane observations differ from the frozen ones, with no check that the mutated source produced a well-formed answer: a seed or eval-cli crash, a timeout or any stderr text change on both lanes is a kill. Same defect as the existing d2fe0f20 control, with a different claim set and a later codec_mutants; not independent evidence of the defect."
+  },
+  {
+   "id": "vm-spec-63e63203-source-mutants-timeout",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "63e63203",
+   "base": "454bf305",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "docs/compiler-campaign/GATES.md",
+      "lines": [
+       80,
+       88
+      ],
+      "note": "vm-spec gate: source mutants"
+     },
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       41,
+       43
+      ],
+      "note": "trusted-runtime definition of done"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       71,
+       90
+      ],
+      "note": "run and observed"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       133,
+       142
+      ],
+      "note": "seed_observation"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       152,
+       162
+      ],
+      "note": "lanes"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       2298,
+       2319
+      ],
+      "note": "SOURCE_MUTANTS and source_mutants"
+     }
+    ]
+   },
+   "note": "The packet shows the whole path: a timeout becomes {exit: None, stdout: \"\", stderr: \"\"}, observed() keeps exactly those fields, lanes() returns them for the mutated source, and source_mutants credits a kill whenever both lanes differ from the frozen observation. A timeout or crash on both lanes is therefore visibly credited as a kill. Manual excerpt: the pool packet 63e63203/0005 is truncated and never shows run/observed/lanes; same defect family as d2fe0f20."
+  },
+  {
+   "id": "vm-model-07e6db73-harness-bound-kill",
+   "rule": "kill-is-semantic",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "docs/compiler-campaign/GATES.md",
+      "lines": [
+       104,
+       105
+      ],
+      "note": "vm-model gate: mutant kills"
+     },
+     {
+      "path": "vm/MODEL.md",
+      "lines": [
+       40,
+       45
+      ],
+      "note": "outcome exits, HarnessBound"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       287,
+       303
+      ],
+      "note": "TORN, harness_faults, KNOWN_EXITS, well_formed"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       1048,
+       1057
+      ],
+      "note": "kills"
+     }
+    ]
+   },
+   "note": "Exit 7 is defined in the claim as a harness limit, yet it is in KNOWN_EXITS, so well_formed accepts a HarnessBound row, and harness_faults only removes admitted rows refused as one of four TORN HostFailure image reasons; kills therefore credits a mutant row that stopped at the harness bound (and any other HostFailure) as a kill, contradicting \"never ... a harness fault\". This is the defect the current clean control (07e6db73-kills) hides by omitting kills and the meaning of 7."
+  },
+  {
+   "id": "recursion-624228e5-fixed-observation",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "recursion",
+   "head": "624228e5",
+   "anchors": [
+    "# Require the intended semantic observation, never a crash or timeout.",
+    "No crash, missing import or timeout counts as a kill."
+   ],
+   "note": "Before any kill is credited, the mutant must typecheck and its observation must equal a fixed well-formed verdict (exit 0 with Checked, or exit 3 with the exact Unsupported check recursive-call diagnostic); a crash, timeout or host failure cannot match either and fails the gate instead. The kill is then the disagreement with the frozen witness expectation cases[witness]['check'], which is exactly a well-formed wrong answer against a reference, as every claim sentence says."
+  },
+  {
+   "id": "descent-2-75e1ac69-semantic-wrong-exit",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "descent-2",
+   "head": "75e1ac69",
+   "upstream": [
+    "nest=campaign/nest"
+   ],
+   "anchors": [
+    "mutation witness must be semantic, not exhaustion or host failure"
+   ],
+   "note": "The registered wrong outcome must be a checker verdict (exit 0, 2 or 3), which rules out exhaustion (4), host failure (5), internal failure (6) and a timeout, and the actual observation must equal it before the kill is judged against the frozen case['check']; the typecheck is required first. The shown predicate therefore requires a well-formed wrong answer in each lane and visibly excludes type errors, timeouts, exhaustion and host failures, matching both claim sentences (the coverage-table sentences are counts, not kill semantics)."
+  },
+  {
+   "id": "classify-2-7b85b8aa-specific-wrong-classification",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "classify-2",
+   "head": "7b85b8aa",
+   "anchors": [
+    "# Each mutant changes an outcome, not syntax, typing, budgets, or tests."
+   ],
+   "note": "Each of the six listed mutations must produce exactly its registered wrong classification (exit 2 or 3 with the named Invalid/Unsupported code) at the frozen witness span, and an exit different from the frozen expectation; a build failure, timeout or host failure cannot satisfy exit 2/3 with that diagnostic. The mutation table, the typecheck and the exact classification are all shown, so both README sentences hold on the packet."
+  },
+  {
+   "id": "generics-78c4942e-exit-0-2-3",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "generics",
+   "head": "78c4942e",
+   "anchors": [
+    "host failure or exhaustion is not a semantic kill",
+    "Mutants are independently seed-typechecked; host failures, internal errors, exhaustion and invalid Wasm are not semantic kills."
+   ],
+   "note": "The mutant is typechecked, its compile artifact must be valid, its observation must equal the registered literal, and its exit must be 0, 2 or 3, which excludes exhaustion, host and internal failures and timeouts; only then is a mismatch with the frozen expectation (checked, rejection, evaluated call, Wasm result or ABI) credited. Both claim sentences are visibly implemented; the remaining README sentences are coverage counts."
+  },
+  {
+   "id": "fields-wasm-3868b119-wrong-enum-result",
+   "rule": "kill-is-semantic",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "fields-wasm",
+   "head": "3868b119",
+   "anchors": [
+    "mutant expectation must be frozen",
+    "Parse/type errors, timeouts, host failures and invalid Wasm cannot satisfy these kill assertions."
+   ],
+   "note": "The kill is a JSON enum result that differs from a frozen seed call tag, read from a host run that must succeed, on a module that must pass wasm2wat, after a seed typecheck; a parse/type error, invalid Wasm, host failure or timeout fails the gate rather than killing. Both lanes are looped, as the claim says; the evidence ends in a truncation after the mutant loop, which does not touch the kill path."
+  },
+  {
+   "id": "nest-5374d928-unmet-laws",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "5374d928",
+   "manifest": {
+    "required_laws": [
+     "General irrefutable-first-row lowering theorem",
+     "General exhaustive-matrix/no-missing-branch lowering theorem"
+    ]
+   },
+   "anchors": [
+    "General exhaustive-matrix/no-missing-branch lowering theorem",
+    "exhaustive_matrix_witness | 0 |"
+   ],
+   "source": "docs/compiler-campaign/state.json:74-75@5374d928",
+   "note": "The second required law, a general exhaustive-matrix lowering theorem, maps only to exhaustive_matrix_witness with 0 binders (a fixed four-row Flag matrix); the remainder helpers state one step of the split, not lowering without a missing branch. The general irrefutable-first-row theorem likewise has only the 0-binder irrefutable_lowering_witness plus one-step helpers. No obligation is recorded, so the packet shows a required law met only by a ground witness."
+  },
+  {
+   "id": "nest-eb15da85-unmet-laws",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "eb15da85",
+   "manifest": {
+    "required_laws": [
+     "General irrefutable-first-row lowering theorem",
+     "General exhaustive-matrix/no-missing-branch lowering theorem"
+    ]
+   },
+   "anchors": [
+    "General exhaustive-matrix/no-missing-branch lowering theorem",
+    "exhaustive_matrix_witness | 0 |"
+   ],
+   "source": "docs/compiler-campaign/state.json:74-75@eb15da85",
+   "note": "Same claim as nest-5374d928-unmet-laws at the round-2 head, with different evidence: both general lowering theorems map only to the 0-binder witnesses irrefutable_lowering_witness and exhaustive_matrix_witness (plus one-step helpers), and the packet records no obligation. It replicates the claim and does not add a distinct one."
+  },
+  {
+   "id": "nest-c500d7d5-unmet-exhaustive",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "c500d7d5",
+   "manifest": {
+    "required_laws": [
+     "General exhaustive-matrix/no-missing-branch lowering theorem"
+    ]
+   },
+   "anchors": [
+    "General exhaustive-matrix/no-missing-branch lowering theorem",
+    "exhaustive_matrix_witness | 0 |"
+   ],
+   "source": "docs/compiler-campaign/state.json:74-74@c500d7d5",
+   "note": "The single required law, the general exhaustive-matrix lowering theorem, has only the 0-binder exhaustive_matrix_witness and the one-step remainder helpers, and no obligation is recorded. The packet is missing the row for src/lowering-LAWS.bend::irrefutable_first_row_selected (the LAW regex drops it). That law is about the irrefutable first row, not exhaustiveness, so the defect does not bear on this one-law claim."
+  },
+  {
+   "id": "vm-model-07e6db73-symbolic-tail",
+   "rule": "required-laws-met",
+   "split": "broken",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "07e6db73",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "manifest": {
+    "required_laws": [
+     "the codec round trip, on a hand-written plan and on five golden images;",
+     "four refusal reasons, and bounded validator soundness: every single-word mutation of `value-on`'s function, constant and node sections is refused or runs soundly;",
+     "\u00a74's resource limits on `value-on`'s function record: a `slots` of 65,537 is `Exhausted` kind 2 `slots`, one of 65,536 is within the limit (and refused by the validator's exactness), and an arity of 4,097 that the record cannot hold is the malformed `function record`, not the arity limit;",
+     "symbolic machine equations over arbitrary states: an entry at fuel 0 is Exhausted, a finished machine is final, tail position, the Nat bounds, `x/0`, `x%0` and shifts by 32 or more;",
+     "one audited run per fixture image (a Book per node family and a Program): its answer, the RC audit at every transition and zero live mortal cells after it;",
+     "audited runs of plans encoded in the law: a tags-mode Case on Char selects Chr for the code of 'A'; a key-mode Case on Char admits and selects the key 0xffffffff; a key Branch and a Default answer a `none` parameter in a U32 Case (arm fit, \u00a73); a Nat word spells its type's own constructor names; and completing Chr on a laundered Pair stops `HostFailure image ill-typed` with every count balanced;",
+     "\u00a78's byte measure: `text_size` counts UTF-8 bytes, not scalars."
+    ]
+   },
+   "anchors": [
+    "symbolic machine equations over arbitrary states",
+    "tail_skips_scopes | 0 |"
+   ],
+   "source": "vm/MODEL.md:50-69@07e6db73",
+   "note": "The list claims 'symbolic machine equations over arbitrary states' that include tail position and 'shifts by 32 or more'. The only tail laws, tail_skips_scopes and operands_are_not_tail, have 0 binders and fixed three-frame stacks, which are ground witnesses where the claim promises equations over arbitrary states. wide_shifts_vanish fixes the shift at exactly 32, which silently narrows '32 or more'. The other bullets are explicitly bounded, so their 0-binder laws are not what decides this label."
+  },
+  {
+   "id": "fields-wasm-3868b119-proof-boundary",
+   "rule": "required-laws-met",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "fields-wasm",
+   "head": "3868b119",
+   "manifest": {
+    "required_laws": [
+     "Five checked capability/representation/erasure helper laws, not general compiler or memory refinement."
+    ]
+   },
+   "anchors": [
+    "Five checked capability/representation/erasure helper laws",
+    "erased_pattern_keeps_offset_and_locals | 15 |"
+   ],
+   "source": "src/CONTRACT.json:203-203@3868b119",
+   "note": "The contract names five capability/representation/erasure helper laws, and the matrix shows exactly five laws, all PROOF filled, each with binders (1, 1, 4, 13, 15): two capability laws, one constructor-representation law and two erasure laws. Nothing in the claim asks for a general refinement law, and the claim itself disclaims one."
+  },
+  {
+   "id": "closures-a1d68911-spec-laws",
+   "rule": "required-laws-met",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "closures",
+   "head": "a1d68911",
+   "manifest": {
+    "required_laws": [
+     "Checked laws state capture, type identity, lowering and evaluator-step equations."
+    ]
+   },
+   "anchors": [
+    "Checked laws state capture, type identity, lowering and evaluator-step equations.",
+    "apply_evaluates_the_function_first | 8 |"
+   ],
+   "source": "tests/compiler-closures/SPEC.md:41-42@a1d68911",
+   "note": "Each of the four named law families has universally quantified laws in the matrix: capture (capture_arity 2, capture_quantity 7), type identity (arrow_kind 3, interned_arrow_is_stable 5), lowering (close_has_one_cell 5, invoke_has_one_dispatch 5) and evaluator steps (apply_evaluates_the_function_first 8, close_starts_with_an_empty_environment 11). All 24 rows have binders > 0 and PROOF filled; nothing is ground-only."
+  },
+  {
+   "id": "generics-78c4942e-proof-boundary",
+   "rule": "required-laws-met",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "generics",
+   "head": "78c4942e",
+   "manifest": {
+    "required_laws": [
+     "Universal raw substitution composition, finite quantity meet laws and erased evaluator steps with explicit fuel; differential corpus agreement is finite, not compiler soundness."
+    ]
+   },
+   "anchors": [
+    "Universal raw substitution composition",
+    "substitution_composes | 3 |"
+   ],
+   "source": "src/CONTRACT.json:292-292@78c4942e",
+   "note": "Universal raw substitution composition is substitution_composes (3 binders, T.subst(T.subst(expr,first),second) == T.subst(expr,T.compose(first,second))); the quantity meet laws are meet_associative/commutative/idempotent (3/2/1 binders); the erased evaluator steps with explicit fuel are the three erased_*_commutes laws (12 binders, V.run(1n+fuel,...)). The trailing clause 'differential corpus agreement is finite, not compiler soundness' is a disclaimer, not a law, and nothing in the packet contradicts it."
+  },
+  {
+   "id": "nest-5374d928-proof-scope",
+   "rule": "required-laws-met",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "5374d928",
+   "manifest": {
+    "required_laws": [
+     "Proof scope: stable row-identity selection is universal over source row lists; irrefutable-column preservation, first-leaf selection, alias identity/erasure, one step of the live split's remainder (the split constructor leaves the remaining tags and its rows leave the negative matrix; other tags and variable rows stay) and work exhaustion are quantified helper laws."
+    ]
+   },
+   "anchors": [
+    "one step of the live split's remainder",
+    "remainder_drops_split_rows | 8 |"
+   ],
+   "source": "tests/compiler-nest/SPEC.md:101-105@5374d928",
+   "note": "Same shape at round 4, where the default helpers were replaced by the remainder laws: row-identity selection (4), irrefutable-column preservation (8, 6), first-leaf selection (6), alias identity/erasure (3, 2), one step of the live split's remainder (remainder_omits_split 4, remainder_keeps_other 4, remainder_drops_split_rows 8, irrefutable_remainder 6) and work exhaustion (5). Every item is a quantified law. The same packet evidence is broken under the state.json unmet-theorem list (nest-5374d928-unmet-laws): a same-evidence, different-claim contrast."
+  },
+  {
+   "id": "nest-57a0c01d-principal-law",
+   "rule": "required-laws-met",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "57a0c01d",
+   "manifest": {
+    "required_laws": [
+     "identities(M.specialize(rows, ctor, fields, level)) == selected(rows, ctor)"
+    ]
+   },
+   "anchors": [
+    "identities(M.specialize(rows, ctor, fields, level)) == selected(rows, ctor)",
+    "specialization_preserves_first_match | 4 |"
+   ],
+   "source": "tests/compiler-nest/receipts/LAW_REVIEW.md:23-23@57a0c01d",
+   "note": "The single required law is stated verbatim by specialization_preserves_first_match, which has 4 binders (rows, ctor, fields, level) and PROOF filled; its statement is the same equation without spaces. The general-named 0-binder rows irrefutable_lowering_selects_first and exhaustive_matrix_has_no_missing_branch are present, but the claim does not ask for them, so they are distractors, not violations."
+  },
+  {
+   "id": "harness-2-364d427e-fixed-57-native",
+   "rule": "clause-vs-delta",
+   "split": "clean",
+   "expected": "clean",
+   "increment": "harness-2",
+   "head": "364d427e",
+   "anchors": [
+    "It is fixed at 57 cases. - C1 is built only in the native lane."
+   ],
+   "note": "A base clause the branch rewords while keeping it: the conformance corpus stays at 57 cases ('at 57 cases, and it runs from the repository root'), and every shown hunk still builds C1 in the native lane ('native, twice'). Added before the clause-vs-delta rewrite so that a base-clause header does not predict the label (the other base-clause controls are broken); it has no baseline score under the original text."
+  },
+  {
+   "id": "nest-384acc6e-partitioned-matrix-budget",
+   "rule": "claim-holds-against-evidence",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "nest",
+   "head": "384acc6e",
+   "anchors": [
+    "research/compiler-fields/SPEC.md:73-75",
+    "S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>"
+   ],
+   "note": "The claim states a bound (4096 matrix steps per expanded match), a partition of it among constructor branches, and a check with a named diagnostic (an exhausted partition reports `Exhausted check budget`). The only 4096 in the shown code bounds the let-binding counter `next` in the `S.Binding` case, not matrix steps. The `S.Matrix` case passes the node's own `work` into `M.expand`, whose body is not shown, and nothing shown partitions a budget among branches or emits `Exhausted check budget`. Under the frozen text this is both 'a counter or size the sentence says is bounded that nothing bounds' and 'a sentence states a requirement or check and the code that would perform it is not shown: missing evidence is not a pass'. The packet shows the claim and the misleading 4096 site, so the label does not depend on outside files. (Seeded by a held-out replay pointer whose finding title was printed during orientation.)"
+  },
+  {
+   "id": "modules-bbff6371-binder-walk-bound",
+   "rule": "claim-holds-against-evidence",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "modules",
+   "head": "bbff6371",
+   "anchors": [
+    "The declaration-order binder walk is bounded at 65,536 work steps",
+    "S.choose(IO(Unit),Bool.and(U32.is_le(c,65536),U32.is_le(d,4096)),u =>"
+   ],
+   "note": "The sentence states a bound on a work counter (the declaration-order binder walk, at 65,536 steps) and its outcome (`Exhausted check`). The only 65536 in the shown code is `configure`'s range check on the character-budget argument `c`, which fails as `HostFailure arguments budget-out-of-range`, not `Exhausted check`, and does not count binder-walk steps. No shown code counts or bounds the walk. This is 'a counter ... the sentence says is bounded that nothing bounds' and a stated check whose enforcing code is absent. The first claim bullet (L5, 'A let or arm binder named like an earlier constructor reports') is a dangling fragment. It is also unevidenced, so it cannot flip the label to clean."
+  },
+  {
+   "id": "literals-943104f8-census-feature-exception",
+   "rule": "claim-holds-against-evidence",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "literals",
+   "head": "943104f8",
+   "upstream": [
+    "modules=campaign/modules"
+   ],
+   "anchors": [
+    "tools/census/SPEC.md:43-45",
+    "const pinned = typeof exception?.sha256 === 'string' && exception.sha256 === entry.sha256"
+   ],
+   "note": "The one claim sentence is realized exactly by the shown code. An exception is looked up per file. It applies only when its `sha256` is a string equal to that file's `entry.sha256` (one exact file SHA-256), and only to features listed in `exception.features` (named features). It suppresses only the forbidden-dependency-feature violation, so it is not wider than the sentence says. The `features.includes` membership test is the naming the sentence describes, not a normalization hiding a difference. 'Reviewed' describes the approval process, not a check the code is said to perform. Identical packets exist at modules/7ac90164 (0132) and modules/bbff6371 (0126). The anchors select 0331 over literals' 0330, which adds an unevidenced 'arrays behind Vec' sentence."
+  },
+  {
+   "id": "nest-99053a70-concrete-normalization-witnesses",
+   "rule": "claim-holds-against-evidence",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "99053a70",
+   "anchors": [
+    "> Two complete checker normalizations exercise an overlapping",
+    "law irrefutable_lowering_witness:"
+   ],
+   "note": "Every part of the single claim sentence is shown. Two laws equate `lower(...)` with a complete `Done{C.Checked{...}}` tree, which is two checker normalizations. `irrefutable_lowering_witness` normalizes an irrefutable `_ _` row overlapping an `Off Off` row. `exhaustive_matrix_witness` normalizes all four Off/On pairs over two columns (an exhaustive 2-by-2 matrix). All three named laws are shown, and none has a `for` binder, so each is a concrete ground instance. The third law uses `M.expand` rather than `lower`, which is consistent with the count 'two'. The sentence names no check or bound that code outside the packet would have to perform. A byte-identical packet is nest/384acc6e 0078, and nest/47172493 0085 carries the same claim. The 99053a70 copy is chosen for head diversity; this head is allowed for this rule."
+  },
+  {
+   "id": "nest-47172493-base-guard-reworded",
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "47172493",
+   "anchors": [
+    "Invariance clause at base (src/CONTRACT.json), reworded or removed by this branch:",
+    "unsigned size > 65536 - bump; only unreachable in the profile"
+   ],
+   "note": "Subject: the allocator guard is the only `unreachable` in the profile. The base clause's rewording adds 'the' and leaves the promise unchanged. No shown hunk emits or adds an `unreachable`: the code regions are a pattern-binder check and gate code, and the review gate adds checks that keep the invariant (no `unreachable` in enum output, and a mutant that introduces one must die). Under the rule, rewording does not make an unchanged subject a violation, and hunks that add checks keeping the invariant hold."
+  },
+  {
+   "id": "nest-384acc6e-base-mvp-reworded",
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "384acc6e",
+   "anchors": [
+    "Invariance clause at base (src/SPEC.md), reworded or removed by this branch:",
+    "only MVP numeric/control instructions."
+   ],
+   "note": "Subject: the emitted Wasm uses a version-1 header and only MVP numeric/control instructions. Every shown hunk is gate, regeneration or seed-table code; none changes emission. The review gate adds a whitelist check on enum output and a mutant that the whitelist must kill, which keeps the invariant. The rule says a packet whose hunks do not touch the subject holds, and that rewording the clause in the same change does not make an unchanged subject a violation."
+  },
+  {
+   "id": "generics-edfad8b9-parameter-mutant-anchor",
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "generics",
+   "head": "edfad8b9",
+   "anchors": [
+    "> The parameter mutant keeps its original anchor"
+   ],
+   "note": "Subject: the parameter mutant's anchor. The hunk keeps the mutant's name, anchor `unsupported(rest,\"parameter-type\")`, replacement and expected wrong outcome, and its file stays parse.bend (the loop now reads the file from the tuple instead of hard-coding parse.bend). The only change to this mutant is its witness, 'application-parameter' becoming ['function-parameter'], which is exactly the change the clause names. The other mutant rows that change are other subjects. The rule says hunks that make exactly the change the clause names hold."
+  },
+  {
+   "id": "modules-7ac90164-census-sole-exception",
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "modules",
+   "head": "7ac90164",
+   "anchors": [
+    "> A reviewed `dependency_feature_exceptions` entry may exempt named features of one exact file SHA-256."
+   ],
+   "note": "Subject: which forbidden dependency features may be exempted. The census change exempts a feature only when the file's own exception entry pins its exact sha256 and names that feature, and forbidden features otherwise stay violations. The added tests check that other files, changed bytes and other features remain rejected. This is exactly the change the clause names, plus checks that keep the rest of the ban. No shown hunk adds another `foreign` exception."
+  },
+  {
+   "id": "vm-core-6f78bd27-control-jobs-want",
+   "rule": "expectation-independent",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "6f78bd27",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       766,
+       766
+      ],
+      "note": "section 11, The rule"
+     },
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       57,
+       59
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       167,
+       179
+      ],
+      "note": "observed_reason"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       406,
+       409
+      ],
+      "note": "host"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       588,
+       591
+      ],
+      "note": "a mutant of group controls"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       752,
+       752
+      ],
+      "note": "main"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       928,
+       945
+      ],
+      "note": "main: the frozen refusal controls through the host"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1057,
+       1060
+      ],
+      "note": "main: the mutants are edits of vm.wat"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1066,
+       1068
+      ],
+      "note": "main: control_jobs"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1083,
+       1083
+      ],
+      "note": "main: groups"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1089,
+       1090
+      ],
+      "note": "main"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1119,
+       1121
+      ],
+      "note": "main: the mutant kill"
+     }
+    ]
+   },
+   "note": "control_jobs' want is the exit, stdout and stderr the VM under test (vm.wasm through the host) printed for each frozen refusal control. Those jobs are group 'controls', which judges the vm.wat mutants (e.g. validator-offset) through observed_wrong. The output is checked only on the refusal code before adoption, and its stdout is never compared with anything independent. Broken twice under the frozen text. First, 'an expected value is the output of the implementation under test ... and is then used to judge ... its mutants', with no exemption for a VM output checked against a reference codec. Second, the claim sentence says expected values are never regenerated from a candidate VM. The same defect is at vm-core dcc7c095 (check-core.py 1086-1102, 1222-1224) and 2c1f3d70 (1616-1630, 1772-1774), and per the brief at earlier heads. Excerpt used because every builder packet of check-core main is truncated at 12 KB, long before control_jobs. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-core-dcc7c095-limit-word-jobs-want",
+   "rule": "expectation-independent",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "dcc7c095",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       68,
+       71
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       634,
+       652
+      ],
+      "note": "compare"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       872,
+       878
+      ],
+      "note": "mutants of group limit-words"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       903,
+       903
+      ],
+      "note": "main"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1082,
+       1084
+      ],
+      "note": "main: traced"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1201,
+       1205
+      ],
+      "note": "main"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1213,
+       1216
+      ],
+      "note": "main: the mutants are edits of vm.wat"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1243,
+       1245
+      ],
+      "note": "main: word_jobs"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1252,
+       1255
+      ],
+      "note": "main: groups"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1284,
+       1286
+      ],
+      "note": "main: the mutant kill"
+     }
+    ]
+   },
+   "note": "word_jobs' want and dump are the runs and registers the VM's own test build (traced -> harness with wasm=test) produced on the limit-word corpus. Group 'limit-words' judges the record-fit mutants of vm.wat with them. compare() checks only the refusal code before the whole output is adopted. The expectation is therefore the output of a build of the implementation under test, used to judge its mutants. This is broken under the code clause alone: the claim (CORE.md's limit-word corpus) names no independent source, so this control tests the pure-code shape, while the 6f78bd27 control_jobs one adds a contradicting sentence. Also present at 2c1f3d70 (check-core.py 1793-1795). Excerpt used because every builder packet of check-core main is truncated at 12 KB. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-spec-cea554ab-vm-expectation",
+   "rule": "expectation-independent",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "cea554ab",
+   "anchors": [
+    "def vm_expectation(case, plan, bounds, source, evaluator=None) -> dict:"
+   ],
+   "note": "Every expectation vm_expectation returns comes from an allowed source. Unsupported comes from the reference codec's undescribable(). Exhausted comes from the frozen bounds rows. Otherwise it is the seed's printed value, or eval-cli's line only after `require(tree == value)` compares eval-cli's tree with the seed's value. That last case is exactly 'taken from Knot's evaluator only after the code compares it with the seed'. Programs go to output_expectation (the reference evaluation checked against the seed's bytes). No expectation is taken from an implementation under test; at vm-spec no VM exists, and the D7 claim is consistent with the code."
+  },
+  {
+   "id": "vm-model-37e69a30-fuel-runs-literal",
+   "rule": "expectation-independent",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-model",
+   "head": "37e69a30",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "want = {n: ('Exhausted', 'vm', '1', 'fuel') for n in cases}"
+   ],
+   "note": "The judging expectations of fuel_runs are literals written in the code: every fuel-0 run must stop `Exhausted vm 1 fuel` with exit 4, and value-on at fuel 1 must print `Evaluated\\t0\\t1\\tOn{}`. The docstring derives them from SPEC section 7. 'A literal written in the code is its own source', and the model's output (result) only feeds the comparison. This matches the claim's 'literal fuel ... controls'."
+  },
+  {
+   "id": "vm-model-19cf7d8f-harness-fuel-ignored",
+   "rule": "kill-is-semantic",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "19cf7d8f",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "docs/compiler-campaign/GATES.md",
+      "lines": [
+       99,
+       100
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       101,
+       109
+      ],
+      "note": "run"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       255,
+       260
+      ],
+      "note": "KNOWN_EXITS, well_formed"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       276,
+       287
+      ],
+      "note": "agrees"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       474,
+       494
+      ],
+      "note": "admitted_runs"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       497,
+       512
+      ],
+      "note": "fuel_ignored, harness_runs"
+     },
+     {
+      "path": "vm/check-model.py",
+      "lines": [
+       927,
+       935
+      ],
+      "note": "kills"
+     }
+    ]
+   },
+   "note": "The packet shows the whole path from a timeout to a counted kill. run() turns a timeout into {'exit': None, ...}; agrees() is then False, since no branch accepts exit None; admitted_runs records 'agrees': False; and harness_runs counts every row that stops agreeing as a kill of the harness mutant fuel-ignored, with no well_formed() test. The same packet defines well_formed as the filter that keeps a crash, trap or timeout from counting, and applies it in kills(). The later `killed == killers` check is the frozen text's 'even if the killed set is later compared with an expected list'. Broken under 'a disagreement is counted as a kill without first establishing that the run ended in a well-formed answer'. Excerpt used because the builder packet shows harness_runs but not run() or agrees(), which carry the timeout to the kill (the brief's crediting bar for vm-model). (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-spec-cea554ab-source-mutants",
+   "rule": "kill-is-semantic",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-spec",
+   "head": "cea554ab",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       756,
+       757
+      ],
+      "note": "section 11. Outcomes and the Exhausted-lane rule"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       71,
+       90
+      ],
+      "note": "run, observed"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       133,
+       141
+      ],
+      "note": "seed_observation"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       152,
+       162
+      ],
+      "note": "lanes"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       2034,
+       2039
+      ],
+      "note": "SOURCE_MUTANTS"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       2042,
+       2055
+      ],
+      "note": "source_mutants"
+     }
+    ]
+   },
+   "note": "The claim says a timeout or crash never counts as a semantic mutant kill. The shown code counts one. On a timeout, run() returns {'exit': None, 'stdout': '', 'stderr': ''}; observed() keeps exactly those fields; lanes() puts them in the seed and eval observations; and source_mutants marks the mutant killed whenever both observations differ from the frozen rows. Nothing establishes a well-formed answer first, and a timed-out (or crashed, nonzero-exit) lane differs from any frozen row. Broken under 'a predicate counts any difference between observations and one of those outcomes yields a differing observation (for example an empty result on timeout)'. Excerpt used because the builder packet shows source_mutants but not lanes/seed_observation/observed/run, and it also carries codec, evaluator and rule mutant code the label does not turn on. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-spec-cea554ab-codec-mutants-helpers",
+   "rule": "kill-is-semantic",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "cea554ab",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1670,
+       1672
+      ],
+      "note": "comment above CODEC_MUTANTS"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/serializer.py",
+      "lines": [
+       39,
+       44
+      ],
+      "note": "the reference codec's two refusal classes"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1020,
+       1035
+      ],
+      "note": "rejected"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1599,
+       1602
+      ],
+      "note": "argument_verdict"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1624,
+       1626
+      ],
+      "note": "describe_verdicts"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1647,
+       1667
+      ],
+      "note": "round_trip, text_spelling"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1824,
+       1827
+      ],
+      "note": "invocation_verdicts"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       1830,
+       1900
+      ],
+      "note": "codec_mutants"
+     }
+    ]
+   },
+   "note": "Every codec kill in codec_mutants compares a value the mutant returned with a frozen image, plan, refusal prefix/message, describe verdict, invocation verdict or argument verdict. Each mutant call sits in try/except Exception that continues or falls back to the frozen verdicts, so a crash never yields a differing observation. The shown helpers return either None or a registered refusal: rejected catches only the codec's Malformed/Exhausted classes, and anything else propagates to that except. The run is in-process, with no timeout or harness outcome. This is the 'pins its observation to a well-formed outcome ... and only then compares it' case. Excerpt used because the builder's only packet for this head mixes codec_mutants with source_mutants (see the broken proposal) and never shows rejected/round_trip/text_spelling/describe_verdicts/invocation_verdicts/argument_verdict. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-core-6f78bd27-wat-mutant-loop",
+   "rule": "kill-is-semantic",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-core",
+   "head": "6f78bd27",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       403,
+       404
+      ]
+     },
+     {
+      "path": "vm/CORE.md",
+      "lines": [
+       436,
+       438
+      ]
+     }
+    ],
+    "evidence": [
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       208,
+       214
+      ],
+      "note": "shown"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       412,
+       423
+      ],
+      "note": "harness, clean"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1057,
+       1059
+      ],
+      "note": "main: comment before the mutant jobs"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1081,
+       1082
+      ],
+      "note": "main: full_heap"
+     },
+     {
+      "path": "vm/check-core.py",
+      "lines": [
+       1089,
+       1124
+      ],
+      "note": "main: the mutant loop"
+     }
+    ]
+   },
+   "note": "The kill predicate first requires clean(): no Trap or HostStack status and no io trap, host or call-stack failure. Only then does it compare the host-visible run and registers with the row's frozen want/dump. A hung or failed harness raises through subprocess's timeout or `require(p.returncode == 0)`, which fails the gate instead of counting. The only trap credited is the trap group's registered defect, and only on exactly the three full-heap rows while every other ceiling row is clean and right. That is 'an exact outcome the mutant is registered to produce'. The shape group kills on a static call-graph observation. Excerpt used because both builder packets of check-core main at this head are truncated at 12 KB before the mutant loop and omit clean/shown/harness. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "vm-spec-cea554ab-d20-non-scalar-output",
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-spec",
+   "head": "cea554ab",
+   "excerpt": {
+    "claim": [
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       740,
+       744
+      ],
+      "note": "section 10. IO and knot-io-2"
+     }
+    ],
+    "evidence": [
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       73,
+       73
+      ],
+      "note": "decision row D4"
+     },
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       85,
+       85
+      ],
+      "note": "decision row D16"
+     },
+     {
+      "path": "docs/COMPILER-CAMPAIGN.md",
+      "lines": [
+       89,
+       89
+      ],
+      "note": "decision row D20"
+     },
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       751,
+       757
+      ],
+      "note": "section 11. Outcomes and the Exhausted-lane rule"
+     },
+     {
+      "path": "vm/SPEC.md",
+      "lines": [
+       792,
+       822
+      ],
+      "note": "section 11"
+     },
+     {
+      "path": "vm/check-spec.py",
+      "lines": [
+       655,
+       687
+      ],
+      "note": "frozen expectation code for a Program golden"
+     }
+    ]
+   },
+   "note": "The seed's native lane succeeds (exit 0) and the VM refuses non-scalar output. That is allowed only as a documented bound, an Unsupported gap or 'a divergence that a decision row itself documents'. Here the D20 decision row itself documents it, and every source gives this case one class: HostFailure io abi in \u00a710, in \u00a711, in the D20 row and in the frozen output_expectation code. So there is no class conflict and no unexcused seed-success refusal. The other shown classes agree with D4/D16 (malformed images HostFailure, \u00a74 limits Exhausted kind 2, unhandled forms Unsupported). Excerpt used because the builder shows only the D4 and D16 rows, never the D20 row, in every vm-spec and vm-core packet. (Excerpt: the builder does not reach the deciding lines.)"
+  },
+  {
+   "id": "literals-943104f8-file-failures-and-path-identity",
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "literals",
+   "head": "943104f8",
+   "upstream": [
+    "modules=campaign/modules"
+   ],
+   "anchors": [
+    "File access failures other than missing imported files remain",
+    "The host query rejects symlink components and non-exact directory-entry spellings"
+   ],
+   "note": "Each class follows the frozen text. File access failures, which fall outside the program's meaning, are HostFailure. Resource bounds are Exhausted and never Invalid. Symlink and case-alias paths the loader cannot yet identify are Unsupported, a D4 capability gap rather than Invalid or HostFailure. No case is given two classes, and the shown sources (D4, D16 rows) do not contradict any of them."
+  },
+  {
+   "id": "nest-384acc6e-wasm-call-stack-arena-exhausted",
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "384acc6e",
+   "anchors": [
+    "During export invocation, a call-stack `RangeError` reports"
+   ],
+   "note": "Both refusals of a domain-valid call are resource limits reported as Exhausted with the limit as cause (call-stack, arena-overflow). That is a documented bound in the frozen text's sense ('a resource limit ... itself Exhausted with its cause'), and the shown outcome section agrees (timeouts and exceeded bounds are exhaustion). No source gives these cases another class."
+  },
+  {
+   "id": "vm-core-6f78bd27-check-spec-run-control-count",
+   "rule": "passages-agree",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-core",
+   "head": "6f78bd27",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "all 41 run controls, as many as SPEC section 12 states",
+    "its seven code-list controls and its 23 run controls"
+   ],
+   "note": "The term is `check-spec.py`. Both passages state how many run controls `check-spec.py` freezes, which is the same case. The changed GATES passage says 41 ('all 41 run controls ... that `check-spec.py` freezes'). SPEC \u00a74 says `check-spec.py` has 23 ('its 23 run controls'). Neither passage is marked as history, and both describe the same frozen set that vm-core must run. 'Two give the same case different numbers' applies directly, so the passages cannot both be true. The shared refusal count (62 in both) shows that the passages describe the same `check-spec.py`."
+  },
+  {
+   "id": "nest-384acc6e-parameter-type-code-retained",
+   "rule": "passages-agree",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "384acc6e",
+   "anchors": [
+    "Generic parameter types retain the existing `parameter-type` code",
+    "Parameter type applications retain their existing `Unsupported parse parameter-type` code"
+   ],
+   "note": "Every passage that shares facts with the claim gives the same classification. A generic (`Name<...`) parameter type is `Unsupported parse parameter-type` (L10, L12, L14), the code is described as the existing broader boundary (L13), and non-generic forms such as arrow or function parameter types also report `parse parameter-type` (L15, L16). That is the claim's 'also covers other unsupported parameter type forms'. The one other mention (L11, 'the parameter-type preflight crash regression' among Perch context controls) concerns a different case, and the rule says that holds. No number, class, criterion or status conflicts."
+  },
+  {
+   "id": "vm-model-37e69a30-model-counts-match-spec",
+   "rule": "passages-agree",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "vm-model",
+   "head": "37e69a30",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "anchors": [
+    "counted from `check-spec.py`: 6, 7 and 11 at vm-spec 8ef906e",
+    "its seven code-list controls and its eleven run controls"
+   ],
+   "note": "Every fact the MODEL passage shares with the evidence matches. It gives 91 goldens (SPEC table: 91 sources) and 28 frozen Book invocations (SPEC \u00a712: the 28 frozen Book invocations). Its admitted plan, code-list and run control counts, 6, 7 and 11, match SPEC \u00a74's six, seven and eleven and SPEC \u00a712's six admitted plan controls and eleven admitted run controls. `vm/evaluate.py` is the reference evaluation in both. The GATES passage only names the gate. The rest of the MODEL passage (Enter debit, stopped control, seed Bool.or lane) overlaps nothing shown. A replay pointer flagged this passage, but that finding (the acceptance item 'agrees with eval-cli on every frozen eval fixture' is deferred) depends on text absent from the packet, which was confirmed by grep. On the packet alone the passages agree. It is the earlier-version twin of the medium broken vm-model/19cf7d8f 0002. (Seeded by a held-out replay pointer whose finding title was printed during orientation.)"
+  },
+  {
+   "id": "generics-edfad8b9-proof-boundary",
+   "rule": "required-laws-met",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "generics",
+   "head": "edfad8b9",
+   "manifest": {
+    "required_laws": [
+     "Universal raw substitution composition, finite quantity meet laws and erased evaluator steps with explicit fuel; differential corpus agreement is finite, not compiler soundness."
+    ]
+   },
+   "anchors": [
+    "Universal raw substitution composition, finite quantity meet laws"
+   ],
+   "note": "The requirement states full generality for substitution composition ('Universal'), and `substitution_composes` states exactly that property over arbitrary expr/first/second with 3 for-binders. 'finite quantity meet laws' is met by the three meet_* laws, each quantified over T.Q (1-3 binders). 'erased evaluator steps with explicit fuel' asks for step laws, and the rule says a requirement that asks for step laws is met by them: three erased_*_commutes laws with 12 binders each, stated on V.run(1n+fuel, ...) with a quantity-0 parameter/binding. The clause 'differential corpus agreement is finite, not compiler soundness' is a disclaimer, which the rule says needs no law. Every required property has a matching law with binders above zero, so no obligation is needed."
+  },
+  {
+   "id": "nest-384acc6e-unmet-laws-recorded",
+   "rule": "required-laws-met",
+   "split": "held-out",
+   "expected": "clean",
+   "increment": "nest",
+   "head": "384acc6e",
+   "manifest": {
+    "required_laws": [
+     "Irrefutable first row, total form: a matrix whose first row is irrefutable lowers to that row's body (open proof obligation, D21)",
+     "Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch (open proof obligation, D21)"
+    ]
+   },
+   "anchors": [
+    "Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch"
+   ],
+   "note": "Neither required general law is established by a law in the matrix: the only laws for them are 0-binder ground witnesses (L52-54) and one-step helper laws. But the recorded obligations section names both as open ('Unproved general law', L92-93) with their evidence (the witnesses, helper laws, fixtures), and the trust inventory says they stay required until proved. The rule holds when each required law has 'a recorded open obligation', so this is the clean shape 'requirement met by a recorded obligation'. The 112 truncated bytes fall inside the evidence cell of the second row, after the law is already named as open with evidence."
+  },
+  {
+   "id": "vm-model-19cf7d8f-proof-entries",
+   "rule": "required-laws-met",
+   "split": "held-out",
+   "expected": "broken",
+   "increment": "vm-model",
+   "head": "19cf7d8f",
+   "upstream": [
+    "vm-spec=campaign/vm-spec"
+   ],
+   "manifest": {
+    "required_laws": [
+     "vm-model adds checked proof entries for the codec round trip, bounded validator soundness, the RC edge audit and zero leaks."
+    ]
+   },
+   "anchors": [
+    "vm-model adds checked proof entries for the codec round trip"
+   ],
+   "note": "The codec round trip is matched only by 0-binder ground witnesses (one word list, one hand-written plan, the fixture list), and the rule says a 0-binder law is one fixed instance whatever its name. No law in the matrix states an RC edge audit or zero leaks: the ran(...) == described(...) rows are 0-binder runs whose statements, read alone, say nothing about reference counts or live cells. No recorded obligation names any of these as open. So at least two requirements (the RC edge audit and zero leaks) have no matching law, and the rule says a required law with no matching law in the matrix breaks it. The codec round trip, matched only by ground witnesses, breaks it as well."
+  }
+ ],
+ "gaps": [
+  {
+   "rule": "clause-vs-delta",
+   "split": "held-out",
+   "expected": "broken",
+   "reason": "Labelled after the rule texts were frozen (9b28680c), by a labeller that saw no scores: None found at high confidence. Coverage, stated as it was: a structural scan of all 1,052 held-out clause-vs-delta packets (nest 47172493 and 384acc6e, generics edfad8b9, literals 943104f8, modules 7ac90164 and bbff6371, vm-core dcc7c095, 2c1f3d70 and 6f78bd27, vm-model 19cf7d8f and 37e69a30, vm-spec cea554ab and 60e80693; nest 99053a70 excluded). The scan grouped every packet with removed diff lines by the removed text, one head at a time (all non-VM heads, bbff6371 included), searched for removed tokens that recur in the clause, and filtered clauses for unchanged/kept/frozen/only/never/identical subjects. Full reads covered: all four base-clause packets (two distinct claims, each at both nest heads; clean); the single-file exit-code and limit family in modules and literals; the generics dispatch and pinned-diagnostic family (0007, 0009, 0017, 0024) and other generics packets (0014, 0029, 0045, 0079, 0101, 0106); nest 384acc6e 0042/0037 and 47172493 0043 (its removed lines are checker code, not emission); literals 0001, 0009, 0017, 0018, 0087, 0090; modules 7ac90164 0007 and 0067; the vm-core dcc7c095 and 2c1f3d70 packets that show vm.wat (0009, 0012, 0037), plus 6f78bd27 0007; and vm-spec cea554ab 0034 and 0124. The roughly 300 vm-spec packets were only spot-checked (0034, 0123, 0124, and the D4 clause at 60e80693). The replay pointers were also checked: the two clause-vs-delta pointers name vm-spec heads 8ef906ec and 5517f263, which are not in the pool, and the modules exit-code pointer is a within-clause contradiction (see rejected). One real subject change was found, generics' monomorphic empty-datatype verdict moving from Invalid to Unsupported. It appears only in packets whose clause does not govern it, or shown by inference only. So the requested broken head-clause confound control is not met from this pool."
+  },
+  {
+   "rule": "outcome-follows-d4",
+   "split": "held-out",
+   "expected": "broken",
+   "reason": "The labeller's only candidate (nest 384acc6e: rec-swapped-args and rec-alias 'remain explicitly unmet, reporting Unsupported check recursive-call' beside their frozen Invalid seed expectation) was excluded before scoring as ambiguous: the frozen text's first clause reads two classes for one case, but under D4 Knot's Unsupported for a form it cannot check yet is conformant and the unmet status is recorded. Every held-out vm-spec and vm-core outcome packet cites D20 without the D20 decision row attached, so none could be labelled either way."
+  }
+ ],
+ "retired": [
+  {
+   "id": "nest-acbdfb2e-partition",
+   "rule": "claim-holds-against-evidence",
+   "was": "broken",
+   "reason": "The contradicting total counter (the body of M.expand) is not in the packet; the label rested only on the missing-evidence clause, so it tested evidence selection, not the claim. First live run 0.89."
+  },
+  {
+   "id": "vm-spec-63e63203-bench",
+   "rule": "claim-holds-against-evidence",
+   "was": "clean",
+   "reason": "The Evidence does not establish every claim sentence ('builds both oracle heads with the seed's native', 'guards ... unchanged'); not a trustworthy clean. First live run 0.70."
+  },
+  {
+   "id": "vm-spec-0f511b06-describe",
+   "rule": "outcome-follows-d4",
+   "was": "broken",
+   "reason": "Its stated defect (section 8 against section 11 on Book describe) is not in the packet: 0f511b06 is the repair commit. It was broken only through the section 11 sentence that records the upstream literals heads' Invalid-parse observation, which the rewritten rule exempts."
+  },
+  {
+   "id": "vm-spec-5517f263-inspection",
+   "rule": "outcome-follows-d4",
+   "was": "broken",
+   "reason": "check-spec.py's oversize HostFailure rows were never attached (only plan_controls, cut at 6,144 bytes); broken only through the recorded upstream observation. The defect is a dev control as an excerpt at 94bc3d57 (vm-spec-94bc3d57-image-size-frozen)."
+  },
+  {
+   "id": "modules-6f44f677-single-file",
+   "rule": "clause-vs-delta",
+   "was": "broken",
+   "reason": "The anchor matched incidental text: the packet quotes the output-file clause, and every shown hunk preserves output; no single-file clause and no violating hunk is in it."
+  },
+  {
+   "id": "nest-57a0c01d-enum",
+   "rule": "clause-vs-delta",
+   "was": "broken",
+   "reason": "The hunk that makes knot-enum-1 emit unreachable is in none of the head's 30 packets, and the enum whitelist is JSON the builder never quotes; the chosen packet shows no violation (a builder recall limit)."
+  },
+  {
+   "id": "closures-a1d68911-fields-wasm",
+   "rule": "clause-vs-delta",
+   "was": "broken",
+   "reason": "The chosen packet quotes the head's exports clause, which names the delta, and the shown code matches it (clean). The frozen-profile widening is the base-clause packet, now dev control closures-a1d68911-only-allocator-appended."
+  },
+  {
+   "id": "nest-99053a70-recursion",
+   "rule": "clause-vs-delta",
+   "was": "held-out broken",
+   "reason": "The output-file clause again; 'recursion' matched only a gate limits string. No violation is visible."
+  },
+  {
+   "id": "vm-model-19cf7d8f-inspection-runs",
+   "rule": "kill-is-semantic",
+   "was": "held-out broken",
+   "reason": "The excerpt ends at the model run: it shows no kill predicate, no comparison and no concurrent mutant pool, so the torn-read credit is not visible in the packet."
+  },
+  {
+   "id": "nest-5374d928-ground-laws",
+   "rule": "required-laws-met",
+   "was": "broken",
+   "reason": "Its required_laws list has no verbatim source: 'specialization preserves first-match on the rows it keeps' first appears in the commit that added the controls. Replaced by lists quoted from docs/compiler-campaign/state.json, CONTRACT and SPEC."
+  },
+  {
+   "id": "nest-c500d7d5-ground-laws",
+   "rule": "required-laws-met",
+   "was": "broken",
+   "reason": "Composed required_laws list (as nest-5374d928-ground-laws); its matrix also omits a 16-binder law the builder's law regex drops."
+  },
+  {
+   "id": "nest-99053a70-d21",
+   "rule": "required-laws-met",
+   "was": "held-out broken",
+   "reason": "Composed required_laws list; the verdict also turned on the 12,288-byte truncation of the trust section."
+  }
+ ]
+}

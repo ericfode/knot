@@ -33,6 +33,7 @@ def parsed(limits: Limits, result: Result<S.Error,P.Parsed>, next: C.Book -> IO(
     case Limits{chars,parser,+checker}:
       checked(S.bind(P.Parsed,C.Book,result,tree => check_file(checker,parsed_root(tree))),next)
 
+# The syntax state machine feeds the whole-book checker before any continuation.
 def source(+limits: Limits, text: String, next: C.Book -> IO(Unit)) -> IO(Unit):
   match limits:
     case Limits{chars,+parser,+checker}:
