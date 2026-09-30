@@ -1,0 +1,140 @@
+{
+  "review": "Seed observations and literal reference counts frozen before the review fixes. Existing golden expectations and oracle archives stay unchanged.",
+  "cases": [
+    {
+      "name": "io-sequence",
+      "source": "vm/review-r0/io-sequence.bend",
+      "sha256": "66e4721aa9fa47f48e974319403dd09928cce282f454e73f6a0d59a568c6a46f",
+      "seed_check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "alpha\nbeta\n",
+        "stderr": ""
+      },
+      "seed_native": {
+        "exit": 0,
+        "stdout": "alpha\nbeta\n",
+        "stderr": ""
+      },
+      "snapshot": {
+        "check": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+        },
+        "eval": {
+          "exit": 2,
+          "stdout": "",
+          "stderr": "Invalid\tparse\tfunction-result\t13:14:3:11\n"
+        }
+      },
+      "availability": {
+        "status": "unavailable",
+        "owner": "literals/io-check",
+        "reason": "inherited Invalid parse function-result on seed-accepted IO"
+      }
+    },
+    {
+      "name": "tail-5000",
+      "source": "vm/review-r0/tail-5000.bend",
+      "sha256": "47d4d36f32cc43fb266deaa6b27321029ed68208385c3a63337af7c9b57a692a",
+      "seed_check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "seed_native": {
+        "exit": 0,
+        "stdout": "True{}\n",
+        "stderr": ""
+      },
+      "snapshot": {
+        "check": {
+          "exit": 0,
+          "stdout": "Checked\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>call0($1:1)]\nmain()->0=call0(5000n)\n\n",
+          "stderr": ""
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tTrue{}\n",
+          "stderr": ""
+        }
+      },
+      "plan": "vm/review-r0/tail-5000.plan.json",
+      "plan_sha256": "5d34ecd5f3e16753a7dcb2f66b02cc4c5d77208db62172f5bae7e89b4ca8e349",
+      "reference": {
+        "exit": 0,
+        "stdout": "Evaluated\t4\t1\tTrue{}\n",
+        "effects": 0,
+        "calls": 5002
+      },
+      "short_fuel": 5001,
+      "reference_short": {
+        "outcome": "Exhausted",
+        "kind": 1,
+        "cause": "fuel",
+        "stdout": "",
+        "effects": 0,
+        "calls": 5001
+      }
+    },
+    {
+      "name": "non-tail-4999",
+      "source": "vm/review-r0/non-tail-4999.bend",
+      "sha256": "10f09801f5632b2970297f2ac9e383029c51de34b6d8a5f0a460e56fa6afcd2c",
+      "seed_check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "seed_bun": {
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": ""
+      },
+      "seed_native": {
+        "exit": 0,
+        "stdout": "False{}\n",
+        "stderr": ""
+      },
+      "snapshot": {
+        "check": {
+          "exit": 0,
+          "stdout": "Checked\ninvert(1:0)->0=case $0 [0=>v0.1;1=>v0.0]\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>call0(call1($1:1))]\nmain()->0=call1(4999n)\n\n",
+          "stderr": ""
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t0\tFalse{}\n",
+          "stderr": ""
+        }
+      },
+      "plan": "vm/review-r0/non-tail-4999.plan.json",
+      "plan_sha256": "7acc546bc7991f939642be4edd7043a1b09ac5b4eec6039da860d75e159dad59",
+      "reference": {
+        "exit": 0,
+        "stdout": "Evaluated\t4\t0\tFalse{}\n",
+        "effects": 0,
+        "calls": 10000
+      },
+      "short_fuel": 9999,
+      "reference_short": {
+        "outcome": "Exhausted",
+        "kind": 1,
+        "cause": "fuel",
+        "stdout": "",
+        "effects": 0,
+        "calls": 9999
+      }
+    }
+  ]
+}

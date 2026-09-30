@@ -1,0 +1,222 @@
+{
+  "entry": "book",
+  "representation": {
+    "U32": 0,
+    "Nat": 1,
+    "Char": 2,
+    "String": 3,
+    "Bool": 4,
+    "Cmp": 5,
+    "Unit": 6,
+    "IO.OP": 7
+  },
+  "types": [
+    {
+      "kind": "opaque",
+      "name": "U32"
+    },
+    {
+      "kind": "data",
+      "name": "Nat",
+      "constructors": [
+        {
+          "name": "Zero",
+          "fields": []
+        },
+        {
+          "name": "Succ",
+          "fields": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "Char",
+      "constructors": [
+        {
+          "name": "Chr",
+          "fields": [
+            0
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "String",
+      "constructors": [
+        {
+          "name": "SNil",
+          "fields": []
+        },
+        {
+          "name": "SCon",
+          "fields": [
+            2,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "Bool",
+      "constructors": [
+        {
+          "name": "False",
+          "fields": []
+        },
+        {
+          "name": "True",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "Cmp",
+      "constructors": [
+        {
+          "name": "LT",
+          "fields": []
+        },
+        {
+          "name": "EQ",
+          "fields": []
+        },
+        {
+          "name": "GT",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "Unit",
+      "constructors": [
+        {
+          "name": "Unit",
+          "fields": []
+        }
+      ]
+    },
+    {
+      "kind": "data",
+      "name": "IO.OP",
+      "constructors": [
+        {
+          "name": "Emit",
+          "fields": [
+            null
+          ]
+        },
+        {
+          "name": "Halt",
+          "fields": [
+            0,
+            3
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "arrow",
+      "domain": 6,
+      "result": 7
+    },
+    {
+      "kind": "arrow",
+      "domain": 8,
+      "result": 7
+    },
+    {
+      "kind": "erased-arrow",
+      "domain": null,
+      "result": 9
+    },
+    {
+      "kind": "data",
+      "name": "Flag",
+      "constructors": [
+        {
+          "name": "Off",
+          "fields": []
+        },
+        {
+          "name": "On",
+          "fields": []
+        }
+      ]
+    }
+  ],
+  "functions": [
+    {
+      "name": "drain",
+      "result": 4,
+      "parameters": [
+        1
+      ],
+      "slots": 2,
+      "body": [
+        "case",
+        4,
+        0,
+        1,
+        "tags",
+        [
+          [
+            "branch",
+            0,
+            1,
+            0,
+            [
+              "value",
+              4,
+              1
+            ]
+          ],
+          [
+            "branch",
+            1,
+            1,
+            1,
+            [
+              "call",
+              4,
+              0,
+              [
+                [
+                  "ref",
+                  1,
+                  1
+                ]
+              ]
+            ]
+          ]
+        ],
+        null
+      ]
+    },
+    {
+      "name": "main",
+      "result": 4,
+      "parameters": [],
+      "slots": 0,
+      "body": [
+        "call",
+        4,
+        0,
+        [
+          [
+            "lit",
+            1,
+            "Nat",
+            5000
+          ]
+        ]
+      ]
+    }
+  ]
+}
