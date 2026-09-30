@@ -92,13 +92,14 @@ one-page arena and exhaustion policy apply; there is no reclamation or owned
 storage guarantee.
 
 `src/types-PROOF.bend` fills 12 laws, including universal substitution composition
-and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 21 laws,
-including erased evaluator transitions with their one-step fuel adjustment, the
-empty-family boundary, `type_level_definition`, `pattern_order` and
-`spaced_quantity`. `src/check-PROOF.bend` fills `def_reference`,
+and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 18 laws,
+including erased evaluator transitions with their one-step fuel adjustment and
+`abstract_identity`. The catalog and type-parsing proof pairs fill three laws
+each, relocated verbatim by subject. `src/check-PROOF.bend` fills `def_reference`,
 `src/catalog-PROOF.bend` fills `empty_datatype`, and the frontend proof fills
 `term_argument` and `marked_binder`; the gate runs the frontend, types,
-erasure and catalog proof entries (the last chains the check laws).
+erasure, catalog, generic-catalog and type-parsing proof entries (the catalog
+entry chains the check laws).
 The complete frontend proof fills the restated generic-header acceptance law,
 whose parameter type touches its closing `>`.
 These proofs and finite differential observations are distinct from a universal
@@ -117,6 +118,59 @@ extends `generics.bend`; see the dual checker path in
 [COMPILER-CAMPAIGN.md](../../docs/COMPILER-CAMPAIGN.md)), and run live Perch
 semantic and style review. No package, runtime IR, evaluator or Wasm emitter
 implementation changes are part of this increment.
+
+## Review round 5
+
+The implementer fixes the last review from `edfad8b9` without merging another
+branch. Main integration is coordinator-owned under the current executor rule.
+[RULINGS.md](RULINGS.md) proposes a disposition for all nine assertion-ledger
+rows and all 24 implementation-chosen boundary pins;
+[MERGE-WITH-CLOSURES.md](MERGE-WITH-CLOSURES.md) assigns the three losing pins
+and the two affected mutants to the D26 reconciliation after closures lands.
+Seed replays preserve On{}, On{} and Off{} for those three books in both lanes.
+
+- `a50dcef2` freezes nine token-gap fixtures before the parser repair (D7).
+  `3781ab6e` uses one adjacency guard for arrows and constructor terms/patterns,
+  with a filled refusal law. Both lanes pass 42 negative-phase observations,
+  preserve 14 artifacts and agree on 12 evaluator/Node calls. The type-correct
+  restoration mutant is killed in both lanes. Focused wall time: 323.538 s at
+  timeout scale 4, under a measured host load near 45.
+- `35e6ea14` freezes an abstract host-entry control before `057eb655` reserves
+  0xffffffff in erased signatures. The evaluator CLI refuses a live abstract
+  parameter/result; internal closed calls retain their seed values. The Wasm
+  adapter's refusal of cell-valued exports remains its owner's follow-up.
+- `c83f53a5` relocates six law/proof blocks verbatim by catalog and type parsing,
+  and renames `old_annotation` to `named_annotation`. All six proof entries stay
+  required. The let-bound late-family case stays a scrutinee control: only four
+  negatives witness constructor-pattern order. The monomorphic forward-pattern
+  residual remains with the pattern/checker owners; this increment's generic
+  order rule and four frozen witnesses remain enforced.
+- `057eb655` runs independent seed suites with four workers, builds and mutants
+  with two, and caches byte-verified builds keyed by source/dependency/toolchain
+  identity. One spacing-mutant build per lane is reused for all seven witnesses.
+  Ten native/Bun cache controls pass, covering changed dependencies, corrupt
+  artifacts and seed-invalid inputs. Detailed counts stay inside this gate;
+  the shared runner reads ordinary fixture/mutant array lengths. Its default
+  hang guard is 1,800 seconds, as in the coordinator's current runner.
+- Ten raw runner summaries move to ignored storage, preserving their hashes and
+  exact historical counts in [GATE-RUNS.md](receipts/GATE-RUNS.md). New execution
+  logs remain ignored.
+
+Reading hypothesis: a single position-aware guard exposes the token invariant;
+an explicit abstract marker preserves the host boundary; subject-specific
+law/proof pairs make each obligation findable. No law statement is weakened.
+
+Offline style preflight covers 26 manifest groups, 1,210 declarations and 44
+files: all 26 compositions are available, zero truncated units, zero structural
+blockers and zero provider requests. The whole-increment targets view over 29
+changed Bend files instead reports 507 units, 87 truncated contexts and 88
+blockers, with the combined composition unavailable. The prior review's 83
+blockers remain historical evidence. Use bounded manifest groups for live
+review. Compression, Delight, memetic identity, Anticipation and Payoff are all
+unreviewed; no numeric ratings or automatic style pass are claimed. General
+parser/application acceptance obligations remain open under D21 in src/SPEC.md.
+
+Full gate verification is recorded below after execution.
 
 ## Review round 4
 
@@ -149,8 +203,8 @@ snapshot matches its commit's files exactly:
 
 | Run | Tree | Result |
 | --- | --- | --- |
-| [run 1](receipts/review-4/gates-run1.json) | `379137f`, 4 jobs, 776 s, load average about 21 to 35 | exit 1: 20 of 21 passed. `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend` (`tests/compiler-bootstrap/check.py:1411`) |
-| [run 2](receipts/review-4/gates.json) | `d0a9eae`, 4 jobs, 625 s, load average about 19 to 27 | exit 0: 21 of 21 passed |
+| [run 1](receipts/GATE-RUNS.md#receipts-review-4-gates-run1-json) | `379137f`, 4 jobs, 776 s, load average about 21 to 35 | exit 1: 20 of 21 passed. `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend` (`tests/compiler-bootstrap/check.py:1411`) |
+| [run 2](receipts/GATE-RUNS.md#receipts-review-4-gates-json) | `d0a9eae`, 4 jobs, 625 s, load average about 19 to 27 | exit 0: 21 of 21 passed |
 
 `bootstrap` is the gate that keeps hitting this host error. Its `ENV`
 (`tests/compiler-bootstrap/check.py:94`) removes `CC` on purpose, because its
@@ -232,8 +286,8 @@ in the census (`005887b`).
 
 | Run | Tree | Result |
 | --- | --- | --- |
-| [run 1](receipts/review-3/gates-run1.json) | `f07ce14`, 4 jobs, 1,293 s, load average about 35 to 50 | exit 1: 19 passed. `census` reported `accepted.json` stale, because `f07ce14` had moved the generics gate's program hash (fixed in `005887b`). `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend`. Generics passed in 832.71 s of its 900 s wall |
-| [run 2](receipts/review-3/gates.json) | `005887b`, 4 jobs, 732 s, load average about 26 to 37 | exit 0: 21 of 21 passed |
+| [run 1](receipts/GATE-RUNS.md#receipts-review-3-gates-run1-json) | `f07ce14`, 4 jobs, 1,293 s, load average about 35 to 50 | exit 1: 19 passed. `census` reported `accepted.json` stale, because `f07ce14` had moved the generics gate's program hash (fixed in `005887b`). `bootstrap` failed on the host error `found no clang` while building `src/compile-cli.bend`. Generics passed in 832.71 s of its 900 s wall |
+| [run 2](receipts/GATE-RUNS.md#receipts-review-3-gates-json) | `005887b`, 4 jobs, 732 s, load average about 26 to 37 | exit 0: 21 of 21 passed |
 
 Run 2 counts for generics are 138 fixtures, 217 seed calls, 324 evaluator and
 324 Node agreements, 600 negative phase observations, 200 preserved
@@ -288,7 +342,7 @@ and the review's probes; after it, only the targeted probes and the new
 fixtures changed outcome.
 
 **Gates.** `npm run -s gates` on `0d2b41f` (4 jobs, 445 s, load about 13 to 21):
-exit 0, 21 of 21 passed ([summary](receipts/review-2/gates.json)). Generics:
+exit 0, 21 of 21 passed ([summary](receipts/GATE-RUNS.md#receipts-review-2-gates-json)). Generics:
 92 fixtures, 185 seed calls, 284 evaluator and 284 Node agreements, 384
 negative phase observations, 128 preserved artifacts, 28 byte-identical module
 pairs, 10 ABI arity observations, 4 proof entries, 9 mutants (18 lane kills).
@@ -349,9 +403,9 @@ gates at their proof step:
 | `2fa6e2c` plus the proposal, 4 jobs (328 s) | exit 0: 21 of 21 passed |
 | `52c9e8a` plus the proposal, `--jobs 1` (854 s, load about 15) | exit 0: 21 of 21 passed |
 
-Runner summaries: [committed tree](receipts/review-1/gates-tree.json),
-[proposal, 4 jobs](receipts/review-1/gates-proposal.json) and
-[proposal, 1 job](receipts/review-1/gates-proposal-jobs1.json).
+Runner summaries: [committed tree](receipts/GATE-RUNS.md#receipts-review-1-gates-tree-json),
+[proposal, 4 jobs](receipts/GATE-RUNS.md#receipts-review-1-gates-proposal-json) and
+[proposal, 1 job](receipts/GATE-RUNS.md#receipts-review-1-gates-proposal-jobs1-json).
 
 The proposal (not committed; it changes classify-2 assertions and needs the
 coordinator's authorization) gives the three seed-accepted application cases
@@ -429,7 +483,7 @@ only `src/PROOF.bend` fails, on the two classify-2 laws. The selfhost need
 
 ## Round 0 verification (`f39ba7e`)
 
-The [scratch-run summary](receipts/gates.json) records **14 of 15 gates passed**;
+The [scratch-run summary](receipts/GATE-RUNS.md#receipts-gates-json) records **14 of 15 gates passed**;
 `npm run -s gates` exits 1 on the retained frontend pin. Before that failure,
 the frontend completed 14 reference fixtures, 28 parser-lane observations,
 24 boundaries and four mutants. Its classification loop stops on the first
@@ -467,7 +521,7 @@ were left unchanged for coordinator refresh. The [census approval summary](recei
 is also included verbatim in the implementation commit message.
 
 A preceding parallel run exceeded existing build and harness timeouts. Its
-[resource-exhaustion summary](receipts/gates-resource-exhaustion.json) remains
+[resource-exhaustion summary](receipts/GATE-RUNS.md#receipts-gates-resource-exhaustion-json) remains
 as failed-run evidence. The final run uses `npm run -s gates -- --jobs 1` with
 the same assertions and time budgets.
 
