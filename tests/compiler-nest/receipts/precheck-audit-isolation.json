@@ -1,0 +1,271 @@
+{
+  "status": "passed",
+  "mutants": [
+    {
+      "name": "audit-skips-bodies",
+      "file": "matrix.bend",
+      "old": "S.bind(Unit,Unit,audit(n,body,width,types),u => audit(n,S.Sequence{tail},width,types))",
+      "new": "audit(n,S.Sequence{tail},width,types)",
+      "prefix": null,
+      "mutated_sha256": "20cd0cbc1bbc8d1035091c8474ab43ddbc5f23541b015c9397f65c13a7b24e87",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "witness": "dead-single-unknown",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/mutant"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/mutant",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-single-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/mutant.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-bodies/mutant.js",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-single-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        }
+      }
+    },
+    {
+      "name": "audit-skips-nested-matches",
+      "file": "matrix.bend",
+      "old": "audit(n,S.Sequence{arms},List.length(&2,S.Node,items(value)),types)",
+      "new": "Done{Unit{}}",
+      "prefix": null,
+      "mutated_sha256": "a5dfd8f408dc68833a7641fe00f5e3d43e0f9249a085ef6f51676649538b79eb",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "witness": "dead-multi-unknown",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/mutant"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/mutant",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-multi-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0,1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1;v0.0)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/mutant.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-nested-matches/mutant.js",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-multi-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0,1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1;v0.0)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        }
+      }
+    },
+    {
+      "name": "audit-skips-let-bodies",
+      "file": "matrix.bend",
+      "old": "S.bind(Unit,Unit,G.promotion(types,token,U32.is_eq(q,2)),u => audit(n,body,width,types))",
+      "new": "S.bind(Unit,Unit,G.promotion(types,token,U32.is_eq(q,2)),u => Done{Unit{}})",
+      "prefix": null,
+      "mutated_sha256": "4ae3b3cb9a2b52d3dbb4cacd36bd74283de11b813cdf95e2b600d9e62aa7643c",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "witness": "dead-let-unknown",
+      "expected": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/mutant"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/mutant",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-let-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/mutant.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-nest/precheck-audit-isolation/audit-skips-let-bodies/mutant.js",
+              "$ROOT/tests/compiler-nest/round11-fixtures/dead-let-unknown.bend"
+            ],
+            "exit": 0,
+            "stdout": "Checked\nh(1:0)->0=$0:0\nf(1:0)->0=case $0 [1=>v0.0;0=>v0.0]\nmain()->0=call1(v0.1)\n\n",
+            "stderr": ""
+          },
+          "outcome": "semantic-kill"
+        }
+      }
+    }
+  ],
+  "inputs": {
+    "src/patterns.bend": "86787402b5a2c0e8d2e91e76c97d8463c22cc437c5ccc9de58c5515edb0a3043",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/check-cli.bend": "aa1b158d62fe43533c793a1acb74d9de802bf4e74831d961595494c9ec1bd272",
+    "src/catalog.bend": "0f653de1c7928984a82503d5fb613416a83da4f3dff09942ad9b5c9da44738be",
+    "src/check-LAWS.bend": "1046e95be57c6a50893b0785d8274393afac4295f42e2799e0f067720373ba34",
+    "src/lex.bend": "af8aabae27a1662be09c3e417e4e0fbdae36bb6d586c742a1147c8c6711d67c4",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/PROOF.bend": "281431ac485ad665b92022a41e385d0ddb556839a9e49303c76765ba402db0ef",
+    "src/lowering-PROOF.bend": "799c034a1e408a847fdb331c24f441f32febf4390e473e214fd5cc519f5f6f4d",
+    "src/catalog-LAWS.bend": "255b3c7ebfe3d54c60e86b02c0464687dc63df021ea2aa3511cec854663b4e24",
+    "src/syntax.bend": "7cf5ebf071c1361a840287cca80ba60b0c29c8781c3cdf89e091f16db2aa28b2",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/LAWS.bend": "a0c109d0e7cb81dcb08feb790f5c9345135aa725f0951f1cc2bdc8e3198d9719",
+    "src/catalog-PROOF.bend": "409cb3c57282716bfedffa6a1750eedb3c4304b04acc927e7718ec59424e1fc1",
+    "src/check.bend": "8c478623349041d736ee2ff673f4fdfdfdcc83eee27b53c889aa1aa7be5cbd90",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/matrix.bend": "20213561a3ed44037d92c7c6a29305b35be495e8fa75db7e9c50c40166cad237",
+    "src/driver.bend": "167913fcea53125003c793aa191e248be9e412ad21d0bc4c3097db8d74b556ac",
+    "src/diagnostic.bend": "44c18ac293b420185a6fe10b36958d1c8b2e0edcb0d7acfddd0c366629cd6abf",
+    "src/scope.bend": "f52af7b10c78e2de6d5794cfb999a85df8faa2da407948fd76b6aa066c24c0c3",
+    "src/wasm.bend": "92bdbe0c45e76bacd9fb0e84d8ea50630f87692739162a7f6b0b8895f2f12aad",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/check-PROOF.bend": "09c94c971018c65290b7584aa0ab00929f3d1815468098b1e7d378330a7c4012",
+    "src/matrix-LAWS.bend": "562e6f402c9c1cf0c9e38ca621bd7000f97a83fb82501db6d3cb882b4639f2f3",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/matrix-PROOF.bend": "e02271ec0aba9832a5dde363f3b7fe11c20cc6811c942037e6bba33a59b25b0c",
+    "src/lowering-LAWS.bend": "21faaa4cc6d9854e650251e6360e98b17f04a399d948d7c17b25bf25cb0a03d2",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/parse.bend": "9634b07d73efe602ae8945568908f26ab5913362b35998845d7ffd93a60315f9"
+  },
+  "counts": {
+    "mutants": 3,
+    "semantic_kills": 6
+  }
+}

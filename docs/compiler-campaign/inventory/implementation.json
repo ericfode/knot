@@ -40049,7 +40049,7 @@
     },
     {
       "file": "src/check-cli.bend",
-      "sha256": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+      "sha256": "aa1b158d62fe43533c793a1acb74d9de802bf4e74831d961595494c9ec1bd272",
       "imports": [
         {
           "module": "Base",
@@ -40319,11 +40319,12 @@
           "key": "src/check-cli.source",
           "kind": "definition",
           "lines": [
-            25,
-            26
+            26,
+            27
           ],
           "features": [
             "calls",
+            "constructors",
             "generics",
             "io",
             "lambdas",
@@ -40340,8 +40341,9 @@
             "Unit",
             "src/check-cli.show_parse",
             "src/lex.tokenize",
+            "src/parse.Book",
             "src/parse.Parsed",
-            "src/parse.parse",
+            "src/parse.run",
             "src/syntax.Token",
             "src/syntax.bind"
           ],
@@ -40358,11 +40360,12 @@
               "U32.to_nat",
               "src/check-cli.show_parse",
               "src/lex.tokenize",
-              "src/parse.parse",
+              "src/parse.run",
               "src/syntax.bind"
             ],
             "types": [
-              "Nat"
+              "Nat",
+              "src/parse.Book"
             ],
             "dynamic_calls": []
           }
@@ -40373,8 +40376,8 @@
           "key": "src/check-cli.read_result",
           "kind": "definition",
           "lines": [
-            28,
-            31
+            29,
+            32
           ],
           "features": [
             "calls",
@@ -40446,8 +40449,8 @@
           "key": "src/check-cli.read_pair",
           "kind": "definition",
           "lines": [
-            33,
-            37
+            34,
+            38
           ],
           "features": [
             "annotations",
@@ -40491,7 +40494,7 @@
           ],
           "captures": [
             {
-              "offset": 1397,
+              "offset": 1490,
               "names": [
                 "characters",
                 "depth",
@@ -40515,8 +40518,8 @@
           "key": "src/check-cli.opened",
           "kind": "definition",
           "lines": [
-            39,
-            43
+            40,
+            44
           ],
           "features": [
             "calls",
@@ -40595,8 +40598,8 @@
           "key": "src/check-cli.open_source",
           "kind": "definition",
           "lines": [
-            45,
-            46
+            46,
+            47
           ],
           "features": [
             "calls",
@@ -40647,8 +40650,8 @@
           "key": "src/check-cli.configure",
           "kind": "definition",
           "lines": [
-            48,
-            54
+            49,
+            55
           ],
           "features": [
             "calls",
@@ -40692,7 +40695,7 @@
           ],
           "captures": [
             {
-              "offset": 2184,
+              "offset": 2277,
               "names": [
                 "c",
                 "d",
@@ -40723,8 +40726,8 @@
           "key": "src/check-cli.arguments",
           "kind": "definition",
           "lines": [
-            56,
-            62
+            57,
+            63
           ],
           "features": [
             "calls",
@@ -40786,8 +40789,8 @@
           "key": "src/check-cli.main",
           "kind": "definition",
           "lines": [
-            64,
-            65
+            65,
+            66
           ],
           "features": [
             "calls",
@@ -48982,7 +48985,7 @@
     },
     {
       "file": "src/driver.bend",
-      "sha256": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+      "sha256": "167913fcea53125003c793aa191e248be9e412ad21d0bc4c3097db8d74b556ac",
       "imports": [
         {
           "module": "Base",
@@ -49286,8 +49289,8 @@
           "key": "src/driver.source",
           "kind": "definition",
           "lines": [
-            30,
-            37
+            31,
+            38
           ],
           "features": [
             "calls",
@@ -49316,8 +49319,9 @@
             "src/driver.checked",
             "src/driver.parsed_root",
             "src/lex.tokenize",
+            "src/parse.Book",
             "src/parse.Parsed",
-            "src/parse.parse",
+            "src/parse.run",
             "src/syntax.Token",
             "src/syntax.bind"
           ],
@@ -49331,14 +49335,14 @@
           ],
           "captures": [
             {
-              "offset": 1131,
+              "offset": 1212,
               "names": [
                 "checker",
                 "parser"
               ]
             },
             {
-              "offset": 1197,
+              "offset": 1285,
               "names": [
                 "checker"
               ]
@@ -49350,11 +49354,12 @@
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
-              "src/parse.parse",
+              "src/parse.run",
               "src/syntax.bind"
             ],
             "types": [
-              "src/driver.Limits"
+              "src/driver.Limits",
+              "src/parse.Book"
             ],
             "dynamic_calls": []
           }
@@ -49365,8 +49370,8 @@
           "key": "src/driver.read_result",
           "kind": "definition",
           "lines": [
-            39,
-            42
+            40,
+            43
           ],
           "features": [
             "calls",
@@ -49441,8 +49446,8 @@
           "key": "src/driver.read_pair",
           "kind": "definition",
           "lines": [
-            44,
-            48
+            45,
+            49
           ],
           "features": [
             "annotations",
@@ -49489,7 +49494,7 @@
           ],
           "captures": [
             {
-              "offset": 1719,
+              "offset": 1807,
               "names": [
                 "limits",
                 "next",
@@ -49513,8 +49518,8 @@
           "key": "src/driver.opened",
           "kind": "definition",
           "lines": [
-            50,
-            53
+            51,
+            54
           ],
           "features": [
             "calls",
@@ -49571,7 +49576,7 @@
           ],
           "captures": [
             {
-              "offset": 2106,
+              "offset": 2194,
               "names": [
                 "limits",
                 "next"
@@ -49605,8 +49610,8 @@
           "key": "src/driver.load",
           "kind": "definition",
           "lines": [
-            55,
-            56
+            56,
+            57
           ],
           "features": [
             "calls",
@@ -49644,7 +49649,7 @@
           ],
           "captures": [
             {
-              "offset": 2289,
+              "offset": 2377,
               "names": [
                 "limits",
                 "next"
@@ -49669,8 +49674,8 @@
           "key": "src/driver.natural",
           "kind": "definition",
           "lines": [
-            58,
-            62
+            59,
+            63
           ],
           "features": [
             "calls",
@@ -49711,7 +49716,7 @@
           ],
           "captures": [
             {
-              "offset": 2541,
+              "offset": 2629,
               "names": [
                 "x"
               ]
@@ -49740,8 +49745,8 @@
           "key": "src/driver.ordinal",
           "kind": "definition",
           "lines": [
-            64,
-            67
+            65,
+            68
           ],
           "features": [
             "constructors",
@@ -49791,8 +49796,8 @@
           "key": "src/driver.ordinals",
           "kind": "definition",
           "lines": [
-            69,
-            74
+            70,
+            75
           ],
           "features": [
             "calls",
@@ -49831,13 +49836,13 @@
           ],
           "captures": [
             {
-              "offset": 2970,
+              "offset": 3058,
               "names": [
                 "tail"
               ]
             },
             {
-              "offset": 3031,
+              "offset": 3119,
               "names": [
                 "x"
               ]

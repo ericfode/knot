@@ -9938,7 +9938,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 446,
+          "declarations": 443,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10475,7 +10475,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/parse.columns",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -10777,7 +10777,7 @@
           {
             "key": "src/catalog.ConstructorRef",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/catalog.field_signature",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -10988,7 +10988,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11177,7 +11177,7 @@
           {
             "key": "src/catalog.pattern_constructor",
             "file": "src/catalog.bend",
-            "via": "src/parse.events",
+            "via": "src/check.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11349,7 +11349,7 @@
           {
             "key": "src/catalog.start",
             "file": "src/catalog.bend",
-            "via": "src/catalog.prior_constructor",
+            "via": "src/catalog.prior_datatype",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13208,7 +13208,8 @@
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
-              "src/parse.parse",
+              "src/parse.Mode",
+              "src/parse.run",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -14232,29 +14233,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.audited",
-            "file": "src/parse.bend",
-            "via": "src/parse.parse",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "src/catalog.collect_types",
-              "src/parse.Parsed",
-              "src/parse.events",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.bang",
             "file": "src/parse.bend",
             "via": "src/parse.continues",
@@ -14368,31 +14346,6 @@
               "src/parse.bang",
               "src/parse.operator",
               "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.events",
-            "file": "src/parse.bend",
-            "via": "src/parse.audited",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "Unit",
-              "src/catalog.pattern_constructor",
-              "src/core.Datatype",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -14548,7 +14501,7 @@
           {
             "key": "src/parse.Mode",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -14694,27 +14647,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.parse",
-            "file": "src/parse.bend",
-            "via": "src/driver.source",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "src/parse.Mode",
-              "src/parse.Parsed",
-              "src/parse.audited",
-              "src/parse.run",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.Parsed",
             "file": "src/parse.bend",
             "via": "src/driver.parsed_root",
@@ -14812,7 +14744,7 @@
           {
             "key": "src/parse.run",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18296,7 +18228,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 446,
+          "declarations": 443,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -18833,7 +18765,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/parse.columns",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19135,7 +19067,7 @@
           {
             "key": "src/catalog.ConstructorRef",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/catalog.field_signature",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -19346,7 +19278,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19535,7 +19467,7 @@
           {
             "key": "src/catalog.pattern_constructor",
             "file": "src/catalog.bend",
-            "via": "src/parse.events",
+            "via": "src/check.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19707,7 +19639,7 @@
           {
             "key": "src/catalog.start",
             "file": "src/catalog.bend",
-            "via": "src/catalog.prior_constructor",
+            "via": "src/catalog.prior_datatype",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -21566,7 +21498,8 @@
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
-              "src/parse.parse",
+              "src/parse.Mode",
+              "src/parse.run",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -22590,29 +22523,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.audited",
-            "file": "src/parse.bend",
-            "via": "src/parse.parse",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "src/catalog.collect_types",
-              "src/parse.Parsed",
-              "src/parse.events",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.bang",
             "file": "src/parse.bend",
             "via": "src/parse.continues",
@@ -22726,31 +22636,6 @@
               "src/parse.bang",
               "src/parse.operator",
               "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.events",
-            "file": "src/parse.bend",
-            "via": "src/parse.audited",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "String",
-              "U32",
-              "Unit",
-              "src/catalog.pattern_constructor",
-              "src/core.Datatype",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -22906,7 +22791,7 @@
           {
             "key": "src/parse.Mode",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -23052,27 +22937,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.parse",
-            "file": "src/parse.bend",
-            "via": "src/driver.source",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "src/parse.Mode",
-              "src/parse.Parsed",
-              "src/parse.audited",
-              "src/parse.run",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.Parsed",
             "file": "src/parse.bend",
             "via": "src/driver.parsed_root",
@@ -23170,7 +23034,7 @@
           {
             "key": "src/parse.run",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26654,7 +26518,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 397,
+          "declarations": 394,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -26966,7 +26830,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/parse.columns",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27291,7 +27155,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27413,7 +27277,7 @@
           {
             "key": "src/catalog.pattern_constructor",
             "file": "src/catalog.bend",
-            "via": "src/parse.events",
+            "via": "src/check.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27533,7 +27397,7 @@
           {
             "key": "src/catalog.start",
             "file": "src/catalog.bend",
-            "via": "src/catalog.prior_constructor",
+            "via": "src/catalog.prior_datatype",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28664,7 +28528,7 @@
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
-              "src/parse.parse",
+              "src/parse.run",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -29372,20 +29236,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.audited",
-            "file": "src/parse.bend",
-            "via": "src/parse.parse",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/catalog.collect_types",
-              "src/parse.events",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.bang",
             "file": "src/parse.bend",
             "via": "src/parse.continues",
@@ -29472,20 +29322,6 @@
               "src/parse.arrow",
               "src/parse.bang",
               "src/parse.operator"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.events",
-            "file": "src/parse.bend",
-            "via": "src/parse.audited",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/catalog.pattern_constructor",
-              "src/syntax.bind",
-              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -29703,20 +29539,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.parse",
-            "file": "src/parse.bend",
-            "via": "src/driver.source",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/parse.audited",
-              "src/parse.run",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.prepend",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -29777,7 +29599,7 @@
           {
             "key": "src/parse.run",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -32253,7 +32075,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 484,
+          "declarations": 481,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -32545,7 +32367,7 @@
           {
             "key": "Bool.or",
             "file": "Base",
-            "via": "U32.divmod.go.shl",
+            "via": "src/parse.run",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -32869,7 +32691,7 @@
           {
             "key": "List.append",
             "file": "Base",
-            "via": "0xc409b77d3230ca33374caf6b0993f0cb/bytes.emit",
+            "via": "src/parse.columns",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33185,7 +33007,7 @@
           {
             "key": "src/catalog.ConstructorRef",
             "file": "src/catalog.bend",
-            "via": "src/parse.events",
+            "via": "src/check.run",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -33393,7 +33215,7 @@
           {
             "key": "src/catalog.find_constructor",
             "file": "src/catalog.bend",
-            "via": "src/catalog.pattern_constructor",
+            "via": "src/check.run",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33578,7 +33400,7 @@
           {
             "key": "src/catalog.pattern_constructor",
             "file": "src/catalog.bend",
-            "via": "src/parse.events",
+            "via": "src/check.pattern",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -33745,7 +33567,7 @@
           {
             "key": "src/catalog.start",
             "file": "src/catalog.bend",
-            "via": "src/catalog.prior_constructor",
+            "via": "src/catalog.prior_datatype",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -35601,8 +35423,9 @@
               "src/driver.checked",
               "src/driver.parsed_root",
               "src/lex.tokenize",
+              "src/parse.Mode",
               "src/parse.Parsed",
-              "src/parse.parse",
+              "src/parse.run",
               "src/syntax.Token",
               "src/syntax.bind"
             ],
@@ -36619,29 +36442,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.audited",
-            "file": "src/parse.bend",
-            "via": "src/parse.parse",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "Unit",
-              "src/catalog.collect_types",
-              "src/core.Datatype",
-              "src/parse.Parsed",
-              "src/parse.events",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.bang",
             "file": "src/parse.bend",
             "via": "src/parse.continues",
@@ -36752,30 +36552,6 @@
               "src/parse.bang",
               "src/parse.operator",
               "src/syntax.Token"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/parse.events",
-            "file": "src/parse.bend",
-            "via": "src/parse.audited",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "Bool",
-              "List",
-              "Nat",
-              "Result",
-              "Unit",
-              "src/catalog.ConstructorRef",
-              "src/catalog.pattern_constructor",
-              "src/core.Datatype",
-              "src/syntax.At",
-              "src/syntax.Error",
-              "src/syntax.Node",
-              "src/syntax.bind",
-              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -36927,7 +36703,7 @@
           {
             "key": "src/parse.Mode",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -37067,27 +36843,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/parse.parse",
-            "file": "src/parse.bend",
-            "via": "src/driver.source",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Nat",
-              "Result",
-              "src/parse.Mode",
-              "src/parse.Parsed",
-              "src/parse.audited",
-              "src/parse.run",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/parse.Parsed",
             "file": "src/parse.bend",
             "via": "src/driver.source",
@@ -37182,7 +36937,7 @@
           {
             "key": "src/parse.run",
             "file": "src/parse.bend",
-            "via": "src/parse.parse",
+            "via": "src/driver.source",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

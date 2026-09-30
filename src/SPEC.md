@@ -143,6 +143,9 @@ reports `Parsed`, reusing the catalog's `unknown-constructor` diagnostic in the
 `check` phase. This audit includes nested matches and discarded rows. Constructor
 expressions retain forward references. Field arity, quantities and typing stay
 in the existing checker; `Parsed` remains a syntax observation, not acceptance.
+The check, evaluation and compile paths run the internal syntax state machine
+then the whole-book checker, which applies the same catalog event rule together
+with the other obligations. They do not repeat the standalone parser's audit.
 A zero-constructor datatype permits an exhaustive zero-row match and has no
 valid host ordinal. Repeated constructor declarations, including across
 datatypes, are invalid. Top-level type/function names share a namespace.
