@@ -1,0 +1,2301 @@
+{
+  "schemaVersion": 1,
+  "status": "frozen",
+  "basis": "Literal contract in bench/fixtures/refresh/CONTRACT.md, then pinned seed check and native/Bun execution before Knot probing.",
+  "seed": {
+    "version": "bend 2.0.29",
+    "declaredCommit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "sourceSha256": "9a13271d23953046a77859d0e993e2c99423afd28899c403c09cddd5dad9e5dd"
+  },
+  "compilerSourceHashes": {
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-fields-wasm/compile.bend": "48927236439b6e2d56532525be1a11ebba7b89aefdf4f83b8568cf38a53ab3c7"
+  },
+  "cases": [
+    {
+      "name": "peano-0",
+      "family": "peano",
+      "size": 0,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-0.bend",
+      "sourceSha256": "75a1a5d573a0358200009741b3347b110fbc013d36439b8c39fd5c7c7b076dce",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-0.bend",
+          "--check-only"
+        ],
+        "ms": 36.043458,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-0.bend",
+        "sha256": "e0fe7b9857f2a3b34a0c3390ea02567be439981b3535dfaa06fd6afd13981743"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0"
+            ],
+            "ms": 300.749375,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "2e9fc2d0d26de2de9729baf4202b0475993bbe717815ac343b1b4981255f0fbc",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0"
+            ],
+            "ms": 183.430125,
+            "stdout": "../../../bench/fixtures/refresh/peano-0.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0.js"
+            ],
+            "ms": 118.613666,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ba808a24499e658c9c196cad1c317f260b5652729f28e8ab232bdd50e6ddf0b4",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-0.js"
+            ],
+            "ms": 18.620625,
+            "stdout": "../../../bench/fixtures/refresh/peano-0.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-0",
+      "family": "cells",
+      "size": 0,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-0.bend",
+      "sourceSha256": "2bc408089a46f4b97e4da27e63d66fdfe6355799497f852314c105bd572fff98",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-0.bend",
+          "--check-only"
+        ],
+        "ms": 39.997459,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-0.bend",
+        "sha256": "e58a06548989d36e999826cc454532e0b64a06dc97f8ef7e735411bee4cdaabe"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0"
+            ],
+            "ms": 311.815834,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "c6c1a3fde235be9e050877b2e96f4feb883e9b5fa6730c214e6c13c931229baa",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0"
+            ],
+            "ms": 1098.950958,
+            "stdout": "../../../bench/fixtures/refresh/cells-0.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0.js"
+            ],
+            "ms": 111.632666,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "3a997663354048d86a178f4983dd6a37484091d29b5b6944ca62caf34cc8b5f0",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-0.js"
+            ],
+            "ms": 26.328208,
+            "stdout": "../../../bench/fixtures/refresh/cells-0.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-0",
+      "family": "inline",
+      "size": 0,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-0.bend",
+      "sourceSha256": "e0b5ffc0fed39118a37448cfa560bc098c9e753ce978ea72dbd37a2f179b7043",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-0.bend",
+          "--check-only"
+        ],
+        "ms": 43.1245,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-0.bend",
+        "sha256": "65ce6246e94fad162797b4e307ca4bf7de83b284d487176a7ee24ae7e3c6c062"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0"
+            ],
+            "ms": 370.399125,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "23ce509330cf33781f2150bf6ed3f1e2b8a39d5d660f0ebcca08d274d898a91a",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0"
+            ],
+            "ms": 327.561625,
+            "stdout": "../../../bench/fixtures/refresh/inline-0.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0.js"
+            ],
+            "ms": 80.5685,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "90337925c5738886375d16293a8331137ed3b32c103dd3a22d0e98c28abef415",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-0.js"
+            ],
+            "ms": 15.946959,
+            "stdout": "../../../bench/fixtures/refresh/inline-0.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "peano-1",
+      "family": "peano",
+      "size": 1,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-1.bend",
+      "sourceSha256": "392e745841214750f291e34d87be69022a5da1ea03043f2a33f439245c797d2c",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-1.bend",
+          "--check-only"
+        ],
+        "ms": 31.847084,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-1.bend",
+        "sha256": "9daec33924159cd449916fd0da362096c6c3109b1310a8fb7040dd65b695c4fe"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1"
+            ],
+            "ms": 311.837375,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "d5b72b6f9f25f50d0e3ae87a21102a73308fadfe1143f7f7a4c8babc445ee791",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1"
+            ],
+            "ms": 693.491458,
+            "stdout": "../../../bench/fixtures/refresh/peano-1.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1.js"
+            ],
+            "ms": 119.6595,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "6584daa078504e5ca7b1bd4e21c4a9faba313fbcba5d54f6e7f6f8aba1c8cf2f",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-1.js"
+            ],
+            "ms": 16.915375,
+            "stdout": "../../../bench/fixtures/refresh/peano-1.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-1",
+      "family": "cells",
+      "size": 1,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-1.bend",
+      "sourceSha256": "f16c9bd694fa6c036f2222784fe1bbc2910c02b8bed973fedc9b9d932816fea7",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-1.bend",
+          "--check-only"
+        ],
+        "ms": 37.509708,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-1.bend",
+        "sha256": "b9daf12d85724d89cae3e4f0b4d853d01c118fa18325f70479db391e3286d669"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1"
+            ],
+            "ms": 303.627875,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "93189eb621fb7a70314ec0f521cbb299cab82c648437ec9bfef30a55ffa32ff8",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1"
+            ],
+            "ms": 844.451042,
+            "stdout": "../../../bench/fixtures/refresh/cells-1.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1.js"
+            ],
+            "ms": 86.423167,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "a10be3facbce7e20b3b3ea2a039e2651d52902c684e69abdafc4ce17d053460a",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-1.js"
+            ],
+            "ms": 19.8885,
+            "stdout": "../../../bench/fixtures/refresh/cells-1.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-1",
+      "family": "inline",
+      "size": 1,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-1.bend",
+      "sourceSha256": "d0e69ef9c8bdc54176195e9a55af7efe422ac0dbcdf7ae4affbefced61494ad8",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-1.bend",
+          "--check-only"
+        ],
+        "ms": 34.117667,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-1.bend",
+        "sha256": "2e3e964a666e841d237a673ef1466ab164a659da9b8d1de74ae873981fa3c013"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1"
+            ],
+            "ms": 401.330375,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "73bb6411dc3ab56e4fa1dfc36559944a87a1b8e45274450d2fb9b00e5b98b310",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1"
+            ],
+            "ms": 167.159917,
+            "stdout": "../../../bench/fixtures/refresh/inline-1.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1.js"
+            ],
+            "ms": 76.731084,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "fd9a42660a09bfd9480a3ea1bc265b4f88977113736c725577d534516540c813",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-1.js"
+            ],
+            "ms": 16.696792,
+            "stdout": "../../../bench/fixtures/refresh/inline-1.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "peano-2",
+      "family": "peano",
+      "size": 2,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-2.bend",
+      "sourceSha256": "10f7f70eaca21897e67104c71f1f5d19d319f5f040053cbf05bf5f10eba192d1",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-2.bend",
+          "--check-only"
+        ],
+        "ms": 32.706292,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-2.bend",
+        "sha256": "09972a5bef2071fa397ec605aeaaec3b8681ab9fee30f5731c53b36d7c2865d9"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2"
+            ],
+            "ms": 310.825,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "aaf156ee9696cf6f18ac39c58ca7735054af9858bebeed4675ac4271522508c5",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2"
+            ],
+            "ms": 542.114334,
+            "stdout": "../../../bench/fixtures/refresh/peano-2.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2.js"
+            ],
+            "ms": 175.850042,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "30351f07320849a60149ef4ae52f73f1feab4e48fa1f1f053eac93b857d0979d",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-2.js"
+            ],
+            "ms": 17.648416,
+            "stdout": "../../../bench/fixtures/refresh/peano-2.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-2",
+      "family": "cells",
+      "size": 2,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-2.bend",
+      "sourceSha256": "84fb2a444db717cb2c5dbbc521fbbbd78617279543efb290481589bb2e549cbd",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-2.bend",
+          "--check-only"
+        ],
+        "ms": 35.315292,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-2.bend",
+        "sha256": "f8332ec9542647789e767622bf453818022e4e6486be9cbbe5322adae008ade5"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2"
+            ],
+            "ms": 339.679167,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "b2d912895e2d074091c6d15c9f9ebfe0d16e5a431af8b27d8cbac6582e61688d",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2"
+            ],
+            "ms": 1096.153416,
+            "stdout": "../../../bench/fixtures/refresh/cells-2.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2.js"
+            ],
+            "ms": 98.962459,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "835f9f670914f2a8622ca5dba2de84d7a0c8a330ac5472ada814198b7de66f2f",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-2.js"
+            ],
+            "ms": 68.217125,
+            "stdout": "../../../bench/fixtures/refresh/cells-2.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-2",
+      "family": "inline",
+      "size": 2,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-2.bend",
+      "sourceSha256": "60f65c3b13614aa2dc9c7872fbfaa59399827db6b4aa64ffbbd771cad3c2c92a",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-2.bend",
+          "--check-only"
+        ],
+        "ms": 43.530792,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-2.bend",
+        "sha256": "a6890345a39dcc5c35bcd593ec0983039a77488a65f49000fa89bee8b14b843a"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2"
+            ],
+            "ms": 292.726375,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "70f211088818d7c30fe70291b459d345e4c4c0b676c532181add8aac4f86f5eb",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2"
+            ],
+            "ms": 268.789708,
+            "stdout": "../../../bench/fixtures/refresh/inline-2.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2.js"
+            ],
+            "ms": 77.151708,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "508058bf5d69dba3900fc8cffc4aff0e6b6ead3e9560355007e6a3d368346019",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-2.js"
+            ],
+            "ms": 15.655666,
+            "stdout": "../../../bench/fixtures/refresh/inline-2.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "peano-3",
+      "family": "peano",
+      "size": 3,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-3.bend",
+      "sourceSha256": "84cd585cc84e0cc667a05b302a1faa5fd79a22a76f4ae6c2d7a18f8c8f9990cd",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-3.bend",
+          "--check-only"
+        ],
+        "ms": 33.272042,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-3.bend",
+        "sha256": "c64498a87229194aa64c3ff29aab516e4b4687b5de774350e91d11130d1e7091"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3"
+            ],
+            "ms": 302.992875,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "2a9e6d596704de7632dea62cf480ffbe6464b4de0b7c60268ac326c5344344bf",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3"
+            ],
+            "ms": 505.926125,
+            "stdout": "../../../bench/fixtures/refresh/peano-3.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3.js"
+            ],
+            "ms": 103.977583,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "9df6f16f8a5d3507296c42511be02be666632caa58a235534ac7946352c39752",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-3.js"
+            ],
+            "ms": 18.72375,
+            "stdout": "../../../bench/fixtures/refresh/peano-3.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-3",
+      "family": "cells",
+      "size": 3,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-3.bend",
+      "sourceSha256": "25a2f770340ee88ba4ce5d79aed813719477aebe945104620ef56f59d94d0970",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-3.bend",
+          "--check-only"
+        ],
+        "ms": 61.202541,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-3.bend",
+        "sha256": "5bf03cd6170eada0278f36be79209176eb66ec6eb518757ae7134ac4442250e1"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3"
+            ],
+            "ms": 374.818875,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "d51189583cb1e4a65a2190e876b9d37e009248dca82f02d9c861dd1dec150bb4",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3"
+            ],
+            "ms": 606.8155,
+            "stdout": "../../../bench/fixtures/refresh/cells-3.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3.js"
+            ],
+            "ms": 94.008584,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ef5d218182fcf793b7f4156b292e94544e7182b838e8885cefe17d10bc3713bd",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-3.js"
+            ],
+            "ms": 18.605125,
+            "stdout": "../../../bench/fixtures/refresh/cells-3.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-3",
+      "family": "inline",
+      "size": 3,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-3.bend",
+      "sourceSha256": "320e1a1eb4c1aa98e4a0995884db2306341bdc01b4fda3c5d6ac3c91a78ef8c3",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-3.bend",
+          "--check-only"
+        ],
+        "ms": 34.841625,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-3.bend",
+        "sha256": "ea688884f0252fa51f421e058935e3c7cc6ea9df4f542912dfb040a7dfab1ec2"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3"
+            ],
+            "ms": 287.835625,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "e6e4cdb74e5286467c5c249f8bf51cab8a45e57f8755aec05368f30dc8ce7b50",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3"
+            ],
+            "ms": 717.780375,
+            "stdout": "../../../bench/fixtures/refresh/inline-3.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3.js"
+            ],
+            "ms": 129.712709,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "7e920dad74c90556eb9ccbb43d739934db99c9a293b9924a51a8eb7105ade065",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-3.js"
+            ],
+            "ms": 19.696,
+            "stdout": "../../../bench/fixtures/refresh/inline-3.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "peano-31",
+      "family": "peano",
+      "size": 31,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-31.bend",
+      "sourceSha256": "6cb93d175910713abb7610518deb562d854e9b50b0a6f3605a1b2be9eb4804d7",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-31.bend",
+          "--check-only"
+        ],
+        "ms": 35.903792,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-31.bend",
+        "sha256": "cae7e64f7058dedecc9442e5ce4e93164f282981fbc1f94b5be126c2819030bf"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31"
+            ],
+            "ms": 330.875708,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "57e313309143061026b2a0d6fa94fc8f6f078082c8e1f13c679bd022aaba3b3a",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31"
+            ],
+            "ms": 995.197667,
+            "stdout": "../../../bench/fixtures/refresh/peano-31.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31.js"
+            ],
+            "ms": 103.625458,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ea34ccf694ba556c353efc2341d6f511a1bce3c1d3512419b763e7aceaf59b5f",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-31.js"
+            ],
+            "ms": 32.909417,
+            "stdout": "../../../bench/fixtures/refresh/peano-31.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-31",
+      "family": "cells",
+      "size": 31,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-31.bend",
+      "sourceSha256": "298bce4abb3ee88cf283d06907c60c6b8096ad611d39baa4d6d5b361946ea0c0",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-31.bend",
+          "--check-only"
+        ],
+        "ms": 51.165792,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-31.bend",
+        "sha256": "74715043b50e4f431938019a5bada12eeb5b048a2eda38b6e2d2ceead892bab7"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31"
+            ],
+            "ms": 511.317666,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ad98ff009beb5035e6a22efcb8cdb2860e4f8b4d54d8b3fb176410e863e438d2",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31"
+            ],
+            "ms": 173.778167,
+            "stdout": "../../../bench/fixtures/refresh/cells-31.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31.js"
+            ],
+            "ms": 80.542333,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "4e5067d9d929bcaa2c3ea335edaa8f9d0593e2b3f5d25dd80af9d315b7fdfb76",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-31.js"
+            ],
+            "ms": 22.246916,
+            "stdout": "../../../bench/fixtures/refresh/cells-31.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-31",
+      "family": "inline",
+      "size": 31,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-31.bend",
+      "sourceSha256": "3319b733d80aa5958df15bf15f862752a2c5188d15763bc8c57a356c5965c853",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-31.bend",
+          "--check-only"
+        ],
+        "ms": 35.819417,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-31.bend",
+        "sha256": "fd6522188c08a547c0510714088ac4dadf23f0e00d023af1128cce3fcd69b9c8"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31"
+            ],
+            "ms": 353.868333,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "fd5e540e83d670090760bd6a68c20af11c6c965dcf1c0b3a2d843fd65ddbe980",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31"
+            ],
+            "ms": 870.614458,
+            "stdout": "../../../bench/fixtures/refresh/inline-31.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31.js"
+            ],
+            "ms": 88.191667,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "d8682858aed77439c81158d1f71c2cbaeede14423a32fb6a0df5154ff4b99ce4",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-31.js"
+            ],
+            "ms": 18.750417,
+            "stdout": "../../../bench/fixtures/refresh/inline-31.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "peano-33",
+      "family": "peano",
+      "size": 33,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/peano-33.bend",
+      "sourceSha256": "0c3428999c2de489a107cbed34389d809c722632e69f46b898eb004e585a9d44",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/peano-33.bend",
+          "--check-only"
+        ],
+        "ms": 38.47875,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/peano-33.bend",
+        "sha256": "b8269f356a2cd4798ffbf6af4995290c1f5be16ad507c8456c35680532f1a16d"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33"
+            ],
+            "ms": 333.4785,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "7d8cfab773fea4cf01c7f96b495ef3aac504174475fb58279e7048b659edb683",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33"
+            ],
+            "ms": 210.211917,
+            "stdout": "../../../bench/fixtures/refresh/peano-33.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33.js"
+            ],
+            "ms": 140.618041,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "c743a23371fbac49a414d6962b4821a525a5acef2b241c0adb3d36f8ac7fff93",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/peano-33.js"
+            ],
+            "ms": 27.466042,
+            "stdout": "../../../bench/fixtures/refresh/peano-33.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "cells-33",
+      "family": "cells",
+      "size": 33,
+      "expected": 1,
+      "constructor": "On",
+      "profile": "knot-fields-wasm-1",
+      "program": "bench/fixtures/refresh/cells-33.bend",
+      "sourceSha256": "a6958609603c33972d6484f00e5bf146209f042c90e14491e9f0254775966542",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/cells-33.bend",
+          "--check-only"
+        ],
+        "ms": 39.447958,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/cells-33.bend",
+        "sha256": "beb9e5243ae2400cabff80f47031676f2c280606737e6ae3f021d91e439087b0"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33"
+            ],
+            "ms": 322.085708,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "36104217a60dee5cd111f12d0f32c16fc015f5a31e483e9fad213322e6d340e3",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33"
+            ],
+            "ms": 1086.714209,
+            "stdout": "../../../bench/fixtures/refresh/cells-33.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33.js"
+            ],
+            "ms": 90.986291,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "9e839f2ad2606add24e4bf18cb8a2b32cdd155aa785ef22de502932b6690bb8f",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/cells-33.js"
+            ],
+            "ms": 14.6795,
+            "stdout": "../../../bench/fixtures/refresh/cells-33.On{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "inline-33",
+      "family": "inline",
+      "size": 33,
+      "expected": 0,
+      "constructor": "Off",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/inline-33.bend",
+      "sourceSha256": "91633434bc6f12a98f8f7ef981fa2501ca4a96c981255d49623545972ed6757a",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/inline-33.bend",
+          "--check-only"
+        ],
+        "ms": 33.871917,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/inline-33.bend",
+        "sha256": "5e2a0104e3141beb327029c73bb4f46122372290c6e60679d701d21dee3e2127"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33"
+            ],
+            "ms": 438.144666,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "1caa4ae4e1cf2b381d8153edd579eafd65f96649bf99a8c6d07562f649acd598",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33"
+            ],
+            "ms": 178.24875,
+            "stdout": "../../../bench/fixtures/refresh/inline-33.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33.js"
+            ],
+            "ms": 85.921959,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "81c5b38aea67ff61480e5a8b1d6d2d65d3a594cb719fea99ed97b97f79e5da9e",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/inline-33.js"
+            ],
+            "ms": 16.910792,
+            "stdout": "../../../bench/fixtures/refresh/inline-33.Off{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-1",
+      "family": "wide",
+      "size": 1,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-1.bend",
+      "sourceSha256": "368beb768542708a1c152976c2693f4808bb9af8698d3f5575e86b177e5d3005",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-1.bend",
+          "--check-only"
+        ],
+        "ms": 34.159125,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-1.bend",
+        "sha256": "0752d132c74fdb647946c182acb0ee3f2d8cf68b1505c0dee50aa9807c7f4384"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1"
+            ],
+            "ms": 287.811459,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "6af0471060086b76ced66ba178beb17d7b496ccb6a0d88b3d20448716fdede8f",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1"
+            ],
+            "ms": 730.001666,
+            "stdout": "../../../bench/fixtures/refresh/wide-1.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1.js"
+            ],
+            "ms": 84.031,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "57711c2bd466249cdb46f56cd429ac0a6b3e0d80a34e3ee97c7f8dfe28504603",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-1.js"
+            ],
+            "ms": 17.25025,
+            "stdout": "../../../bench/fixtures/refresh/wide-1.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-2",
+      "family": "wide",
+      "size": 2,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-2.bend",
+      "sourceSha256": "36b0ad27d9e41a202ee3528b20ed854efb898a60413928a47e0bf5f63176ea19",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-2.bend",
+          "--check-only"
+        ],
+        "ms": 31.88075,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-2.bend",
+        "sha256": "3cd70ddd516a9ab738194f83bf7274dfe1eff6e6fd5a9ec394b89d9fc687f6ca"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2"
+            ],
+            "ms": 445.014375,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "79373f3c8bbbf35e47fbfb55591e6b8d7b1a0914a90b25efeb49f7a1aa62eb0b",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2"
+            ],
+            "ms": 174.92925,
+            "stdout": "../../../bench/fixtures/refresh/wide-2.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2.js"
+            ],
+            "ms": 75.6575,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ca5e178a3f4c5c3e264fbe5ccb04dfa257479a4fb9efaf285732f7574857191b",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-2.js"
+            ],
+            "ms": 17.688125,
+            "stdout": "../../../bench/fixtures/refresh/wide-2.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-3",
+      "family": "wide",
+      "size": 3,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-3.bend",
+      "sourceSha256": "0bca662efcde4ba681b2006887354f394df31c1dc00820a60e420d2ad16fe64e",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-3.bend",
+          "--check-only"
+        ],
+        "ms": 33.794959,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-3.bend",
+        "sha256": "33062b45e2b0586fbb0959388fba77ff1f8f538fd834d0236bea7d52610ba51f"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3"
+            ],
+            "ms": 277.316417,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "83e8db0ead4ab3b9ef8c92f7976a37d2b7f880a004897a80db267370cd61f433",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3"
+            ],
+            "ms": 734.434292,
+            "stdout": "../../../bench/fixtures/refresh/wide-3.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3.js"
+            ],
+            "ms": 84.520083,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "8bb5333835437358c8946087bf389c3edc3cfee4a612769c729285fc80deee02",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-3.js"
+            ],
+            "ms": 15.754667,
+            "stdout": "../../../bench/fixtures/refresh/wide-3.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-31",
+      "family": "wide",
+      "size": 31,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-31.bend",
+      "sourceSha256": "920ef80090ef949a83f855cdda89151ea6806e01a5893527553e0d4e95c08e65",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-31.bend",
+          "--check-only"
+        ],
+        "ms": 32.213042,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-31.bend",
+        "sha256": "a1719375bcb92999a04debd0bf7c87b33264624178a8d23beac1042192af5515"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31"
+            ],
+            "ms": 337.863792,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "e667303e5d159c956bc4e05ef4831d7840b55b7514776285476919e5b8710562",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31"
+            ],
+            "ms": 174.228041,
+            "stdout": "../../../bench/fixtures/refresh/wide-31.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31.js"
+            ],
+            "ms": 105.395292,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "e471d22a323074cc130c7920ddbb1a5e978c589af555e9ee5a952ae4d3c8b017",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-31.js"
+            ],
+            "ms": 18.49425,
+            "stdout": "../../../bench/fixtures/refresh/wide-31.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-33",
+      "family": "wide",
+      "size": 33,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-33.bend",
+      "sourceSha256": "07cfc33f2b102011d1bb167629e39529c35e9b425817aa8d454fc97187bc34bf",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-33.bend",
+          "--check-only"
+        ],
+        "ms": 28.788333,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-33.bend",
+        "sha256": "a7166849e8ecafd29ebca729ba4147f03d60988d37a9377798d81c1d3a5d7d73"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33"
+            ],
+            "ms": 276.419458,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "ffc0589562aefb96b8da35ff07f936969986e40b731614266fb61db073b81de0",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33"
+            ],
+            "ms": 818.543792,
+            "stdout": "../../../bench/fixtures/refresh/wide-33.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33.js"
+            ],
+            "ms": 77.4365,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "f258793564cfe578993398dd712bfb0f2be93232bf68b327755b7cddfc1278e9",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-33.js"
+            ],
+            "ms": 16.855333,
+            "stdout": "../../../bench/fixtures/refresh/wide-33.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "name": "wide-255",
+      "family": "wide",
+      "size": 255,
+      "expected": 0,
+      "constructor": "T0",
+      "profile": "knot-enum-1",
+      "program": "bench/fixtures/refresh/wide-255.bend",
+      "sourceSha256": "6a4889669e0717ee21dbf2ac738f4797587ee5bf0cfcbd9b527705ec202e02ed",
+      "seedCheck": {
+        "argv": [
+          "bun",
+          "--no-env-file",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/bench/fixtures/refresh/wide-255.bend",
+          "--check-only"
+        ],
+        "ms": 43.790125,
+        "stdout": "All terms check.",
+        "stderr": "",
+        "exit": 0,
+        "signal": null,
+        "error": null
+      },
+      "seedBuildSource": {
+        "adaptation": "Import unchanged fixture as F, with import Base required by seed builds, and call F.main.",
+        "path": ".local/bench-2/seed-edges/wide-255.bend",
+        "sha256": "697a1a9fd3a324efdb412a5d3b2fbce888dc0abc2ad09751ac6bd72f072bb994"
+      },
+      "seed": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255"
+            ],
+            "ms": 317.022333,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "7f629ecd5e2fc0348a95fb48cdad42f5f7a92e08c3933e47fc93ac878dfb90b9",
+          "observed": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255"
+            ],
+            "ms": 188.010667,
+            "stdout": "../../../bench/fixtures/refresh/wide-255.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255.js"
+            ],
+            "ms": 217.620208,
+            "stdout": "",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          },
+          "sha256": "c7f1e381537ee67b3c5d1812b100cffe1016090d60465706dcc00e5ffebf8528",
+          "observed": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-bench-2/.local/bench-2/seed-edges/wide-255.js"
+            ],
+            "ms": 21.721791,
+            "stdout": "../../../bench/fixtures/refresh/wide-255.T0{}",
+            "stderr": "",
+            "exit": 0,
+            "signal": null,
+            "error": null
+          }
+        }
+      }
+    }
+  ]
+}
