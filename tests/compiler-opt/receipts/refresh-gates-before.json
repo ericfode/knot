@@ -1,0 +1,1273 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "-s",
+    "gates",
+    "--",
+    "--jobs",
+    "1",
+    "--timeout",
+    "1800"
+  ],
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "seconds": 51.947573,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "seconds": 17.615242,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "seconds": 29.38543,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "seconds": 51.269407,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "seconds": 45.720015,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "seconds": 0.374067,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "seconds": 0.605012,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "seconds": 0.252787,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "seconds": 8.136973,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "seconds": 17.367118,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "seconds": 79.699626,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "seconds": 86.966889,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-opt/check.py"
+      ],
+      "counts": {
+        "abi_checks": 154,
+        "accepted_programs": 66,
+        "boundaries": 18,
+        "core_idempotence_checks": 148,
+        "core_round_observations": 154,
+        "core_verifier_controls_per_lane": 43,
+        "corpus_growth_controls": 8,
+        "default_enum_byte_checks": 50,
+        "direct_pointer_host_calls": 0,
+        "execution_lanes": 2,
+        "generated_programs": 9,
+        "new_fixture_reference_calls": 58,
+        "new_fixtures": 13,
+        "new_laws": 16,
+        "observer_programs": 11,
+        "observer_reference_calls": 22,
+        "reference_calls": 222,
+        "rejected_programs": 8,
+        "rejection_lane_observations": 16,
+        "review_controls_per_lane": 14,
+        "self_tail_module_checks": 616,
+        "semantic_mutants": 7,
+        "single_pass_abi_checks": 462,
+        "single_pass_evaluator_checks": 1332,
+        "source_programs": 74,
+        "structured_result_observers": 22,
+        "unfrozen_off_programs": 0,
+        "unoptimized_byte_checks": 154
+      },
+      "exit_code": 0,
+      "name": "compiler-opt",
+      "seconds": 603.205124,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 41,
+        "declarations": 567,
+        "files": 38
+      },
+      "exit_code": 0,
+      "name": "census",
+      "seconds": 7.696412,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/perch-context/check.py"
+      ],
+      "counts": {
+        "fixtures": 33,
+        "mutants": 8
+      },
+      "exit_code": 0,
+      "name": "perch-context",
+      "seconds": 27.208671,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 168
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "seconds": 8.803328,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-bootstrap/check.py"
+      ],
+      "counts": {
+        "corpus": 660,
+        "mutants": 9,
+        "reached": 2,
+        "stages": 8
+      },
+      "exit_code": 0,
+      "name": "bootstrap",
+      "seconds": 35.071642,
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-classification/check.py"
+      ],
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "classification",
+      "seconds": 3.874115,
+      "status": "passed"
+    }
+  ],
+  "normalized": {
+    "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
+    "gates": [
+      {
+        "command": [
+          "python3",
+          "tests/subsets/check_frontend.py"
+        ],
+        "counts": {
+          "boundaries": 24,
+          "fixtures": 14,
+          "lane_observations": 28,
+          "mutants": 4
+        },
+        "exit_code": 0,
+        "name": "frontend",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-checker/check.py"
+        ],
+        "counts": {
+          "bound_observations": 16,
+          "bounds": 2,
+          "budgets": 10,
+          "fixtures": 49,
+          "lane_observations": 98,
+          "mutants": 7
+        },
+        "exit_code": 0,
+        "name": "checker",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-structural/check.py"
+        ],
+        "counts": {
+          "bounds": 4,
+          "fixtures": 16,
+          "lane_observations": 64,
+          "mutants": 7
+        },
+        "exit_code": 0,
+        "name": "structural",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-fields/check.py"
+        ],
+        "counts": {
+          "bound_observations": 12,
+          "bounds": 2,
+          "budgets": 36,
+          "fixtures": 40,
+          "host_boundaries": 6,
+          "lane_observations": 240,
+          "mutants": 9
+        },
+        "exit_code": 0,
+        "name": "fields",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-wasm/check.py"
+        ],
+        "counts": {
+          "boundaries": 44,
+          "execution_lanes": 2,
+          "fixtures": 25,
+          "mutants": 7,
+          "reference_calls": 90,
+          "rejects": 64
+        },
+        "exit_code": 0,
+        "name": "wasm",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-wasm/trust.ts"
+        ],
+        "counts": {
+          "entries": 3,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "wasm-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-fields/trust.ts"
+        ],
+        "counts": {
+          "entries": 4,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "fields-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "bun",
+          "tests/compiler-structural/trust.ts"
+        ],
+        "counts": {
+          "entries": 2,
+          "proof_holes": 0
+        },
+        "exit_code": 0,
+        "name": "structural-trust",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "research/owned-store/check.py"
+        ],
+        "counts": {
+          "cases": 3532,
+          "execution_lanes": 2,
+          "literal_witnesses": 15,
+          "mutants": 6
+        },
+        "exit_code": 0,
+        "name": "owned-store",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "research/flat-store/check.py"
+        ],
+        "counts": {
+          "bun": {
+            "installed_boundary_states": 2,
+            "instances": 3534,
+            "lifecycle_checks": 7,
+            "observations": 13621
+          },
+          "mutants": 9,
+          "native": {
+            "installed_boundary_states": 2,
+            "instances": 3534,
+            "lifecycle_checks": 7,
+            "observations": 13621
+          }
+        },
+        "exit_code": 0,
+        "name": "flat-store",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-recursion/check.py"
+        ],
+        "counts": {
+          "fixtures": 19,
+          "mutants": 3
+        },
+        "exit_code": 0,
+        "name": "recursion",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-fields-wasm/check.py"
+        ],
+        "counts": {
+          "boundaries": 30,
+          "fixtures": 8,
+          "mutants": 4
+        },
+        "exit_code": 0,
+        "name": "fields-wasm",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-opt/check.py"
+        ],
+        "counts": {
+          "abi_checks": 154,
+          "accepted_programs": 66,
+          "boundaries": 18,
+          "core_idempotence_checks": 148,
+          "core_round_observations": 154,
+          "core_verifier_controls_per_lane": 43,
+          "corpus_growth_controls": 8,
+          "default_enum_byte_checks": 50,
+          "direct_pointer_host_calls": 0,
+          "execution_lanes": 2,
+          "generated_programs": 9,
+          "new_fixture_reference_calls": 58,
+          "new_fixtures": 13,
+          "new_laws": 16,
+          "observer_programs": 11,
+          "observer_reference_calls": 22,
+          "reference_calls": 222,
+          "rejected_programs": 8,
+          "rejection_lane_observations": 16,
+          "review_controls_per_lane": 14,
+          "self_tail_module_checks": 616,
+          "semantic_mutants": 7,
+          "single_pass_abi_checks": 462,
+          "single_pass_evaluator_checks": 1332,
+          "source_programs": 74,
+          "structured_result_observers": 22,
+          "unfrozen_off_programs": 0,
+          "unoptimized_byte_checks": 154
+        },
+        "exit_code": 0,
+        "name": "compiler-opt",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "node",
+          "tools/census/census.mjs",
+          "--check"
+        ],
+        "counts": {
+          "classes": 41,
+          "declarations": 567,
+          "files": 38
+        },
+        "exit_code": 0,
+        "name": "census",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/perch-context/check.py"
+        ],
+        "counts": {
+          "fixtures": 33,
+          "mutants": 8
+        },
+        "exit_code": 0,
+        "name": "perch-context",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "npm",
+          "run",
+          "-s",
+          "lint:verify"
+        ],
+        "counts": {
+          "law_rules": 8,
+          "tests": 168
+        },
+        "exit_code": 0,
+        "name": "lint:verify",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-bootstrap/check.py"
+        ],
+        "counts": {
+          "corpus": 660,
+          "mutants": 9,
+          "reached": 2,
+          "stages": 8
+        },
+        "exit_code": 0,
+        "name": "bootstrap",
+        "status": "passed"
+      },
+      {
+        "command": [
+          "python3",
+          "tests/compiler-classification/check.py"
+        ],
+        "counts": {
+          "fixtures": 17,
+          "mutants": 6
+        },
+        "exit_code": 0,
+        "name": "classification",
+        "status": "passed"
+      }
+    ],
+    "receipt_counts": {
+      "identical": 64,
+      "semantic": 11,
+      "volatile-only": 10
+    },
+    "receipts": [
+      {
+        "after_sha256": "e852cca9c33e245352c17856439548166b2b5ed87800995cb9181e8d3d01f1ae",
+        "before_sha256": "e852cca9c33e245352c17856439548166b2b5ed87800995cb9181e8d3d01f1ae",
+        "classification": "volatile-only",
+        "path": "research/compiler-fields/receipts/trust.json"
+      },
+      {
+        "after_sha256": "d7b83f6c700c802c14cc1e6baa9d77ef076c7e07fb81b7361ea1639ff76adbf2",
+        "before_sha256": "d7b83f6c700c802c14cc1e6baa9d77ef076c7e07fb81b7361ea1639ff76adbf2",
+        "classification": "volatile-only",
+        "path": "research/compiler-structural/receipts/trust.json"
+      },
+      {
+        "after_sha256": "338b317192e9fa6bc38522244cc3b7fc76d8d3dce3c3bc2baff126204358f0af",
+        "before_sha256": "338b317192e9fa6bc38522244cc3b7fc76d8d3dce3c3bc2baff126204358f0af",
+        "classification": "volatile-only",
+        "path": "research/compiler-wasm/receipts/trust.json"
+      },
+      {
+        "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/bun-oracle.txt.gz"
+      },
+      {
+        "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/bun-wasm.json"
+      },
+      {
+        "after_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+        "before_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/gate.json"
+      },
+      {
+        "after_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+        "before_sha256": "0de6ba8b0cf838453ae7f83d91e93832242215561a490884be8069c4d783aef6",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-accept-padding.json"
+      },
+      {
+        "after_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+        "before_sha256": "4730ffa519456fcb71b513723147e76beecd8171ad1c6832eeba36c60927bb98",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-erase-allocated-payload.json"
+      },
+      {
+        "after_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+        "before_sha256": "43e2d4e57deefb3f8339f875a23d4b47d7ef16bb27401d227f88ae5f8f45f86e",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-ignore-arena.json"
+      },
+      {
+        "after_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+        "before_sha256": "61fe39777e471cb1db41058d9687a143cb7669bfb04d997e8fe3bfabe55a3803",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-lose-free-tail.json"
+      },
+      {
+        "after_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+        "before_sha256": "6439ddf4992b22ac0d951159f0ae70076cade8f41c3799acf3c0a815933ede4f",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-overwrite-on-rejection.json"
+      },
+      {
+        "after_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+        "before_sha256": "92d205e20ab14f7c10da440f361f11064b8f921d0b280b725275a078931cd44a",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-reuse-generation.json"
+      },
+      {
+        "after_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+        "before_sha256": "7307b6c85c933607d5971c31f294914076f231408ce5cbf96b2fc20fb332d8d5",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-wrap-at-ceiling.json"
+      },
+      {
+        "after_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+        "before_sha256": "894c35012fbcbf8727e8fd0865048c8198e1644a08068e4f3e4456546616fc78",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-write-on-reinit.json"
+      },
+      {
+        "after_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+        "before_sha256": "0caecc46fed76662ea4a92b471a148c70420fda240b555db67ff7b0355b7b9bf",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/mutant-zero-sentinel.json"
+      },
+      {
+        "after_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "before_sha256": "f2bb88e42f39b7ecdc0b8b8c646762e20f2e00aef036cee5e9e069dd7666b80c",
+        "classification": "volatile-only",
+        "path": "research/flat-store/receipts/native-oracle.txt.gz"
+      },
+      {
+        "after_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "before_sha256": "caaabfac0c773b713abbbfe675d4ff845caa3565ff3f0862442e832dc7be815c",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/native-wasm.json"
+      },
+      {
+        "after_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+        "before_sha256": "0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/native.wasm"
+      },
+      {
+        "after_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+        "before_sha256": "8f7376fa388942d25885b1e39ff2d646bd938dbaddd20c55eec331de8f2db0b1",
+        "classification": "identical",
+        "path": "research/flat-store/receipts/store.wat"
+      },
+      {
+        "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/bun.txt.gz"
+      },
+      {
+        "after_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+        "before_sha256": "c9873b6056d83d3262ce149cfac0ce7cf2c770d0e2f698c779639988359787fd",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/gate.json"
+      },
+      {
+        "after_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+        "before_sha256": "c7f628a75dec30af2ace7451e75848e8ad7bb253fc977c131dca3a2cf2897195",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/inputs.json.gz"
+      },
+      {
+        "after_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "before_sha256": "a090685d03e09db9610e6a77f29a9012a999ff1eafe726c5007ff87b285442e5",
+        "classification": "volatile-only",
+        "path": "research/owned-store/receipts/native.txt.gz"
+      },
+      {
+        "after_sha256": "3fdaceef47826ba4d1a224a29690c91db8edcd4bdf9134311e59e5069e01f8d0",
+        "before_sha256": "29de63fabd47e430eb08b0e86c6794eb969a06b5c9368477a03929b5e5968284",
+        "changed_fields": [
+          "/controls/0/expected/agree",
+          "/controls/0/observed/agree",
+          "/corpus/files",
+          "/corpus/reference_sha256",
+          "/inputs/src~1CONTRACT.json",
+          "/mutants/7/violations/0",
+          "/own_source",
+          "/stages/0/agree",
+          "/stages/0/corpus",
+          "/stages/0/outcomes/Parsed",
+          "/stages/0/outcomes/Unsupported\tlex\tliteral",
+          "/stages/0/outcomes/Unsupported\tparse\tdeclaration-form",
+          "/stages/2/corpus"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-bootstrap/receipts/progress.json"
+      },
+      {
+        "after_sha256": "f352e55d57b287d4c16ac64fce954f3df41d646f9697ff713404c8fdfac35dd5",
+        "before_sha256": "a457ac35d10504ad574237caea4933c456c6bcb9cfb81fd84e04cbc48b14adad",
+        "changed_fields": [
+          "/files"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-bootstrap/receipts/reference.json"
+      },
+      {
+        "after_sha256": "12dd671621b5e8b03e723ff0d098bf2a36fd08c1c43338ef06526ec8a44695b8",
+        "before_sha256": "da02ae70eda0e5d18f9e4f216f3a8abd26ea6b81bcf57f5db000e875b643b0a3",
+        "changed_fields": [
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-checker/receipts/checker.json"
+      },
+      {
+        "after_sha256": "539177c67f7a92375c36b35adf08131f0481dbb9125d5fe86afe38d126491ebf",
+        "before_sha256": "0e465142a8d4e7e17b9b058798d6611f75705248e3b38f33edb7c566e9d7c8a1",
+        "changed_fields": [
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-classification/receipts/precision.json"
+      },
+      {
+        "after_sha256": "b1627b132c89806ad69f4596c324385db820da8f1765847235f0a6f361b9fe31",
+        "before_sha256": "61d05c0384d832f8c89080908af5b65ef238462920c7e33488e37b580c05f20a",
+        "changed_fields": [
+          "/inputs/src~1CONTRACT.json",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+      },
+      {
+        "after_sha256": "069492843893527bd53cd7818526d34deeeb6ea8f2c40b861d15c83de6f412ee",
+        "before_sha256": "930a092a5289cbe6eb1ad3c7d156a59a8854daf7b51614ee3c811a6e16452538",
+        "changed_fields": [
+          "/inputs/src~1CONTRACT.json",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-fields/receipts/fields.json"
+      },
+      {
+        "after_sha256": "fa97cadd5f35295f48999386aaef52c4df6be766cbc10d6dbd1d3651ce113bef",
+        "before_sha256": "fa97cadd5f35295f48999386aaef52c4df6be766cbc10d6dbd1d3651ce113bef",
+        "classification": "identical",
+        "path": "tests/compiler-opt/receipts/optimization.json"
+      },
+      {
+        "after_sha256": "1ec09eaf249c545ca28c0df263014fba5f9e1da0e2a784836f81b4e85678902f",
+        "before_sha256": "819a06ac6f5ad17c97edd3b56764faf1ca2a180cccc174e1b8e7c0e4072b8fea",
+        "changed_fields": [
+          "/inputs/src~1CONTRACT.json",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-recursion/receipts/recursion.json"
+      },
+      {
+        "after_sha256": "0bcd1238f0b477f96cdf2e3063489f440eda7961e06588b6dfce6cb7bd08d0e3",
+        "before_sha256": "aac7f632dec34cae5c223aa57bc000f66b521b962e89854b2b9b0e03c863b7b5",
+        "changed_fields": [
+          "/inputs/src~1CONTRACT.json",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-structural/receipts/catalog.json"
+      },
+      {
+        "after_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+        "before_sha256": "e96687e2e5d4ac4cb213fc985c04ce11e093352ff219e4299dbd34acf940adca",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/argument-order.wasm"
+      },
+      {
+        "after_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+        "before_sha256": "f37cbe2701400d9c18f9d6c68a01ea09b141f338356da7393068026b1e9a8a5f",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/argument-order.wat"
+      },
+      {
+        "after_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+        "before_sha256": "a8734f91c39dd226ab7e18e0444e5fd7c5b9dba31aff2d8189f1814fbd8d68ee",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-locals.wasm"
+      },
+      {
+        "after_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+        "before_sha256": "bb923ea26e63396f1ef4bebb4d2676e90af03973ca5237abb7eadd9af48e59bf",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-locals.wat"
+      },
+      {
+        "after_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+        "before_sha256": "c2b4f229a9a76dbe3e8067b757f96e4be291e4bde06bc5083a809812a296cf8d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-maximum.wasm"
+      },
+      {
+        "after_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+        "before_sha256": "fba780290b6b5b23cc33e76f751ceaeb5bcc239c4d6ae5e4fbc022fd233a3d27",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/branch-maximum.wat"
+      },
+      {
+        "after_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+        "before_sha256": "315fb3a9c262d9ab0b41f98b340fd24218bcf6ea54ac67aa739a8c4be1070a3f",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-argument.wasm"
+      },
+      {
+        "after_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+        "before_sha256": "ed75d9fe42c1d6bbab4e3a2e2a7bca580b9c402b7a5e4d2c0b48d09a1c364f18",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-argument.wat"
+      },
+      {
+        "after_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+        "before_sha256": "eafdaa8e9a2da700547dddd622cd1943b3957c410924af2212768e30926b6006",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-promote.wasm"
+      },
+      {
+        "after_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+        "before_sha256": "9f4d2dad526ec16960a22eda56c95aff89b5b56ab0e898e4c0c524f9f11ac602",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-promote.wat"
+      },
+      {
+        "after_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+        "before_sha256": "1b6fa7f73721009af94d57b15f24a0dfde75d3f3b2610afeafce230098b040f0",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-reuse.wasm"
+      },
+      {
+        "after_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+        "before_sha256": "b0614c68d8d19f2bae6cf61161988a362cfe09050926200ecb92ac44ed26150e",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/data-reuse.wat"
+      },
+      {
+        "after_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+        "before_sha256": "002da7da4fea81579a8c7fa63622cc55059907d52e0ef89a86b0753f5e786529",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/duplicate-parameters.wasm"
+      },
+      {
+        "after_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+        "before_sha256": "dcc379283c35854e1c33ecdcb84a0fdeaa30c7ec2d6e282d32bbb56d5089ee88",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/duplicate-parameters.wat"
+      },
+      {
+        "after_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+        "before_sha256": "1c3514495fd2b7a2cd61cbffc6123b862c3e85444a5133ed9b6124c0aa93dd21",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-affine-copy.wasm"
+      },
+      {
+        "after_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+        "before_sha256": "055a83f5f056c27e8e85fe7079234140853817cd0a4a6fde3e9ffdddab52aa6c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-affine-copy.wat"
+      },
+      {
+        "after_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+        "before_sha256": "bbcd5a7ab55789fc728c10e7461124204b039e9ba1b24e9ab461e2b69f4db650",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-binding.wasm"
+      },
+      {
+        "after_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+        "before_sha256": "a558b16fe463395ffc8e0c069af06608af0890070624259ca9f8755bd275476d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-binding.wat"
+      },
+      {
+        "after_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+        "before_sha256": "e89d826e17ab5aa25cfc0f03c7d2adcd5632aa786fbf1e9752a0d5dd3808ac7c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-cost.wasm"
+      },
+      {
+        "after_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+        "before_sha256": "ce35460d179426683ef0d4e71857cbfcb58acc51edf3abfe3f23cd912e041e11",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-cost.wat"
+      },
+      {
+        "after_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+        "before_sha256": "4789bad7cc7945c3ff26f61d5fff550c121dfe104a01f5958528de10940edb0c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward-call.wasm"
+      },
+      {
+        "after_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+        "before_sha256": "df456ef2da426ba381ab4d9782d80c09d43425855b4a16c93706827ed10992da",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward-call.wat"
+      },
+      {
+        "after_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+        "before_sha256": "d89506ad72ba9df9c0bdf11bb61f7a5fb8b35da3cc625de0d4acf3007e187951",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward.wasm"
+      },
+      {
+        "after_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+        "before_sha256": "801b2be5d507f6d7769431dfb5c2225fc6cb15a1c056f50c8656de1db2dea4b7",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/erased-forward.wat"
+      },
+      {
+        "after_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+        "before_sha256": "bec4dba4714d72ede6f34df093b4ba4fcda05c944c2b731686d1e53b64b0e609",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/flag.wasm"
+      },
+      {
+        "after_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+        "before_sha256": "d89c671580c74c91c0770b588ff7e817ab138b5119c51c5ad93f731fa3f612b5",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/flag.wat"
+      },
+      {
+        "after_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+        "before_sha256": "2cd98d33df7f42fb49f3eb5eb4147e4d4a1f79bd65b2ae6fac92a90710f62863",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/forward-type.wasm"
+      },
+      {
+        "after_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+        "before_sha256": "9f7d13f0bccebd0d66a878c80e83ad49442af7a24856136079be0d8819df2f0c",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/forward-type.wat"
+      },
+      {
+        "after_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+        "before_sha256": "15edf65637c6aca2c95587a9a2fe552b5ac6ae1c8466ac8d33dfc50b8c9c3142",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-function-index.wasm"
+      },
+      {
+        "after_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+        "before_sha256": "1aa3bb5aca7304f4d4df965e8a0f9b7cdba42eb484e88fa1818d4e83f4c053f0",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-function-index.wat"
+      },
+      {
+        "after_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+        "before_sha256": "d4854c8beccea614595cdeff1f34f65890c7df15c29498c6caea7347b5133169",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-local-index.wasm"
+      },
+      {
+        "after_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+        "before_sha256": "0a2deda6f68819e91c58fe28d63be626ab4e23200fb1d1f98a9073fc9b739d68",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-local-index.wat"
+      },
+      {
+        "after_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+        "before_sha256": "da61f775a8d31a37d291260660755497b6a09bcfcc7d4732c89b67e571d32aff",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-tags.wasm"
+      },
+      {
+        "after_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+        "before_sha256": "885c9fbaa6902d8ace1381242f42eb18d1a41c1424667d6afa4cfa63d74acf45",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/high-tags.wat"
+      },
+      {
+        "after_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+        "before_sha256": "105603258a021465192e32aa6c779a3b7e4fa941b6bf0bb8ed7c6c8407c90381",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-duplicate.wasm"
+      },
+      {
+        "after_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+        "before_sha256": "6abb33d24f0ee5d36ac5dcee8b12367814ffc3f6be9429afbcbcef5f3d199002",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-duplicate.wat"
+      },
+      {
+        "after_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+        "before_sha256": "2e39da0d65fef8c394d67fdfa3c83aea66ceb478d4499905f80afa4038646345",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-return.wasm"
+      },
+      {
+        "after_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+        "before_sha256": "00e0dc95212b73916e9a86c1f27044efddd153cd361521905ab929552801ce58",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/matched-return.wat"
+      },
+      {
+        "after_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+        "before_sha256": "1d373db24a683eb74c15998be917c7a20a3a527f1dbdb172e2ce2bf0248aeac5",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/mixed-types.wasm"
+      },
+      {
+        "after_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+        "before_sha256": "a3d78294553b4f77e1af29fae54dc4660c315d9f70ba3d06776dcb023e03f096",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/mixed-types.wat"
+      },
+      {
+        "after_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+        "before_sha256": "d0d70a64a72ea6fd48cd30506366301723e09fc8d793a9fe619f5147a7628128",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/nested-match.wasm"
+      },
+      {
+        "after_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+        "before_sha256": "170708736dfd0613119da1cbb49eb859b5a49e24e9208990476da830e4f247c8",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/nested-match.wat"
+      },
+      {
+        "after_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+        "before_sha256": "a2b939de11ab1f80d906380a20613bde72e6ff0e5da1c056a02b7229765380d2",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/renamed.wasm"
+      },
+      {
+        "after_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+        "before_sha256": "732c5e3fcf5f9c98ae91b1f8440745e46e6f973001dabc7fb1c32d8db4cc237d",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/renamed.wat"
+      },
+      {
+        "after_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+        "before_sha256": "f5c8b1e19d401f40b45ab367d8d4f2c031f4507c3f45bdd63b661d6c41ec4d90",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/reordered-arms.wasm"
+      },
+      {
+        "after_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+        "before_sha256": "4e8644f95652b7b8a8fd323398a61b5ac1e9f20e366e603530c9641a27474fd1",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/reordered-arms.wat"
+      },
+      {
+        "after_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+        "before_sha256": "e62047100c1408071aff1e1f3a3cbd830efcaa38b73cd231db9424ac7dc49803",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/shadowing.wasm"
+      },
+      {
+        "after_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+        "before_sha256": "9f4d66d630312e4f777df41b452c4a5d544bb45f0c2ba14ce96fb120032e819e",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/shadowing.wat"
+      },
+      {
+        "after_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+        "before_sha256": "4f75589bfd70c348f4c13bc8d689546bc7bf57032d37f0593b4f36ba5604a880",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/three-colors.wasm"
+      },
+      {
+        "after_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+        "before_sha256": "851bad13c2e5b0dc08aad26af8613daa667f30d885f9372353dbd17d30b37bda",
+        "classification": "identical",
+        "path": "tests/compiler-wasm/generated/three-colors.wat"
+      },
+      {
+        "after_sha256": "01502b5d3c24a69fd9bb2e54d0d4224038c6179345cf4ac365a7e0cd3b19122e",
+        "before_sha256": "2badca96fdef12a88be78f9a2de11fc100438f8dd2309b726d76181188d56477",
+        "changed_fields": [
+          "/inputs/src~1CONTRACT.json",
+          "/inputs/src~1SPEC.md",
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/compiler-wasm/receipts/wasm.json"
+      },
+      {
+        "after_sha256": "a333da2ef4844af39cbf635037a24494202e23923f7158a5144e01406dd6f31e",
+        "before_sha256": "ef65eeada2d4dbacb32632e7827086e675b1f76fb495286572cd5fe3a9c64f10",
+        "changed_fields": [
+          "/distinct_declarations",
+          "/groups",
+          "/inputs/docs~1compiler-campaign~1manifest.json",
+          "/summary/compositions_available",
+          "/summary/files",
+          "/summary/groups",
+          "/summary/groups_completed",
+          "/summary/units"
+        ],
+        "classification": "semantic",
+        "path": "tests/perch-context/receipts/context.json"
+      },
+      {
+        "after_sha256": "5ba1ad39b6e46119834bfc1d0be5531b79832782ad1846efcf778a18b7715a34",
+        "before_sha256": "3e7bb1a14204bcc347979348718448ced02d61591f604f51a5bf8f855d834b4b",
+        "changed_fields": [
+          "/inputs/src~1opt-LAWS.bend",
+          "/inputs/src~1opt-PROOF.bend",
+          "/inputs/src~1opt-check.bend",
+          "/inputs/src~1opt-fold.bend",
+          "/inputs/src~1opt-inline.bend",
+          "/inputs/src~1opt-term.bend",
+          "/inputs/src~1opt-wasm.bend",
+          "/inputs/src~1opt.bend"
+        ],
+        "classification": "semantic",
+        "path": "tests/subsets/receipts/frontend.json"
+      }
+    ],
+    "snapshot_sha256": "6a8b9047603ca90d86778c26fceec6127a06d3755bd5eaa52d75853623fbaccf",
+    "status": "passed"
+  },
+  "scope": "Initial opt-1 tree at 02b17c99, before refresh fixtures and gate wiring",
+  "started_at": "2026-09-30T01:56:07.066488+00:00",
+  "total_seconds": 1080.938994
+}

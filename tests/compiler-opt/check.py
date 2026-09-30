@@ -499,6 +499,8 @@ def main():
                  HERE / 'baseline.json', HERE / 'expectations.json', HERE / 'extensions.json',
                  HERE / 'regressions.json', HERE / 'review-controls.json', HERE / 'SPEC.md',
                  HERE / 'test_corpus.py', HERE / 'freeze.py', Path(__file__),
+                 HERE / 'refresh.py', HERE / 'refresh-cases.json', HERE / 'receipts/refresh-seed.json',
+                 *sorted((HERE / 'refresh-fixtures').glob('*.bend')),
                  ROOT / 'bench/generate.mjs', HOST,
                  *[ROOT / 'tests' / family / 'cases.json'
                    for family in ('compiler-wasm', 'compiler-fields-wasm', 'compiler-recursion')],
@@ -631,6 +633,19 @@ def main():
                     record['boundaries'].append({'name': 'stack-' + name, 'lane': lane, 'setting': setting, 'result': result})
         optimizer_boundaries(record, lanes, regressions)
         mutants(record, cases, regressions['abi_control'])
+        refresh_path = HERE / 'receipts/refresh.json'
+        refresh_path.unlink(missing_ok=True)
+        refresh_result = run(['python3', '-B', HERE / 'refresh.py'], timeout=240)
+        require(refresh_result['exit'] == 0, ('refresh probes failed', refresh_result))
+        refreshed = json.loads(refresh_path.read_text())
+        require(refreshed['status'] == 'pass' and refreshed['counts']['source_programs'] >= 20,
+                ('refresh probes incomplete', refreshed.get('counts')))
+        require(all(record['inputs'].get(path) == source_hash
+                    for path, source_hash in refreshed['inputs'].items()),
+                'refresh probes used different inputs')
+        record['refresh'] = {'result': refresh_result, 'receipt': str(refresh_path.relative_to(ROOT)),
+                             'sha256': digest(refresh_path), 'counts': refreshed['counts'],
+                             'inputs': refreshed['inputs']}
         require(all(digest(ROOT / p) == expected for p, expected in record['inputs'].items()), 'inputs changed during gate')
         observers = sum(c['family'] == 'compiler-opt-observer' for c in cases)
         record['counts'] = {'source_programs': len(cases) + len(rejected) - observers, 'accepted_programs': len(cases) - observers,
@@ -654,7 +669,8 @@ def main():
                             'new_fixtures': len(frozen['cases']) + len(regressions['cases']),
                             'new_fixture_reference_calls': sum(len(c['calls']) for c in frozen['cases'] + regressions['cases']),
                             'observer_reference_calls': sum(len(c['calls']) for c in cases if c['family'] == 'compiler-opt-observer'),
-                            'generated_programs': sum(c['family'] == 'bench' for c in cases)}
+                            'generated_programs': sum(c['family'] == 'bench' for c in cases),
+                            'refresh': record['refresh']['counts']}
         record['status'] = 'passed'
     except Exception as error:
         record['failure'] = repr(error)

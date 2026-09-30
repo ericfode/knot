@@ -1,0 +1,137 @@
+{
+  "method": "Exact frozen-source sha256 intersection; form-level integration limits are recorded in REFRESH-2026-09-29.md.",
+  "nest_commit": "486ae5fff06772a90b0d99b2d6f263bc495ef1e9",
+  "nest_expectation_files": 13,
+  "nest_source_pins": 1194,
+  "opt_source_pins": 117,
+  "exact_source_matches": [],
+  "opt_rejection_pins": [
+    {
+      "file": "tests/compiler-recursion/fixtures/same-parameter.bend",
+      "sha256": "3aa67d0b3ccb3d9d545404959036d2eaa0871f63cb17700a638eead095fb2e4c",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/other-parameter.bend",
+      "sha256": "c5252c14ba1f2dc4ad12c496321fe247d279c19434e9162c6d1d6340976c42e5",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/rebuilt-parent.bend",
+      "sha256": "7f9ee29b2ce6e2f8fc607fc1a6aff54035f54475d312e0da7928ab8de6e3bcaa",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/rebuilt-constructor.bend",
+      "sha256": "7ba3e48f12a5c309e3ed215ccded13e7e4dd0126c594d0d7ea125bbd0c1edeb5",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/computed.bend",
+      "sha256": "6bdd0c955058cd9e63c6e7c918a71a45237208ef61f8f7ea9fdc4eb095a39eda",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/shadow-let.bend",
+      "sha256": "568cdf41693687228d467d2cd1c9329b697d2f0b3fd6b41f6b816b67b4d3cb2e",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/mutual.bend",
+      "sha256": "db229b6b80a0175af909d13dd4dfb6a7b2172aba03cb0494219c0c282144b1a4",
+      "verdict": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tforward-live-call\t"
+      }
+    },
+    {
+      "file": "tests/compiler-recursion/fixtures/second-descent.bend",
+      "sha256": "c80d1224a2d05935d2614029f169f74ed6bc00c0b640f1d6a852f4f7d996d6d6",
+      "verdict": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tcheck\trecursive-call\t"
+      }
+    }
+  ],
+  "nest_special_source_pins": [
+    {
+      "suite": "tests/compiler-nest/expectations.json",
+      "name": "forward-constructor-pattern",
+      "file": "tests/compiler-nest/fixtures/forward-constructor-pattern.bend",
+      "source_sha256": "388d82705a9b1ec0e3dd058e141e861eacd574c406dee5aa0d40e890cef214d7",
+      "verdict": {
+        "source": "seed",
+        "outcome": "Invalid",
+        "exit": 2,
+        "phase": "check",
+        "code": "unknown-constructor",
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t",
+        "code_basis": "proposed: no frozen case yet; the catalog vocabulary already names unknown-constructor, which is the seed rule at the pattern (constructor not yet declared)"
+      }
+    },
+    {
+      "suite": "tests/compiler-nest/expectations.json",
+      "name": "first-match-duplicate-arm",
+      "file": "tests/compiler-nest/fixtures/first-match-duplicate-arm.bend",
+      "source_sha256": "3cb531f3b7cbfd051c7a849942d8a457ccda24c491aa12ea50267403959b0817",
+      "verdict": {
+        "source": "seed",
+        "outcome": "Accepted",
+        "exit": 0
+      }
+    },
+    {
+      "suite": "tests/compiler-nest/expectations.json",
+      "name": "empty-type",
+      "file": "tests/compiler-nest/fixtures/empty-type.bend",
+      "source_sha256": "44381662138908f069c0b14f11f698672a6a41f74d84112d1e2ce492a8131861",
+      "verdict": {
+        "source": "knot_expected",
+        "outcome": "Accepted",
+        "exit": 0,
+        "justification": "A datatype without constructors and a match without rows are the base case of exhaustiveness, and the seed accepts both. src/catalog.bend (nonempty) currently rejects it as Invalid empty-datatype (read from source, not run), a D4 misclassification this increment repairs.",
+        "alternative": "Coordinator override allowed: Unsupported\tcheck\tempty-datatype\t (exit 3) if empty datatypes are deferred. Invalid is never allowed (D4)."
+      }
+    },
+    {
+      "suite": "tests/compiler-nest/expectations.json",
+      "name": "rec-alias",
+      "file": "tests/compiler-nest/fixtures/rec-alias.bend",
+      "source_sha256": "798708f5ad868629e15d900f919e85a07b3575ba727946db6c826dcf073722dd",
+      "verdict": {
+        "source": "seed",
+        "outcome": "Invalid",
+        "exit": 2,
+        "phase": "check",
+        "code": null,
+        "diagnostic": null,
+        "code_basis": "assigned by increment 1 (structural recursion descent check). Until it lands Knot reports Unsupported check recursive-call, which is admissible (never Invalid-by-accident) but does not pass this fixture."
+      }
+    }
+  ],
+  "manifest_hashes": {
+    "tests/compiler-opt/expectations.json": "7df4ccd93ce2ce45ae308d4877840da58cd54a1e761ed03f0458f6c5fe00a9d4",
+    "tests/compiler-opt/baseline.json": "3ce9a17fd42a7c1c2aaef23ffb0dd80717f8c69b303fdbf1c5af2ae83f2ea99c",
+    "tests/compiler-opt/regressions.json": "5979c6bf9ab51e06118d571adf03af2bad6323b47d4ee5d9bc5c43799f68be74",
+    "tests/compiler-opt/refresh-cases.json": "4aa2fded2102a5e31fc89ed1469b8a1137671591177f7a7d6285665e8e571029",
+    "tests/compiler-recursion/cases.json": "774029cc4dcc2b5f3cb907aa43f16fcbf524537a6c9db943375b7fd3350ebb47"
+  }
+}

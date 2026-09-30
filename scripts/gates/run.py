@@ -61,7 +61,7 @@ GATES = (
     Gate('fields-wasm', ('python3', 'tests/compiler-fields-wasm/check.py'),
          ('tests/compiler-fields-wasm/receipts/fields-wasm.json',)),
     Gate('compiler-opt', ('python3', 'tests/compiler-opt/check.py'),
-         ('tests/compiler-opt/receipts/optimization.json',)),
+         ('tests/compiler-opt/receipts/optimization.json', 'tests/compiler-opt/receipts/refresh.json')),
     Gate('census', ('node', 'tools/census/census.mjs', '--check')),
     Gate('perch-context', ('python3', 'tests/perch-context/check.py'),
          ('tests/perch-context/receipts/context.json',)),

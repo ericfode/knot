@@ -25,6 +25,7 @@ qualify the repaired implementation.
 ```sh
 export BEND_NO_TELEMETRY=1
 python3 tests/compiler-opt/check.py
+python3 -B tests/compiler-opt/refresh.py
 npm run -s gates
 npm run -s gates:verify
 ```
@@ -155,3 +156,10 @@ The next increment can measure compile/size costs and whole-body growth under
 the existing benchmark controls, extend domains through the explicit freeze
 procedure, and obtain live Perch ratings. Shared gate receipts are refreshed by
 the coordinator after integration.
+
+The [2026-09-29 refresh](REFRESH-2026-09-29.md) adds 32 seed-frozen edge programs
+without changing earlier observations, laws, controls or mutants. Its separate
+checker runs within the registered optimizer gate and compares both compiler
+hosts with optimization off, the complete pipeline and each individual pass.
+The report records current D21/D24/D26
+obligations and coordinator integration work.
