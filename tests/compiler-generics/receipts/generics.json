@@ -231,6 +231,25 @@
   "builds": [
     {
       "lane": "native",
+      "phase": "parse",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-generics/gate/parse"
+        ],
+        "cached": false,
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "cdd2992bb26bbf7743d20b65e703c07d38f8b30961dd53a4161946250009163c"
+    },
+    {
+      "lane": "native",
       "phase": "check",
       "result": {
         "argv": [
@@ -246,7 +265,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "8403e3813179d477e7eeacb64179260a3e76706878650eec83d0515b719b15fb"
+      "sha256": "13d01840f7f4785a58752f94b2285fc17d5c65a653616568e68ee1321f64a6ae"
     },
     {
       "lane": "native",
@@ -265,7 +284,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "8bb99dda1de8b7d2a90f433c6b222e56f028242d7229dc26283cc5b280a78390"
+      "sha256": "cc4c4921b94e7c03945c4555ae75fb0f260124ef331dbfb6ce52b406af15b739"
     },
     {
       "lane": "native",
@@ -284,7 +303,26 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "3742bdac4103ba135f830e760e7e326234daf1c9cc1267963cef663da9fb89da"
+      "sha256": "d1376f87862e84ef518fc4ddd8d00d1f24ae57e247168b0e583e5c31a59724fb"
+    },
+    {
+      "lane": "bun",
+      "phase": "parse",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/parse-cli.bend",
+          "-o",
+          "$ROOT/.local/compiler-generics/gate/parse.js"
+        ],
+        "cached": false,
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": ""
+      },
+      "sha256": "3d055a3b898a9462cc53ce06373c048b3b824c11a6f342f1135748fb70edbbe4"
     },
     {
       "lane": "bun",
@@ -303,7 +341,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "e3e7e721c61674a1d20ad6257a00cb35616a340bbb627e0993ce7f04a467d538"
+      "sha256": "fd728406fac7116d9e3fc2e67da048099da1d585f598b57c02586073224a3de3"
     },
     {
       "lane": "bun",
@@ -322,7 +360,7 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "01ea4383f6aa0d9f84fd4ca2f4b9b4c74214abb9d54a68ea9cc0c363e997aad8"
+      "sha256": "44a715f47ad30716e6752f655cc0f4f9d7d695a91cc50074a756f05fd4c150e4"
     },
     {
       "lane": "bun",
@@ -341,13 +379,13 @@
         "stderr": "",
         "stdout": ""
       },
-      "sha256": "681a3d6ddf88ad9e020203af45d81da8e4e49a900300f65c65927be07e8d65ba"
+      "sha256": "b526cb0a4a0240cbf11b138abd0a46df6b436fd73cc6f32ac5acb18a85ada500"
     }
   ],
   "counts": {
     "abi_arity_observations": 10,
     "abi_module_probes": 8,
-    "additional_mutant_witness_kills": 12,
+    "additional_mutant_witness_kills": 16,
     "agreed_fixtures": 41,
     "blocked_fixtures": 0,
     "byte_identical_modules": 41,
@@ -357,11 +395,20 @@
     "execution_lanes": 2,
     "fixtures": 148,
     "host_refusals": 4,
-    "mutant_lane_kills": 34,
-    "mutants": 17,
+    "mutant_lane_kills": 44,
+    "mutants": 22,
     "negative_phase_observations": 642,
+    "precheck_byte_identical_modules": 3,
+    "precheck_evaluator_agreements": 6,
+    "precheck_fixtures": 13,
+    "precheck_lane_observations": 104,
+    "precheck_preserved_artifacts": 20,
+    "precheck_seed_check_observations": 13,
+    "precheck_seed_parse_observations": 13,
+    "precheck_seed_runs": 3,
+    "precheck_wasm_agreements": 6,
     "preserved_artifacts": 214,
-    "proof_entries": 6,
+    "proof_entries": 7,
     "rejected_fixtures": 62,
     "seed_calls": 226,
     "seed_invalid": 62,
@@ -28356,7 +28403,7 @@
     "src/CONTRACT.json": "2500997ad4b7f916c974850b47c8faa1cb8547857ab7dcd422999aea1c278747",
     "src/LAWS.bend": "96784d0206dd716d58997b8a4ab412dc6ac97b49e6544da668e9e0c00aa6b165",
     "src/PROOF.bend": "92e35e9f13fb7a2934c24d4e35250d563c4c02797d69d58f7b79c46238e67b23",
-    "src/SPEC.md": "a14ec6f69a09943df82f69ec92b2ad72ef8de5992353da54a96c4abb261bbd58",
+    "src/SPEC.md": "dabc2eabdf2123cc59b0cac4a706ad33c619fd21e537c1555d3677015b98c46e",
     "src/catalog-LAWS.bend": "d8312b56bcd24c7331b849c6f36df4076c1d28123ec204cdd09c3823c9b69235",
     "src/catalog-PROOF.bend": "c090b3b28f5cb9080c579e0ad09461ae2f26d65f1270ee6a5dc00385629df665",
     "src/catalog.bend": "959861062e04dd17520816e9891252e34298a49b9eb9c226d9a89a85a6b70973",
@@ -28379,8 +28426,11 @@
     "src/generic-catalog.bend": "4c4339611277b94a57a6c67cb6d5bf1ddd8b88eb99637434a32c81c1e1129ac5",
     "src/generics.bend": "452510bbd39fbc1bd9282d5188469f89fe611ccfebcefe2449b03ddcbf59447b",
     "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
-    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
-    "src/parse.bend": "2c09d9c01f64ad72ca22bce0c0a049974f580b7518fd6b57cf2b41821781c8e7",
+    "src/parse-cli.bend": "c897b49120fe9bfe407dbafc9a57ff4c05fbb14183a4429cf34c3768896c7305",
+    "src/parse-order-LAWS.bend": "bc231eac13d142de33027c81cd01095aad1dd936989365e324ee21addf0ffebb",
+    "src/parse-order-PROOF.bend": "49bfda159c41faf7a740d1169e2c156e51b777596f5bbffccb0bc687ccf316c5",
+    "src/parse-order.bend": "ccec0e0799d626c69c26c435511ae0fb054bb72668f806a45e944af81f1e78f8",
+    "src/parse.bend": "91a03d6ad81870eec2980390b45c860c1dd72749853a002c3f635bc3638ebe7c",
     "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
     "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
     "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
@@ -28393,7 +28443,7 @@
     "src/type-erasure.bend": "d78e243aa06bacf65841ed8bbfb6ebbeeffbdf5f089bf4ba9a88269acca7962b",
     "src/type-parse-LAWS.bend": "7f1dc7df284ee114782e2bae2696fbed60bf378219fba1cddf8a84d791d7d1eb",
     "src/type-parse-PROOF.bend": "66b1c65a4211064e923b370180c9da4fb2e832d632bc363670f9bc9db8b60609",
-    "src/type-parse.bend": "8d33ac6d476e83f9232e2689d5f83fc47b0e6a6d14c1435ed3f6124c31b53439",
+    "src/type-parse.bend": "b04ea1087ebbaca4bfd6cf7828df070f75db697a356a80a598fc179af386b931",
     "src/types-LAWS.bend": "4ca28bccb97831e118050b939e727aab92b0da430c13ba5ed4c6f672bbf286ab",
     "src/types-PROOF.bend": "7ee78ebbdadd7b4182ea43a5a169b541e1fd1edcefa9ef2ee2e14d30f8c11f17",
     "src/types.bend": "5cc9fd37d13c4b194c9ce2b3aff6368de5bd5d1efd9e11bfb2f4aca9d776b513",
@@ -28427,7 +28477,7 @@
     "tests/compiler-generics/boundaries/fixtures/type-valued-result.bend": "69ef0cd500074c527a74d19bdbd6aa82ef9fed9f169955ba5573156ead349da5",
     "tests/compiler-generics/boundaries/fixtures/value-indexed-family.bend": "bdab92018a2cf1637230208470eff5b3cadd4859cc0809a52a3efcf68785ec7a",
     "tests/compiler-generics/boundaries/regen.py": "9fe7f4d7a8024413e01fa7d632420565f3df8bfcc756b9a5daa34ebc6fa58140",
-    "tests/compiler-generics/check.py": "5e80321ec12219db5e419e9790a9e411688eb6a21d6ee5bb422f4672b646f190",
+    "tests/compiler-generics/check.py": "f233106795c2d21dfc0604a0b20f759f481a09b3909d8fff9c4f6f649cf4f81f",
     "tests/compiler-generics/def-references/expectations.json": "65a53df687db5eb68c44cc69506f8e958cfe8988b882e9a17c71093a7abcc12d",
     "tests/compiler-generics/def-references/fixtures/def-reference-erased-monomorphic.bend": "45097bd949c10e98b278091e0f3819e89123ca2adf24a04da50229f80a90fbfa",
     "tests/compiler-generics/def-references/fixtures/def-reference-erased.bend": "0cad3f3ed25688062c6440a58152a63ca7ec59a8be49e04cc99e889508a37613",
@@ -28523,6 +28573,24 @@
     "tests/compiler-generics/pattern-order/fixtures/later-family-parameter.bend": "267a27fbe4d062a48fe87fc5d4c8107d648847b547a317a592552d05e514ad96",
     "tests/compiler-generics/pattern-order/fixtures/later-family-unbox.bend": "c726566ec13b3fb9e660c9ffe1e2f39ee5a643fc13f966f041db85bb7c4a5ac1",
     "tests/compiler-generics/pattern-order/regen.py": "a0030e55cbe359ba4bdafb0e219e61b9761eba5be2ef5dcd245d07b9184fba3c",
+    "tests/compiler-generics/prechecks/README.md": "f7d00c5e1358320d75adad5bdf53365b32994b0fa4804b658109aa8d9e431afb",
+    "tests/compiler-generics/prechecks/SPEC.md": "0f0b64217bc85382e48f45409176df36c8960c7c467104e55aaa5cc5129cbc7f",
+    "tests/compiler-generics/prechecks/check.py": "d8f3743ec3ef3768d9bdd7c6e69adcc590695531e0897c8d0c6e2951c45e1498",
+    "tests/compiler-generics/prechecks/expectations.json": "d24776172434b33c8c04e677df3816e3fde60eadac017303ccafb0916f56a924",
+    "tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec",
+    "tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend": "0030a3d27e2572f9c1aa33f914864f095147387953cc62b81742c2583dc0ee8c",
+    "tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend": "3a57659eece1bf1dfe7ae789a8016f5d525e9958d3a5a8bbc9b7682275b59bdd",
+    "tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend": "66acbfe944f49488ae2d61dd9c0723ee9c3b2623a5466ea72219ff386026107a",
+    "tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend": "5605d9115aaf775e2af737b3fd271d323e5fb2d29258c8b8a8cf41756b5611ab",
+    "tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend": "095b335753e43c94098ba27f09214e33973cc88f8ad48a216b5cf9aae0795e75",
+    "tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend": "267a27fbe4d062a48fe87fc5d4c8107d648847b547a317a592552d05e514ad96",
+    "tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend": "09ad0347501eff042cc5a9b4514b1a8e924e39bac9e0d4e2d6e1370638a7edb7",
+    "tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend": "a5307c5be17b1c15925c39cf762d460c18ebbe741e1a2710b35aec57d6519dba",
+    "tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend": "90a860b7ed03ee248660b5e73bb5e1139aa96664ddd4211507d8d5a82a201057",
+    "tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend": "443aca1528c1811138a37e7374457e007ae13500b78ce386be60619844411759",
+    "tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend": "299c7947c7d7a981a79586ab311086deda8a574280f827d11ada86bb8128ba9c",
+    "tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend": "1d569d47256a77f98a6ae20702619179d120f97713bdf455548395062baf02c3",
+    "tests/compiler-generics/prechecks/seed-parse.ts": "b594e00937c9005cf3b313e1fafe0dc7fd492e339974aa09839fee56dd3e189f",
     "tests/compiler-generics/regen.py": "4ada0ca7ded9f62f9d99f8463d9f32a7ed60845ec8a76769432f6e7a5ad7dece",
     "tests/compiler-generics/spacing/expectations.json": "a62414d3c3e9530566747441325891f26fa14be889ba63f6becae0adb1f6609e",
     "tests/compiler-generics/spacing/fixtures/close-gap-header.bend": "aa64fbd62a250e770e3a5b88a760e464fa867324932aa71d4aa4ae0f1fb639fe",
@@ -28620,7 +28688,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "cbab95ee0527fd3dad80858f77359cc00dbe1b68d94a53da042a526eb98020ef"
+          "sha256": "e202b8343075251b02e3cc66380d65c717ddfe4caa20bb4b08869ca845acf906"
         },
         "native": {
           "actual": {
@@ -28649,7 +28717,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "25398e087a4ca5d19a19529106e03e9b6a9c4341e3472bee2907480c64818862"
+          "sha256": "866044160cbc164cbd703cbaebd5a557e2fcef9ac16754cb358be95bf2fdff3c"
         }
       },
       "name": "skipped-substitution",
@@ -28734,7 +28802,7 @@
             "stdout": "Built\t176\n"
           },
           "outcome": "semantic-kill",
-          "sha256": "9f9a41866ae77bed74d2833e7744f3bae96c24a375cfc678437db008d60e0f4c"
+          "sha256": "b2b1d1852d939b45d486128e159b693e37aa700e67d5c5c5723afa7aa701c5f9"
         },
         "native": {
           "actual": {
@@ -28776,7 +28844,7 @@
             "stdout": "Built\t176\n"
           },
           "outcome": "semantic-kill",
-          "sha256": "b0d9d938f8f03a61089e9cb63be69abbe81391673a43753bd45faa927d76e6da"
+          "sha256": "a525758cbe6c2f44b0e49f8a454c11dd06d2fc02078158466a3a9878d2cde3aa"
         }
       },
       "name": "erased-argument-live",
@@ -28840,7 +28908,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "2fa0d43ff6830a716ddc04d3d99e4c175b8ad2b23e5009f77ff9a9a4ec42373b"
+          "sha256": "e38f134dccb5f1d3a7c840e3b5b9690e61cb41a4ed60dea72a549e9538f5e986"
         },
         "native": {
           "actual": {
@@ -28869,7 +28937,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "f4baca23ee70bdb185ddcabfce202825d2164a6c7569bb994ca93bdbbfec972e"
+          "sha256": "dfe2f3f4134f520c7c54cc11ec388bfaaa3b53321e2db002c79d44ff7800bc3d"
         }
       },
       "name": "wrong-quantity-meet",
@@ -28932,7 +29000,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "04ab57000bb739e1ae26cd4970ee4fe50f431b148e0aa0191a99a90431d7c527"
+          "sha256": "dd6039fe498aff9cf62dabf17fa9210298128ef7a47cba5e54b497b0b848b0a4"
         },
         "native": {
           "actual": {
@@ -28961,7 +29029,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "413d4cd4a2ff9979b4bdee6d1b1c374cde2e51ea81ad4602b6c0674cad5c7d0a"
+          "sha256": "502e73db986ef14ded3ad53b2c420f17b40e3b71fcdd3baaa7a99d3241fb3aa2"
         }
       },
       "name": "missing-arity-check",
@@ -29025,7 +29093,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "77110d2c16977310d5d5f83db267f281c0645d7c716fe62bab48fcbd3f79162b"
+          "sha256": "bb4f64559b9c933f16f6378d7491c27b4cb9a9dcfb7a8b6d33ba915438e799a2"
         },
         "native": {
           "actual": {
@@ -29054,7 +29122,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "d5859a2566563a35be14f8e5e4926f3430f164b296a790ce0c7d3623b3ba3fef"
+          "sha256": "5eec2653ba9b0141df4b031c92a6742ce2bb486658e26b9bd019ed2e574ec774"
         }
       },
       "name": "bare-quantity-default",
@@ -29118,7 +29186,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "9e1d5366f72cc5b45c6a48a46e659d8b984ddc6c7a77cc45ec99b9cc857bd01c"
+          "sha256": "0b26a357222fb83dda7e15b8e45b886b2372c1db77e09b5600cb0fdf85f42a84"
         },
         "native": {
           "actual": {
@@ -29147,14 +29215,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "3b43bf33af8259f1eef0fc6f21612b075fddc8b22c17b9165af11701f59b24e2"
+          "sha256": "1e9aec8f1e8d171dd6bb526bc2309513811cfebe0b49e772eabc0202d1de0776"
         }
       },
       "name": "term-argument-invalid",
       "new": "Fail{S.Invalid{\"parse\",\"term-argument\",S.at(h)}}",
       "old": "Fail{S.Unsupported{\"parse\",\"term-argument\",S.at(h)}}",
       "phase": "check",
-      "source_sha256": "98aa3afea5dcea78b4c6ddcdd3cc155b5f26819660279de053915e4585eebab7",
+      "source_sha256": "e7de5b4fccb7af29c25d87e0d86e9db59c0e8c69e0c8dca0e377ac9f2914afb7",
       "typecheck": {
         "argv": [
           "bun",
@@ -29211,7 +29279,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "949e2bfaa8c3ddaedbb8f96bedb5284ebbd628bb3d6bf343ee0bfa3913e3b290"
+          "sha256": "2c75dd158bb6a2f45f7155b06470ef133fd4924d03bda99b2071b7eafe3d2006"
         },
         "native": {
           "actual": {
@@ -29240,7 +29308,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "63518445da06bfe3773748069ddcf677e88d87945bd3e0982581a93511ebed9b"
+          "sha256": "1285c65da37a159e65e9e1fff19561ea773357b9fb733e91c290b0b2f0d0eed7"
         }
       },
       "name": "empty-family-invalid",
@@ -29304,7 +29372,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "8e02a0f6db8cc3ed3d0884307b7233a8c1d527a889f517d2f207479ddb363355"
+          "sha256": "697f30f98c58c33301c9773eb7d637578e6ba544b5db731cbf63484279d5aad4"
         },
         "native": {
           "actual": {
@@ -29333,7 +29401,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "02878142fb0ce83d7448bba32a7bf967a70061a9d54040aa3ad25684750a5a21"
+          "sha256": "5276f8486939380f6bebf0510c5c4cecc85e689b589c9c99f07924e88dd9f641"
         }
       },
       "name": "empty-datatype-invalid",
@@ -29397,7 +29465,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "798330a9163d5208330b6cdc73a270518af7db81e162be5d2e444bf1d6187a31"
+          "sha256": "70a9e90ef9ec1ffbabbe550d1ab2c0a48723008d75a71fcaa32e30df65e8391f"
         },
         "native": {
           "actual": {
@@ -29426,7 +29494,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "a78858d69ebdceb2ebd8ec048908540b5530540c6b8fc952aca14bba9db57ab2"
+          "sha256": "9acbaf4d090dbd5852a2a358c7cc475fb2a9c6fe59723948524859e8e16b79df"
         }
       },
       "name": "def-reference-free",
@@ -29490,7 +29558,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "53fe92810bac4df9eac7f5634e1f740ee5cbdb097cec070fa329e5fc02ff952c"
+          "sha256": "f27c0b33feff99b65a8b8786aa651583ec8a0c9b4e6e904e9800a6679de588c4"
         },
         "native": {
           "actual": {
@@ -29519,7 +29587,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "4cfa148d9ca7165e2e8b2f930903537794442536e8c7df4227efe1f5f80f6b63"
+          "sha256": "6762f07777178e6e2ce6bff8e193ad2ac939c793141f8f32a5cefbb76f0be84f"
         }
       },
       "name": "type-level-definition-unknown",
@@ -29583,7 +29651,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "0cae1d8a3caa75e6f452051638e3b7e935a16f7ff5f8f2c523b26419c86f9c98"
+          "sha256": "4d3761a337cbfb53100ebe1dc852e98d0f8fb926d4ff2b2e72fd0de694b6bf53"
         },
         "native": {
           "actual": {
@@ -29612,14 +29680,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "54334c6e3cb65d353edaf355fff8bb755520b149bad330afa45ddb5096329e8b"
+          "sha256": "bce5f6569e750bb21f1e50d36d1e697884ffd3261504c46357be23df7f336d8b"
         }
       },
       "name": "marked-binder-quantity",
       "new": "S.choose(Result<S.Error,Parsed>,True{},u =>",
       "old": "S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,1),u =>",
       "phase": "check",
-      "source_sha256": "bfc7eaf8971f9f891250d33e567fd4fbeb1be451eeafb60a94261947a24a03e7",
+      "source_sha256": "6a3377dcb57948342b0ca806e3bca24bbd880bf3c0eb272fc6086e9fe0a43441",
       "typecheck": {
         "argv": [
           "bun",
@@ -29676,7 +29744,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "633380de2927f3c7ca4ff153403bb9b9231affaed079072c945d34e900032536"
+          "sha256": "c253a883613682e2b3374645c903442b0bc14b22279db1021561296f2cd4e73a"
         },
         "native": {
           "actual": {
@@ -29705,7 +29773,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "fd7d957d4f9450a0fbf0bedfe28b64db78d0c58f0a4ce8e2ac5160e8f208526a"
+          "sha256": "afdc475e7eca0299eb5fd74f9a54d2c89f40e1422f1ea0d91526672838de2eb6"
         }
       },
       "name": "pattern-order-forward",
@@ -29769,7 +29837,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "3d32a21156df1b8503526fc1cf9db2b5132b3c1b965cf06ba4e721d1f4ccdb6c"
+          "sha256": "6fb0e46ec0d80611fbb66dc77dbd1b88f65b7f2f842c012c74840606185897cf"
         },
         "native": {
           "actual": {
@@ -29798,14 +29866,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "a21d79c7b15c00657da380f780cd3a858c4b2f4f14dd255d525c372be8a1a290"
+          "sha256": "500bbd7dc7ed78ec2aa85688b3c84eedb949027c23cf3b8cfee05a540dd57a8f"
         }
       },
       "name": "quantity-gap-glued",
       "new": "True{}",
       "old": "glued(token,value)",
       "phase": "check",
-      "source_sha256": "5e175d78d9462901f4ae76cc3b1acf38564e7891933b117dc5b3c5c37e3e876d",
+      "source_sha256": "e30911d7fe6106ee09c76829adf02ee37f4ae8277055414056fd2619ca47762f",
       "typecheck": {
         "argv": [
           "bun",
@@ -29862,7 +29930,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "cf7af6e0ecefad7a90fee64de36b91e9b376b397cbb75d467b33193dd9d78b5d"
+          "sha256": "41bbe222ed0666db9981f8f0a3e33086f1cb8a234e06009528d8665a4357f48e"
         },
         "native": {
           "actual": {
@@ -29891,14 +29959,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "fdadc5a77658abc34195e0dc19a88378f816bdd061f8821076e2c22d4ea8b7f3"
+          "sha256": "e7893d886189c11a8396806fe8bb5faaf685061773d62c99ea7d89f30c934468"
         }
       },
       "name": "meet-gap-glued",
       "new": "True{}",
       "old": "Bool.and(glued(a,b),glued(b,c))",
       "phase": "check",
-      "source_sha256": "21ebd19c421d6621c0a9db8004ad447464c299beb001158bc001c2ccd26f1d0f",
+      "source_sha256": "b3da65a793fa608062e7b40623fe9b6ce52661a5e450fe9caa8979eb49d34dfa",
       "typecheck": {
         "argv": [
           "bun",
@@ -29955,7 +30023,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "d5d24185a94f0878ffef54b0cb7d4f562bf2b56055172e06b03586863069ab6e"
+          "sha256": "3514ab0204cc7b53ed86b865af0a76dbc0b354dafc10213241b9072fa0edf5af"
         },
         "native": {
           "actual": {
@@ -29984,14 +30052,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "ff5b313b00be4693ef1bce6bf807a6aca881456a084dcd6cfa4eb910931add93"
+          "sha256": "bedd4c503daaff9278ef70d618482c1085424df0ea6466ff4950ef3756ec4757"
         }
       },
       "name": "close-gap-glued",
       "new": "u => False{}",
       "old": "u => Bool.not(flush(from,h))",
       "phase": "check",
-      "source_sha256": "6faecc7ac13c3fe6274574cbd933dd8308a08e06bd4f4396cb722b1fe75435e5",
+      "source_sha256": "d253e891c62bbe68581edd7c35f17d6cdd3c51ce5c7706a5194b864e21075f9c",
       "typecheck": {
         "argv": [
           "bun",
@@ -30147,7 +30215,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "4139ae6cf9d9fb4d5b7bb97f835b7b6cfc34cb8d54f60c7ef2eff520e0cb92f9"
+          "sha256": "e16970932d0a8dff1219f8a07e105084119eccfd27a58fedda42187576d10881"
         },
         "native": {
           "actual": {
@@ -30261,14 +30329,14 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "ce753ad451552b60955e420a78832ef37ef2362774cd677edba45d260c20ad40"
+          "sha256": "42609a2d9089d77cbd12d5c8f588ed23744da6cf1519d1b49820e6e71fb28270"
         }
       },
       "name": "term-token-gap-glued",
       "new": "True{}",
       "old": "T.glued(left,right)",
       "phase": "check",
-      "source_sha256": "5e6f0728d6f882faac4d9942f74f9d229763ddd61edc84c4674e1d1543928eef",
+      "source_sha256": "804cf58cd13f3054186cfd4de44fd479560261d9ff59050930ff53dc3de1e933",
       "typecheck": {
         "argv": [
           "bun",
@@ -30331,7 +30399,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "9cf948c16cb7ac0c0caec12e9c2ec5aece8f72f9790b5b98e7056cc2df9b49e9"
+          "sha256": "3db2e69929b33539e3cc32cb8bd5d1e5eb063336436063c781079d9da5dedac3"
         },
         "native": {
           "actual": {
@@ -30363,7 +30431,7 @@
             "stdout": ""
           },
           "outcome": "semantic-kill",
-          "sha256": "c96126aa61b482065576b426867203f7c5bfe9274020543d87fd9af8295e5bec"
+          "sha256": "779113fa08de28f90081b86e47182c2bcc116a5d627e54fc7b24ca3a2d2c0636"
         }
       },
       "name": "abstract-type-zero",
@@ -30387,8 +30455,2131 @@
         "stdout": "All terms check.\n"
       },
       "witness": "abstract-entry"
+    },
+    {
+      "actual": {
+        "contains": "Parsed\t",
+        "exit": 0
+      },
+      "also_witnesses": [
+        "late-flag-pattern"
+      ],
+      "expected": {
+        "diagnostic": "Invalid\tparse\tunknown-constructor\t",
+        "exit": 2
+      },
+      "file": "parse-cli.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant.js",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Parsed\tdef open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); type Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def main()->Flag open($Flag; Box{On{}})\n"
+          },
+          "additional_kills": [
+            {
+              "actual": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant.js",
+                  "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Parsed\ttype Tag<0 A:Kind(&1)> Kind(&2)(First{}; Second{}); def pick(1 x:Flag)->Tag<$Flag> match[$x](Off{} => First{}; On{} => Second{}); def main()->Tag<$Flag> pick(On{}); type Flag Data(Off{}; On{})\n"
+              },
+              "outcome": "semantic-kill",
+              "witness": "late-flag-pattern"
+            }
+          ],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/parse-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant.js"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "59a1bb3eff5a7a73972235dd31c9e00ef25392f94a6b2c0609bac906972fd50d"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Parsed\tdef open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); type Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def main()->Flag open($Flag; Box{On{}})\n"
+          },
+          "additional_kills": [
+            {
+              "actual": {
+                "argv": [
+                  "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant",
+                  "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Parsed\ttype Tag<0 A:Kind(&1)> Kind(&2)(First{}; Second{}); def pick(1 x:Flag)->Tag<$Flag> match[$x](Off{} => First{}; On{} => Second{}); def main()->Tag<$Flag> pick(On{}); type Flag Data(Off{}; On{})\n"
+              },
+              "outcome": "semantic-kill",
+              "witness": "late-flag-pattern"
+            }
+          ],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/parse-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/mutant"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "7b8a40b018e476059a30a7b802a41bbfe95e80cde1c69ccf3d6d8250556adcd6"
+        }
+      },
+      "name": "late-pattern-parsed",
+      "new": "Done{Unit{}}",
+      "old": "O.validate(4096n,value)",
+      "phase": "parse",
+      "source_sha256": "cbcf127051e10bad99b66869b751a7fc933573e7e20051cf16d5f24595353431",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/late-pattern-parsed/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "late-box-pattern"
+    },
+    {
+      "actual": {
+        "diagnostic": "Unsupported\tparse\ttype-expression\t",
+        "exit": 3
+      },
+      "expected": {
+        "diagnostic": "Invalid\tparse\ttype-expression\t",
+        "exit": 2,
+        "require": "reject"
+      },
+      "file": "type-parse.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/mutant.js",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\ttype-expression\t103:104:9:11\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/mutant.js"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "b878e1f36a0c964ffde38fc2ee1b6346fb437094eb4c8b05ffc2127af1f18c32"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/mutant",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\ttype-expression\t103:104:9:11\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/mutant"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "968cf278376c7b9046ab9384408230be9fba350b75e773e3b47e7f5d9529d300"
+        }
+      },
+      "name": "tilde-type-unsupported",
+      "new": "False{},u =>",
+      "old": "S.matches(h,\"~\"),u =>",
+      "phase": "check",
+      "source_sha256": "a1c6b309f15888242728aba0c8b4eaff98eeadcc9a3c5f5bc9aadfe05f27ee83",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/tilde-type-unsupported/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "tilde-type-argument"
+    },
+    {
+      "actual": {
+        "diagnostic": "Unsupported\tparse\tterm-form\t",
+        "exit": 3
+      },
+      "expected": {
+        "diagnostic": "Invalid\tparse\texpected-term\t",
+        "exit": 2,
+        "require": "reject"
+      },
+      "file": "parse.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/mutant.js",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-form\t106:107:9:14\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/mutant.js"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "4689b6f199be7b7460ce4f2d8ea96cd3b6a6cc1ae2e12ebe4feaaf31123ddae6"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/mutant",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+            ],
+            "exit": 3,
+            "outcome": "unsupported",
+            "stderr": "Unsupported\tparse\tterm-form\t106:107:9:14\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/mutant"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "2bc89bacf08c052198039b659650af93afc8f14ab72131cb53a648856a1788f7"
+        }
+      },
+      "name": "double-equals-unsupported",
+      "new": "Bool.or(False{},\n        Bool.or(S.matches(h,\"\\n\"),",
+      "old": "Bool.or(S.matches(h,\"=\"),\n        Bool.or(S.matches(h,\"\\n\"),",
+      "phase": "check",
+      "source_sha256": "701383fc91720320e0c814e48940189df98bfbe6f085ffb036f7e265c8ed3579",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/double-equals-unsupported/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "double-binding-equals"
+    },
+    {
+      "actual": {
+        "diagnostic": "Invalid\tparse\tfunction-result\t",
+        "exit": 2
+      },
+      "expected": {
+        "exit": 0,
+        "require": "agree"
+      },
+      "file": "parse.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/mutant.js",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tparse\tfunction-result\t46:47:5:11\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/mutant.js"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "fcbcc0c662910990bf22c9bbbaf7198be28776559adff82a4b08bd55685dd232"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/mutant",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+            ],
+            "exit": 2,
+            "outcome": "invalid",
+            "stderr": "Invalid\tparse\tfunction-result\t46:47:5:11\n",
+            "stdout": ""
+          },
+          "additional_kills": [],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/check-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/mutant"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "21212db80d41662bea2f24f12eac996e175591d2eb50c7ba54ba6a874b792438"
+        }
+      },
+      "name": "multiline-result-invalid",
+      "new": "S.matches(colon,\":\")",
+      "old": "Bool.or(S.matches(colon,\":\"),\n              Bool.and(S.matches(colon,\"\\n\"),starts(S.skip_lines(Con{colon,body}),\":\")))",
+      "phase": "check",
+      "source_sha256": "860cca063086d3b91d5aac3f74a758c511ddac58a05ea4b300431e797d03ea56",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/multiline-result-invalid/check-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "multiline-result-control"
+    },
+    {
+      "actual": {
+        "contains": "Parsed\t",
+        "exit": 0
+      },
+      "also_witnesses": [
+        "late-flag-pattern"
+      ],
+      "expected": {
+        "diagnostic": "Invalid\tparse\tunknown-constructor\t",
+        "exit": 2
+      },
+      "file": "parse-order.bend",
+      "lanes": {
+        "bun": {
+          "actual": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant.js",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Parsed\tdef open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); type Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def main()->Flag open($Flag; Box{On{}})\n"
+          },
+          "additional_kills": [
+            {
+              "actual": {
+                "argv": [
+                  "bun",
+                  "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant.js",
+                  "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Parsed\ttype Tag<0 A:Kind(&1)> Kind(&2)(First{}; Second{}); def pick(1 x:Flag)->Tag<$Flag> match[$x](Off{} => First{}; On{} => Second{}); def main()->Tag<$Flag> pick(On{}); type Flag Data(Off{}; On{})\n"
+              },
+              "outcome": "semantic-kill",
+              "witness": "late-flag-pattern"
+            }
+          ],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/parse-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant.js"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "af7e3c0361d968328e25a2bfad6e4b3f05a424f1f38c22988876094c985039a6"
+        },
+        "native": {
+          "actual": {
+            "argv": [
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant",
+              "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+            ],
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": "Parsed\tdef open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); type Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def main()->Flag open($Flag; Box{On{}})\n"
+          },
+          "additional_kills": [
+            {
+              "actual": {
+                "argv": [
+                  "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant",
+                  "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+                ],
+                "exit": 0,
+                "outcome": "success",
+                "stderr": "",
+                "stdout": "Parsed\ttype Tag<0 A:Kind(&1)> Kind(&2)(First{}; Second{}); def pick(1 x:Flag)->Tag<$Flag> match[$x](Off{} => First{}; On{} => Second{}); def main()->Tag<$Flag> pick(On{}); type Flag Data(Off{}; On{})\n"
+              },
+              "outcome": "semantic-kill",
+              "witness": "late-flag-pattern"
+            }
+          ],
+          "build": {
+            "argv": [
+              "bun",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/parse-cli.bend",
+              "-o",
+              "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/mutant"
+            ],
+            "cached": false,
+            "exit": 0,
+            "outcome": "success",
+            "stderr": "",
+            "stdout": ""
+          },
+          "outcome": "semantic-kill",
+          "sha256": "3e16797a1d6877b6602c229c327b3cd334d89dce9cdc624a79988d0ccaae2f2c"
+        }
+      },
+      "name": "constructor-event-unordered",
+      "new": "True{}",
+      "old": "U32.is_lt(p,r)",
+      "phase": "parse",
+      "source_sha256": "e765576a2b89ab1c6306aeadd8da720e13709e01e94d421f9d41433dd2d97fd5",
+      "typecheck": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/.local/compiler-generics/gate/constructor-event-unordered/parse-cli.bend",
+          "--check-only"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      },
+      "witness": "late-box-pattern"
     }
   ],
+  "prechecks": {
+    "byte_identical_modules": 3,
+    "evaluator_agreements": 6,
+    "fixtures": [
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-application-prefix-colon-bun.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-application-prefix-colon-native.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t54:55:5:19\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "application-prefix-colon",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/application-prefix-colon.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() -> List<:\n  |                    ^\n6 |   Nil{}\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 54,
+          "expected": "a term",
+          "ok": false
+        },
+        "sha256": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-extra-return-closer-bun.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-extra-return-closer-native.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-:\t96:97:8:21\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "extra-return-closer",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/extra-return-closer.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : ':'\n- observed : '>'\nLocation:\n7 | \n8>| def f() -> Flag<Flag>>:\n  |                      ^\n9 |   On{}\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 96,
+          "expected": "':'",
+          "ok": false
+        },
+        "sha256": "095b335753e43c94098ba27f09214e33973cc88f8ad48a216b5cf9aae0795e75"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-late-flag-pattern-bun.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-late-flag-pattern-native.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\tunknown-constructor\t102:105:7:9\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "late-flag-pattern",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/late-flag-pattern.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n6 |   match x:\n7>|     case Off{}:\n  |          ^^^^^\n8 |       First{}\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 102,
+          "expected": "a declared constructor (unknown: probe.Off)",
+          "ok": false
+        },
+        "sha256": "09ad0347501eff042cc5a9b4514b1a8e924e39bac9e0d4e2d6e1370638a7edb7"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-tilde-type-argument-bun.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-tilde-type-argument-native.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\ttype-expression\t103:104:9:11\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "tilde-type-argument",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/tilde-type-argument.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : a term\n- observed : '~'\nLocation:\n 8 | def f() -> Flag:\n 9>|   +x: Flag<~x> = On{}\n   |            ^\n10 |   x\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 103,
+          "expected": "a term",
+          "ok": false
+        },
+        "sha256": "1d569d47256a77f98a6ae20702619179d120f97713bdf455548395062baf02c3"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-late-box-pattern-bun.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-late-box-pattern-native.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tcheck\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\tunknown-constructor\t56:59:3:9\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "late-box-pattern",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/late-box-pattern.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{value}: value\n  |          ^^^^^^^^^^\n4 | \n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 56,
+          "expected": "a declared constructor (unknown: probe.Box)",
+          "ok": false
+        },
+        "sha256": "267a27fbe4d062a48fe87fc5d4c8107d648847b547a317a592552d05e514ad96"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-return-prefix-colon-bun.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-return-prefix-colon-native.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\ttype-expression\t91:92:8:16\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "return-prefix-colon",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/return-prefix-colon.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n7 | \n8>| def f() -> Flag<:\n  |                 ^\n9 |   On{}\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 91,
+          "expected": "a term",
+          "ok": false
+        },
+        "sha256": "299c7947c7d7a981a79586ab311086deda8a574280f827d11ada86bb8128ba9c"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-detached-tag-branch-bun.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-detached-tag-branch-native.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t186:187:14:13\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "detached-tag-branch",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/detached-tag-branch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n13 |     case On{}:\n14>|       Second {}\n   |              ^\n15 | \n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 186,
+          "expected": "'def', 'type' or 'law'",
+          "ok": false
+        },
+        "sha256": "3a57659eece1bf1dfe7ae789a8016f5d525e9958d3a5a8bbc9b7682275b59bdd"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-erased-call-bun.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 later:A}); def ghost(0 p:Flag; 1 x:Flag)->Flag $x; def early(1 x:Flag)->Flag ghost(later($main); $x); def later(1 x:Flag)->Flag $x; def main()->Flag early(On{})\n"
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-erased-call-native.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tcheck\tdef-reference\t168:172:13:14\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 later:A}); def ghost(0 p:Flag; 1 x:Flag)->Flag $x; def early(1 x:Flag)->Flag ghost(later($main); $x); def later(1 x:Flag)->Flag $x; def main()->Flag early(On{})\n"
+            }
+          }
+        },
+        "name": "multiline-result-erased-call",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/multiline-result-erased-call.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "outcome": "success",
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "seed_parse": {
+          "ok": true
+        },
+        "sha256": "443aca1528c1811138a37e7374457e007ae13500b78ce386be60619844411759"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-double-binding-equals-bun.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-double-binding-equals-native.wasm"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend"
+              ],
+              "exit": 2,
+              "outcome": "invalid",
+              "stderr": "Invalid\tparse\texpected-term\t106:107:9:14\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "double-binding-equals",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/double-binding-equals.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag<x>= = On{}\n   |               ^\n10 |   x\n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 106,
+          "expected": "a term",
+          "ok": false
+        },
+        "sha256": "5605d9115aaf775e2af737b3fd271d323e5fb2d29258c8b8a8cf41756b5611ab"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-detached-tag-entry-bun.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-detached-tag-entry-native.wasm"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend"
+              ],
+              "exit": 3,
+              "outcome": "unsupported",
+              "stderr": "Unsupported\tparse\tspacing\t449:450:31:7\n",
+              "stdout": ""
+            }
+          }
+        },
+        "name": "detached-tag-entry",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/detached-tag-entry.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "outcome": "process-failure",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n30 | def main() -> Tag<Flag>:\n31>|   TagY {}\n   |        ^\n32 | \n",
+          "stdout": ""
+        },
+        "seed_parse": {
+          "begin": 449,
+          "expected": "'def', 'type' or 'law'",
+          "ok": false
+        },
+        "sha256": "66acbfe944f49488ae2d61dd9c0723ee9c3b2623a5466ea72219ff386026107a"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nmain()->0=v0.1\n\n"
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-control-bun.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t37\n"
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def main()->Flag On{}\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-control-bun.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":37}\n"
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nmain()->0=v0.1\n\n"
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-control-native.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t37\n"
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); def main()->Flag On{}\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-result-control-native.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":37}\n"
+            }
+          }
+        },
+        "name": "multiline-result-control",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/multiline-result-control.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "outcome": "success",
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "seed_parse": {
+          "ok": true
+        },
+        "sha256": "90a860b7ed03ee248660b5e73bb5e1139aa96664ddd4211507d8d5a82a201057"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nopen(0:0,1:1)->4294967295=case $1 [0(1 $2:4294967295;0 $0:0;)=>$2:4294967295]\nmain()->0=call0(v0.0;v1.0{v0.1;v0.0})\n\n"
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-declared-box-pattern-bun.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t151\n"
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); def main()->Flag open($Flag; Box{On{}})\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-declared-box-pattern-bun.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":151}\n"
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nopen(0:0,1:1)->4294967295=case $1 [0(1 $2:4294967295;0 $0:0;)=>$2:4294967295]\nmain()->0=call0(v0.0;v1.0{v0.1;v0.0})\n\n"
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-declared-box-pattern-native.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t151\n"
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def open(0 A:Kind(&1); 1 b:Box<$A>)->$A match[$b](Box{$value} => $value); def main()->Flag open($Flag; Box{On{}})\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-declared-box-pattern-native.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":151}\n"
+            }
+          }
+        },
+        "name": "declared-box-pattern",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/declared-box-pattern.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "outcome": "success",
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "seed_parse": {
+          "ok": true
+        },
+        "sha256": "0030a3d27e2572f9c1aa33f914864f095147387953cc62b81742c2583dc0ee8c"
+      },
+      {
+        "lanes": {
+          "bun": {
+            "check": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/check.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nwrap(1:0)->1=v1.0{$0:0;v0.0}\nmain()->0=v0.1\n\n"
+            },
+            "compile": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/compile.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-applied-result-bun.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t133\n"
+            },
+            "eval": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/eval.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "bun",
+                "$ROOT/.local/compiler-generics/gate/parse.js",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def wrap(1 x:Flag)->Box<$Flag> Box{$x}; def main()->Flag On{}\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-applied-result-bun.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":133}\n"
+            }
+          },
+          "native": {
+            "check": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/check",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Checked\nwrap(1:0)->1=v1.0{$0:0;v0.0}\nmain()->0=v0.1\n\n"
+            },
+            "compile": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/compile",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-applied-result-native.wasm"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Built\t133\n"
+            },
+            "eval": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/eval",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend",
+                "main",
+                "1048576"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Evaluated\t0\t1\tOn{}\n"
+            },
+            "parse": {
+              "argv": [
+                "$ROOT/.local/compiler-generics/gate/parse",
+                "$ROOT/tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "Parsed\ttype Flag Data(Off{}; On{}); type Box<0 A:Kind(&1)> Kind(&1)(Box{1 value:A}); def wrap(1 x:Flag)->Box<$Flag> Box{$x}; def main()->Flag On{}\n"
+            },
+            "wasm": {
+              "argv": [
+                "node",
+                "$ROOT/scripts/run-wasm.mjs",
+                "--profile=knot-fields-wasm-1",
+                "$ROOT/.local/compiler-generics/gate/precheck-multiline-applied-result-native.wasm",
+                "main"
+              ],
+              "exit": 0,
+              "outcome": "success",
+              "stderr": "",
+              "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":133}\n"
+            }
+          }
+        },
+        "name": "multiline-applied-result",
+        "seed_check": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-generics/prechecks/fixtures/multiline-applied-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "outcome": "success",
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        "seed_parse": {
+          "ok": true
+        },
+        "sha256": "a5307c5be17b1c15925c39cf762d460c18ebbe741e1a2710b35aec57d6519dba"
+      }
+    ],
+    "lane_observations": 104,
+    "preserved_artifacts": 20,
+    "seed_check_observations": 13,
+    "seed_parse_observations": 13,
+    "seed_runs": 3,
+    "wasm_agreements": 6
+  },
   "profile": "knot-generics-1",
   "proofs": [
     {
@@ -30468,6 +32659,20 @@
           "bun",
           ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
           "$ROOT/src/type-parse-PROOF.bend"
+        ],
+        "exit": 0,
+        "outcome": "success",
+        "stderr": "",
+        "stdout": "All terms check.\n"
+      }
+    },
+    {
+      "entry": "src/parse-order-PROOF.bend",
+      "result": {
+        "argv": [
+          "bun",
+          ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "$ROOT/src/parse-order-PROOF.bend"
         ],
         "exit": 0,
         "outcome": "success",

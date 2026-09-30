@@ -641,3 +641,34 @@ The combined composition is unavailable: 195,340 bytes against 48,000, with
 memetic identity, Anticipation and Payoff remain unreviewed; no style pass or
 semantic Perch review is claimed. The earlier preflight remains as historical
 evidence under `preflight-before-dispatch.json`.
+
+## Precheck round 6
+
+The frozen pre-review probes now enforce constructor declaration availability
+before Parsed, allow a line break before a result colon, and reject malformed
+`~` type arguments and doubled initializer `=` tokens. Availability follows
+source offsets, preserving the original sequence-order mutant. Three filled
+boundary laws and five new semantic mutants accompany the repair. Earlier
+expectations remain unchanged; six requested condition fingerprints are repaired
+and six are disputed with exact contract and seed evidence in
+[PRECHECKS.md](PRECHECKS.md).
+
+The full `npm run -s gates` run on `97eb180e` exits 0: all 21 gates pass in
+566.744248 seconds, with generics taking 317.829750 seconds under observed
+one-minute load 21.242188–40.019043. The owned receipt retains all 148 prior
+fixture requirements and 17 prior mutants. It adds 13 probes/controls and five
+mutants: 104 phase observations, 20 preserved artifacts, six evaluator and six
+Wasm agreements, three module pairs, 22 total mutants and 44 lane kills.
+All 248 input hashes match. The census has 47 files and 732 declarations;
+its tests pass 75/75 and the frozen frontend definition count stays 48.
+[PRECHECK-GATES.md](PRECHECK-GATES.md) records every gate's exact counts,
+normalized evidence hashes, review limits and coordinator actions.
+
+Current offline style preflight covers 27 bounded groups and 1,242 units with
+all 27 compositions available, zero truncations/blockers and zero provider
+requests. All five style axes remain unreviewed. C1's comparison against the
+pre-repair head reports zero new conditions and is partial because helper lanes
+and manifest d4_targets are absent; it is not an all-rule pre-review pass.
+General parser/application and declaration-traversal obligations remain open
+under D21. Shared receipts, live Perch and closures integration remain
+coordinator actions.
