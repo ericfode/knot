@@ -137,3 +137,24 @@ witnesses. The List control checks the seed's raw empty constructor as well as
 its sugared display; boxed Wasm validation is not enum-value agreement.
 `prechecks/REPORTED.md` records the fixed reading contract and evidence limits.
 Live semantic and all five style axes remain unreviewed by user instruction.
+
+## Non-leading template layout — precheck round 8
+
+The reported multiline parameter lists bypassed an existing rejection guard:
+it tested the newline before the `~` rather than the marker. The guard and its
+diagnostic now use the existing `S.skip_lines`. Nine independently frozen
+controls include both exact reported programs, an inline rejection, comments
+and blank lines, a bare quantity binder, leading-template prefixes and an
+ordinary multiline function executed through enum Wasm. No earlier law or
+expectation changes.
+
+The new `nonleading_template_layout` law is a universal equation for the
+comma/newline/marker boundary, including arbitrary remaining suffix, source
+positions, parsed head and fuel. Its fill has no holes; the original
+non-leading-template law remains filled and unchanged. The restoration mutant
+is independently typechecked and killed on five fixed witnesses in both lanes.
+All nine complete proof entries and all 60 prechecks pass in focused native/Bun
+verification. `PRECHECK-8.md` gives every supplied condition's evidence and
+distinguishes fixed findings from disputed offset, TSV and renderer assumptions.
+General parser refinement remains an open D21 obligation. All five style axes
+remain unreviewed; complete offline context is not a rating.

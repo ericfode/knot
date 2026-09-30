@@ -109,7 +109,8 @@ Nine checked classification laws quantify over source locations and unconsumed
 suffixes; they are classification laws, not a parser soundness theorem or feature
 support. The destructuring law excludes `==` and `=>`; both report
 `Invalid parse end-of-body`. A `~` after an ordinary binder reports
-`Invalid parse parameter`. An initial template binder stops recognition, so its
+`Invalid parse parameter`, including after comma-separated layout and comments.
+An initial template binder stops recognition, so its
 later binders and body are not validated.
 
 The generic extension below parses `Name<...>` in parameter types, return types

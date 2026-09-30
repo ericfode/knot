@@ -25,3 +25,10 @@ missing-colon negatives. `REPORTED.md` records the contract and the raw seed
 constructor evidence for `[]` versus `Nil{}`. Both manifests run through the
 same replay. Boxed outputs are evaluated, with byte-identical validated Wasm;
 only closed enum controls count as Wasm value agreements.
+
+`template-tail-expectations.json` adds nine seed-frozen controls. A non-leading
+`~` after a comma remains Invalid across line breaks and comments, at the
+marker's original span. A leading template retains its Unsupported boundary,
+including its malformed suffix control. The ordinary multiline control checks,
+evaluates and agrees with actual enum Wasm. `TEMPLATE-TAIL.md` records the fixed
+contract; the restoration mutant must be killed on all five layout witnesses.

@@ -234,6 +234,14 @@ MUTANTS = (
      'old': 'Bool.and(Bool.not(S.matches(h,"\\n")),glued(h,mark))', 'new': 'glued(h,mark)',
      'witness': 'newline-header-close', 'also_witnesses': ['newline-kind-header-close'], 'phase': 'check',
      'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'template-tail-layout-unguarded', 'file': 'parse.bend',
+     'old': 'Bool.and(parameters,starts(S.skip_lines(t),"~"))',
+     'new': 'Bool.and(parameters,starts(t,"~"))',
+     'witness': 'reported-template-second',
+     'also_witnesses': ['reported-template-third', 'template-tail-layout',
+                        'template-tail-comments', 'template-tail-bare-quantity'],
+     'phase': 'check',
+     'actual': {'exit': 3, 'diagnostic': 'Unsupported\tparse\ttemplate-binder\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
@@ -248,7 +256,8 @@ MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'function-open-layout-invalid', 'generic-is-layout-invalid',
                 'parameter-start-layout-invalid', 'parameter-tail-layout-invalid',
                 'result-start-layout-invalid', 'applied-type-layout-invalid',
-                'newline-header-close-glued', 'newline-named-header-close-glued', 'newline-is-glue'}
+                'newline-header-close-glued', 'newline-named-header-close-glued', 'newline-is-glue',
+                'template-tail-layout-unguarded'}
 
 
 def require(condition, detail):
@@ -667,7 +676,8 @@ def main():
                        *sorted((directory / 'fixtures').glob('*.bend'))]
         inputs += [HERE / 'prechecks' / name for name in
                    ('expectations.json', 'reported-expectations.json', 'review-r0-expectations.json',
-                    'review-r0-layout-guards.json', 'review-r0-named-guard.json', 'seed-parse.ts', 'seed-value.ts',
+                    'review-r0-layout-guards.json', 'review-r0-named-guard.json',
+                    'template-tail-expectations.json', 'TEMPLATE-TAIL.md', 'seed-parse.ts', 'seed-value.ts',
                     'check.py', 'README.md', 'SPEC.md', 'REPORTED.md')]
         inputs += sorted((HERE / 'prechecks/fixtures').glob('*.bend'))
         record['inputs'] = {str(path.relative_to(ROOT)): digest(path) for path in inputs}

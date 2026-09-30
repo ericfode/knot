@@ -49,6 +49,17 @@ law parameter_tail_layout:
   {P.run(1n+n,P.ListTail{close,head,True{},False{}},Con{S.Token{"\n",at},rest})
     == P.run(1n+n,P.ListTail{close,head,True{},False{}},rest) : Result<S.Error,P.Parsed>}
 
+# An ordinary binder ends the leading template region across layout too.
+law nonleading_template_layout:
+  for +n: Nat
+  for +head: S.Node
+  for +at: S.At
+  for +mark: S.At
+  for +rest: List<&2,S.Token>
+  {P.run(1n+n,P.ListTail{")",head,True{},False{}},
+      Con{S.Token{",",at},Con{S.Token{"\n",at},Con{S.Token{"~",mark},rest}}})
+    == Fail{S.Invalid{"parse","parameter",mark}} : Result<S.Error,P.Parsed>}
+
 law declaration_name_layout:
   for +n: Nat
   for +at: S.At

@@ -21,6 +21,9 @@ def L.parameters_layout(n,close,at,rest):
 def L.parameter_tail_layout(n,close,head,at,rest):
   {==}
 
+def L.nonleading_template_layout(n,head,at,mark,rest):
+  {==}
+
 def L.declaration_name_layout(n,at,name,rest):
   {==}
 

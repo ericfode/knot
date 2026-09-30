@@ -714,3 +714,13 @@ controls, nine complete proof entries and 36 mutants in both lanes.
 [REVIEW-R1-GATES.md](REVIEW-R1-GATES.md) records exact counts, measured
 under-load times, evidence hashes and remaining coordinator actions. All five
 style axes remain unreviewed; boundary proofs do not discharge D21 obligations.
+
+The current supplied C1 conditions are addressed in [PRECHECK-8.md](PRECHECK-8.md).
+Two confirmed non-leading-template layout defects are repaired after a separate
+D7 freeze; the remaining visible reports are disputed with fresh seed/CLI
+evidence and unchanged expectations. Focused verification passes all 60
+prechecks and nine proof entries, and kills the new restoration mutant on five
+witnesses in both lanes. All original 148 main fixtures and 36 prior mutants
+remain required; the registered gate now requires 37 mutants. Offline review
+has complete context and zero provider calls; all five style axes remain
+unreviewed. Final full-suite acceptance follows in PRECHECK-8-GATES.md.

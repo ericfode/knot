@@ -258,8 +258,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
             # A parameter tail is reachable only after an ordinary binder.
-            S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(t,"~")),u =>
-              invalid(t,"parameter"),u =>
+            S.choose(Result<S.Error,Parsed>,Bool.and(parameters,starts(S.skip_lines(t),"~")),u =>
+              invalid(S.skip_lines(t),"parameter"),u =>
               then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest))),u =>
             invalid(Con{h,t},"argument-separator"))))
     case 1n+ +n Term{+pattern}:

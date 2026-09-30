@@ -31,3 +31,10 @@ layout, including refusal results. A fourth refuses a detached named-type header
 closer. Both named and structured parameter routes check the original source
 offsets before the parameter-list parser skips layout. These equations do not
 prove general parser soundness.
+
+Parameter-tail layout does not restart a leading template region. After any
+ordinary binder (including a bare quantity binder), a following `~` is Invalid
+parse parameter at the marker, across comments and line breaks. Initial
+templates retain the documented prefix-only Unsupported boundary. The added
+filled equation states the non-leading-marker refusal after a newline,
+independently of the unconsumed suffix and source positions.
