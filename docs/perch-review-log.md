@@ -991,3 +991,15 @@ The first offline style task exceeded the 16 KB task cap. A bounded task and the
 remains unavailable. Use the increment's fixed bounded contract from the first
 preflight. Compression, Delight, Memetic identity, Anticipation and Payoff remain
 unrated, with no distributions or pass claim. No provider or live Perch call ran.
+
+The first registered suite caught two missed integration boundaries: the new
+residual guard displaced nest's frozen `nested-alias-affine` quantity diagnostic,
+and four new sources were absent from the style manifest. The checker now retains
+the concrete `Invalid check affine-reuse` result before applying the conservative
+guard. Its fixed control and the two residual refusals pass in both lanes; the
+unchanged 127 offline lint tests and eight law-rule controls pass after adding
+the new groups and closing affected imports. Run the existing manifest assertion
+when adding a source, and freeze concrete-error precedence alongside capability
+refusals. The final bounded preflight has 52 declarations, still six truncated
+contexts and no live ratings. Evidence: `LAW_REVIEW.md` in the descent gate and
+the executor repair report; failed export `run-06fqujan` remains under `.local/gates`.

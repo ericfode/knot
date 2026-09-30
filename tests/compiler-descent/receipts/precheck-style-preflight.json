@@ -15,7 +15,7 @@
     "reason": null
   },
   "summary": {
-    "units": 51,
+    "units": 52,
     "files": 9,
     "unranked_files": 0,
     "empty_files": 0,
@@ -31,7 +31,7 @@
       "context-helper-limit": 3,
       "truncated-context": 6
     },
-    "max_state_bytes": 37034,
+    "max_state_bytes": 37939,
     "composition_available": false,
     "composition_reasons": [
       "unresolved_composition_context",
@@ -59,7 +59,7 @@
       "src/scope.bend"
     ],
     "context_files": 15,
-    "source_bytes": 108423,
+    "source_bytes": 109001,
     "byte_limit": 48000,
     "unresolved_by_reason": {
       "collaborator-not-in-group": 1
@@ -555,8 +555,8 @@
     {
       "target": "src/check.bend::mode_at",
       "kind": "bend_definition",
-      "line": 182,
-      "state_bytes": 13849,
+      "line": 191,
+      "state_bytes": 13818,
       "truncated": false,
       "limit_reasons": [],
       "diagnostics_available": true,
@@ -566,7 +566,7 @@
     {
       "target": "src/check.bend::located",
       "kind": "bend_definition",
-      "line": 271,
+      "line": 279,
       "state_bytes": 7740,
       "truncated": false,
       "limit_reasons": [],
@@ -577,8 +577,8 @@
     {
       "target": "src/check.bend::run",
       "kind": "bend_definition",
-      "line": 199,
-      "state_bytes": 37034,
+      "line": 208,
+      "state_bytes": 37939,
       "truncated": true,
       "limit_reasons": [
         "context-helper-limit"
@@ -586,6 +586,11 @@
       "diagnostics_available": false,
       "supporting_role_possible": false,
       "role_context_gaps": [
+        {
+          "path": "src/core.bend",
+          "name": "Signature",
+          "reason": "context-helper-limit"
+        },
         {
           "path": "src/scope.bend",
           "name": "D.Alias",
@@ -649,6 +654,11 @@
         {
           "path": "src/check.bend",
           "name": "constructor_result",
+          "reason": "context-helper-limit"
+        },
+        {
+          "path": "src/catalog.bend",
+          "name": "C.Signature",
           "reason": "context-helper-limit"
         },
         {
@@ -801,8 +811,8 @@
     {
       "target": "src/check.bend::function_body",
       "kind": "bend_definition",
-      "line": 276,
-      "state_bytes": 36487,
+      "line": 284,
+      "state_bytes": 36275,
       "truncated": true,
       "limit_reasons": [
         "context-helper-limit"
@@ -810,6 +820,11 @@
       "diagnostics_available": false,
       "supporting_role_possible": false,
       "role_context_gaps": [
+        {
+          "path": "src/check.bend",
+          "name": "pattern",
+          "reason": "context-helper-limit"
+        },
         {
           "path": "src/check.bend",
           "name": "arm_body",
@@ -1014,21 +1029,6 @@
           "path": "src/residual.bend",
           "name": "guarded",
           "reason": "context-helper-limit"
-        },
-        {
-          "path": "src/check.bend",
-          "name": "G.pattern_constructor",
-          "reason": "context-helper-limit"
-        },
-        {
-          "path": "src/check.bend",
-          "name": "pattern_arity",
-          "reason": "context-helper-limit"
-        },
-        {
-          "path": "src/check.bend",
-          "name": "C.unsupported",
-          "reason": "context-helper-limit"
         }
       ]
     },
@@ -1099,6 +1099,17 @@
           "reason": "context-helper-limit"
         }
       ]
+    },
+    {
+      "target": "src/check.bend::alias_result",
+      "kind": "bend_definition",
+      "line": 183,
+      "state_bytes": 14666,
+      "truncated": false,
+      "limit_reasons": [],
+      "diagnostics_available": true,
+      "supporting_role_possible": true,
+      "role_context_gaps": []
     }
   ],
   "note": "Structural preflight only: no ratings or request bodies. A truncated unit cannot pass (Anticipation/Payoff unavailable); a unit without complete role context is held to the leading targets; an unavailable required composition prevents qualification. Project mode has no declared group, as in a live run; single-file groups are reported for planning explicit groups."

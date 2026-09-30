@@ -179,6 +179,15 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
     case C.Checked{C.Sequence{args},ignored,uses}: Done{C.Checked{P.value(token,type_id,tag,params,args),type_id,uses}}
     case _: C.internal(C.Checked,"refined-arguments")
 
+# Concrete quantity failures precede the conservative residual-identity refusal.
+def alias_result(result: Result<S.Error,C.Checked>, refusal: Result<S.Error,E.Scope>) -> Result<S.Error,C.Checked>:
+  match result:
+    case Fail{S.Invalid{+phase,+code,+at}}:
+      S.choose(Result<S.Error,C.Checked>,String.eq(code,"affine-reuse"),u => Fail{S.Invalid{phase,code,at}},u =>
+        S.bind(E.Scope,C.Checked,refusal,scope => Fail{S.Invalid{phase,code,at}}))
+    case Fail{error}: S.bind(E.Scope,C.Checked,refusal,scope => Fail{error})
+    case Done{value}: S.bind(E.Scope,C.Checked,refusal,scope => Done{value})
+
 def mode_at(mode: Mode) -> S.At:
   match mode:
     case Rebuild{C.Value{token,type_id,tag}}: S.at(token)
@@ -227,9 +236,8 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       S.bind(S.Node,C.Checked,M.step(token,columns,rows,work,types,scope),node =>
         run(n,Expression{node,wanted},catalog,current,scope))
     case 1n+ +n Expression{S.Alias{+token,+level,mark,+body},+wanted} C.Catalog{types,sigs} _:
-      S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark,types),bound =>
-        S.bind(E.Scope,C.Checked,R.guard(n,bound,token,level,body),ready =>
-          run(n,Expression{body,wanted},catalog,current,ready)))
+      S.bind(E.Scope,C.Checked,M.alias(scope,token,level,mark,types),+bound =>
+        alias_result(run(n,Expression{body,wanted},catalog,current,bound),R.guard(n,bound,token,level,body)))
     case 1n+ +n Expression{node,wanted} _ _: C.internal(C.Checked,"expression-node")
     case 1n+ +n Arguments{Nil{},Nil{},token} _ _:
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}

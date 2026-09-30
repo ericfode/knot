@@ -72,7 +72,8 @@
         "src/patterns.bend",
         "src/check.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Complete checking boundary and explicit unsupported capabilities."
@@ -108,7 +109,8 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Enum terms to binary Wasm; full local closure exceeds the composition bound and ByteOutput remains external."
@@ -135,7 +137,9 @@
         "src/wasm-bytes.bend",
         "src/wasm.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/parse-patterns.bend",
+        "src/residual.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through frontend/checker to independent evaluation or Wasm emission, including all CLI entry points. Full local closure exceeds the composition bound."
@@ -168,7 +172,8 @@
         "src/parse.bend",
         "src/patterns.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Checker boundary and scope laws. Earlier proof-entry imports are retained in the closed local family, even when not referenced by a term."
@@ -193,7 +198,8 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source-machine and codec laws, including the earlier proof-entry chain. Oversize and external ByteOutput context remain blockers."
@@ -220,7 +226,8 @@
         "src/scope.bend",
         "src/wasm-bytes.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Catalog kind laws and their complete chained proof entry; the full family exceeds the composition bound."
@@ -249,7 +256,8 @@
         "src/runtime-PROOF.bend",
         "src/wasm-bytes.bend",
         "src/matrix.bend",
-        "src/descent.bend"
+        "src/descent.bend",
+        "src/residual.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Field quantities, reconstruction, source-machine and inspection laws with the full earlier proof-entry chain. The family exceeds the composition bound."
@@ -282,7 +290,8 @@
         "src/matrix.bend",
         "src/descent.bend",
         "src/descent-LAWS.bend",
-        "src/descent-PROOF.bend"
+        "src/descent-PROOF.bend",
+        "src/residual.bend"
       ],
       "task": "tests/compiler-descent/SPEC.md",
       "notes": "Lexicographic structural self-call and scope laws, with the full inherited proof chain. The family exceeds the composition bound."
@@ -331,7 +340,8 @@
         "src/parse.bend",
         "src/descent.bend",
         "src/descent-PROOF.bend",
-        "src/descent-LAWS.bend"
+        "src/descent-LAWS.bend",
+        "src/residual.bend"
       ],
       "task": "tests/compiler-nest/SPEC.md",
       "notes": "Universal stable-selection and boundary laws plus literal complete-lowering witnesses, including the complete inherited proof chain. The closed family exceeds the composition bound."
@@ -347,6 +357,46 @@
       ],
       "task": "tests/compiler-descent/SPEC.md",
       "notes": "Seed structural comparison algebra, parameter order and comparison-only alias provenance; filled comparison and budget laws."
+    },
+    {
+      "name": "pattern-declaration-events",
+      "files": [
+        "src/parse-patterns.bend",
+        "src/syntax.bend"
+      ],
+      "task": "tests/compiler-descent/precheck-SPEC.md",
+      "notes": "Prior constructor declarations and exact pattern arities in the parse CLI."
+    },
+    {
+      "name": "residual-identity",
+      "files": [
+        "src/residual.bend",
+        "src/scope.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/descent.bend"
+      ],
+      "task": "tests/compiler-descent/precheck-SPEC.md",
+      "notes": "Conservative affine default-alias refusal with saturated usage and lexical shadowing."
+    },
+    {
+      "name": "precheck-laws",
+      "files": [
+        "src/precheck-LAWS.bend",
+        "src/precheck-PROOF.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/scope.bend",
+        "src/descent.bend",
+        "src/matrix.bend",
+        "src/parse-patterns.bend",
+        "src/residual.bend",
+        "src/check.bend",
+        "src/catalog.bend",
+        "src/patterns.bend"
+      ],
+      "task": "tests/compiler-descent/precheck-SPEC.md",
+      "notes": "Two general helper equations and six ground controls; not a general checker or matrix theorem."
     }
   ]
 }

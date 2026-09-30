@@ -73,7 +73,7 @@ or matrix law is claimed. The required general matrix laws above remain open
 under D21. The residual guard is conservative; Default-core integration remains
 required for complete support.
 
-The bounded offline style preflight prepares all 51 changed/new declarations in
+The bounded offline style preflight prepares all 52 changed/new declarations in
 nine files with zero provider calls. Its fixed task is available (2,208 bytes).
 Six contexts truncate, and the composition exceeds 48 KB with one unavailable
 collaborator. Conceptual compression, Delight, Memetic identity, Anticipation and
@@ -82,9 +82,18 @@ applicable target; no automatic style pass is claimed. The initial broader
 preflight's 165 units / 24 truncations and oversize task remain in ignored evidence.
 
 The shared runner now differs from its effective base only by additive gate/count
-rows, and its required-name test only by added names. Six affected legacy gate
-drivers are byte-identical to the effective base. The earlier classification and
+rows, and its required-name test only by added names. Five affected legacy gate
+drivers are byte-identical to the effective base; seven timeout changes were
+removed in total. The earlier classification and
 recursion assertion/mutant migrations retain their independent freezes and
 original witnesses; the coordinator must reconcile those D26 changes at merge.
 The full registered suite and committed-head precheck replay are pending at this
 implementation checkpoint. The complete results belong in the repair report.
+
+The first full-suite run caught an overbroad residual refusal before the existing
+`nested-alias-affine` control could report its concrete quantity failure. The
+checker now retains `Invalid check affine-reuse` and applies the conservative
+guard to the remaining results. Both lanes preserve that immutable diagnostic
+and refuse default alias duplication/rematching. The source-manifest completeness
+assertion also caught four omitted files; three new groups and the required local
+import closures restore coverage without changing any test.
