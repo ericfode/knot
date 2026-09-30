@@ -128,7 +128,7 @@ def leaked(+code: H.Code, +m: M.Machine) -> U32:
   W.count(U32,mortal_cells(live_cells(heap_of(m),base_of(code)),heap_of(m)))
 
 # SPEC §6, the atomic-stops ruling: a step that stops the machine changes no state. The stopped
-# machine keeps the frames, `act`, `top`, allocation state and output of the machine that stopped;
+# machine keeps the pending control, frames, `act`, `top`, every stored word and output line;
 # only an Enter's debit stands (SPEC §7).
 def same_frame(a: H.Frame, b: H.Frame) -> Bool:
   match a b:
@@ -151,9 +151,55 @@ def same_stack(a: H.Stack, b: H.Stack) -> Bool:
   match a b:
     case H.Stack{p,f,t} H.Stack{q,g,u}: Bool.and(Bool.and(U32.is_eq(p,q),U32.is_eq(t,u)),same_frames(f,g))
 
+# Stores are compared in full, including zeroed words and branches outside live cells.
+def same_trie(a: W.Trie, b: W.Trie) -> Bool:
+  match a b:
+    case W.Void{} W.Void{}: True{}
+    case W.Leaf{x} W.Leaf{y}: U32.is_eq(x,y)
+    case W.Fork{al,ah} W.Fork{bl,bh}: Bool.and(same_trie(al,bl),same_trie(ah,bh))
+    case _ _: False{}
+
+def same_store(a: W.Store, b: W.Store) -> Bool:
+  match a b:
+    case W.Store{d,t} W.Store{e,u}: Bool.and(Nat.is_eq(d,e),same_trie(t,u))
+
 def same_heap(a: H.Heap, b: H.Heap) -> Bool:
   match a b:
-    case H.Heap{m,p,f} H.Heap{n,q,g}: Bool.and(U32.is_eq(p,q),W.same(f,g))
+    case H.Heap{m,p,f} H.Heap{n,q,g}: Bool.and(same_store(m,n),Bool.and(U32.is_eq(p,q),W.same(f,g)))
+
+def same_output(a: List<&2,List<&2,U32>>, b: List<&2,List<&2,U32>>) -> Bool:
+  match a b:
+    case Nil{} Nil{}: True{}
+    case Con{x,xs} Con{y,ys}: Bool.and(W.same(x,y),same_output(xs,ys))
+    case _ _: False{}
+
+def same_stop(a: W.Stop, b: W.Stop) -> Bool:
+  match a b:
+    case W.Exhausted{k,c} W.Exhausted{l,d}: Bool.and(U32.is_eq(k,l),String.eq(c,d))
+    case W.Refused{p,c} W.Refused{q,d}: Bool.and(String.eq(p,q),String.eq(c,d))
+    case W.Unsupported{p,c} W.Unsupported{q,d}: Bool.and(String.eq(p,q),String.eq(c,d))
+    case W.Internal{c} W.Internal{d}: String.eq(c,d)
+    case W.Bound{c} W.Bound{d}: String.eq(c,d)
+    case _ _: False{}
+
+def same_target(a: M.Target, b: M.Target) -> Bool:
+  match a b:
+    case M.Callee{f} M.Callee{g}: U32.is_eq(f,g)
+    case M.Held{w} M.Held{x}: U32.is_eq(w,x)
+    case _ _: False{}
+
+# A stopped control can itself be pending; compare through every Outcome without discarding it.
+def same_control(a: M.Control, b: M.Control) -> Bool:
+  match a b:
+    case M.Eval{n} M.Eval{m}: U32.is_eq(n,m)
+    case M.Return{w} M.Return{x}: U32.is_eq(w,x)
+    case M.Enter{t,ops} M.Enter{u,qs}: Bool.and(same_target(t,u),W.same(ops,qs))
+    case M.Finished{M.Answered{w}} M.Finished{M.Answered{x}}: U32.is_eq(w,x)
+    case M.Finished{M.Described{t,k,s}} M.Finished{M.Described{u,l,r}}: Bool.and(Bool.and(U32.is_eq(t,u),U32.is_eq(k,l)),W.same(s,r))
+    case M.Finished{M.Emitted{}} M.Finished{M.Emitted{}}: True{}
+    case M.Finished{M.Died{c,s}} M.Finished{M.Died{d,r}}: Bool.and(U32.is_eq(c,d),W.same(s,r))
+    case M.Finished{M.Stopped{s,p}} M.Finished{M.Stopped{t,q}}: Bool.and(same_stop(s,t),same_control(p,q))
+    case _ _: False{}
 
 def same_meter(a: M.Meter, b: M.Meter) -> Bool:
   match a b:
@@ -167,10 +213,10 @@ def is_enter(control: M.Control) -> Bool:
 # `after` is `before` advanced one step: a stop changed nothing but an Enter's meter.
 def atomic(before: M.Machine, after: M.Machine) -> Bool:
   match before after:
-    case M.Machine{control,stack,heap,+meter,out} M.Machine{M.Finished{M.Stopped{stop,pending}},stack2,heap2,+meter2,out2}:
+    case M.Machine{+control,stack,heap,+meter,out} M.Machine{M.Finished{M.Stopped{stop,pending}},stack2,heap2,+meter2,out2}:
       Bool.and(Bool.and(same_stack(stack,stack2),same_heap(heap,heap2)),
         Bool.and(W.or(same_meter(meter,meter2),Bool.and(is_enter(control),same_meter(M.charged(meter),meter2))),
-          U32.is_eq(W.count(List<&2,U32>,out),W.count(List<&2,U32>,out2))))
+          Bool.and(same_control(control,pending),same_output(out,out2))))
     case _ _: True{}
 
 # `prior` is the machine before the last step, which a Book's description is atomic against.

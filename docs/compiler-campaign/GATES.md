@@ -131,10 +131,10 @@ allocation state and output as they were, and its meters too but for an Enter's 
 a Book's description included); the bounded soundness sweep, every single-word
 mutation of every golden refused exactly when the reference codec refuses it, for the
 same reason, and otherwise run soundly and atomically; `vm/PROOF.bend` printing `All
-terms check.` (45 laws); 61 model mutants, 60 killed by a wrong observation, never a
-crash or a harness fault, and `debit-refunded` refuted by its law alone (D23 left no run
-that reaches a stop after an Enter's debit, so the gate requires that every run agrees
-with the model), 21 of them refuted by the law named, on a proof cut to that law (the
+terms check.` (49 laws); 45 literal installed-state controls (complete heap, output
+and pending-control preservation, and the full-frame Enter debit); 65 model mutants,
+each killed by a wrong execution observation, never a crash or a harness fault,
+25 of them also refuted by the law named, on a proof cut to that law (the
 unmutated model proves every law); and the harness mutant `fuel-ignored` killed by
 exactly the fuel controls. A mutant's audit binary is built only when its model runs
 leave it alive. Every image its runs share is staged once, read-only, before any run; a

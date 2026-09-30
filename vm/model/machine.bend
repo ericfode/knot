@@ -626,5 +626,5 @@ def concluded(+code: H.Code, +t: U32, m: Machine) -> Result<W.Stop,Machine>:
         H.bind(H.Heap,Machine,H.drop(heap,H.room(stack),H.act_of(stack)),+heap2 =>
         H.bind(H.Heap,Machine,H.drop(heap2,H.room(stack),w),heap3 =>
           Done{Machine{Finished{Described{t,H.tag_of(code,heap,t,w),tree}},H.with_act(stack,0),heap3,meter,out}}))),
-        Machine{Finished{Answered{w}},stack,heap,meter,out})}
+        Machine{Return{w},stack,heap,meter,out})}
     case _: Done{m}

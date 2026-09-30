@@ -38,6 +38,10 @@ def L.loop_performs_each_returned_request(): {==}
 def L.case_takes_default_over_request(): {==}
 def L.case_without_default_refuses_request(): {==}
 def L.request_is_never_rendered(): {==}
+def L.atomic_rejects_changed_input(): {==}
+def L.atomic_rejects_changed_output(): {==}
+def L.atomic_rejects_changed_pending(): {==}
+def L.atomic_description_keeps_return(): {==}
 def L.stop_changes_no_state(control,stack,heap,meter,out,stop): {==}
 def L.paid_stop_keeps_the_debit(control,stack,heap,meter,out,stop): {==}
 def L.frame_past_region(act,frames): {==}

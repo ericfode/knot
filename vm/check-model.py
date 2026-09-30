@@ -48,10 +48,11 @@ seed's native lane and requires:
   is refused exactly when the reference codec refuses it, for the same reason,
   and every admitted mutation runs soundly;
 - vm/PROOF.bend to print 'All terms check.';
-- every model mutant killed by a wrong observation of those checks, never by a
+- the literal installed-state controls in model-boundaries.json, including complete
+  atomic-state comparisons and a full-frame Enter that retains its debit;
+- every model mutant killed by a wrong execution observation of those checks, never by a
   crash or a timeout, and those in LAW_MUTANTS also refuted by the law named, on
-  a PROOF.bend cut to that law; the one in LAW_KILLED, whose stop no run reaches,
-  is refuted by its law alone and must survive every observation;
+  a PROOF.bend cut to that law; a law failure alone never credits a kill;
 - the images its runs share staged once, read-only, before any run; a refusal as
   `length`, `magic`, `total` or `noncanonical` of an image the reference codec
   admits is a harness fault, never a kill, and fails the gate; and the harness
@@ -83,9 +84,10 @@ RECEIPT = HERE / 'receipts/model.json'
 SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # hang guard only
 SECTIONS = ('word', 'decode', 'validate', 'encode', 'memory', 'machine', 'audit')  # vm/model/, in import order
 SOURCES = tuple(f'model/{s}.bend' for s in SECTIONS) + (
-    'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'model-lanes.bend', 'LAWS.bend', 'PROOF.bend')
-ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend', 'lanes': 'model-lanes.bend'}
-BUILT = tuple(f'model/{s}.bend' for s in SECTIONS) + ('model-cli.bend', 'model-audit.bend', 'model-sweep.bend')  # the natively built model
+    'model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'model-lanes.bend', 'model-boundaries.bend', 'LAWS.bend', 'PROOF.bend')
+ENTRIES = {'model': 'model-cli.bend', 'audit': 'model-audit.bend', 'sweep': 'model-sweep.bend',
+           'lanes': 'model-lanes.bend', 'boundaries': 'model-boundaries.bend'}
+BUILT = tuple(f'model/{s}.bend' for s in SECTIONS) + ('model-cli.bend', 'model-audit.bend', 'model-sweep.bend', 'model-boundaries.bend')  # the natively built model
 SWEEP_FUEL = '256'  # every golden completes within 256 entries; mutants that loop stop early
 WORKERS = 8  # mutants observed at once, and staged runs at once in the harness control; each is a build, then runs
 
@@ -148,6 +150,11 @@ def check_inputs(expected: dict) -> dict:
             require(listed == words(image.read_bytes()), f'LAWS.bend fixture {name} differs from its image')
             fixtures[name] = len(listed)
     require(len(fixtures) >= 5, f'LAWS.bend fixtures {sorted(fixtures)}')
+    boundary = (HERE / 'model-boundaries.bend').read_text()
+    literal = re.search(r'^def value_on\(\) -> List<&2,U32>:\n  \[([0-9,\s]+)\]', boundary, re.M)
+    require(literal is not None, 'model-boundaries.bend has no literal value-on fixture')
+    require([int(x) for x in re.split(r'[,\s]+', literal[1].strip()) if x] == words((GOLDEN / 'value-on.kimg').read_bytes()),
+            'model-boundaries.bend fixture value_on differs from its image')
     return fixtures
 
 
@@ -844,10 +851,27 @@ def proof() -> dict:
             'laws': laws}
 
 
+def boundary_runs(boundaries: Path) -> dict:
+    """Native installed-state controls, against the literal expectations frozen before the repairs."""
+    frozen = json.loads((HERE / 'model-boundaries.json').read_text())
+    rows = frozen['rows']
+    require(frozen['schema'] == 1 and len({name for name, _ in rows}) == len(rows)
+            and all(isinstance(name, str) and type(value) is bool for name, value in rows),
+            'invalid model-boundaries.json')
+    result = run([boundaries], 120)
+    lines = result['stdout'].splitlines()
+    complete = result['exit'] == 0 and result['stderr'] == '' and len(lines) == len(rows)
+    return {name: {'result': {**result, 'stdout': lines[i] if i < len(lines) else ''},
+                   'agrees': complete and lines[i] == f'{name}\t{int(value)}'}
+            for i, (name, value) in enumerate(rows)}
+
+
 def observing(bins: dict, tree: Path, expected: dict, shared: dict):
     """Each check's (name, rows) for one build of the model, one check at a time; `shared` holds the
     staged controls."""
     model, audit = bins['model'], bins.get('audit')
+    if 'boundaries' in bins:
+        yield 'boundaries', boundary_runs(bins['boundaries'])
     yield 'goldens', golden_runs(model, expected)
     yield 'invocations', invocation_runs(model, audit, expected)
     yield 'inspection', inspection_runs(model, shared['inspection'])
@@ -1131,6 +1155,19 @@ MUTANTS = [
         '    case H.Stack{act,Con{H.Top{0},rest},top}:\n'
         '      H.bind(H.Heap,Next,H.drop(heap,H.room(stack),act),heap => to(Finished{Answered{w}},H.with_act(stack,0),heap))')],
      "Return to Top(0) drops `act` before the Book's answer is described"),
+    ('audit-store-uncompared', 'audit', [(
+        'Bool.and(same_store(m,n),Bool.and(U32.is_eq(p,q),W.same(f,g)))',
+        'Bool.and(U32.is_eq(p,q),W.same(f,g))')],
+     'the atomic audit compares heap metadata but discards stored words'),
+    ('audit-output-count-only', 'audit', [(
+        'same_output(out,out2)', 'U32.is_eq(W.count(List<&2,U32>,out),W.count(List<&2,U32>,out2))')],
+     'the atomic audit compares output line counts but discards their contents and order'),
+    ('audit-pending-uncompared', 'audit', [('same_control(control,pending)', 'True{}')],
+     'the atomic audit discards the stopped pending control'),
+    ('describe-pending-replaced', 'machine', [(
+        '        Machine{Return{w},stack,heap,meter,out})}',
+        '        Machine{Finished{Answered{w}},stack,heap,meter,out})}')],
+     'a refused Book description replaces its pending Return with Finished(Answered)'),
 ]
 
 
@@ -1150,13 +1187,11 @@ LAW_MUTANTS = {
     'top-drops-act-first': 'refused_halt_keeps_its_activation', 'gather-popped-first': 'nat_range_keeps_its_gather',
     'describe-after-drop': 'request_is_never_rendered',
     'debit-refunded': 'entry_past_region_keeps_its_debit',
+    'audit-store-uncompared': 'atomic_rejects_changed_input',
+    'audit-output-count-only': 'atomic_rejects_changed_output',
+    'audit-pending-uncompared': 'atomic_rejects_changed_pending',
+    'describe-pending-replaced': 'atomic_description_keeps_return',
 }
-
-# SPEC section 7: a stop of an Enter's steps 2 and 3 keeps the debit. Since D23 the only such stops are a frame
-# region (kind 3) or a heap (kind 2) that is full, or an overflowing count, and no run in the reference
-# evaluation's reach fills any of them (section 6.3), so every run of these mutants agrees with the model and
-# only the law refutes them. A run that kills one makes its entry stale.
-LAW_KILLED = ('debit-refunded',)
 
 
 def law_blocks(text: str) -> list:
@@ -1202,7 +1237,6 @@ def kills(base: dict, mutant: dict) -> list:
 
 
 def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
-    require(set(LAW_KILLED) <= set(LAW_MUTANTS), f'LAW_KILLED names a mutant with no law: {set(LAW_KILLED) - set(LAW_MUTANTS)}')
     trees = {name: build_tree(f'mutants/{name}', section, mutation) for name, section, mutation, _ in MUTANTS}
 
     def one(entry):
@@ -1220,10 +1254,12 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
         # Most mutants die by a golden or an early control, so nothing later runs, and the audit is built
         # only when the model's own runs leave the mutant alive. vm/model-lanes.bend imports word.bend
         # alone: only a word mutant can change it.
-        bins = built(tree, ('model', 'lanes') if section == 'word' else ('model',))
+        entries = (('model', 'boundaries') if section == 'audit' or name in ('debit-refunded', 'describe-pending-replaced')
+                   else ('model', 'lanes') if section == 'word' else ('model',))
+        bins = built(tree, entries)
         observed = observed_until_killed(bins)
         if not kills(base, observed):
-            bins = {**bins, **built(tree, ('audit',))}
+            bins = {**bins, **built(tree, ('audit',) if 'boundaries' in bins else ('audit', 'boundaries'))}
             observed = observed_until_killed(bins)
         crashes = [f'{c}:{n}' for c, rows in observed.items() for n, r in rows.items()
                    if not r['agrees'] and not well_formed(r)]
@@ -1239,10 +1275,7 @@ def mutant_runs(expected: dict, shared: dict, base: dict) -> list:
         require(not faults, f'mutant {name}: harness faults, not kills, at {faults[:8]}')
         require(name not in LAW_MUTANTS or laws[name] == LAW_MUTANTS[name],
                 f'mutant {name}: PROOF.bend failed at {laws.get(name)}, not at the law {LAW_MUTANTS.get(name)}')
-        by_law = name in LAW_KILLED
-        require(not (by_law and killed), f'mutant {name}: runs kill it ({killed[:8]}), so its law is no longer alone')
-        out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed) or by_law,
-                    'by': [f'law:{laws[name]}'] if by_law else killed[:8],
+        out.append({'mutant': name, 'breaks': meaning, 'killed': bool(killed), 'by': killed[:8],
                     'kills': len(killed), 'law': laws.get(name), 'crashes': len(crashes), 'crashed': crashes[:8]})
     return out
 
@@ -1266,14 +1299,15 @@ def main() -> int:
     BUILD.mkdir(parents=True, exist_ok=True)
     expected = json.loads((GOLDEN / 'vm-expected.json').read_text())
     record = {'gate': 'vm-model', 'date': datetime.datetime.now(datetime.timezone.utc).isoformat(timespec='seconds'),
-              'status': 'failed', 'sources': {s: sha((HERE / s).read_bytes()) for s in SOURCES}}
+              'status': 'failed', 'sources': {s: sha((HERE / s).read_bytes()) for s in SOURCES},
+              'boundary_expectations_sha256': sha((HERE / 'model-boundaries.json').read_bytes())}
     record['fixtures'] = check_inputs(expected)
     record['registry'] = check_registry()
     record['connectives'] = check_connectives()
     record['seed'] = seed_controls()
 
     tree = build_tree('base')
-    bins = built(tree, ('model', 'audit', 'sweep', 'lanes'))
+    bins = built(tree, ('model', 'audit', 'sweep', 'lanes', 'boundaries'))
     record['lanes'] = check_lanes(tree, bins['lanes'])
     # Every shared image is staged here, before any pool reads one.
     shared = {'inspection': inspection_controls(), 'controls': controls(),
@@ -1302,6 +1336,7 @@ def main() -> int:
                  for n, r in base['goldens'].items()},
         invocations={n: (r['result']['stdout'] or r['result']['stderr']).strip()[:120] for n, r in base['invocations'].items()},
         fuel=summary(base['fuel']),
+        boundaries={n: r['result']['stdout'] for n, r in base['boundaries'].items()},
         inspection={n: r['result']['stderr'].strip() for n, r in base['inspection'].items()},
         arguments={n: (r['result']['stdout'] or r['result']['stderr']).strip()[:120] for n, r in base['arguments'].items()},
         controls={n: r['reference'] for n, r in base['controls'].items()},
@@ -1322,8 +1357,9 @@ def main() -> int:
           f"{len(base['admitted'])} admitted controls "
           f"({', '.join(f'{n} {k}' for k, n in kinds(base['admitted']).items())}), "
           f"{len(base['audit'])} audited runs, "
+          f"{len(base['boundaries'])} installed-state controls, "
           f"{swept_total} swept mutations of {len(swept)} images, {proven['laws']} laws, "
-          f"{len(mutants)} killed mutants ({len(LAW_KILLED)} by its law alone), {len(harness)} killed harness mutant; "
+          f"{len(mutants)} execution-killed mutants, {len(harness)} killed harness mutant; "
           f"{RECEIPT.relative_to(ROOT)}")
     return 0
 

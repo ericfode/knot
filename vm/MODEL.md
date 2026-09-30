@@ -46,7 +46,7 @@ on transitions: a harness limit, never VM exhaustion.
 
 ## Laws
 
-[LAWS.bend](LAWS.bend) states 45 laws, proved by [PROOF.bend](PROOF.bend):
+[LAWS.bend](LAWS.bend) states 49 laws, proved by [PROOF.bend](PROOF.bend):
 - the codec round trip, on a hand-written plan and on five golden images;
 - four refusal reasons, and bounded validator soundness: every single-word
   mutation of `value-on`'s function, constant and node sections is refused or
@@ -142,14 +142,17 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   changes the frames, `act`, `top`, heap, meters or output, including one refused
   mid-way by an allocation. The one exception is SPEC §7's debit: an Enter that
   stops after its target check keeps its fuel and call spent (`paid`). The audit
-  checks this at every stop of every audited run (`atomic`), and laws pin it. This
+  checks this at every stop of every audited run (`atomic`), comparing the complete
+  store tries, the pending control and every output word in order, as well as the
+  stack, allocation metadata and meters. Literal installed-state alterations in
+  [model-boundaries.json](model-boundaries.json) and checked laws pin it. This
   follows the coordinator's ruling on vm-lockstep's findings 1 and 2, as SPEC §6.3
   now states it (Return to Top refuses an ill-typed IO.OP, or a request it cannot
   perform, before it drops `act`; no Gather frame is popped before its operands are
   inspected or NatRange is tested). A Book's description is part of Return to Top(0):
   the machine halts `Answered` with `act` still current, and `concluded` describes
   the answer, then drops `act` and the answer, so a description that stops (a display
-  bound, an ill-typed word, a request) leaves `act` owned. The audit compares a
+  bound, an ill-typed word, a request) leaves `act` owned and `Return` pending. The audit compares a
   stopped description with the machine before the Return (`Audit.prior`). The other
   two places where SPEC §6.3 moved the text hold by construction: a Case's stop at
   the selection, the Scope's push or the predecessor's cell leaves no Scope (the
@@ -160,11 +163,14 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   and `cell_past_memory` pin the two limits, refused before anything is written). No
   audited run reaches either stop, since each needs a full frame region or heap
   (vm-core's rows `nat-pred-frames` and `nat-pred-heap` are the images that do), so the
-  `atomic` check does not witness them: the laws do. The same holds for the debit of an
-  Enter whose steps 2 and 3 stop (SPEC §7): since D23 the print refusals that reached
+  `atomic` check does not witness them: the laws do. For the debit of an
+  Enter whose steps 2 and 3 stop (SPEC §7), since D23 the print refusals that reached
   `paid` in review round 3 belong to Top's loop, which is no entry, and every remaining
   stop there is a full region or heap. `entry_past_region_keeps_its_debit` states the
-  debit for the region, and the mutant `debit-refunded` is refuted by that law alone.
+  debit for the region. The native `entry-frame-debit` control installs a full region,
+  steps an Enter and requires fuel 0, calls 18 and quantum 1 from fuel 1, calls 17
+  and quantum 0, with every other field unchanged. It execution-kills `debit-refunded`;
+  the checked law is additional evidence. No law-only kill exception is admitted.
 - A stopped machine keeps the control it could not advance, so the words of a
   pending Enter stay owned (§7).
 - The frozen eval suites have no images until the `image` encoder exists; the
@@ -218,4 +224,4 @@ successor, predecessor) of every golden, diffed against `serializer.py`.
   about 190 s of CPU, most of it in the audited runs (the laws of requests run
   their plans with `run_words_final`, balanced after the last step alone, which
   costs a fifth of auditing each step). A law mutant is proved on a proof cut to
-  the one law that must refute it, not on all 45.
+  the one law that must refute it, not on all 49.

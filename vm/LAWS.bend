@@ -5,6 +5,7 @@ import ./model/encode.bend as E
 import ./model/memory.bend as H
 import ./model/machine.bend as M
 import ./model/audit.bend as A
+import ./model-boundaries.bend as B
 
 # Laws of the knot-vm-1 model: bounded, computed equations on committed golden
 # images (vm/check-model.py requires each fixture to equal its .kimg words) and
@@ -386,6 +387,19 @@ law request_is_never_rendered:
   {stopped(E.encode(rendered_request())) == Stopped{Some{W.Unsupported{"vm","effect"}},A.Held{[0],True{},3}} : Stopped}
 
 # ---------------------------------------------------------------- atomic stops
+
+# These alterations remain RC-balanced; atomicity must reject their changed contents independently.
+law atomic_rejects_changed_input:
+  {B.atomic_input() == False{} : Bool}
+
+law atomic_rejects_changed_output:
+  {B.atomic_output() == False{} : Bool}
+
+law atomic_rejects_changed_pending:
+  {B.atomic_pending() == False{} : Bool}
+
+law atomic_description_keeps_return:
+  {B.description_stop() == True{} : Bool}
 
 def nat_succ_range() -> List<&2,U32>:
   [1196247371,1,174,0,2,32,43,65,87,96,143,0,1,4294967295,4294967295,4294967295,0,4294967295,
