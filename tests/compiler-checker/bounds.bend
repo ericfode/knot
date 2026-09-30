@@ -20,7 +20,7 @@ def types(n: Nat, +index: U32) -> List<&2,S.Node>:
 def params(n: Nat, +index: U32) -> List<&2,S.Node>:
   match n:
     case 0n: Nil{}
-    case 1n+m: Con{S.Parameter{token(index),1,token(0)},params(m,U32.add(index,1))}
+    case 1n+m: Con{S.Parameter{S.Token{String.append("p",U32.show(index)),S.At{0,0,1,0}},1,token(0)},params(m,U32.add(index,1))}
 
 def funcs(n: Nat, +index: U32) -> List<&2,S.Node>:
   match n:

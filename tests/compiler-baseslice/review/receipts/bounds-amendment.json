@@ -1,0 +1,119 @@
+{
+  "schema": 1,
+  "status": "passed",
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "shadow-two",
+      "parameters": 2,
+      "seed_source": "import Base\n\ntype N0 is Type:\n  Value{}\n\ntype Answer is Data:\n  No{}\n  Yes{}\n\ndef bounded(N0: N0,N1: N0) -> Answer:\n  Yes{}\n\ndef main() -> Answer:\n  Yes{}\n",
+      "sha256": "d6000a7f881b1f7fdc883e8f0353f0c5127265d8abc9265660545fbafafa7401",
+      "check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : N0\nContext:\n- N0 : N0\nLocation: bounded\n 9 | \n10>| def bounded(N0: N0,N1: N0) -> Answer:\n   |                        ^^\n11 |   Yes{}\n"
+      },
+      "interpreter": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : N0\nContext:\n- N0 : N0\nLocation: bounded\n 9 | \n10>| def bounded(N0: N0,N1: N0) -> Answer:\n   |                        ^^\n11 |   Yes{}\n"
+      },
+      "native_build": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : Type\n- observed : N0\nContext:\n- N0 : N0\nLocation: bounded\n 9 | \n10>| def bounded(N0: N0,N1: N0) -> Answer:\n   |                        ^^\n11 |   Yes{}\n"
+      }
+    },
+    {
+      "name": "renamed-two",
+      "parameters": 2,
+      "seed_source": "import Base\n\ntype N0 is Type:\n  Value{}\n\ntype Answer is Data:\n  No{}\n  Yes{}\n\ndef bounded(p0: N0,p1: N0) -> Answer:\n  Yes{}\n\ndef main() -> Answer:\n  Yes{}\n",
+      "sha256": "59df3e51a52fb24f696c213e74d3ee734a0fa1288d72e93fc6f34fb6e2165f6a",
+      "check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "interpreter": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      },
+      "native_build": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "native": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "renamed-256",
+      "parameters": 256,
+      "seed_source": "import Base\n\ntype N0 is Type:\n  Value{}\n\ntype Answer is Data:\n  No{}\n  Yes{}\n\ndef bounded(p0: N0,p1: N0,p2: N0,p3: N0,p4: N0,p5: N0,p6: N0,p7: N0,p8: N0,p9: N0,p10: N0,p11: N0,p12: N0,p13: N0,p14: N0,p15: N0,p16: N0,p17: N0,p18: N0,p19: N0,p20: N0,p21: N0,p22: N0,p23: N0,p24: N0,p25: N0,p26: N0,p27: N0,p28: N0,p29: N0,p30: N0,p31: N0,p32: N0,p33: N0,p34: N0,p35: N0,p36: N0,p37: N0,p38: N0,p39: N0,p40: N0,p41: N0,p42: N0,p43: N0,p44: N0,p45: N0,p46: N0,p47: N0,p48: N0,p49: N0,p50: N0,p51: N0,p52: N0,p53: N0,p54: N0,p55: N0,p56: N0,p57: N0,p58: N0,p59: N0,p60: N0,p61: N0,p62: N0,p63: N0,p64: N0,p65: N0,p66: N0,p67: N0,p68: N0,p69: N0,p70: N0,p71: N0,p72: N0,p73: N0,p74: N0,p75: N0,p76: N0,p77: N0,p78: N0,p79: N0,p80: N0,p81: N0,p82: N0,p83: N0,p84: N0,p85: N0,p86: N0,p87: N0,p88: N0,p89: N0,p90: N0,p91: N0,p92: N0,p93: N0,p94: N0,p95: N0,p96: N0,p97: N0,p98: N0,p99: N0,p100: N0,p101: N0,p102: N0,p103: N0,p104: N0,p105: N0,p106: N0,p107: N0,p108: N0,p109: N0,p110: N0,p111: N0,p112: N0,p113: N0,p114: N0,p115: N0,p116: N0,p117: N0,p118: N0,p119: N0,p120: N0,p121: N0,p122: N0,p123: N0,p124: N0,p125: N0,p126: N0,p127: N0,p128: N0,p129: N0,p130: N0,p131: N0,p132: N0,p133: N0,p134: N0,p135: N0,p136: N0,p137: N0,p138: N0,p139: N0,p140: N0,p141: N0,p142: N0,p143: N0,p144: N0,p145: N0,p146: N0,p147: N0,p148: N0,p149: N0,p150: N0,p151: N0,p152: N0,p153: N0,p154: N0,p155: N0,p156: N0,p157: N0,p158: N0,p159: N0,p160: N0,p161: N0,p162: N0,p163: N0,p164: N0,p165: N0,p166: N0,p167: N0,p168: N0,p169: N0,p170: N0,p171: N0,p172: N0,p173: N0,p174: N0,p175: N0,p176: N0,p177: N0,p178: N0,p179: N0,p180: N0,p181: N0,p182: N0,p183: N0,p184: N0,p185: N0,p186: N0,p187: N0,p188: N0,p189: N0,p190: N0,p191: N0,p192: N0,p193: N0,p194: N0,p195: N0,p196: N0,p197: N0,p198: N0,p199: N0,p200: N0,p201: N0,p202: N0,p203: N0,p204: N0,p205: N0,p206: N0,p207: N0,p208: N0,p209: N0,p210: N0,p211: N0,p212: N0,p213: N0,p214: N0,p215: N0,p216: N0,p217: N0,p218: N0,p219: N0,p220: N0,p221: N0,p222: N0,p223: N0,p224: N0,p225: N0,p226: N0,p227: N0,p228: N0,p229: N0,p230: N0,p231: N0,p232: N0,p233: N0,p234: N0,p235: N0,p236: N0,p237: N0,p238: N0,p239: N0,p240: N0,p241: N0,p242: N0,p243: N0,p244: N0,p245: N0,p246: N0,p247: N0,p248: N0,p249: N0,p250: N0,p251: N0,p252: N0,p253: N0,p254: N0,p255: N0) -> Answer:\n  Yes{}\n\ndef main() -> Answer:\n  Yes{}\n",
+      "sha256": "f3fbfa7afe94597a97681c0fc4f20be8415011f7dea8fa4d40857c7498e3d415",
+      "check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "interpreter": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      },
+      "native_build": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "native": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "renamed-257",
+      "parameters": 257,
+      "seed_source": "import Base\n\ntype N0 is Type:\n  Value{}\n\ntype Answer is Data:\n  No{}\n  Yes{}\n\ndef bounded(p0: N0,p1: N0,p2: N0,p3: N0,p4: N0,p5: N0,p6: N0,p7: N0,p8: N0,p9: N0,p10: N0,p11: N0,p12: N0,p13: N0,p14: N0,p15: N0,p16: N0,p17: N0,p18: N0,p19: N0,p20: N0,p21: N0,p22: N0,p23: N0,p24: N0,p25: N0,p26: N0,p27: N0,p28: N0,p29: N0,p30: N0,p31: N0,p32: N0,p33: N0,p34: N0,p35: N0,p36: N0,p37: N0,p38: N0,p39: N0,p40: N0,p41: N0,p42: N0,p43: N0,p44: N0,p45: N0,p46: N0,p47: N0,p48: N0,p49: N0,p50: N0,p51: N0,p52: N0,p53: N0,p54: N0,p55: N0,p56: N0,p57: N0,p58: N0,p59: N0,p60: N0,p61: N0,p62: N0,p63: N0,p64: N0,p65: N0,p66: N0,p67: N0,p68: N0,p69: N0,p70: N0,p71: N0,p72: N0,p73: N0,p74: N0,p75: N0,p76: N0,p77: N0,p78: N0,p79: N0,p80: N0,p81: N0,p82: N0,p83: N0,p84: N0,p85: N0,p86: N0,p87: N0,p88: N0,p89: N0,p90: N0,p91: N0,p92: N0,p93: N0,p94: N0,p95: N0,p96: N0,p97: N0,p98: N0,p99: N0,p100: N0,p101: N0,p102: N0,p103: N0,p104: N0,p105: N0,p106: N0,p107: N0,p108: N0,p109: N0,p110: N0,p111: N0,p112: N0,p113: N0,p114: N0,p115: N0,p116: N0,p117: N0,p118: N0,p119: N0,p120: N0,p121: N0,p122: N0,p123: N0,p124: N0,p125: N0,p126: N0,p127: N0,p128: N0,p129: N0,p130: N0,p131: N0,p132: N0,p133: N0,p134: N0,p135: N0,p136: N0,p137: N0,p138: N0,p139: N0,p140: N0,p141: N0,p142: N0,p143: N0,p144: N0,p145: N0,p146: N0,p147: N0,p148: N0,p149: N0,p150: N0,p151: N0,p152: N0,p153: N0,p154: N0,p155: N0,p156: N0,p157: N0,p158: N0,p159: N0,p160: N0,p161: N0,p162: N0,p163: N0,p164: N0,p165: N0,p166: N0,p167: N0,p168: N0,p169: N0,p170: N0,p171: N0,p172: N0,p173: N0,p174: N0,p175: N0,p176: N0,p177: N0,p178: N0,p179: N0,p180: N0,p181: N0,p182: N0,p183: N0,p184: N0,p185: N0,p186: N0,p187: N0,p188: N0,p189: N0,p190: N0,p191: N0,p192: N0,p193: N0,p194: N0,p195: N0,p196: N0,p197: N0,p198: N0,p199: N0,p200: N0,p201: N0,p202: N0,p203: N0,p204: N0,p205: N0,p206: N0,p207: N0,p208: N0,p209: N0,p210: N0,p211: N0,p212: N0,p213: N0,p214: N0,p215: N0,p216: N0,p217: N0,p218: N0,p219: N0,p220: N0,p221: N0,p222: N0,p223: N0,p224: N0,p225: N0,p226: N0,p227: N0,p228: N0,p229: N0,p230: N0,p231: N0,p232: N0,p233: N0,p234: N0,p235: N0,p236: N0,p237: N0,p238: N0,p239: N0,p240: N0,p241: N0,p242: N0,p243: N0,p244: N0,p245: N0,p246: N0,p247: N0,p248: N0,p249: N0,p250: N0,p251: N0,p252: N0,p253: N0,p254: N0,p255: N0,p256: N0) -> Answer:\n  Yes{}\n\ndef main() -> Answer:\n  Yes{}\n",
+      "sha256": "746c828d045edab8fb4e8e0525853b82af318e75e6343c5a5b2003f640fa52dd",
+      "check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      },
+      "interpreter": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      },
+      "native_build": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      },
+      "native": {
+        "exit": 0,
+        "stdout": "Yes{}\n",
+        "stderr": ""
+      }
+    }
+  ],
+  "amendment": {
+    "path": "tests/compiler-checker/bounds.bend",
+    "before_sha256": "b9491adc3146f51ab9ce87274c3c0cbc39f5082b522099c969f8b4edbeba6be8",
+    "after_sha256": "d8a561f7a68e8546efd1c20039adff7bf400a181d4a4301840948e4561ed31e1",
+    "assertions_path": "tests/compiler-checker/check.py",
+    "assertions_sha256": "27ede49b2e14b5dcc8e9d1c18fd00852a80660db1b4851b6dc475695b5fcafda",
+    "assertions_unchanged_from": "ff44b974"
+  }
+}
