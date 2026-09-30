@@ -1,0 +1,731 @@
+{
+  "schema": 1,
+  "cases": [
+    {
+      "name": "shadow-result",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-result",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "shadow-later",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-later",
+      "require": "agree",
+      "result_type": "Answer",
+      "seed_value": "Yes{}",
+      "type_id": 1,
+      "tag": 1,
+      "constructor": "Yes"
+    },
+    {
+      "name": "shadow-erased",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-erased",
+      "require": "agree",
+      "result_type": "Answer",
+      "seed_value": "Yes{}",
+      "type_id": 1,
+      "tag": 1,
+      "constructor": "Yes"
+    },
+    {
+      "name": "shadow-let-parameter",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-let-parameter",
+      "require": "agree",
+      "result_type": "Answer",
+      "seed_value": "Yes{}",
+      "type_id": 1,
+      "tag": 1,
+      "constructor": "Yes"
+    },
+    {
+      "name": "shadow-let-local",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-let-local",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "shadow-let-erased",
+      "require": "reject",
+      "seed_reason": "expected : Type",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-let-erased",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "shadow-field",
+      "require": "reject",
+      "seed_reason": "expected : Data",
+      "diagnostic": "Invalid\tcheck\ttype-shadow\t",
+      "exit": 2
+    },
+    {
+      "name": "control-field",
+      "require": "agree",
+      "result_type": "Answer",
+      "seed_value": "Yes{}",
+      "type_id": 1,
+      "tag": 1,
+      "constructor": "Yes",
+      "compile_diagnostic": "Unsupported\tcheck\tconstructor-fields\t",
+      "compile_exit": 3
+    },
+    {
+      "name": "dotted-affine",
+      "require": "reject",
+      "seed_reason": "a name (a parallel or typed let binds names; destructure in its body)",
+      "diagnostic": "Invalid\tparse\tbinding-name\t",
+      "exit": 2
+    },
+    {
+      "name": "simple-affine",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "dotted-reusable",
+      "require": "reject",
+      "seed_reason": "a quantified datatype after +",
+      "diagnostic": "Invalid\tparse\tbinding-name\t",
+      "exit": 2
+    },
+    {
+      "name": "simple-reusable",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "dotted-erased",
+      "require": "unsupported",
+      "diagnostic": "Unsupported\tparse\tdotted-binder\t",
+      "exit": 3,
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "simple-erased",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "function-value",
+      "require": "unsupported",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On",
+      "diagnostic": "Unsupported\tcheck\tfunction-reference\t",
+      "exit": 3
+    },
+    {
+      "name": "function-direct",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "function-forward-erased",
+      "require": "unsupported",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On",
+      "diagnostic": "Unsupported\tcheck\tfunction-reference\t",
+      "exit": 3
+    },
+    {
+      "name": "function-local-shadow",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    },
+    {
+      "name": "free-name",
+      "require": "reject",
+      "seed_reason": "a defined name",
+      "diagnostic": "Invalid\tcheck\tfree-name\t",
+      "exit": 2
+    },
+    {
+      "name": "own-annotation",
+      "require": "agree",
+      "result_type": "Flag",
+      "seed_value": "On{}",
+      "type_id": 0,
+      "tag": 1,
+      "constructor": "On"
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "cases": [
+      {
+        "name": "shadow-result",
+        "source_sha256": "d55e4d345c8867f09b1d25c81e10c7bff9bf888a1a7ea33a7ae79e612e9bed01",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag) -> Flag:\n   |                         ^^^^\n10 |   Flag\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag) -> Flag:\n   |                         ^^^^\n10 |   Flag\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag) -> Flag:\n   |                         ^^^^\n10 |   Flag\n"
+        }
+      },
+      {
+        "name": "control-result",
+        "source_sha256": "b409112188f66eefc798d4475cdb4b43807f1b940022b2d64db7ff7508e331ca",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-result.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-later",
+        "source_sha256": "fd296165fbad12217574b50e1c9a28a140e9ff04628d8d2377a9ec548b5ec5e7",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag, value: Flag) -> Answer:\n   |                             ^^^^\n10 |   Yes{}\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag, value: Flag) -> Answer:\n   |                             ^^^^\n10 |   Yes{}\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(Flag: Flag, value: Flag) -> Answer:\n   |                             ^^^^\n10 |   Yes{}\n"
+        }
+      },
+      {
+        "name": "control-later",
+        "source_sha256": "3fa41841e0e4d56769f582c47a8be42a79f4d0d33beb8acf5ec9b77e15e003c6",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "Yes{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-later.Yes{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-erased",
+        "source_sha256": "bb6726b9b5c77582cfc0a7bff2b1c5e7caffecf21071c66e9d6f012d202c65b4",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(-Flag: Flag, value: Flag) -> Answer:\n   |                              ^^^^\n10 |   Yes{}\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(-Flag: Flag, value: Flag) -> Answer:\n   |                              ^^^^\n10 |   Yes{}\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 8 | \n 9>| def pick(-Flag: Flag, value: Flag) -> Answer:\n   |                              ^^^^\n10 |   Yes{}\n"
+        }
+      },
+      {
+        "name": "control-erased",
+        "source_sha256": "7d33720dd6351ddabf281f16f788ee5ab08b66e38220e08024953cb574605d1b",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "Yes{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-erased.Yes{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-let-parameter",
+        "source_sha256": "002da28663618269e6521c806c05d00486f1fe10dfae773636dffdea9ff9e703",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 9 | def pick(Flag: Flag) -> Answer:\n10>|   value : Flag = On{}\n   |           ^^^^\n11 |   Yes{}\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 9 | def pick(Flag: Flag) -> Answer:\n10>|   value : Flag = On{}\n   |           ^^^^\n11 |   Yes{}\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: pick\n 9 | def pick(Flag: Flag) -> Answer:\n10>|   value : Flag = On{}\n   |           ^^^^\n11 |   Yes{}\n"
+        }
+      },
+      {
+        "name": "control-let-parameter",
+        "source_sha256": "ce3e6d97c3db6d0655c2476d42c370ec8ad6991f267238a37741d41a63429287",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "Yes{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-let-parameter.Yes{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-let-local",
+        "source_sha256": "4c70517cd9239bf6312d6e308ce96dc05f74f4a3f27c0eabe0304b20fa04c1df",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   Flag\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   Flag\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   Flag\n"
+        }
+      },
+      {
+        "name": "control-let-local",
+        "source_sha256": "793c813e0b051d32c7cde92cd08dcf77c8ed7a2ca131ed8810c47ab1246e9ef4",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-let-local.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-let-erased",
+        "source_sha256": "e4c355bc21c491ab6730fe9d5255d403fb16cfff60ba6757508519a6e2e8169f",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   -Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   On{}\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   -Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   On{}\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: main\n10 |   -Flag : Flag = On{}\n11>|   value : Flag = Off{}\n   |           ^^^^\n12 |   On{}\n"
+        }
+      },
+      {
+        "name": "control-let-erased",
+        "source_sha256": "ec3caf7dfd5c33d19f4c2ec680061928e0df6f8de3a5a08ced9d02be1d9a8b28",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-let-erased.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "shadow-field",
+        "source_sha256": "e9cdef43e2adf1b21f3c1e1a148051244a1eef9f7e5b97e43c3d243bc2d7dc51",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: Held\n 9 | type Holder is Data:\n10>|   Held{Flag: Flag, value: Flag}\n   |                           ^^^^\n11 | \n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: Held\n 9 | type Holder is Data:\n10>|   Held{Flag: Flag, value: Flag}\n   |                           ^^^^\n11 | \n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Flag\nContext:\n- Flag : Flag\nLocation: Held\n 9 | type Holder is Data:\n10>|   Held{Flag: Flag, value: Flag}\n   |                           ^^^^\n11 | \n"
+        }
+      },
+      {
+        "name": "control-field",
+        "source_sha256": "e6e6a5de32b9442ac54ea6d5fcce4021b190bcd5742a677413d5ee8b87111286",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "Yes{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/control-field.Yes{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "dotted-affine",
+        "source_sha256": "6be9cb41baaf84ef1932523cd65cfca73a9bdc1e29747e96c7ecad9c9aec85ce",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n 9 | def main() -> Flag:\n10>|   Flag.value : Flag = On{}\n   |   ^^^^^^^^^^\n11 |   Flag.value\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n 9 | def main() -> Flag:\n10>|   Flag.value : Flag = On{}\n   |   ^^^^^^^^^^\n11 |   Flag.value\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a name (a parallel or typed let binds names; destructure in its body)\nLocation:\n 9 | def main() -> Flag:\n10>|   Flag.value : Flag = On{}\n   |   ^^^^^^^^^^\n11 |   Flag.value\n"
+        }
+      },
+      {
+        "name": "simple-affine",
+        "source_sha256": "f21164717322d889c27f740e1b911d4b95f69e7484d10f77bad5e81fa4c4584a",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/simple-affine.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "dotted-reusable",
+        "source_sha256": "e1b07709d12913df5d62e4651532789a90ce735eecc14562192506fcfa402960",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n 9 | def main() -> Flag:\n10>|   +Flag.value : Flag = On{}\n   |               ^\n11 |   Flag.value\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n 9 | def main() -> Flag:\n10>|   +Flag.value : Flag = On{}\n   |               ^\n11 |   Flag.value\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a quantified datatype after + (+D<..> sets D's leading quantities to &2)\n- observed : ':'\nLocation:\n 9 | def main() -> Flag:\n10>|   +Flag.value : Flag = On{}\n   |               ^\n11 |   Flag.value\n"
+        }
+      },
+      {
+        "name": "simple-reusable",
+        "source_sha256": "0f21dbb032f8970fec84f7f2652c2ca9a81c1e372371919ebc6af1b459cdee08",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/simple-reusable.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "dotted-erased",
+        "source_sha256": "190e68d953b7723f868523e385a21edf67932006904473a46445b80d5fc496cc",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/dotted-erased.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "simple-erased",
+        "source_sha256": "864fd3e6892e26f90dcf315b73a356d7b4b0fa14fe775044217a9279e9342853",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/simple-erased.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "function-value",
+        "source_sha256": "9057a9612e0333ee1057489cfbc792558426de6aafb1673fc08f03e74a0c9afd",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/function-value.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "function-direct",
+        "source_sha256": "7a1988893ad23775d21c7350a4c52e2a4b95a5a97688fe212a3904fa39084465",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/function-direct.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "function-forward-erased",
+        "source_sha256": "38f1c5deda8cb96eb2b02fd820fe6760cd006ad4cd74048518aed04ec6e5a13c",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/function-forward-erased.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "function-local-shadow",
+        "source_sha256": "05c6d0765fe75417b8743614ce438f9536ff5c0b8058a601cc842ff005ae1f2d",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/function-local-shadow.On{}\n",
+          "stderr": ""
+        }
+      },
+      {
+        "name": "free-name",
+        "source_sha256": "9c249a2d943c690442d1a451564c1feda058b5419f50013f5100f1710cc7eb56",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n 9 | def main() -> Flag:\n10>|   missing\n   |   ^^^^^^^\n11 | \n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n 9 | def main() -> Flag:\n10>|   missing\n   |   ^^^^^^^\n11 | \n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : missing\nLocation: main\n 9 | def main() -> Flag:\n10>|   missing\n   |   ^^^^^^^\n11 | \n"
+        }
+      },
+      {
+        "name": "own-annotation",
+        "source_sha256": "c15340133214afa8189d99cf38cf345c0e56b09d6ed70e52197b011b84f54f4e",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "interpreter": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        },
+        "native": {
+          "exit": 0,
+          "stdout": "../../../../tests/compiler-baseslice/review/fixtures/own-annotation.On{}\n",
+          "stderr": ""
+        }
+      }
+    ]
+  }
+}
