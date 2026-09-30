@@ -16,6 +16,8 @@ and a Book never reaches the loop. A request is never inspected: every read of a
 first and stops with `Unsupported vm effect` (section 6), except that a Case matches no row of a request,
 in either mode, so it takes its Default, and only a Case without one refuses (section 6.1, D24).
 A Python exception other than `Halt` is a harness failure, never an outcome.
+Plan evaluation uses an explicit stack: source calls, invocations and pending
+operands do not consume the Python call stack.
 
 A stop is atomic (section 6.3). The state of this evaluation is its meters (`fuel`, `calls`), its output (`stdout`) and `effects`,
 and a refusal is decided before its step changes any of them, so a stopped run reports what it held before the refusing step; the
@@ -62,12 +64,21 @@ def show(n: int) -> list:
     return [ord(c) for c in str(n)]
 
 
+class Evaluation:
+    """A node and its environment, scheduled by the active evaluation driver."""
+    __slots__ = ('node', 'env')
+
+    def __init__(self, node, env):
+        self.node, self.env = node, env
+
+
 class Machine:
     def __init__(self, plan: dict, fuel: int, policy: str = 'vm'):
         self.types, self.functions = plan['types'], plan['functions']
         self.rep = plan.get('representation', {})
         self.fuel, self.calls, self.policy = fuel, 0, policy
         self.stdout, self.prints, self.effects = bytearray(), [], 0
+        self.evaluating = False
 
     # ---------------------------------------------------------------- inspection (section 6)
 
@@ -120,6 +131,34 @@ class Machine:
     # ---------------------------------------------------------------- evaluation (sections 3, 6)
 
     def eval(self, node, env):
+        """Drive suspended node evaluations. While the driver is active, call, case and
+        closure entry schedule their bodies instead of recursively starting a driver.
+        Only completed nodes feed their value to a parent; exceptions propagate as
+        harness failures or Halt, retaining the existing debit and output semantics."""
+        if self.evaluating:
+            return Evaluation(node, env)
+        self.evaluating = True
+        stack, value = [(node, self.step(node, env))], None
+        try:
+            while stack:
+                current, pending = stack[-1]
+                try:
+                    child = pending.send(value)
+                except StopIteration as done:
+                    stack.pop()
+                    value = done.value
+                    self.completed(current, value)
+                else:
+                    stack.append((child.node, self.step(child.node, child.env)))
+                    value = None
+            return value
+        finally:
+            self.evaluating = False
+
+    def completed(self, node, value):
+        """Observer hook for the gate's independent eval-cli work measurement."""
+
+    def step(self, node, env):
         op = node[0]
         if op == 'lit':
             return self.string(node[3]) if node[2] == 'String' else node[3]
@@ -128,23 +167,29 @@ class Machine:
         if op == 'ref':
             return env[node[2]]
         if op == 'let':
-            env[node[2]] = self.eval(node[3], env)
-            return self.eval(node[4], env)
+            env[node[2]] = yield Evaluation(node[3], env)
+            return (yield self.eval(node[4], env))
         if op == 'case':
-            return self.case(node, env)
+            return (yield self.case(node, env))
         if op == 'closure':
             return ('closure', node, tuple(env[s] for s in node[4]))
         if op == 'invoke':
-            f = self.eval(node[2], env)
-            return self.apply(f, [self.eval(a, env) for a in node[3]])
-        operands = [self.eval(k, env) for k in node[3]]
+            f = yield Evaluation(node[2], env)
+            operands = []
+            for a in node[3]:
+                operands.append((yield Evaluation(a, env)))
+            entered = self.apply(f, operands)
+            return (yield entered) if isinstance(entered, Evaluation) else entered
+        operands = []
+        for k in node[3]:
+            operands.append((yield Evaluation(k, env)))
         if op == 'con':
             return self.construct(node[1], node[2], operands)
         if op == 'prim':
             return self.prim(node[2], operands)
         if op == 'foreign':
             return ('action', node[2], tuple(operands))
-        return self.call(node[2], operands)
+        return (yield self.call(node[2], operands))
 
     def construct(self, t, tag, operands):
         if t == self.rep.get('Nat'):

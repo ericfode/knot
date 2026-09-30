@@ -62,7 +62,7 @@ def load_codec(text: str | None = None):
 
 codec = load_codec()
 reference = load(EVALUATOR)
-sys.setrecursionlimit(20_000)  # the reference evaluation recurses on the plan's nesting
+sys.setrecursionlimit(20_000)  # codec traversals recurse on syntactic nesting; evaluation uses an explicit stack
 
 
 def require(condition, detail):
@@ -601,6 +601,7 @@ def review_observations(built: dict) -> dict:
             require(got['availability'] == entry['availability'], f'review {name}: unavailable lane')
         rows[name] = got
     controls = program_oracle_controls()
+    evaluated = review_evaluation()
     mutants = []
     for name, old, new in [
             ('false-invalid-is-agreement', "return {'status': 'unavailable', 'owner': 'literals/io-check', 'reason': reason}\n",
@@ -616,7 +617,66 @@ def review_observations(built: dict) -> dict:
             mutants.append({'mutant': name, 'killed': True, 'by': str(refusal)})
             continue
         raise AssertionError(f'review oracle mutant {name} survived')
-    return {'fixtures': rows, 'oracle_controls': controls, 'oracle_mutants': mutants}
+    stack_mutants = []
+    source = EVALUATOR.read_text()
+    for name, old, new in [
+            ('driver-discards-returned-value', '                    value = done.value\n',
+             '                    value = 0\n'),
+            ('driver-skips-suspended-body',
+             '                    stack.append((child.node, self.step(child.node, child.env)))\n                    value = None\n',
+             '                    value = 1\n')]:
+        require(source.count(old) == 1, f'review stack mutant {name}: unique anchor')
+        mutant = load(EVALUATOR, source.replace(old, new))
+        try:
+            review_evaluation(mutant)
+        except AssertionError as refusal:
+            stack_mutants.append({'mutant': name, 'killed': True, 'by': str(refusal)})
+            continue
+        raise AssertionError(f'review stack mutant {name} survived')
+    return {'fixtures': rows, 'oracle_controls': controls, 'oracle_mutants': mutants,
+            'stack_runs': evaluated, 'stack_mutants': stack_mutants}
+
+
+def review_evaluation(evaluator=None) -> dict:
+    """Seed-backed tail and non-tail plans, on ample, exact and one-short fuel with a small host stack."""
+    ev, rows, reg = evaluator or reference, {}, codec.registry()
+    digest = codec.base_digest(reg)
+    for entry in json.loads((REVIEW / 'expectations.json').read_text())['cases']:
+        if 'plan' not in entry:
+            continue
+        name, data = entry['name'], (ROOT / entry['plan']).read_bytes()
+        require(sha(data) == entry['plan_sha256'], f'review {name}: plan hash')
+        plan = json.loads(data)
+        require(not codec.validate(plan, reg), f'review {name}: invalid plan')
+        image = codec.encode(plan, digest)
+        require(codec.decode(image, digest) == plan, f'review {name}: canonical plan')
+        # The snapshot numbers its Bool and Nat 0 and 1; the independently written plans number them 4 and 1.
+        projected = {'types': [plan['types'][4], plan['types'][1]], 'representation': {'Bool': 0, 'Nat': 1}}
+        functions = from_display(entry['snapshot']['check']['stdout'], projected,
+                                 (ROOT / entry['source']).read_text(), reg)
+        indices = {0: 4, 1: 1}
+        for f in functions:
+            f['parameters'] = [indices[t] for t in f['parameters']]
+            f['result'] = indices[f['result']]
+        for n in walk({'functions': functions}):
+            if n[0] not in ('branch', 'default') and n[1] is not None:
+                n[1] = indices[n[1]]
+            if n[0] == 'case':
+                n[3] = indices[n[3]]
+        require(functions == plan['functions'], f'review {name}: independent checked-core projection')
+        host_limit = sys.getrecursionlimit()
+        try:
+            sys.setrecursionlimit(256)
+            for label, fuel, expected in [('ample', VM_FUEL, entry['reference']),
+                                          ('exact', entry['reference']['calls'], entry['reference']),
+                                          ('short', entry['short_fuel'], entry['reference_short'])]:
+                got = ev.book(plan, 'main', [], fuel)
+                require(got == expected, f'review {name}/{label}: {got}, frozen {expected}')
+                rows[f'{name}/{label}'] = {'fuel': fuel, 'host_recursionlimit': 256, **got,
+                                         'image_sha256': sha(image), 'plan_matches': 'checked-core'}
+        finally:
+            sys.setrecursionlimit(host_limit)
+    return rows
 
 
 def core_controls(cases: dict, plans: dict, sources: dict, displays: dict, reg: dict) -> list:
@@ -906,12 +966,10 @@ def reach(plan: dict, value: str, evaluator=None) -> dict:
     class Reach(ev.Machine):
         units = transitions = 0
 
-        def eval(self, node, env):
-            w = super().eval(node, env)
+        def completed(self, node, w):
             size = w if node[1] == nat else len(self.codes(w)) if node[1] == string else 0
             self.units = max(self.units, size)
             self.transitions += 1 + (size if node[0] in ('lit', 'prim') else 0)
-            return w
     m = Reach(plan, VM_FUEL)
     try:
         m.call(next(i for i, f in enumerate(plan['functions']) if f['name'] == 'main'), [])
@@ -3726,12 +3784,12 @@ EVALUATOR_MUTANTS = [
     ('eager-effect', [("        return ('request', f[1], f[2], operands[0])",
                        "        return self.apply(operands[0], [self.effect(('request', f[1], f[2], operands[0]))])")]),
     ('dropped-argument-request-performed',
-     [("        return self.eval(f['body'], operands + [None] * f['slots'])",
-       "        env = operands + [None] * f['slots']\n        w = self.eval(f['body'], env)\n        for v in env:\n"
+     [("        return (yield self.call(node[2], operands))\n",
+       "        entered = self.call(node[2], operands)\n        w = yield entered\n        for v in entered.env:\n"
        "            if isinstance(v, tuple) and v[0] == 'request' and v is not w:\n                self.effect(v)\n        return w")]),
     ('dropped-let-request-performed',
-     [("            env[node[2]] = self.eval(node[3], env)\n            return self.eval(node[4], env)\n",
-       "            env[node[2]] = self.eval(node[3], env)\n            w = self.eval(node[4], env)\n"
+     [("            env[node[2]] = yield Evaluation(node[3], env)\n            return (yield self.eval(node[4], env))\n",
+       "            env[node[2]] = yield Evaluation(node[3], env)\n            w = yield self.eval(node[4], env)\n"
        "            if isinstance(env[node[2]], tuple) and env[node[2]][0] == 'request' and env[node[2]] is not w:\n"
        "                self.effect(env[node[2]])\n            return w\n")]),
     # The loop enters k before the effect: it survives every run that finishes, and dies where k's entry stops.

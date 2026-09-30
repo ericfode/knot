@@ -1164,6 +1164,17 @@ cause, request and limit, because `exhausted(2)` alone does not say which bound
 was hit. Frame capacity is kind 3. Model tracing memory is a harness bound and
 never excuses the VM.
 
+The reference value evaluation uses an explicit stack of pending node
+evaluations, including non-tail operands and closure bodies. It does not use
+Python recursion to represent source calls. Its host memory and any exception
+other than `Halt` remain harness failures, never VM exhaustion or conformance
+agreement. `review-r0` holds two independent seed-backed plans to their checked
+core and exact call counts at ample, exact and one-short fuel, all with the host
+recursion limit reduced to 256 (six runs). Two semantic driver mutants change
+the returned value or skip the scheduled body and are killed by these runs;
+an exception is not a mutant kill. The codec's syntactic traversal limit is
+separate from this runtime evaluation.
+
 **An exhausted eval lane** where the VM owes the seed's value is excused only by
 one of the three literals eval bounds, named by the phase eval-cli prints
 (`Exhausted<TAB>phase<TAB>budget`), and only when the program passes that budget.

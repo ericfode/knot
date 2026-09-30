@@ -1417,7 +1417,8 @@ Round 13's list stands in full (D22, D23 and D24, the loader controls and the co
    The snapshot and existing goldens are immutable evidence. vm-spec now
    records every Program's `oracle_availability` separately from the raw
    verdict: `unavailable`, owner literals/io-check. Only this exact inherited
-   diagnostic and the known Unsupported parameter-type and generic-datatype gaps are admitted;
+   diagnostic and the known Unsupported parameter-type and generic-datatype
+   gaps are admitted;
    checker/evaluator disagreement, successful evaluation, unrelated Invalid
    and host failure cannot be mistaken for that lane. Four refusal controls
    and two killed rule mutants hold the classification; all three new review
@@ -1631,3 +1632,42 @@ Round 13's list stands in full (D22, D23 and D24, the loader controls and the co
    lane recorded beside it), and both VMs' Case, which would take the Default of a class-5 word without reading
    its payload. It would change no compiled program. It is worth doing only if the self-hosting compiler is to emit
    a catch-all over an IO.OP, which its checker refuses today; the recommendation is to keep option a.
+
+## Review r0 executor dispositions (2026-09-29)
+
+- **Major: historical literals IO verdict.** Confirmed; vm-spec's fix is the
+  explicit unavailable lane and independent witness described in finding 1 and
+  SPEC §11. The frozen archive and every existing expectation are unchanged.
+  The literals/io-check implementation correction remains its owner's work;
+  replacing the snapshot remains coordinator integration. Neither blocks this
+  executor under the campaign's ownership rule.
+- **Minor: Bun PATH.** The current default resolves to Bun 1.3.14. Every review
+  seed run and gate run explicitly prepends `/Users/ericfode/.bun/bin` to PATH,
+  as the reviewer prescribed. The 1.3.14 expectation stays frozen; no version
+  assertion is weakened. The exact resume environment is in the ignored handoff.
+- **Minor: reference recursion.** Confirmed at the original recursion limit
+  20,000; the seed's Bun/native lanes and the historical literals evaluator
+  succeed on `review-r0/tail-5000.bend`. `evaluate.py` now drives suspended node
+  evaluations on an explicit stack. Calls, Cases and closure bodies schedule
+  their next node while that driver is active; operand results resume their
+  parent in order. The entry checks, debits, reads, effects and refusal sites
+  retain their semantics. The completed-node hook keeps `reach`'s independent
+  eval-cli work measurement in the same units.
+  The tail plan returns True after 5,002 calls and the non-tail plan returns
+  False after 10,000. Both match the pinned checker's independently projected
+  core, validate and round-trip, and pass at ample and exact fuel with a host
+  recursion limit of 256. One-short fuel reports the frozen kind-1 Exhausted
+  outcomes. All six results and two killed driver mutants are recorded in the
+  receipt's `review_r0`, alongside three seed/snapshot witnesses, four oracle
+  refusals and two killed oracle mutants. Exceptions still fail the harness.
+  Two existing D23 mutants whose recursive-evaluation anchors moved are
+  re-expressed at the suspended call/let return, preserving the mistake of
+  performing a dropped request and the original independent witnesses. All
+  128 evaluator mutant anchors remain unique; no frozen expected result moved.
+
+The atomic-stop and order controls of round 14 remain binding. This follow-up
+adds reference-oracle evidence; it adds no compiler capability, law, runtime
+heap model or frame-limit excuse. Full gates and the current vm-spec receipt
+are required before handing off this increment. Live Perch, integration with
+main, shared receipt refresh, the six Invalid closure rows and VM-track machine
+changes remain coordinator or component-owner obligations.
