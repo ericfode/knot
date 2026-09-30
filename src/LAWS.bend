@@ -2,6 +2,7 @@ import Base
 import ./syntax.bend as S
 import ./lex.bend as L
 import ./parse.bend as P
+import ./core.bend as C
 
 # These are focused frontend boundary laws, not parser/checker soundness.
 law empty_source:
@@ -29,6 +30,23 @@ law no_character_budget:
 law no_parser_budget:
   for +tokens: List<&2,S.Token>
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
+
+law forward_pattern_event_witness:
+  {P.events(2n,S.Constructor{S.Token{"On",S.At{71,73,5,11}},Nil{}},
+      [C.Datatype{S.Token{"Flag",S.At{111,115,10,5}},True{},
+        [C.Constructor{S.Token{"On",S.At{143,145,12,2}},Nil{}}]}],True{})
+    == Fail{S.Invalid{"check","unknown-constructor",S.At{71,73,5,11}}} : Result<S.Error,Unit>}
+
+law declared_pattern_event_witness:
+  {P.events(2n,S.Constructor{S.Token{"On",S.At{71,73,5,11}},Nil{}},
+      [C.Datatype{S.Token{"Flag",S.At{5,9,1,5}},True{},
+        [C.Constructor{S.Token{"On",S.At{30,32,3,2}},Nil{}}]}],True{})
+    == Done{Unit{}} : Result<S.Error,Unit>}
+
+law forward_expression_event_witness:
+  for +token: S.Token
+  for args: List<&2,S.Node>
+  {P.events(1n,S.Constructor{token,args},Nil{},False{}) == Done{Unit{}} : Result<S.Error,Unit>}
 
 # Prefix classification does not validate the unconsumed suffix.
 law generic_header:

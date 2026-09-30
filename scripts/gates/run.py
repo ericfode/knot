@@ -100,6 +100,8 @@ GATES = (
          ('tests/compiler-nest/receipts/round12.json',)),
     Gate('nest-round13', ('python3', 'tests/compiler-nest/round13.py'),
          ('tests/compiler-nest/receipts/round13.json',)),
+    Gate('nest-precheck', ('python3', 'tests/compiler-nest/precheck.py'),
+         ('tests/compiler-nest/receipts/precheck.json',)),
 )
 
 
@@ -316,6 +318,8 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
     if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8',
                      'nest-round9', 'nest-round10', 'nest-round11', 'nest-sweep11', 'nest-round12', 'nest-round13'):
+        result.update(record['counts'])
+    if gate.name == 'nest-precheck':
         result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):

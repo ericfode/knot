@@ -138,6 +138,11 @@ digits, underscores or dots. Keywords cannot be identifiers.
   definitions. No executable artifact is emitted until the entire book passes.
 
 Constructor names must be unique across the book in this first profile.
+The public parser audits constructor-pattern declaration events before it
+reports `Parsed`, reusing the catalog's `unknown-constructor` diagnostic in the
+`check` phase. This audit includes nested matches and discarded rows. Constructor
+expressions retain forward references. Field arity, quantities and typing stay
+in the existing checker; `Parsed` remains a syntax observation, not acceptance.
 A zero-constructor datatype permits an exhaustive zero-row match and has no
 valid host ordinal. Repeated constructor declarations, including across
 datatypes, are invalid. Top-level type/function names share a namespace.
@@ -176,6 +181,7 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `Name<...` in a parameter type | `parse` | `parameter-type` |
 | `Name<...` in a return type or local binding annotation | `parse` | `type-application` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
+| A dotted pattern or live let binder whose rebinding scope the parser cannot resolve | `parse` | `dotted-binder` |
 | A line break where call or constructor arguments expect an element, a separator or their closer | `parse` | `line-break` |
 | A second `case` arm on the line of an arm's body | `parse` | `same-line-arm` |
 | A line break in a let before its `=` or `:`, before its value or between its marker and name | `parse` | `line-break` |

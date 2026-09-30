@@ -1,5 +1,7 @@
 import Base
 import ./syntax.bend as S
+import ./core.bend as C
+import ./catalog.bend as G
 
 type Parsed is Data:
   Parsed{value: S.Node, rest: List<&2,S.Token>}
@@ -534,5 +536,31 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"pattern-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
 
-def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
-  run(depth,Book{},tokens)
+# Constructor expressions may refer forward; patterns resolve at their source event.
+# Reuse the catalog's event rule before exposing a complete parsed book. The check
+# phase/code stays the same as the existing matrix audit.
+def events(fuel: Nat, node: S.Node, +types: List<&2,C.Datatype>, +pattern: Bool) -> Result<S.Error,Unit>:
+  match fuel node:
+    case 0n _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
+    case 1n+ +n S.Constructor{+token,+args}:
+      S.choose(Result<S.Error,Unit>,pattern,u =>
+        S.bind(G.ConstructorRef,Unit,G.pattern_constructor(types,token),ref => events(n,S.Sequence{args},types,True{})),u => Done{Unit{}})
+    case 1n+n S.Function{token,params,result,body}: events(n,body,types,False{})
+    case 1n+n S.Binding{token,q,annotation,value,body}: events(n,body,types,False{})
+    case 1n+n S.Match{token,value,arms}: events(n,S.Sequence{arms},types,False{})
+    case 1n+ +n S.Arm{token,row,+body}:
+      S.bind(Unit,Unit,events(n,row,types,True{}),u => events(n,body,types,False{}))
+    case 1n+n S.Sequence{Nil{}}: Done{Unit{}}
+    case 1n+ +n S.Sequence{Con{head,+tail}}:
+      S.bind(Unit,Unit,events(n,head,types,pattern),u => events(n,S.Sequence{tail},types,pattern))
+    case _ _: Done{Unit{}}
+
+def audited(+depth: Nat, tree: Parsed) -> Result<S.Error,Parsed>:
+  match tree:
+    case Parsed{S.Sequence{+nodes},+rest}:
+      S.bind(List<&2,C.Datatype>,Parsed,G.collect_types(nodes,0),types =>
+        S.bind(Unit,Parsed,events(depth,S.Sequence{nodes},types,False{}),u => Done{Parsed{S.Sequence{nodes},rest}}))
+    case _: Fail{S.Internal{"parse","book-node"}}
+
+def parse(+depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  S.bind(Parsed,Parsed,run(depth,Book{},tokens),tree => audited(depth,tree))

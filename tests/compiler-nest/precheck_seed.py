@@ -50,7 +50,7 @@ def seed_parse(paths):
 
 
 def seed_check(path):
-    return gate.run(['bun', '--no-env-file', *gate.SEED[1:], path, '--check-only'])
+    return gate.run(['bun', '--no-env-file', gate.SEED[-1], path, '--check-only'])
 
 
 def main():

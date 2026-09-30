@@ -3896,6 +3896,10 @@
         {
           "module": "./parse.bend",
           "file": "src/parse.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
         }
       ],
       "declarations": {
@@ -3981,6 +3985,48 @@
           "laws",
           "literals.nat",
           "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/LAWS.bend::forward_pattern_event_witness:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/LAWS.bend::declared_pattern_event_witness:law": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/LAWS.bend::forward_expression_event_witness:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"
@@ -5174,6 +5220,14 @@
         {
           "module": "./syntax.bend",
           "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./catalog.bend",
+          "file": "src/catalog.bend"
         }
       ],
       "declarations": {
@@ -5759,12 +5813,54 @@
           "recursion",
           "types.base"
         ],
-        "src/parse.bend::parse:definition": [
+        "src/parse.bend::events:definition": [
           "calls",
+          "captures",
           "constructors",
+          "fields",
           "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse.bend::audited:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse.bend::parse:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "generics",
+          "lambdas",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ]
       }
@@ -6915,6 +7011,46 @@
           "literals.string",
           "literals.u32",
           "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/PROOF.bend::L.forward_pattern_event_witness:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/PROOF.bend::L.declared_pattern_event_witness:law_fill": [
+          "calls",
+          "constructors",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/PROOF.bend::L.forward_expression_event_witness:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "proofs",
+          "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
           "types.base"

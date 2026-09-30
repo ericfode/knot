@@ -192,3 +192,9 @@ def L.body_start_witness(): {==}
 def L.arm_body_may_start_with_a_term(rest): {==}
 
 def L.closer_starts_no_body(rest): {==}
+
+def L.forward_pattern_event_witness(): {==}
+
+def L.declared_pattern_event_witness(): {==}
+
+def L.forward_expression_event_witness(token,args): {==}

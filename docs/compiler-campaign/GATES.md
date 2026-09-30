@@ -105,6 +105,15 @@ reference, seed-witness, read, parity and mutant totals; it writes
 
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
 
+`nest-precheck` replays ten seed-frozen precheck probes and declaration-order
+controls through the parser, checker, evaluator and both emitters in both
+compiler lanes. A constructor pattern resolves at its source declaration event
+before `Parsed` is exposed; constructor expressions retain forward references.
+It also preserves the standing operator and dotted-binder prefix rulings,
+checks rejected compilation preserves existing artifacts, and kills three
+type-correct semantic mutants in both lanes. It writes only the owned
+`tests/compiler-nest/receipts/precheck.json`.
+
 - It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
 - It then runs Knot's `check-cli` and `eval-cli` on each case.
 - A case is blocked while a reviewed need is unavailable. A blocked case never
