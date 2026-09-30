@@ -1579,3 +1579,15 @@ Judgment: confirmed. Equal cuts still had different complete state hashes.
 Change and why: canonicalize summary rows only after both earlier returns, and after adding each names-only row. Compare Unicode scalar sequences rather than UTF-16 code units. Existing early-return states are preserved.
 Clean / broken / held-out evidence and deterministic checks: 54 offline tests pass (40 existing controls, 13 existing semantic mutants, one new complete-state locale control). The new fixture passes the pinned seed checker. Both locales encode 59,829 bytes with SHA-256 `a3713c8ccedd645eee88edd3620dc032ee1c7b5d3d616d7247c7df46a5dc9d7c`; production `prepareStyleTargets` reports the same hash. Full gate execution follows the boundary repair.
 Remaining uncertainty / next trigger: the confirmed minimum-boundary finding and exact-saving defect remain for this review round. Names-only judge calibration remains unmeasured and advisory.
+
+
+## 2026-09-29 — perch-cap round 1: exact savings and scalar ties
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `db6035e2`.
+Evidence links and usage receipt IDs: review's `independent-context.mjs` in `/private/tmp/knot-codex/perch-cap/scratch/`; [additive independent whole-state controls](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): a one-byte saving omitted by the old formula caused an unnecessary second signature cut. UTF-16 comparison contradicted the documented scalar order. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): offline tooling only; rubric and provider configuration unchanged.
+Judgment: confirmed for both minor semantic findings.
+Change and why: rank the complete encoded saving, including byte/count digits and array commas; recompute after each cut. The first warning's common setup cost is accounted for. Use the scalar comparator already established by the locale fix.
+Clean / broken / held-out evidence and deterministic checks: 59 offline context tests pass: 40 original controls, three additive controls, and 16 semantic mutants. Independent projections pin a one-cut exact-cap witness and a ranking change after the first cut. The Unicode witness chooses U+E000 before U+10000. Three new mutants separately break summary collation, counter savings and scalar comparison; all are killed by assertions. Existing frozen expectations remain unchanged; the tier-skipping mutant is re-expressed at the new loop with its same witness.
+Remaining uncertainty / next trigger: the minimum-boundary finding remains for the next commit. Full gates and the complete additive gate registration follow that repair; no live calibration is claimed.

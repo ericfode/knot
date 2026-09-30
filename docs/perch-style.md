@@ -220,7 +220,9 @@ line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
 - **Order.** Each tier takes the largest saving first, then path, then name. The
   interface tier's saving is the source bytes it removes. The names tier's saving
   is the exact drop in encoded bytes, and a cut that cannot shrink the state is
-  skipped. The order of `calls` and `called_by` never changes the choice, and the
+  skipped after installing the first cut's shared warning. Savings include
+  source-byte and marker-count digits and summary-array commas, and are
+  recomputed after each cut. The order of `calls` and `called_by` never changes the choice, and the
   names tier compares path and name by code point, so the process locale does not
   either, including supplementary Unicode scalars. On entry to the names tier,
   summary rows are also sorted by path and name; their earlier insertion order

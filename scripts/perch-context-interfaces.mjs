@@ -211,16 +211,25 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
   // insertion order from their complete identity, while preserving both earlier returns.
   summarized.sort(byIdentity);
   const rowOf = item => summarized.find(row => row.path === item.path && row.name === item.name);
-  const cuts = [];
-  for (const item of [...context.seen.calls, ...context.seen.called_by]) {
-    if (item.representation === NAMES_ONLY) continue;
+  const cuts = [...context.seen.calls, ...context.seen.called_by]
+    .filter(item => item.representation !== NAMES_ONLY).map(item => ({ item }));
+  const savingOf = item => {
     const cut = { path: item.path, name: item.name, representation: NAMES_ONLY };
     const row = { path: item.path, name: item.name, reason: NAMES_ONLY_REASON }, old = rowOf(item);
-    const saving = encoded(item) - encoded(cut) - (old ? encoded(row) - encoded(old) : encoded(row) + 1);
-    if (saving > 0) cuts.push({ item, saving });
-  }
-  cuts.sort(largestSavingByCode);
-  for (const { item } of cuts) {
+    const rowDelta = old ? encoded(row) - encoded(old) : encoded(row) + (summarized.length ? 1 : 0);
+    const counterSaving = encoded(notes.source_bytes) - encoded(context.provenance.source_bytes - Buffer.byteLength(item.source));
+    const nextMarker = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };
+    const markerDelta = notes.names_only ? encoded(nextMarker) - encoded(notes.names_only) : encoded({ names_only: nextMarker }) - 1;
+    return encoded(item) - encoded(cut) - rowDelta + counterSaving - markerDelta;
+  };
+  while (cuts.length) {
+    // Counters and array commas can cross encoded-size boundaries after any cut.
+    for (const cut of cuts) cut.saving = savingOf(cut.item);
+    cuts.sort(largestSavingByCode);
+    // The first marker has a fixed setup cost shared by every choice. Install it once;
+    // subsequent cuts must shrink the complete state, including count and byte digits.
+    if (notes.names_only && cuts[0].saving <= 0) break;
+    const { item } = cuts.shift();
     context.provenance.source_bytes -= Buffer.byteLength(item.source);
     notes.source_bytes = context.provenance.source_bytes;
     for (const key of ['line', 'end_line', 'source']) delete item[key];

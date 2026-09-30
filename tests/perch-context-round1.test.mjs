@@ -66,3 +66,59 @@ test(expect.controls[0], async t => {
   const [candidate] = await prepareStyleTargets(['probe.bend::target'], cohort, config, root, snapshot);
   assert.equal(candidate.state_sha256, sha(JSON.stringify(states[0])), 'production hashes the same complete state');
 });
+
+const noLoad = { load() { throw new Error('interface-only witness must not load a body'); } };
+const marker = { count: 1, note: 'Cut to qualified names by the encoded-state cap: an entry marked names-only shows no signature and no body. Do not infer its type, contract or behavior from the name.' };
+const item = (path, name, source) => ({ path, name, line: 1, end_line: 3, source, representation: 'interface' });
+function assembled(items, source = 'p'.repeat(500), cohort = 'Frozen independent task.') {
+  const summarized = items.map(({ path, name }) => ({ path, name, reason: 'context-state-interface' }));
+  const source_bytes = Buffer.byteLength(source) + items.reduce((n, entry) => n + Buffer.byteLength(entry.source), 0);
+  const unresolved = [], provenance = { summarized, unresolved, source_bytes, truncated: false,
+    files: items.map(({ path }) => ({ path, source_sha256: 'a'.repeat(64) })) };
+  return { prefix: { path: 'main.bend', name: 'main', declaration_kind: 'bend_definition', source, cohort },
+    context: { provenance, seen: { calls: items, called_by: [], laws: [], datatypes: [], imports: [],
+      context_notes: { summarized, unresolved, source_bytes, truncated: false } } } };
+}
+// Independent whole-state projection; savings are measured by serializing the result, not by
+// repeating the production formula. Both fields and warning text are fixed by the contract.
+function named(f, index) {
+  const result = structuredClone(f), entry = result.context.seen.calls[index];
+  result.context.provenance.source_bytes -= Buffer.byteLength(entry.source);
+  result.context.seen.context_notes.source_bytes = result.context.provenance.source_bytes;
+  result.context.seen.calls[index] = { path: entry.path, name: entry.name, representation: 'names-only' };
+  result.context.provenance.summarized[index].reason = 'context-state-names-only';
+  result.context.seen.context_notes.names_only = marker;
+  return result;
+}
+test(expect.controls[1], async () => {
+  const a = 'def a(x:\n  # ' + '"'.repeat(200) + '\n  U32) -> U32: # interface: body omitted';
+  const b = 'def b(x:\n  # ' + 'x'.repeat(400) + '\n  U32) -> U32: # interface: body omitted';
+  const primary = '# ' + 'p'.repeat(10001 - Buffer.byteLength(b) - 2);
+  const f = assembled([item('a.bend', 'a', a), item('b.bend', 'b', b)], primary);
+  assert.equal(f.context.provenance.source_bytes - Buffer.byteLength(a), 10001);
+  const cutA = enc(stateOf(named(f, 0))), cutB = enc(stateOf(named(f, 1)));
+  assert.equal(cutA, cutB + 1, 'only the byte counter makes b the larger saving');
+  await assert.doesNotReject(fitInterfaceContext(f.context, noLoad, f.prefix, cutB));
+  assert.deepEqual(f.context.seen.calls.filter(e => e.representation === 'names-only').map(e => e.name), ['b']);
+  assert.equal(enc(stateOf(f)), cutB, 'one cut fits exactly; a keeps its signature');
+
+  // A first large cut changes 10,xxx source bytes to 1,xxx. Recompute: neither remaining
+  // cut now crosses a digit boundary, so the equal savings use the path tie-break.
+  const later = assembled([item('0.bend', 'first', 'x'.repeat(8500)), item('a.bend', 'a', a), item('b.bend', 'b', b)],
+    'p'.repeat(1501 - Buffer.byteLength(b)));
+  assert.equal(enc(stateOf(named(later, 1))), enc(stateOf(named(later, 2))) + 1);
+  const afterFirst = named(later, 0);
+  assert.equal(enc(stateOf(named(afterFirst, 1))), enc(stateOf(named(afterFirst, 2))), 'rank changes after the first cut');
+  const afterBoth = named(afterFirst, 1);
+  afterBoth.context.seen.context_notes.names_only = { ...marker, count: 2 };
+  const cap = enc(stateOf(afterBoth));
+  assert.ok(enc(stateOf(afterFirst)) > cap);
+  await assert.doesNotReject(fitInterfaceContext(later.context, noLoad, later.prefix, cap));
+  assert.deepEqual(later.context.seen.calls.filter(e => e.representation === 'names-only').map(e => e.name), ['first', 'a']);
+});
+test(expect.controls[2], async () => {
+  const f = assembled([item('\u{10000}.bend', 'one', 'x'.repeat(500)), item('\ue000.bend', 'two', 'x'.repeat(500))]);
+  const cap = Math.max(enc(stateOf(named(f, 0))), enc(stateOf(named(f, 1))));
+  await assert.doesNotReject(fitInterfaceContext(f.context, noLoad, f.prefix, cap));
+  assert.deepEqual(f.context.seen.calls.filter(e => e.representation === 'names-only').map(e => e.path), ['\ue000.bend']);
+});
