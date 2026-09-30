@@ -23,7 +23,7 @@ acceptance or false Invalid**. [Current edge receipt](receipts/refresh-edges.jso
 The seed build wrapper imports the unchanged fixture as F and adds Base, which
 the seed requires for emitted builds; qualified outputs are retained verbatim.
 
-The existing benchmark gate still passes 53 unit tests, the original two-lane
+The refresh at `035fa0d9` passed 53 unit tests, the original two-lane
 smoke, 201 inventoried programs, 31 measured programs, 38 runtime batches of at
 least 10 ms, and four seed-type-correct mutants killed in both lanes. Coverage
 remains 157 Unsupported, 13 Invalid and five known seed-valid D4 discrepancies.
@@ -77,11 +77,14 @@ coordinator-only actions do not block implementer completion.
 
 ## Deterministic gates
 
-The final branch gate run passes all 14 registered gates, exit 0, in
-**422.539081 seconds**. Its exported snapshot includes the new
-edge corpus and runner. Receipt comparison reports **63 identical,
+The receipt-portability revalidation passes all 14 registered gates, exit 0, in
+**743.113962 seconds**, on the repair committed as `c44b04fb`. Its exported
+snapshot includes the new edge corpus, runner and portable serializers.
+Receipt comparison reports **63 identical,
 17 volatile-only and 0 semantic** differences. No shared receipt was refreshed.
-[Final gate receipt](receipts/refresh-gates.json). The exact fresh counts are
+[Fresh gate receipt](receipts/refresh-gates.json) retains the earlier
+422.539081-second run's hashes and harness identity under `previousRun`.
+The exact fresh counts are
 below; categories overlap and are not summed.
 
 | Gate | Passed counts |
@@ -166,5 +169,7 @@ all **four mutants in two lanes**. It regenerated the edge and verification
 receipts with the new harness identities. The **24 edge programs / 48 compiler,
 evaluator and Wasm observations / 24 byte-identical pairs** still pass.
 All 26 frozen edge-corpus files are byte-identical. `gates:verify` passes
-**18 tests**. Full registry revalidation follows this checkpoint; the gate
-results above are the preserved earlier observations.
+**18 tests**. Full registry revalidation passed with every gate's exact counts
+unchanged from the earlier run, as listed above. Shared receipts were not
+refreshed. D21, D24 and D26 dispositions and the coordinator integration
+boundary remain unchanged.

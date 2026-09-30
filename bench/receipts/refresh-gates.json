@@ -2,11 +2,11 @@
   "schemaVersion": 1,
   "status": "passed",
   "command": "npm run -s gates -- --jobs 1 --timeout 1800",
-  "startedAt": "2026-09-30T02:04:11.524618+00:00",
-  "elapsedSeconds": 422.539081,
-  "snapshotSha256": "849ace6790f324c148667075f5dfe1d4a58755cf286142746c10229fe6456cd1",
+  "startedAt": "2026-09-30T02:19:46.052500+00:00",
+  "elapsedSeconds": 743.113962,
+  "snapshotSha256": "ab3b9392675c0f9bc8ff2d3a4527a8c2eda7def2c83fb74e6f0d9e35fe4efa4a",
   "dependenciesSha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
-  "rawSummarySha256": "3afc852f62fb2bf229e431e93b7ff18615f1f03321648701697a16af5b6339c5",
+  "rawSummarySha256": "2d4e30c334c9bea78371edaaef0cfc4c73c7b2c8b7013d0856c9a0edb68abb93",
   "sourceHashes": {
     "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
     "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
@@ -46,10 +46,12 @@
     "bench/lib/compare.mjs": "b2208f87eb0130a6d9e4d7f5c2f715d198e7e3182629ee1dd21ebaaa5a89c8c2",
     "bench/lib/fixtures.mjs": "94b53d44d57c09c79dc7118db05f6722692e6c2bbbeb489f63cb6b23fdff8284",
     "bench/lib/outcome.mjs": "2d6d74ebe44b300d900b07841777c5b1fc462a567bee8860126526949e598c04",
+    "bench/lib/receipt.mjs": "bddf6a2fc1f84ca93e2264815626873fbc501d9ed2e2a978c9c547fc3f1ecabc",
     "bench/lib/stats.mjs": "aac7db4532b7f6c8493534a21bf7bbe6c2d00653b896e614268be6bdde3ef6e9",
     "bench/lib/suite.mjs": "bd1768fbf3a0746218c82e43fad23fead1934d1e5259b0832c2204b0baf24aaf",
     "bench/lib/system.mjs": "e6fb279dc8648324c9946aa413d05a9a18c65de8f88c5fb4d92335a304a66d0b",
-    "bench/run.mjs": "69dfa7175aa11b3fb1b1efe89211141c097c60c0c5fe09e5643247950fd2c310",
+    "bench/normalize-receipts.mjs": "3401bff10e786117ab847c01a21651fee44a9e3fe9fac9887bf487ccde0ac5c5",
+    "bench/run.mjs": "d3e217cf237f0dd13e658149d4e9eb6b2987ef8eed8641fed420f8784686db27",
     "bench/wasm-worker.mjs": "e76548db74328435bd62dc6baba6079e810047ce4005ecd57f67b3d4aec01b48"
   },
   "gates": [
@@ -311,5 +313,24 @@
   "gateRunnerTests": 18,
   "censusApprovalSummary": "",
   "censusRegeneration": "byte-identical",
-  "note": "Final exported worktree includes the new edge corpus and runner. This qualifies the branch registry, not the expanded registry on main. Shared receipts were not refreshed."
+  "note": "Fresh revalidation of the receipt portability repair. Prior-run hashes retain historical provenance. This qualifies the branch registry, not main's expanded registry; shared receipts were not refreshed.",
+  "previousRun": {
+    "startedAt": "2026-09-30T02:04:11.524618+00:00",
+    "elapsedSeconds": 422.539081,
+    "snapshotSha256": "849ace6790f324c148667075f5dfe1d4a58755cf286142746c10229fe6456cd1",
+    "dependenciesSha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
+    "rawSummarySha256": "3afc852f62fb2bf229e431e93b7ff18615f1f03321648701697a16af5b6339c5",
+    "harnessHashes": {
+      "bench/compare.mjs": "6a8367f780b35ed1964020ede9b1851bf60474d43d3e6c14f658a5ab98426676",
+      "bench/generate.mjs": "54dbb27ee963e35663e1736ed0e2365f62da67ec40992e0c502fa8ba24f5ffc1",
+      "bench/lib/compare.mjs": "b2208f87eb0130a6d9e4d7f5c2f715d198e7e3182629ee1dd21ebaaa5a89c8c2",
+      "bench/lib/fixtures.mjs": "94b53d44d57c09c79dc7118db05f6722692e6c2bbbeb489f63cb6b23fdff8284",
+      "bench/lib/outcome.mjs": "2d6d74ebe44b300d900b07841777c5b1fc462a567bee8860126526949e598c04",
+      "bench/lib/stats.mjs": "aac7db4532b7f6c8493534a21bf7bbe6c2d00653b896e614268be6bdde3ef6e9",
+      "bench/lib/suite.mjs": "bd1768fbf3a0746218c82e43fad23fead1934d1e5259b0832c2204b0baf24aaf",
+      "bench/lib/system.mjs": "e6fb279dc8648324c9946aa413d05a9a18c65de8f88c5fb4d92335a304a66d0b",
+      "bench/run.mjs": "69dfa7175aa11b3fb1b1efe89211141c097c60c0c5fe09e5643247950fd2c310",
+      "bench/wasm-worker.mjs": "e76548db74328435bd62dc6baba6079e810047ce4005ecd57f67b3d4aec01b48"
+    }
+  }
 }
