@@ -1,0 +1,1108 @@
+{
+  "schema": 2,
+  "head": {
+    "commit": "716f7703b6fd8b7f6d9d1efe8e0122bf5f832934",
+    "dirty": false,
+    "tree": "3096222ab176ee111ad25b88ea84a8a11c5e686c",
+    "worktree": false
+  },
+  "base": {
+    "commit": "d14418b7cb0416f68cd5cade43d634313d63330b",
+    "kind": "main",
+    "stacked_on": [],
+    "tree": "c29da1da284486a0b892aca0ffa4f2254ee417a3"
+  },
+  "suite_exit": 3,
+  "suite_summary": {
+    "counts": {
+      "blocking/new": 2,
+      "info/new": 5,
+      "major/new": 4,
+      "minor/new": 40
+    },
+    "errors": 0,
+    "exit": 3,
+    "failing": 6,
+    "incomplete": 2,
+    "strict": false
+  },
+  "rules_unavailable": {
+    "C1": {
+      "helper-divergence": "no helper lanes are declared (lanes.helpers)",
+      "incomplete-repair": "the manifest declares no d4_targets: nothing was promised to repair"
+    },
+    "C3": {
+      "generator-not-reproducible": "no generators declared in the manifest",
+      "out-of-scope-edit": "no `owns` declared in the increment manifest"
+    }
+  },
+  "executor_conditions": [
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tdotted-binder\t124:127:10:14",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(c: Cell) -> Flag:\n  match c:\n    case Cell{a.b}: On{}\n",
+        "seed_offset": 124,
+        "sha256": "17dfaaf99151dd45e4dc3b1f364b6f24a0f233dd86c9007d6987c5a35d4bd101"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "45039564fcfeef32415b",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "binder 'case a.b': seed_offset=124, knot=Unsupported\tparse\tdotted-binder\t124:127:10:14, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "minor",
+      "subject": {
+        "lane": "parse",
+        "probe": "17dfaaf99151dd45"
+      },
+      "value": {
+        "family": "binder"
+      },
+      "disposition": "disputed",
+      "reason": "Standing coordinator dotted-binder ruling explicitly selects Unsupported parse dotted-binder until the modules scope rule lands. All four exact programs are refused, never accepted/evaluated. The suite reports its same-offset heuristic as premature-unsupported; the named stopgap is canonical."
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tdotted-binder\t90:93:7:9",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef f(x: Flag, y: Flag) -> Flag:\n  match x y:\n    case a.b On{}: a.b\n    case _ _: Off{}\n\ndef main() -> Flag:\n  f(On{}, On{})\n",
+        "seed_offset": 90,
+        "sha256": "8583b8be9bce45eb8cc71edfa9e1d1f0a12c1ca8a2949386ace911ff665a931b"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "3e7f002746acdd34676c",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "binder-spelling-grid-d4 'probes/findings/dotted-binder.bend': seed_offset=90, knot=Unsupported\tparse\tdotted-binder\t90:93:7:9, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "8583b8be9bce45eb"
+      },
+      "value": {
+        "family": "binder-spelling-grid-d4"
+      },
+      "disposition": "disputed",
+      "reason": "Standing coordinator dotted-binder ruling explicitly selects Unsupported parse dotted-binder until the modules scope rule lands. All four exact programs are refused, never accepted/evaluated. The suite reports its same-offset heuristic as premature-unsupported; the named stopgap is canonical."
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tdotted-binder\t124:129:10:14",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(c: Cell) -> Flag:\n  match c:\n    case Cell{x.y.z}: On{}\n",
+        "seed_offset": 124,
+        "sha256": "a590bb727820b070aecdfa8f1a5891bdd4f2cab97d516ac059affcd5539906a0"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "e4af3e4a0fabc7da90b9",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "binder 'case x.y.z': seed_offset=124, knot=Unsupported\tparse\tdotted-binder\t124:129:10:14, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "minor",
+      "subject": {
+        "lane": "parse",
+        "probe": "a590bb727820b070"
+      },
+      "value": {
+        "family": "binder"
+      },
+      "disposition": "disputed",
+      "reason": "Standing coordinator dotted-binder ruling explicitly selects Unsupported parse dotted-binder until the modules scope rule lands. All four exact programs are refused, never accepted/evaluated. The suite reports its same-offset heuristic as premature-unsupported; the named stopgap is canonical."
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tdotted-binder\t124:126:10:14",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(c: Cell) -> Flag:\n  match c:\n    case Cell{a.}: On{}\n",
+        "seed_offset": 124,
+        "sha256": "f74330fa42fc04212e815785ea8a6a6802adf5140cd4005841b5f50c99f6fc8c"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "a33f42d5b48d15b4bc86",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "binder 'case a.': seed_offset=124, knot=Unsupported\tparse\tdotted-binder\t124:126:10:14, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "minor",
+      "subject": {
+        "lane": "parse",
+        "probe": "f74330fa42fc0421"
+      },
+      "value": {
+        "family": "binder"
+      },
+      "disposition": "disputed",
+      "reason": "Standing coordinator dotted-binder ruling explicitly selects Unsupported parse dotted-binder until the modules scope rule lands. All four exact programs are refused, never accepted/evaluated. The suite reports its same-offset heuristic as premature-unsupported; the named stopgap is canonical."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {
+        "problems": [
+          "an existing entry changed or was removed"
+        ]
+      },
+      "expected": "tools/census/approved.json changes only by its allowed additive shape (census-approval)",
+      "fingerprint": "36cca7c64f2debab284b",
+      "fix_hint": "Keep shared files additive; the coordinator resolves anything else at merge.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "an existing entry changed or was removed",
+      "rule": "shared-file-shape",
+      "severity": "minor",
+      "subject": {
+        "path": "tools/census/approved.json",
+        "shape": "census-approval"
+      },
+      "value": {
+        "problems": 1
+      },
+      "disposition": "disputed-generated-or-inherited",
+      "reason": "Required census:approve regeneration records new declarations/imports/class widenings. b8361221, 7ba698ea and f5ca6c0d contain every nonempty printed summary. 716f7703 records its empty approval summary. Subsequent census and census:check pass. This is generated source inventory, not hand-edited policy; coordinator reconciliation remains pending."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {
+        "problems": [
+          "an existing entry changed or was removed"
+        ]
+      },
+      "expected": "docs/compiler-campaign/manifest.json changes only by its allowed additive shape (manifest-group)",
+      "fingerprint": "d789742f1f5540c40ea5",
+      "fix_hint": "Keep shared files additive; the coordinator resolves anything else at merge.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "an existing entry changed or was removed",
+      "rule": "shared-file-shape",
+      "severity": "minor",
+      "subject": {
+        "path": "docs/compiler-campaign/manifest.json",
+        "shape": "manifest-group"
+      },
+      "value": {
+        "problems": 1
+      },
+      "disposition": "disputed-generated-or-inherited",
+      "reason": "The imported checker/parse helpers must be in every affected group to satisfy the unchanged 127-test offline manifest/import-closure gate. Three new bounded groups and append-only file members were added in 7ba698ea; no old group, task, note or member was removed relative to 3eb80a30. Earlier group edits are inherited. The suite only allows new groups, which cannot close existing groups after a new source import. Coordinator reconciliation remains pending."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {},
+      "expected": "frozen paths are byte-identical to base unless the coordinator authorized the edit",
+      "fingerprint": "377c91d8f5f372de0a2e",
+      "fix_hint": "Revert it. If the edit is wanted, list it in HANDOFF.md as a pending coordinator authorization; a commit message does not authorize.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "M tests/compiler-recursion/check.py (frozen)",
+      "rule": "frozen-edit",
+      "severity": "blocking",
+      "subject": {
+        "path": "tests/compiler-recursion/check.py"
+      },
+      "value": {
+        "status": "M"
+      },
+      "disposition": "disputed-inherited-D26",
+      "reason": "This pre-existing script migration adapts most-precise seed outcomes and re-expresses removed mutant anchors with their original witnesses. It is unchanged from 3eb80a30 except removing the unauthorized timeout edit. The old script demands conservative Unsupported and obsolete helper anchors; restoring it would defeat the verified capability. Coordinator D26 reconciliation/authorization remains pending."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {},
+      "expected": "frozen paths are byte-identical to base unless the coordinator authorized the edit",
+      "fingerprint": "0e4cf4252a837aa62567",
+      "fix_hint": "Revert it. If the edit is wanted, list it in HANDOFF.md as a pending coordinator authorization; a commit message does not authorize.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "M tests/subsets/check_frontend.py (frozen)",
+      "rule": "frozen-edit",
+      "severity": "blocking",
+      "subject": {
+        "path": "tests/subsets/check_frontend.py"
+      },
+      "value": {
+        "status": "M"
+      },
+      "disposition": "disputed-inherited-D26",
+      "reason": "This pre-existing script migration adapts most-precise seed outcomes and re-expresses removed mutant anchors with their original witnesses. It is unchanged from 3eb80a30 except removing the unauthorized timeout edit. The old script demands conservative Unsupported and obsolete helper anchors; restoring it would defeat the verified capability. Coordinator D26 reconciliation/authorization remains pending."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {
+        "pointers": [
+          "/cases/20",
+          "/cases/39"
+        ]
+      },
+      "expected": "rows of a frozen data file are identical at head (additions are allowed)",
+      "fingerprint": "1edc1d233d5f8396faf7",
+      "fix_hint": "Restore the rows, or add an `amend:` line citing the finding or seed observation.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "2 base row(s) differ or vanished, e.g. ['/cases/20', '/cases/39']",
+      "rule": "frozen-row-changed",
+      "severity": "major",
+      "subject": {
+        "path": "tests/compiler-checker/cases.json"
+      },
+      "value": {
+        "rows": 2
+      },
+      "disposition": "disputed-inherited-D26",
+      "reason": "All reported rows predate this executor round and are unchanged from 3eb80a30. Seed observations and agreed values do not move; the precise new check verdicts are independently frozen. These losing conservative pins require coordinator D26 reconciliation."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {
+        "pointers": [
+          "/cases/23",
+          "/cases/25"
+        ]
+      },
+      "expected": "rows of a frozen data file are identical at head (additions are allowed)",
+      "fingerprint": "5a5e0e99a8cad16b2cab",
+      "fix_hint": "Restore the rows, or add an `amend:` line citing the finding or seed observation.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "2 base row(s) differ or vanished, e.g. ['/cases/23', '/cases/25']",
+      "rule": "frozen-row-changed",
+      "severity": "major",
+      "subject": {
+        "path": "tests/compiler-fields/cases.json"
+      },
+      "value": {
+        "rows": 2
+      },
+      "disposition": "disputed-inherited-D26",
+      "reason": "All reported rows predate this executor round and are unchanged from 3eb80a30. Seed observations and agreed values do not move; the precise new check verdicts are independently frozen. These losing conservative pins require coordinator D26 reconciliation."
+    },
+    {
+      "actor": "executor",
+      "check": "C3",
+      "evidence": {
+        "pointers": [
+          "/cases/2"
+        ]
+      },
+      "expected": "rows of a frozen data file are identical at head (additions are allowed)",
+      "fingerprint": "c8797540d2c0063c7234",
+      "fix_hint": "Restore the rows, or add an `amend:` line citing the finding or seed observation.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "1 base row(s) differ or vanished, e.g. ['/cases/2']",
+      "rule": "frozen-row-changed",
+      "severity": "major",
+      "subject": {
+        "path": "tests/subsets/classification-cases.json"
+      },
+      "value": {
+        "rows": 1
+      },
+      "disposition": "disputed-inherited-D26",
+      "reason": "All reported rows predate this executor round and are unchanged from 3eb80a30. Seed observations and agreed values do not move; the precise new check verdicts are independently frozen. These losing conservative pins require coordinator D26 reconciliation."
+    }
+  ],
+  "coordinator_conditions": [
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "expectations are committed before the first implementation commit (D7)",
+      "fingerprint": "bf6874c11e853b06bea5",
+      "fix_hint": "History is immutable; the ledger records it once by commit.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "tests/compiler-descent/expectations.json was added in 95c2c20a, not before implementation commit e82c79c1",
+      "rule": "freeze-order",
+      "severity": "minor",
+      "subject": {
+        "path": "tests/compiler-descent/expectations.json"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "expectations are committed before the first implementation commit (D7)",
+      "fingerprint": "dd27ac2aec16978abfbc",
+      "fix_hint": "History is immutable; the ledger records it once by commit.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "tests/compiler-descent/bounds.json was added in 8a7a61f5, not before implementation commit e82c79c1",
+      "rule": "freeze-order",
+      "severity": "minor",
+      "subject": {
+        "path": "tests/compiler-descent/bounds.json"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "expectations are committed before the first implementation commit (D7)",
+      "fingerprint": "c763d0cc90ed78dc917e",
+      "fix_hint": "History is immutable; the ledger records it once by commit.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "tests/compiler-recursion/expectation-revisions.json was added in 8a7a61f5, not before implementation commit e82c79c1",
+      "rule": "freeze-order",
+      "severity": "minor",
+      "subject": {
+        "path": "tests/compiler-recursion/expectation-revisions.json"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "01baa668dbb2fb1ad6a7",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "e82c79c1 'Freeze multi-scrutinee acceptance before matrix implementati': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "e82c79c1bb3b2f7fcfe8a5f87bbbb3545ee29010"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit does not change another gate's check script together with src/*.bend",
+      "fingerprint": "9991df8652ff2a53d546",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "e82c79c1 touches tests/subsets/check_frontend.py and src/*.bend",
+      "rule": "mixed-gate-commit",
+      "severity": "info",
+      "subject": {
+        "commit": "e82c79c1bb3b2f7fcfe8a5f87bbbb3545ee29010"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "7996edf92ec4c4df8798",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "f5bcc0ca 'Freeze first-match acceptance for duplicate constructor rows': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "f5bcc0ca8893e53190f5d433d27398a0fd42b96d"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "111d45b625b1075da438",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "4b024ee2 'Freeze nested constructor discrimination against the seed': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "4b024ee24d169bf21b411be2a69aaa676d080adf"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "22d57feaa84b45adea9d",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "2810a178 'Freeze binding through a nested single-constructor pattern': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "2810a1784794bdbfe62ce68f77c28d91743c59d9"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "84f516fb833acb1df494",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "997f83fd 'Specify empty datatypes as accepted catalog entries': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "997f83fdfb48f336353ae663346686633926baa5"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "e3b30b184cf9e815711f",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b2637adc 'Freeze matrix and recursive-tree resource controls': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "b2637adc8f8b84ec789bbb4fe8991bf68c5dac23"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "f04fb1ca1667b56ceafd",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "57a0c01d 'Lower ordered pattern matrices to checked core cases': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "57a0c01df87fc4cdba198c80cb3efbbb3511ad60"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit does not change another gate's check script together with src/*.bend",
+      "fingerprint": "871d2c4055a5c06a6c4f",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "57a0c01d touches tests/subsets/check_frontend.py and src/*.bend",
+      "rule": "mixed-gate-commit",
+      "severity": "info",
+      "subject": {
+        "commit": "57a0c01df87fc4cdba198c80cb3efbbb3511ad60"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "3b3d22756fa96a3d974b",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "95c2c20a 'Freeze seed decreasing-call expectations for descent-2': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "95c2c20a97f78ddb58ac7f5242294c373bddf236"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "daef87e0124f11941c16",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "8a7a61f5 'Implement seed structural descent and classify same-paramete': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "8a7a61f5e0a139f951f7de53477ec6d8a95d3775"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit that changes approved.json carries the census:approve summary",
+      "fingerprint": "efa40f2ceb5021e53cb5",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "8a7a61f5 edits approved.json without the summary",
+      "rule": "census-approval-summary",
+      "severity": "minor",
+      "subject": {
+        "commit": "8a7a61f5e0a139f951f7de53477ec6d8a95d3775"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit does not change another gate's check script together with src/*.bend",
+      "fingerprint": "30ba6a4ae521cc5b7176",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "8a7a61f5 touches tests/compiler-recursion/check.py and src/*.bend",
+      "rule": "mixed-gate-commit",
+      "severity": "info",
+      "subject": {
+        "commit": "8a7a61f5e0a139f951f7de53477ec6d8a95d3775"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "2317ff8b55f8f63c7a31",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "fbac98eb 'Migrate recursion assertion: classify other-parameter Invali': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "fbac98eb7a094711116658664cd9d16fef084c18"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "b6e609c4364c9fef3c17",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b3008977 'Migrate recursion assertion: classify rebuilt-parent Invalid': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "b300897712da8d098ed13182f5d03c5796c2249a"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "d1c2a3796830c9a66762",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "c16bb4b4 'Migrate recursion assertion: classify rebuilt-constructor In': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "c16bb4b450e8dfa41141c2597cd8b5f2544725c1"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "d2fdb2b9daf7f978c052",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "23310bf7 'Migrate recursion assertion: classify computed Invalid': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "23310bf798134526529c358b47ed98e95811d888"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "c5fd385a85557876d2fb",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "c805d0d7 'Migrate recursion assertion: classify shadow-let Invalid': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "c805d0d78e2c6edb985f4234f78a1bf588b577df"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "63e322b7efa03b8bcba5",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "32ae9d2f 'Migrate recursion assertion: accept second-descent': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "32ae9d2f0d624dda004ac58cad0333f3af32855f"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "abf8861226a62ba15a8b",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b3a783b3 'Migrate checker recursive-call assertion to Invalid': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "b3a783b33763327251368e30b268f3f9b499dd09"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "46e0e1afc04d30069c24",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "feebc5ce 'Migrate nest rec-swapped-args to its frozen Invalid outcome': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "feebc5ceec394e373f3b4caa1bb6222d241e39ac"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "74ca175e1bbcc86f635b",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "d8647ccf 'Migrate nest rec-alias to its frozen Invalid outcome': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "d8647ccf96d2bbf7dd8a25c2764e3cafef5703f9"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "6493039dc9adeaaafe57",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "d74e0d48 'Freeze shared-alias resource controls before descent repair': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "d74e0d4852f76c6b961bc20890761b3261a8e7fd"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "0d771b80270301c2651f",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "ca5ac202 'Bound descent comparison work while preserving seed decision': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "ca5ac20235a61c362a16ca97b7aa0facd67b53dc"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit that changes approved.json carries the census:approve summary",
+      "fingerprint": "4b1702ec83527dc6d380",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "ca5ac202 edits approved.json without the summary",
+      "rule": "census-approval-summary",
+      "severity": "minor",
+      "subject": {
+        "commit": "ca5ac20235a61c362a16ca97b7aa0facd67b53dc"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit does not change another gate's check script together with src/*.bend",
+      "fingerprint": "10b9fede83871fe4f7c9",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "ca5ac202 touches tests/compiler-descent/check.py and src/*.bend",
+      "rule": "mixed-gate-commit",
+      "severity": "info",
+      "subject": {
+        "commit": "ca5ac20235a61c362a16ca97b7aa0facd67b53dc"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "41967bf75a1b85fed2a8",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "75e1ac69 'Record descent-2 qualification and final gate evidence': trailer names 'GPT-6 Astra <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "75e1ac69852c5d430c32f91dc0d77543982e4466"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "4871b17bd65438a592e0",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "84ee2be0 'Freeze descent refresh probes in both seed lanes': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "84ee2be026ab870aa16ee40afc67cf6077b33064"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "862b8f61f80fb96ea2ae",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "c7ce3338 'Carry main host reliability into descent gate runs': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "c7ce33388e28778d45bd6709a884377e12e3f9a2"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "bbf64e3a1405783da241",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "3eb80a30 'Qualify descent refresh and record integration obligations': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "3eb80a30263d257c9badd6a94d6c89938d305eac"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "cc2e5743f462885ca94c",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "9b33f2cb 'Freeze executor precheck probes and nearby seed controls': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "9b33f2cbd81fd397ca6cba4687c7349a3bca6a8b"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "887885ef4ec4035705b6",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b8361221 'Refuse unsound pattern identities and restore gate ownership': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "b8361221ef0ff4be6bdd050d3bdc81c187f595ce"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit that changes approved.json carries the census:approve summary",
+      "fingerprint": "f72a02b0b051df95db61",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b8361221 edits approved.json without the summary",
+      "rule": "census-approval-summary",
+      "severity": "minor",
+      "subject": {
+        "commit": "b8361221ef0ff4be6bdd050d3bdc81c187f595ce"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "a commit does not change another gate's check script together with src/*.bend",
+      "fingerprint": "8c45fc72cac19d5257a1",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "b8361221 touches tests/compiler-checker/check.py and src/*.bend",
+      "rule": "mixed-gate-commit",
+      "severity": "info",
+      "subject": {
+        "commit": "b8361221ef0ff4be6bdd050d3bdc81c187f595ce"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "d390d9ded934db5d12e2",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "7ba698ea 'Preserve concrete quantity errors before residual refusal': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "7ba698ea1530650c2585fbca86ba6032bc7f404f"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "54d8dee36306789ba37c",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "f5ca6c0d 'Share the scope quantity policy with residual identities': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "f5ca6c0d44597211647be01b0fbb1322d3be0d25"
+      },
+      "value": null
+    },
+    {
+      "actor": "coordinator",
+      "check": "C3",
+      "evidence": {},
+      "expected": "every non-merge commit carries a Co-Authored-By trailer naming the executor (claude)",
+      "fingerprint": "bff9c3d0ea1ebe2802e4",
+      "fix_hint": "",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "716f7703 'Return Unit from the admission-only residual guard': trailer names 'GPT-6.1 Sol <noreply@openai.com>'",
+      "rule": "commit-trailer",
+      "severity": "minor",
+      "subject": {
+        "commit": "716f7703b6fd8b7f6d9d1efe8e0122bf5f832934"
+      },
+      "value": null
+    }
+  ]
+}

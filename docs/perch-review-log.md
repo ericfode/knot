@@ -1023,3 +1023,26 @@ eight-law proof still checks. Default O3 is retained. A successful individual
 build is not a comparative speedup or full qualification. The superseded,
 already-failed run `run-meomdq__` was stopped after recording its completed gates;
 its unrun gates are not passes. Final qualification rebuilds every gate.
+
+## 2026-09-29: descent-2 final qualification and host identity
+
+The unchanged source head `716f7703` passes all 17 gates in 957.714092 measured
+seconds. Two earlier 16/17 runs failed clang discovery before program/mutant
+execution; the cached version response alone did not eliminate the failure.
+Absolute CC selection retains the seed's version validation. The frozen precheck
+driver filters TMPDIR; the local launcher now enforces owned scratch for its
+seed calls. Application scheduling alone also left native deadline failures.
+
+Use exact native build caching for repeated release builds, with fresh source
+typechecking/C generation/preprocessing and compiler/linker/link-input identities.
+The final run reused 17 verified entries and compiled 73 new entries; every frozen
+normal/mutant assertion still executes in both lanes. Cache controls distinguish
+identical input, changed C and invalid C. The first dry control caught random
+object paths defeating reuse; only transient object/debug-directory metadata is
+normalized for the strict no-debug/no-coverage command. Reused native output is
+not fresh LLVM/link evidence or a cold-build performance pass.
+
+Evidence: `tests/compiler-descent/receipts/precheck-verification.json`, the protected
+input and disposition receipts, and `docs/compiler-campaign/DESCENT-2-PRECHECK-REPAIR.md`.
+All failed/cancelled attempts remain evidence; no host failure counts as a semantic
+kill. No frozen expectation, law or mutant changed and no provider call ran.

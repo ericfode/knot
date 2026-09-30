@@ -1,5 +1,11 @@
 # Descent-2 refresh
 
+Historical qualification at `3eb80a30`. Subsequent executor repairs changed
+production source and restored the shared runner/legacy host limits. The current
+qualification and its precheck dispositions are in
+[DESCENT-2-PRECHECK-REPAIR.md](DESCENT-2-PRECHECK-REPAIR.md). The results below retain
+their original checkpoint meaning.
+
 Starting checkpoint: `75e1ac69`. The refresh preserves the accepted decreasing-call implementation and all earlier freezes. No production Bend declaration changed.
 
 The direct implementer instruction forbids merges. The refresh prompt's main merge therefore remains a coordinator action. This report qualifies the branch-local work; it does not qualify an integrated main/nest/modules tree. Main decisions D1-D26 and the standing coordinator rulings were read from main. Main's host reliability changes were carried over narrowly without a merge: a 1,800-second outer gate limit, factor-four legacy subprocess hang guards, resolved clang/SDK forwarding and one bounded clang-discovery retry with the first attempt retained. Frozen verdicts, compiler resource budgets, laws and semantic mutants remain unchanged. The new retry controls distinguish assertion failures and persistent host failures; `gates:verify` passes 20 tests and six semantic wrapper mutants.

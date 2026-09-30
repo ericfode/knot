@@ -87,8 +87,13 @@ drivers are byte-identical to the effective base; seven timeout changes were
 removed in total. The earlier classification and
 recursion assertion/mutant migrations retain their independent freezes and
 original witnesses; the coordinator must reconcile those D26 changes at merge.
-The full registered suite and committed-head precheck replay are pending at this
-implementation checkpoint. The complete results belong in the repair report.
+The full registered suite passes 17/17 gates on source `716f7703`, exit 0, in
+957.714092 measured seconds. The committed-head C1/C3 replay has exit 3: no
+remaining false acceptance, false Invalid or malformed-diagnostic condition;
+four dotted-binder stopgap flags and seven generated/inherited C3 conditions
+have concrete dispositions. It is not a precheck pass. The complete gate counts,
+all failed attempts, 16 D26 selections and remaining coordinator work are in
+[the repair report](../../docs/compiler-campaign/DESCENT-2-PRECHECK-REPAIR.md).
 
 The first full-suite run caught an overbroad residual refusal before the existing
 `nested-alias-affine` control could report its concrete quantity failure. The
@@ -113,3 +118,14 @@ with unchanged outcomes (10 observations); the eight-law proof still checks.
 Direct native builds retain the default O3 flag. No build-time speedup or causal
 effect is claimed from these observations; the final full-suite result decides
 qualification against the unchanged host deadlines.
+
+The final suite uses ignored native build caching: 17 matching builds reused,
+73 new successful native compiler invocations. Source typechecking/generated C
+and actual clang preprocessing are fresh on every eligible call; a reused
+LLVM/link artifact is not a fresh native backend build. Cache inputs include the
+compiler/linker/link-library hashes, preprocessed C and strict release command;
+used entries are verified after the run. The current source snapshot and all
+126 prior frozen paths plus 31 new fixed controls remain unchanged. Cold native
+builds can exceed the frozen host guards under concurrent load; no cold-build
+performance pass or speedup is claimed. The local launcher enforces owned scratch
+and the seed-supported absolute compiler selection. No provider/live Perch call ran.
