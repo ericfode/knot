@@ -1,0 +1,358 @@
+{
+  "basis": "D7: seed-only observations and literal verdicts frozen before the precheck repairs; all earlier expectations stay unchanged.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_files": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "application-prefix-colon",
+      "sha256": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/application-prefix-colon.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 54
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() -> List<:\n  |                    ^\n6 |   Nil{}\n"
+        }
+      }
+    },
+    {
+      "name": "extra-return-closer",
+      "sha256": "095b335753e43c94098ba27f09214e33973cc88f8ad48a216b5cf9aae0795e75",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/extra-return-closer.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 96
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '>'\nLocation:\n7 | \n8>| def f() -> Flag<Flag>>:\n  |                      ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "late-flag-pattern",
+      "sha256": "09ad0347501eff042cc5a9b4514b1a8e924e39bac9e0d4e2d6e1370638a7edb7",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tunknown-constructor\t"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+        }
+      },
+      "file": "fixtures/late-flag-pattern.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a declared constructor (unknown: probe.Off)",
+          "begin": 102
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n6 |   match x:\n7>|     case Off{}:\n  |          ^^^^^\n8 |       First{}\n"
+        }
+      }
+    },
+    {
+      "name": "tilde-type-argument",
+      "sha256": "1d569d47256a77f98a6ae20702619179d120f97713bdf455548395062baf02c3",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\ttype-expression\t"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\ttype-expression\t"
+        }
+      },
+      "file": "fixtures/tilde-type-argument.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 103
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '~'\nLocation:\n 8 | def f() -> Flag:\n 9>|   +x: Flag<~x> = On{}\n   |            ^\n10 |   x\n"
+        }
+      }
+    },
+    {
+      "name": "late-box-pattern",
+      "sha256": "267a27fbe4d062a48fe87fc5d4c8107d648847b547a317a592552d05e514ad96",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\tunknown-constructor\t"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+        }
+      },
+      "file": "fixtures/late-box-pattern.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a declared constructor (unknown: probe.Box)",
+          "begin": 56
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Box)\nLocation:\n2 |   match b:\n3>|     case Box{value}: value\n  |          ^^^^^^^^^^\n4 | \n"
+        }
+      }
+    },
+    {
+      "name": "return-prefix-colon",
+      "sha256": "299c7947c7d7a981a79586ab311086deda8a574280f827d11ada86bb8128ba9c",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/return-prefix-colon.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 91
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n7 | \n8>| def f() -> Flag<:\n  |                 ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "detached-tag-branch",
+      "sha256": "3a57659eece1bf1dfe7ae789a8016f5d525e9958d3a5a8bbc9b7682275b59bdd",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/detached-tag-branch.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "'def', 'type' or 'law'",
+          "begin": 186
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n13 |     case On{}:\n14>|       Second {}\n   |              ^\n15 | \n"
+        }
+      }
+    },
+    {
+      "name": "multiline-result-erased-call",
+      "sha256": "443aca1528c1811138a37e7374457e007ae13500b78ce386be60619844411759",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "allowed_exits": [
+            0,
+            3
+          ]
+        }
+      },
+      "file": "fixtures/multiline-result-erased-call.bend",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "double-binding-equals",
+      "sha256": "5605d9115aaf775e2af737b3fd271d323e5fb2d29258c8b8a8cf41756b5611ab",
+      "expected": {
+        "parse": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\texpected-term\t"
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tparse\texpected-term\t"
+        }
+      },
+      "file": "fixtures/double-binding-equals.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 106
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag<x>= = On{}\n   |               ^\n10 |   x\n"
+        }
+      }
+    },
+    {
+      "name": "detached-tag-entry",
+      "sha256": "66acbfe944f49488ae2d61dd9c0723ee9c3b2623a5466ea72219ff386026107a",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/detached-tag-entry.bend",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "'def', 'type' or 'law'",
+          "begin": 449
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n30 | def main() -> Tag<Flag>:\n31>|   TagY {}\n   |        ^\n32 | \n"
+        }
+      }
+    },
+    {
+      "name": "multiline-result-control",
+      "sha256": "90a860b7ed03ee248660b5e73bb5e1139aa96664ddd4211507d8d5a82a201057",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "file": "fixtures/multiline-result-control.bend",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "declared-box-pattern",
+      "sha256": "0030a3d27e2572f9c1aa33f914864f095147387953cc62b81742c2583dc0ee8c",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "file": "fixtures/declared-box-pattern.bend",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "multiline-applied-result",
+      "sha256": "a5307c5be17b1c15925c39cf762d460c18ebbe741e1a2710b35aec57d6519dba",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "file": "fixtures/multiline-applied-result.bend",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    }
+  ]
+}
