@@ -222,7 +222,10 @@ line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
   is the exact drop in encoded bytes, and a cut that cannot shrink the state is
   skipped. The order of `calls` and `called_by` never changes the choice, and the
   names tier compares path and name by code point, so the process locale does not
-  either. The interface tier's tie-break is unchanged. Fitting stops at the first
+  either, including supplementary Unicode scalars. On entry to the names tier,
+  summary rows are also sorted by path and name; their earlier insertion order
+  cannot change the complete state hash. Both earlier fitting returns and the
+  interface tier's tie-break are unchanged. Fitting stops at the first
   state that fits, so an entry the cap does not need is left as it was.
 - **Record and marker.** Each cut has one `summarized` row with reason
   `context-state-names-only` (an interface entry's row changes its reason; a kept

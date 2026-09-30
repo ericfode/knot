@@ -1567,3 +1567,15 @@ Remaining uncertainty / next trigger:
 - The tier can fail although the primary source, the task and the names alone would fit, because datatypes, laws and notes are kept whole. `run` carries 8,200 bytes of datatypes and 6,147 bytes of `unresolved` notes. Compacting the notes would help, but it changes every state, so it needs its own measured increment.
 - The coordinator applies the reverts on `literals-integ` after this merges. 53 units will then carry names-only rows, and a live review of a few of them is the first calibration evidence to collect.
 - The composition margins above are thin. If a merge pushes a group over 48,000, the smallest honest fix is a smaller selected group, not a change to source.
+
+
+## 2026-09-29 — perch-cap round 1: canonical complete names-only states
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `e02a06b1`; `scripts/perch-context-interfaces.mjs` and its offline controls.
+Evidence links and usage receipt IDs: confirmed locale witness in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; additive requirements frozen in `2a3f4f82` ([round-1 expectations](../tests/perch-context/round1-expectations.json)); [production-hash control](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): existing tests compared cut order without exercising locale-sensitive interface-row insertion. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider or live Perch call; rubric unchanged.
+Judgment: confirmed. Equal cuts still had different complete state hashes.
+Change and why: canonicalize summary rows only after both earlier returns, and after adding each names-only row. Compare Unicode scalar sequences rather than UTF-16 code units. Existing early-return states are preserved.
+Clean / broken / held-out evidence and deterministic checks: 54 offline tests pass (40 existing controls, 13 existing semantic mutants, one new complete-state locale control). The new fixture passes the pinned seed checker. Both locales encode 59,829 bytes with SHA-256 `a3713c8ccedd645eee88edd3620dc032ee1c7b5d3d616d7247c7df46a5dc9d7c`; production `prepareStyleTargets` reports the same hash. Full gate execution follows the boundary repair.
+Remaining uncertainty / next trigger: the confirmed minimum-boundary finding and exact-saving defect remain for this review round. Names-only judge calibration remains unmeasured and advisory.

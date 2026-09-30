@@ -322,6 +322,7 @@ function afterCuts(state, order, count, note) {
     const row = notes.summarized.find(r => r.path === item.path && r.name === item.name);
     if (row) row.reason = REASON; else notes.summarized.push({ path: item.path, name: item.name, reason: REASON });
   }
+  notes.summarized.sort((a, b) => byCode(a.path, b.path) || byCode(a.name, b.name));
   if (count) notes.names_only = { count, note };
   return expected;
 }

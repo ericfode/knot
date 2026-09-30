@@ -155,7 +155,15 @@ export function buildInterface(path, file, names = null) {
 }
 
 // The names tier orders ties by code point, so its choice never depends on the process locale.
-const byCode = (a, b) => (a < b ? -1 : a > b ? 1 : 0);
+const byCode = (a, b) => {
+  const left = [...a], right = [...b];
+  for (let i = 0; i < Math.min(left.length, right.length); i++) {
+    const delta = left[i].codePointAt(0) - right[i].codePointAt(0);
+    if (delta) return delta;
+  }
+  return left.length - right.length;
+};
+const byIdentity = (a, b) => byCode(a.path, b.path) || byCode(a.name, b.name);
 const largestSavingByCode = (a, b) => b.saving - a.saving || byCode(a.item.path, b.item.path) || byCode(a.item.name, b.item.name);
 const encoded = value => Buffer.byteLength(JSON.stringify(value));
 const NAMES_ONLY = 'names-only', NAMES_ONLY_REASON = 'context-state-names-only';
@@ -199,6 +207,9 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
   // a body the interface tier kept because its interface was no smaller. Its one summary row changes
   // reason (a kept body gets its row now); the saving is the exact drop in encoded bytes.
   const { summarized } = context.provenance, notes = context.seen.context_notes;
+  // Only newly enabled states reach this point. Erase the interface tier's locale-dependent
+  // insertion order from their complete identity, while preserving both earlier returns.
+  summarized.sort(byIdentity);
   const rowOf = item => summarized.find(row => row.path === item.path && row.name === item.name);
   const cuts = [];
   for (const item of [...context.seen.calls, ...context.seen.called_by]) {
@@ -216,6 +227,7 @@ export async function fitInterfaceContext(context, snapshot, prefix, maxBytes = 
     item.representation = NAMES_ONLY;
     const row = rowOf(item);
     if (row) row.reason = NAMES_ONLY_REASON; else summarized.push({ path: item.path, name: item.name, reason: NAMES_ONLY_REASON });
+    summarized.sort(byIdentity);
     notes.names_only = { count: (notes.names_only?.count ?? 0) + 1, note: NAMES_ONLY_NOTE };
     if (size() <= maxBytes) return;
   }
