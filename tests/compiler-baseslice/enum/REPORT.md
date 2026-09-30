@@ -1,9 +1,10 @@
 # baseslice implementation report
 
 The Base-slice plan and its first independent step, **BS1 enum-source
-qualification**, are complete. `npm run -s gates` passes **15/15** registered gates
-with the default four workers. This is acceptance of the owned branch's BS1
-contract. Main integration, imported Base and VM execution remain separate.
+qualification**, are complete. `npm run -s gates -- --jobs=1` passes **15/15**
+registered gates with the original frozen harnesses and limits. This is acceptance
+of the owned branch's BS1 contract. Main integration, imported Base and VM
+execution remain separate.
 
 ## Plan and ownership
 
@@ -63,8 +64,8 @@ re-executed BS1 successfully from the same inputs.
 
 [receipts/gates.json](receipts/gates.json) retains every exact normalized count,
 source identities, receipt comparisons and the raw run's hash. The command was
-`npm run -s gates`, exit 0, four workers. Every gate exited 0. Its ignored raw
-record is `.local/gates/run-lat78q9s/summary.json`.
+`npm run -s gates -- --jobs=1`, exit 0, one worker. Every gate exited 0. The
+committed receipt retains the raw summary hash and omits its machine-local location.
 
 | Gate | Result / exit | Exact wrapper counts |
 |---|---|---|
@@ -94,35 +95,36 @@ Additional receipt/stdout counts, not exposed by the wrapper's count projection:
 - `npm run -s gates:verify`: 26 tests pass, including eight seed-build guard
   controls. This is a separate offline wrapper check.
 
-## Build-guard correction and historical failures
+## Pre-review correction and historical failures
 
-Initial full runs failed at legacy 30–60-second seed-native-build guards; even
-serial scheduling hit frontend's 30-second and structural's 45-second guards.
-The six affected harnesses now use a 180-second minimum for exact seed-prefix
-`-o` builds. Flat-store uses the same shared guard. Program timeouts and all
-byte/depth/fuel budgets, fixed expectations, proof obligations and mutant
-requirements are unchanged.
+The seven C3 frozen-edit findings were confirmed. The added decorators/imports
+and guard input hashes are removed from `research/flat-store/check.py` and the
+frontend, structural, fields, Wasm, recursion and fields-Wasm harnesses. All seven
+are now byte-identical to base **ff44b974**. The matching census inventory is also
+restored; census validation passes. Frozen expectations, proof obligations,
+program observations and production compiler sources are unchanged.
 
-A later serial run hit the seed's `found no clang` discovery diagnostic in
-flat-store; default scheduling reproduced it in structural. Apple clang 21 was
-installed, and twenty direct Bun discovery probes succeeded. The shared guard
-permits at most two retries for that exact discovery diagnostic with exit 1 and
-empty stdout, retaining every failed attempt. All other failures and timeouts
-still fail immediately. Persistent missing-clang failures stop after three
-attempts. The final successful run needed no discovery retry in structural or
-flat-store. Every affected receipt hashes the guard.
+The C4 finding was confirmed: `provenance.raw_summary` named an ephemeral local
+run. That field is removed. The portable receipt records the raw summary SHA-256,
+normalized results and **54 matching executed input identities**, including each
+restored script. The guard and its controls remain as an uninstalled proposal;
+their future integration requires coordinator authorization. Eight proposal
+controls pass as part of the 26 offline wrapper tests; they do not alter this run.
 
-Census regeneration changed exactly four gate SHA-256 fields in accepted.json.
-It changed no fixture hash, classification, approval or other census manifest.
-The fresh comparison has 64 identical, ten volatile-only and seven semantic
-receipt differences. All seven semantic differences are harness/guard input
-identities; two also carry the earlier fail-closed host-adapter identity. No
-program observation changed. Shared execution receipts were not refreshed.
+The earlier 15/15 run at 4559c20a used the unauthorized harness integrations and
+is historical evidence, not acceptance of the restored scripts. Earlier failed
+and cancelled runs are preserved in ignored local evidence. A fresh default
+four-worker run of the restored tree passed 14/15 gates; frontend alone timed out
+at its original 30-second seed-native build guard. The identical standalone
+native checker build succeeded in **18.48 measured seconds**. The subsequent
+complete one-worker run passes all fifteen gates without changing a timeout,
+expectation, fixture or compiler source. These runs are not combined into a pass.
 
-Historical failed/cancelled runs remain in ignored `.local/gates/`:
-`run-g0kd4rov`, `run-049ignie`, `run-fvsfzgw_` and `run-dp8fuq9y`. They are not
-aggregated into the final pass. The final pass comes from one fresh full run.
-[The review log](../../../docs/perch-review-log.md) records prevention and evidence.
+The final receipt comparison has 64 identical, 15 volatile-only and 2 semantic
+differences. Both semantic differences contain only the earlier fail-closed
+host-adapter input identity; program observations are unchanged. Shared execution
+receipts were not refreshed. See the appended pre-review correction in
+[the review log](../../../docs/perch-review-log.md).
 
 ## Coordinator and later increments
 

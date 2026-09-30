@@ -999,3 +999,26 @@ records fresh full-suite acceptance, not an aggregate of earlier green gates.
 Prevention: give host compiler builds an explicit hang guard distinct from the
 program's deterministic resource contract, and retain classified host failures.
 No provider review or elapsed-effort estimate is claimed.
+
+## 2026-09-29 — baseslice pre-review: preserve frozen harness ownership
+
+C3 correctly found seven frozen gate edits in 4559c20a. A host-build guard does
+not authorize editing another gate. The seven scripts and matching census
+identities are restored byte for byte to ff44b974. The original expectations
+remain unchanged. The preceding guard entry records history; its harness
+integration has been removed and is pending coordinator authorization.
+
+C4 correctly found an ephemeral raw-summary location in the new gate receipt.
+The field is removed; the summary hash, normalized results and matching source
+identities remain. No provider call or shared execution-receipt refresh occurred.
+
+A fresh default run passed 14/15 gates, with frontend hitting its unchanged
+30-second native-build guard. The same standalone build took 18.48 measured
+seconds. A subsequent complete `npm run -s gates -- --jobs=1` passes all 15 gates
+with their original limits; all 26 wrapper tests pass. These are separate runs,
+not an aggregate. [The report and portable receipt](../tests/compiler-baseslice/enum/REPORT.md)
+record exact counts and distinguish current acceptance from historical runs.
+
+Prevention: inspect frozen ownership before changing a gate; use its scheduling
+control for host contention and submit any guard integration to the coordinator.
+Persist content identities rather than machine-local evidence locations.

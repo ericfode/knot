@@ -6,9 +6,11 @@
     "npm",
     "run",
     "-s",
-    "gates"
+    "gates",
+    "--",
+    "--jobs=1"
   ],
-  "jobs": 4,
+  "jobs": 1,
   "seed": {
     ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
     ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
@@ -16,12 +18,10 @@
     ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
   },
   "executed_input_hashes": {
-    "docs/compiler-campaign/inventory/accepted.json": "25640542491d6acffbe3e4c39fc43538289ca777c62b238880d017085304f426",
-    "research/flat-store/check.py": "2516b3f2caa0d3f7067e9fdf96c56e6ffb73f845c2fc959f8bc2aafa7df1fd7b",
+    "docs/compiler-campaign/inventory/accepted.json": "1a3006c3118684ddd7ce8e7bbdd9fa2ca526b81e2731e57987178eb33c28158d",
+    "research/flat-store/check.py": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69",
     "scripts/gates/normalize.py": "02c2fa858d00dcd29277d54eaacbc0b52699d8f085da3811c29e3b05caac3656",
     "scripts/gates/run.py": "4eaa99e0d1496379e3032e13e278556bdbf41c9e8648bae2e97a343bc204fc35",
-    "scripts/gates/seed_build.py": "983183c8f4c1f47c5451ea4141d95fe973d5060a4d1179615784286e3267fa20",
-    "scripts/gates/test_seed_build.py": "f5c3e1abf918c2dfaee4e230c4b0066f97a765e4c4c34c4fb244cf27c70bbb3f",
     "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
     "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
     "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
@@ -66,20 +66,19 @@
     "tests/compiler-baseslice/enum/fixtures/wrong-type.bend": "30174dc93803a58b97176abb1bf15824173581848e1e3cbfa1f7a8c14887f34d",
     "tests/compiler-baseslice/enum/regen.py": "f1ad114e769115d77134ab079f9ded1372c9be0336539998ac7001b1933f5910",
     "tests/compiler-baseslice/enum/trust.ts": "251c88be2e4e09556d71bb2b62f83ffeb2450ccc96835eb71fa73e34ed76b191",
-    "tests/compiler-fields-wasm/check.py": "a60977f20bba74d8be75e032b7853477617a32114c4adb518c9675dcb7691fe0",
-    "tests/compiler-fields/check.py": "5739413836dd233e4ab17124d2a06a88f1ed6870190ed7611742557918740c53",
-    "tests/compiler-recursion/check.py": "2174b01df5cea55d8dd6ad5c088dd3ec90d102a5edb25cd5528693dc0fd9fa76",
-    "tests/compiler-structural/check.py": "d513c28956445f194c3a12210c0fdadefa34b5ef269bc6d4d10e4dacf60f3fb1",
-    "tests/compiler-wasm/check.py": "53659f97acc72784236ee3fa39dc791acb7ba450b2aad3a3cef42598efea6eaa",
-    "tests/subsets/check_frontend.py": "92add003550555143c516016e6575371ef311e26579d78b786297838f4f99917"
+    "tests/compiler-fields-wasm/check.py": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+    "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+    "tests/compiler-recursion/check.py": "0c5a3355ed138e9c14bb6043777e19542e8beef9ca03becd137e3b0bd6438f30",
+    "tests/compiler-structural/check.py": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
+    "tests/compiler-wasm/check.py": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d",
+    "tests/subsets/check_frontend.py": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9"
   },
   "provenance": {
-    "head_at_run": "b034708b1c578caa2b722392738697ac4cb6bbb4",
-    "note": "Run includes the uncommitted seed-build guard and census-hash updates, committed with this receipt. Later report/log edits change no executed input.",
-    "raw_summary": ".local/gates/run-lat78q9s/summary.json",
-    "raw_summary_sha256": "4aa5503cb0893b6a497e541e2ef6351e30fb532334e2f5778b7d43c0493e8d15",
-    "started_at": "2026-09-30T00:47:01.164136+00:00",
-    "total_seconds": 478.914704
+    "head_at_run": "4559c20a894e57f7be7b40eb95519615a639669b",
+    "note": "Run includes frozen-script restoration and matching census hashes. The committed receipt omits the raw run location. Later report/log edits change no executed input.",
+    "raw_summary_sha256": "13fae01b0c6b28052936ca9e92cd36668aabecd144d191fbde8f197bcede41a9",
+    "started_at": "2026-09-30T01:06:27.469461+00:00",
+    "total_seconds": 431.305378
   },
   "normalized": {
     "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
@@ -332,8 +331,8 @@
     ],
     "receipt_counts": {
       "identical": 64,
-      "semantic": 7,
-      "volatile-only": 10
+      "semantic": 2,
+      "volatile-only": 15
     },
     "receipts": [
       {
@@ -367,13 +366,9 @@
         "path": "research/flat-store/receipts/bun-wasm.json"
       },
       {
-        "after_sha256": "0bfc6d76856dddd73f4ddf23b2999cbfe76fadec31cb948ba1e14fff64c1a3c1",
+        "after_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
         "before_sha256": "8bd1b0dd7a61bdb08d5d1d8c03bd5e22aedff63e8bc664093162a02174126928",
-        "changed_fields": [
-          "/harnesses/research~1flat-store~1check.py",
-          "/harnesses/scripts~1gates~1seed_build.py"
-        ],
-        "classification": "semantic",
+        "classification": "volatile-only",
         "path": "research/flat-store/receipts/gate.json"
       },
       {
@@ -491,44 +486,30 @@
         "path": "tests/compiler-checker/receipts/checker.json"
       },
       {
-        "after_sha256": "0771c3fc4b94900a58a8c9938507cf986f14d49d4d9afc3cffd972fb99f5931d",
+        "after_sha256": "56c618bf2752b1e4a641db5dcf48acfb23d8ada3c3fa6533e3e3d677b89ad7f4",
         "before_sha256": "79a4653796f22c66f5cf4d27e59c0c7847637a8f8eee6b49829f5c81696cf324",
         "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/scripts~1run-wasm.mjs",
-          "/inputs/tests~1compiler-fields-wasm~1check.py"
+          "/inputs/scripts~1run-wasm.mjs"
         ],
         "classification": "semantic",
         "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
       },
       {
-        "after_sha256": "ccdf33caf60dac8e6989301ef4728953cd5328dba308b402692c386130c058d1",
+        "after_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
         "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
-        "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/tests~1compiler-fields~1check.py"
-        ],
-        "classification": "semantic",
+        "classification": "volatile-only",
         "path": "tests/compiler-fields/receipts/fields.json"
       },
       {
-        "after_sha256": "b27fa6c2a55a51b5c14edb5f9f8c03a633e1153d160aec7e0c9befcaf0459be4",
+        "after_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
         "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
-        "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/tests~1compiler-recursion~1check.py"
-        ],
-        "classification": "semantic",
+        "classification": "volatile-only",
         "path": "tests/compiler-recursion/receipts/recursion.json"
       },
       {
-        "after_sha256": "cbed65a89839388446a76eb2ecc896f5098aa8757e35b3d1ef1e32fee138b7b4",
+        "after_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
         "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
-        "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/tests~1compiler-structural~1check.py"
-        ],
-        "classification": "semantic",
+        "classification": "volatile-only",
         "path": "tests/compiler-structural/receipts/catalog.json"
       },
       {
@@ -832,28 +813,22 @@
         "path": "tests/compiler-wasm/generated/three-colors.wat"
       },
       {
-        "after_sha256": "3838ce67614ec20912c2fb358700b1f9247a50e59ce5f984749df53cb0accf02",
+        "after_sha256": "5e509615699d7154f0dac4007f37716360172f1280b0ab916532b4858eacf2b6",
         "before_sha256": "91a6afad18b6335b1e4e9f927111bc7fd5033d777125f136c94ef6ca13350c49",
         "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/scripts~1run-wasm.mjs",
-          "/inputs/tests~1compiler-wasm~1check.py"
+          "/inputs/scripts~1run-wasm.mjs"
         ],
         "classification": "semantic",
         "path": "tests/compiler-wasm/receipts/wasm.json"
       },
       {
-        "after_sha256": "754b31f02bc3a9694f0cbd5a346902e21ca99458cea05f64d8e31b89b38fec17",
+        "after_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
         "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
-        "changed_fields": [
-          "/inputs/scripts~1gates~1seed_build.py",
-          "/inputs/tests~1subsets~1check_frontend.py"
-        ],
-        "classification": "semantic",
+        "classification": "volatile-only",
         "path": "tests/subsets/receipts/frontend.json"
       }
     ],
-    "snapshot_sha256": "5facc900c6341392a399d4e5cda9c5a0ae2bb9e997dd295d5a7e5a5ea057c32d",
+    "snapshot_sha256": "d695708ce9e7400bbaff5c572699e801484997c0f7bd294516c1bbe70825c0fe",
     "status": "passed"
   },
   "additional_counts": {
@@ -883,5 +858,21 @@
     }
   },
   "shared_execution_receipts_refreshed": false,
-  "live_perch": "unrun: prohibited for this implementer"
+  "live_perch": "unrun: prohibited for this implementer",
+  "pre_review": {
+    "frozen_gate_base": "ff44b974ef457359a2bace8410a95ebfd047d275",
+    "restored_frozen_gate_hashes": {
+      "research/flat-store/check.py": "f0a47f6418adabae03fb69bfe7c1a6ba90d41833edda3bae4d42d56c23563c69",
+      "tests/compiler-fields-wasm/check.py": "544de0f4486cc62c8ec3fe1150bf29561f0e9e3cf1570fecd07e314fe3066d74",
+      "tests/compiler-fields/check.py": "86667e25daac9e9be73cf8693c1ed699db08d5f03a8028d7c4d55999bddca393",
+      "tests/compiler-recursion/check.py": "0c5a3355ed138e9c14bb6043777e19542e8beef9ca03becd137e3b0bd6438f30",
+      "tests/compiler-structural/check.py": "3d0d052ed2c79f8a60b7546f707c0403f6e9b621f26104d81da73318b5f18d28",
+      "tests/compiler-wasm/check.py": "77c2197f98e827b97758138cc934ffab665b908f608dfefd32ef7d2ee138b28d",
+      "tests/subsets/check_frontend.py": "b8953fcc58c8d58b67eac795754435140fab763f1be62bd61e137a7b1f46c2a9"
+    },
+    "removed_receipt_fields": [
+      "provenance.raw_summary"
+    ],
+    "host_guard_integration": "uninstalled; pending coordinator authorization"
+  }
 }
