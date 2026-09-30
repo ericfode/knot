@@ -17,9 +17,23 @@ def evaluated(+book: C.Book, result: Result<S.Error,E.Value>) -> IO(Unit):
     case Fail{e}: D.fail(e)
     case Done{value}: print(E.describe(value,book))
 
-def evaluate(+book: C.Book, name: String, request: Request) -> IO(Unit):
-  match request:
-    case Request{fuel,args}: evaluated(book,E.invoke(book,name,args,fuel))
+def abstract_parameters(params: List<&2,C.Parameter>) -> Bool:
+  match params:
+    case Nil{}: False{}
+    case Con{C.Parameter{token,q,typ},tail}:
+      Bool.or(Bool.and(Bool.not(U32.is_eq(q,0)),U32.is_eq(typ,4294967295)),abstract_parameters(tail))
+
+def entry(+book: C.Book, +name: String, request: Request,
+  found: Result<S.Error,C.Function>) -> IO(Unit):
+  match request found:
+    case _ Fail{e}: D.fail(e)
+    case Request{+fuel,+args} Done{C.Function{C.Signature{token,params,result},body}}:
+      S.choose(IO(Unit),Bool.or(U32.is_eq(result,4294967295),abstract_parameters(params)),u =>
+        D.fail(S.Host{"invoke","abstract-signature"}),u => evaluated(book,E.invoke(book,name,args,fuel)))
+
+def evaluate(+book: C.Book, +name: String, request: Request) -> IO(Unit):
+  match book:
+    case C.Book{types,functions}: entry(book,name,request,E.function_named(functions,name))
 
 def configured(path: String, +name: String, result: Result<S.Error,Request>) -> IO(Unit):
   match result:

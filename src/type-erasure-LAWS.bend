@@ -7,6 +7,10 @@ import ./type-erasure.bend as E
 import ./eval.bend as V
 import ./wasm.bend as W
 
+law abstract_identity:
+  for index: U32
+  {E.type_id(T.Bound{index}) == 4294967295 : U32}
+
 law nominal_identity:
   for +index: U32
   {E.type_id(T.Family{index}) == index : U32}

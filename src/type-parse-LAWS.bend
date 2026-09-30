@@ -36,4 +36,3 @@ law spaced_quantity:
   for gap: {P.glued(token,value) == False{} : Bool}
   {P.read_quantity(token,Con{value,rest})
     == Fail{S.Unsupported{"parse","spacing",S.at(value)}} : Result<S.Error,P.Parsed>}
-

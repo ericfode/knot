@@ -4,8 +4,10 @@ import ./core.bend as C
 import ./types.bend as T
 import ./generic-catalog.bend as G
 
+# Catalog indices are bounded below 256; 0xffffffff marks an abstract signature.
 def type_id(typ: T.Expr) -> U32:
   match typ:
+    case T.Bound{index}: 4294967295
     case T.Family{index}: index
     case T.Apply{function,argument}: type_id(function)
     case _: 0

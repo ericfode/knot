@@ -35,4 +35,3 @@ law pattern_order:
   for later: {G.visible(token,G.declaration(reference)) == False{} : Bool}
   {G.pattern_constructor(families,token)
     == Fail{S.Invalid{"check","unknown-constructor",S.at(token)}} : Result<S.Error,G.ConstructorRef>}
-

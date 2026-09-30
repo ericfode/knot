@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import datetime
+from concurrent.futures import ThreadPoolExecutor
 import hashlib
 import json
 import os
@@ -10,6 +11,7 @@ from pathlib import Path
 import re
 import shutil
 import subprocess
+import tempfile
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -20,6 +22,7 @@ HOST = ROOT / 'scripts/run-wasm.mjs'
 PROFILE = '--profile=knot-fields-wasm-1'
 COMPILE = ROOT / 'tests/compiler-fields-wasm/compile.bend'
 ABI_EXPECTATIONS = HERE / 'abi-expectations.json'
+HOST_EXPECTATIONS = HERE / 'host-boundaries/host-expectations.json'
 ABI_HOST = BUILD / 'abi.mjs'
 ABI_SOURCE = '''import fs from 'node:fs/promises';
 const [path, ...names] = process.argv.slice(2);
@@ -45,7 +48,7 @@ try {
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
            HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
            HERE / 'def-references', HERE / 'type-level-names', HERE / 'marked-binders',
-           HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps')
+           HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps', HERE / 'host-boundaries')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend', 'src/generic-catalog-PROOF.bend',
           'src/type-parse-PROOF.bend')
@@ -133,14 +136,21 @@ MUTANTS = (
     {'name': 'term-token-gap-glued', 'file': 'parse.bend',
      'old': 'T.glued(left,right)', 'new': 'True{}',
      'witness': 'arrow-gap-generic', 'phase': 'check',
+     'also_witnesses': ['arrow-gap-typed-result', 'term-brace-gap-generic',
+                        'pattern-brace-gap-generic', 'arrow-gap-monomorphic',
+                        'term-brace-gap-monomorphic', 'pattern-brace-gap-monomorphic'],
      'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'abstract-type-zero', 'file': 'type-erasure.bend',
+     'old': 'case T.Bound{index}: 4294967295', 'new': 'case T.Bound{index}: 0',
+     'witness': 'abstract-entry', 'phase': 'host', 'entry': 'identity', 'ordinals': [1],
+     'actual': {'exit': 0, 'stdout': 'Evaluated\t0\t1\tGreen{}\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
                 'def-reference-free', 'type-level-definition-unknown', 'marked-binder-quantity',
                 'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued',
-                'term-token-gap-glued'}
+                'term-token-gap-glued', 'abstract-type-zero'}
 
 
 def require(condition, detail):
@@ -172,6 +182,70 @@ def successful(argv, timeout=60):
     result = run(argv, timeout)
     require(result['exit'] == 0 and result['stderr'] == '', result)
     return result
+
+
+def build(entry, executable):
+    """Reuse only byte-verified builds of this entry, sources and host toolchain."""
+    cache = BUILD / 'build-cache'
+    cache.mkdir(exist_ok=True)
+    library = Path(ENV.get('BEND_LIB', str(Path.home() / '.bend/lib')))
+    sources = set((ROOT / 'src').glob('*.bend')) | set(entry.parent.glob('*.bend')) | {entry, COMPILE}
+    sources.update((ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2' / name)
+                   for name in ('main.ts', 'bend.ts', 'comp.ts', 'base.bend'))
+    for package in library.glob('0x*'):
+        sources.update(p for p in package.rglob('*') if p.is_file() and
+                       p.suffix in ('.bend', '.c', '.h', '.ts', '.js', '.wasm') and
+                       not any(part == '.env' or part.startswith('.env.') for part in p.parts))
+    native = executable.suffix != '.js'
+    identity = {'entry': str(entry), 'native': native,
+                'sources': {str(p): digest(p) for p in sorted(sources)},
+                'bun': successful(['bun', '--version'])['stdout'],
+                'host': {k: ENV.get(k) for k in ('CC', 'SDKROOT', 'DEVELOPER_DIR')}}
+    if native:
+        identity['clang'] = successful([ENV.get('CC', 'clang'), '--version'])['stdout']
+    key = hashlib.sha256(json.dumps(identity, sort_keys=True).encode()).hexdigest()
+    artifact, receipt = cache / key, cache / (key + '.json')
+    command = [*SEED, entry, '-o', executable]
+    if artifact.is_file() and receipt.is_file():
+        saved = json.loads(receipt.read_text())
+        if saved['sha256'] == digest(artifact):
+            shutil.copy2(artifact, executable)
+            return {**saved['result'], 'argv': [str(x) for x in command], 'cached': True}
+    result = successful(command, timeout=120)
+    with tempfile.NamedTemporaryFile(dir=cache, delete=False) as temporary:
+        staging = Path(temporary.name)
+    shutil.copy2(executable, staging)
+    staging.replace(artifact)
+    receipt.write_text(json.dumps({'sha256': digest(artifact), 'result': result}) + '\n')
+    return {**result, 'cached': False}
+
+
+def host_controls(rows):
+    controls = json.loads(HOST_EXPECTATIONS.read_text())['controls']
+    indexed = {row['case']['name']: row for row in rows}
+    require(controls, 'nonempty host controls')
+    for control in controls:
+        require(indexed[control['case']]['case']['knot']['require'] == 'agree', control)
+        require(control['exit'] == 5 and control['diagnostic'] ==
+                'HostFailure\tinvoke\tabstract-signature\n', control)
+    return controls
+
+
+def host_result(actual, control):
+    require(actual['exit'] == control['exit'] and actual['stdout'] == ''
+            and actual['stderr'] == control['diagnostic'], (control, actual))
+
+
+def host_observations(rows, lanes):
+    indexed = {row['case']['name']: row for row in rows}
+    observations = []
+    for control in host_controls(rows):
+        for lane, commands in lanes.items():
+            actual = run([*commands['eval'], indexed[control['case']]['source'],
+                          control['entry'], 1048576, *control['ordinals']])
+            host_result(actual, control)
+            observations.append({'control': control, 'lane': lane, 'result': actual})
+    return observations
 
 
 def checked(result):
@@ -343,7 +417,7 @@ def observe_literal(actual, expected):
 
 def mutation(spec, rows, controls, sources=None):
     name, phase = spec['name'], spec['phase']
-    require(phase in ('check', 'eval', 'wasm', 'abi'), (name, 'mutation phase'))
+    require(phase in ('check', 'eval', 'wasm', 'abi', 'host'), (name, 'mutation phase'))
     row = rows[spec['witness']]
     directory = BUILD / name
     directory.mkdir(exist_ok=True)
@@ -357,7 +431,7 @@ def mutation(spec, rows, controls, sources=None):
         entry = directory / 'fields-compile.bend'
         entry.write_text(COMPILE.read_text().replace('../../src/', './'))
     else:
-        entry = directory / f'{phase}-cli.bend'
+        entry = directory / f'{"eval" if phase == "host" else phase}-cli.bend'
     typecheck = successful([*SEED, entry, '--check-only'])
     require(typecheck['stdout'] == 'All terms check.\n', typecheck)
     record = {**spec, 'source_sha256': digest(target), 'typecheck': typecheck, 'lanes': {}}
@@ -367,6 +441,12 @@ def mutation(spec, rows, controls, sources=None):
                     and control['export'] in spec['exports']]
         require(len(selected) == len(spec['exports']), (name, 'ABI witness must be frozen'))
         record['expected'] = selected
+    elif phase == 'host':
+        selected = [control for control in host_controls(list(rows.values()))
+                    if control['case'] == spec['witness'] and control['entry'] == spec['entry']
+                    and control['ordinals'] == spec['ordinals']]
+        require(len(selected) == 1, (name, 'host witness must be frozen'))
+        record['expected'] = selected[0]
     elif phase != 'check':
         calls = [call for call in row['reference']['calls'] if call['entry'] == spec['entry']
                  and call['ordinals'] == spec['ordinals']]
@@ -377,13 +457,15 @@ def mutation(spec, rows, controls, sources=None):
         record['expected'] = row['case']['knot']
     for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
         executable = directory / ('mutant' + suffix)
-        built = successful([*SEED, entry, '-o', executable], timeout=120)
+        built = build(entry, executable)
         command = [*runtime, executable]
         item = {'build': built, 'sha256': digest(executable)}
         if phase == 'check':
             actual = run([*command, row['source']])
         elif phase == 'eval':
             actual = run([*command, row['source'], call['entry'], 1048576, *call['ordinals']])
+        elif phase == 'host':
+            actual = run([*command, row['source'], spec['entry'], 1048576, *spec['ordinals']])
         else:
             output = directory / f'{lane}.wasm'
             output.write_bytes(MARKER)
@@ -406,12 +488,26 @@ def mutation(spec, rows, controls, sources=None):
                 evaluated(actual, call)
             elif phase == 'wasm':
                 wasm_result(actual, call, output)
+            elif phase == 'host':
+                host_result(actual, selected[0])
             else:
                 abi_result(actual, selected, output)
         except AssertionError:
             item['outcome'] = 'semantic-kill'
         else:
             raise AssertionError((name, lane, 'mutant survived'))
+        item['additional_kills'] = []
+        for witness in spec.get('also_witnesses', []):
+            twin = rows[witness]
+            observed = run([*command, twin['source']])
+            observe_literal(observed, spec['actual'])
+            try:
+                rejection(observed, twin['case']['knot'])
+            except AssertionError:
+                item['additional_kills'].append({'witness': witness, 'actual': observed,
+                                                 'outcome': 'semantic-kill'})
+            else:
+                raise AssertionError((name, lane, witness, 'mutant survived'))
         record['lanes'][lane] = item
     return record
 
@@ -439,8 +535,11 @@ def coverage(record):
         'abi_arity_observations': sum(len(row['controls']) for row in record['abi']),
         'execution_lanes': len({lane for row in fixtures for lane in row['lanes']}),
         'proof_entries': len(record['proofs']),
+        'host_refusals': len(record.get('host', [])),
         'mutants': len(record['mutants']),
         'mutant_lane_kills': sum(len(row['lanes']) for row in record['mutants']),
+        'additional_mutant_witness_kills': sum(len(lane.get('additional_kills', []))
+                                              for row in record['mutants'] for lane in row['lanes'].values()),
     }
 
 
@@ -449,17 +548,18 @@ def main():
     RECEIPT.parent.mkdir(exist_ok=True)
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'profile': 'knot-generics-1',
-              'fixtures': [], 'proofs': [], 'mutants': [], 'abi': []}
+              'fixtures': [], 'proofs': [], 'mutants': [], 'abi': [], 'host': []}
     try:
         inputs = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md',
-                  ROOT / 'src/CONTRACT.json', HOST, COMPILE, ABI_EXPECTATIONS, Path(__file__)]
+                  ROOT / 'src/CONTRACT.json', HOST, COMPILE, ABI_EXPECTATIONS, HOST_EXPECTATIONS, Path(__file__)]
         for directory in SOURCES:
             inputs += [directory / 'expectations.json', directory / 'regen.py',
                        *sorted((directory / 'fixtures').glob('*.bend'))]
         record['inputs'] = {str(path.relative_to(ROOT)): digest(path) for path in inputs}
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3', 'wasm2wat')}
-        record['reference'] = [successful(['python3', directory / 'regen.py']) for directory in SOURCES]
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            record['reference'] = list(pool.map(lambda directory: successful(['python3', directory / 'regen.py']), SOURCES))
         rows = corpus()
         controls = abi_controls(rows)
         ABI_HOST.write_text(ABI_SOURCE)
@@ -470,26 +570,32 @@ def main():
             require(result['stdout'] == 'All terms check.\n', result)
             record['proofs'].append({'entry': proof, 'result': result})
         record['builds'], lanes = [], {}
+        jobs = []
         for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
             lanes[lane] = {}
             for phase in ('check', 'eval', 'compile'):
                 entry = COMPILE if phase == 'compile' else ROOT / f'src/{phase}-cli.bend'
                 executable = BUILD / (phase + suffix)
-                built = successful([*SEED, entry, '-o', executable], timeout=120)
-                record['builds'].append({'lane': lane, 'phase': phase,
-                                         'result': built, 'sha256': digest(executable)})
                 lanes[lane][phase] = [*runtime, executable]
+                jobs.append((lane, phase, entry, executable))
+        def build_cli(job):
+            lane, phase, entry, executable = job
+            return {'lane': lane, 'phase': phase, 'result': build(entry, executable),
+                    'sha256': digest(executable)}
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            record['builds'] = list(pool.map(build_cli, jobs))
         for row in rows:
             record['fixtures'].append(fixture(row, lanes))
         failed = [(row['name'], row['status']) for row in record['fixtures']
                   if row['status'] not in ('agreed', 'rejected', 'unsupported')]
         require(not failed, ('fixture failures', failed))
         record['abi'] = abi_observations(controls, lanes)
+        record['host'] = host_observations(rows, lanes)
         require({spec['name'] for spec in MUTANTS} == MUTANT_NAMES and len(MUTANTS) == len(MUTANT_NAMES),
                 'Each required semantic mutant must be configured exactly once')
         indexed = {row['case']['name']: row for row in rows}
-        for spec in MUTANTS:
-            record['mutants'].append(mutation(spec, indexed, controls))
+        with ThreadPoolExecutor(max_workers=2) as pool:
+            record['mutants'] = list(pool.map(lambda spec: mutation(spec, indexed, controls), MUTANTS))
         require(all(digest(ROOT / path) == expected for path, expected in record['inputs'].items()),
                 'Inputs changed during gate')
         record['status'] = 'passed'

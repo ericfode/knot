@@ -79,7 +79,7 @@ Full stdout/stderr logs, `snapshot.json`, `dependencies.json`, normalized
 receipts, and unified semantic diffs remain alongside the summary. Scratch
 sources, build products, and dependency caches are removed by default;
 `--keep-scratch` retains them. `--timeout` sets a per-gate wall limit (default
-900 seconds); timeout kills that process group and records `exhausted`.
+1,800 seconds); timeout kills that process group and records `exhausted`.
 
 To compare two runs of unchanged inputs, compare their entire `normalized`
 objects, or byte-compare their `normalized/` receipt trees. Real timings and run
@@ -236,7 +236,10 @@ recorded host/toolchain, not promised equal across hosts.
 
 Extend the gate/output inventory and dependency edges when a later increment
 adds a gate or new receipt family. Extend count extraction with that gate's
-independent completion record. Keep the compiler's Invalid, Unsupported,
+independent completion record. The generics gate validates and records its own
+detailed coverage; the shared runner reads its fixture and mutant array lengths
+with the same declarative checks as the other compiler gates, without importing
+or executing the generics module. Keep the compiler's Invalid, Unsupported,
 Exhausted, host and internal observations intact inside the retained evidence;
 wrapper process failures are a separate summary status, never a judgment of
 the source language.
