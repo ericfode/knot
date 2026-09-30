@@ -12,6 +12,9 @@ import re
 import shutil
 import subprocess
 import tempfile
+import sys
+
+from prechecks.check import replay as precheck_replay, rows as precheck_rows
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -51,7 +54,7 @@ SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-bo
            HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps', HERE / 'host-boundaries')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend', 'src/generic-catalog-PROOF.bend',
-          'src/type-parse-PROOF.bend')
+          'src/type-parse-PROOF.bend', 'src/parse-order-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 # Harness hang guard only, as in the other gates; the runner scales it under load.
 TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
@@ -144,13 +147,37 @@ MUTANTS = (
      'old': 'case T.Bound{index}: 4294967295', 'new': 'case T.Bound{index}: 0',
      'witness': 'abstract-entry', 'phase': 'host', 'entry': 'identity', 'ordinals': [1],
      'actual': {'exit': 0, 'stdout': 'Evaluated\t0\t1\tGreen{}\n'}},
+    {'name': 'late-pattern-parsed', 'file': 'parse-cli.bend',
+     'old': 'O.validate(4096n,value)', 'new': 'Done{Unit{}}',
+     'witness': 'late-box-pattern', 'also_witnesses': ['late-flag-pattern'], 'phase': 'parse',
+     'actual': {'exit': 0, 'contains': 'Parsed\t'}},
+    {'name': 'tilde-type-unsupported', 'file': 'type-parse.bend',
+     'old': 'S.matches(h,"~"),u =>', 'new': 'False{},u =>',
+     'witness': 'tilde-type-argument', 'phase': 'check',
+     'actual': {'exit': 3, 'diagnostic': 'Unsupported\tparse\ttype-expression\t'}},
+    {'name': 'double-equals-unsupported', 'file': 'parse.bend',
+     'old': 'Bool.or(S.matches(h,"="),\n        Bool.or(S.matches(h,"\\n"),',
+     'new': 'Bool.or(False{},\n        Bool.or(S.matches(h,"\\n"),',
+     'witness': 'double-binding-equals', 'phase': 'check',
+     'actual': {'exit': 3, 'diagnostic': 'Unsupported\tparse\tterm-form\t'}},
+    {'name': 'multiline-result-invalid', 'file': 'parse.bend',
+     'old': 'Bool.or(S.matches(colon,":"),\n              Bool.and(S.matches(colon,"\\n"),starts(S.skip_lines(Con{colon,body}),":")))',
+     'new': 'S.matches(colon,":")',
+     'witness': 'multiline-result-control', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tfunction-result\t'}},
+    {'name': 'constructor-event-unordered', 'file': 'parse-order.bend',
+     'old': 'U32.is_lt(p,r)', 'new': 'True{}',
+     'witness': 'late-box-pattern', 'also_witnesses': ['late-flag-pattern'], 'phase': 'parse',
+     'actual': {'exit': 0, 'contains': 'Parsed\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
                 'def-reference-free', 'type-level-definition-unknown', 'marked-binder-quantity',
                 'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued',
-                'term-token-gap-glued', 'abstract-type-zero'}
+                'term-token-gap-glued', 'abstract-type-zero', 'late-pattern-parsed',
+                'tilde-type-unsupported', 'double-equals-unsupported', 'multiline-result-invalid',
+                'constructor-event-unordered'}
 
 
 def require(condition, detail):
@@ -417,7 +444,7 @@ def observe_literal(actual, expected):
 
 def mutation(spec, rows, controls, sources=None):
     name, phase = spec['name'], spec['phase']
-    require(phase in ('check', 'eval', 'wasm', 'abi', 'host'), (name, 'mutation phase'))
+    require(phase in ('parse', 'check', 'eval', 'wasm', 'abi', 'host'), (name, 'mutation phase'))
     row = rows[spec['witness']]
     directory = BUILD / name
     directory.mkdir(exist_ok=True)
@@ -447,20 +474,20 @@ def mutation(spec, rows, controls, sources=None):
                     and control['ordinals'] == spec['ordinals']]
         require(len(selected) == 1, (name, 'host witness must be frozen'))
         record['expected'] = selected[0]
-    elif phase != 'check':
+    elif phase not in ('parse', 'check'):
         calls = [call for call in row['reference']['calls'] if call['entry'] == spec['entry']
                  and call['ordinals'] == spec['ordinals']]
         require(len(calls) == 1, (name, 'mutant witness must be one frozen call'))
         call = calls[0]
         record['expected'] = call['result']
     else:
-        record['expected'] = row['case']['knot']
+        record['expected'] = row['case']['parse'] if phase == 'parse' else row['case']['knot']
     for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
         executable = directory / ('mutant' + suffix)
         built = build(entry, executable)
         command = [*runtime, executable]
         item = {'build': built, 'sha256': digest(executable)}
-        if phase == 'check':
+        if phase in ('parse', 'check'):
             actual = run([*command, row['source']])
         elif phase == 'eval':
             actual = run([*command, row['source'], call['entry'], 1048576, *call['ordinals']])
@@ -479,7 +506,9 @@ def mutation(spec, rows, controls, sources=None):
         observe_literal(actual, spec['actual'])
         require(actual['exit'] in (0, 2, 3), (name, 'host failure or exhaustion is not a semantic kill'))
         try:
-            if phase == 'check':
+            if phase == 'parse':
+                observe_literal(actual, row['case']['parse'])
+            elif phase == 'check':
                 if row['case']['knot']['require'] == 'agree':
                     checked(actual)
                 else:
@@ -502,7 +531,10 @@ def mutation(spec, rows, controls, sources=None):
             observed = run([*command, twin['source']])
             observe_literal(observed, spec['actual'])
             try:
-                rejection(observed, twin['case']['knot'])
+                if phase == 'parse':
+                    observe_literal(observed, twin['case']['parse'])
+                else:
+                    rejection(observed, twin['case']['knot'])
             except AssertionError:
                 item['additional_kills'].append({'witness': witness, 'actual': observed,
                                                  'outcome': 'semantic-kill'})
@@ -515,6 +547,7 @@ def mutation(spec, rows, controls, sources=None):
 def coverage(record):
     fixtures = record['fixtures']
     lane_rows = [lane for row in fixtures for lane in row['lanes'].values()]
+    probes = record.get('prechecks', {})
     return {
         'fixtures': len(fixtures), 'seed_calls': sum(row['seed_calls'] for row in fixtures),
         'seed_valid': sum(row['requirement']['require'] != 'reject' for row in fixtures),
@@ -540,6 +573,11 @@ def coverage(record):
         'mutant_lane_kills': sum(len(row['lanes']) for row in record['mutants']),
         'additional_mutant_witness_kills': sum(len(lane.get('additional_kills', []))
                                               for row in record['mutants'] for lane in row['lanes'].values()),
+        'precheck_fixtures': len(probes.get('fixtures', [])),
+        **{'precheck_' + key: probes.get(key, 0) for key in (
+            'seed_parse_observations', 'seed_check_observations', 'seed_runs',
+            'lane_observations', 'preserved_artifacts', 'evaluator_agreements',
+            'wasm_agreements', 'byte_identical_modules')},
     }
 
 
@@ -555,6 +593,9 @@ def main():
         for directory in SOURCES:
             inputs += [directory / 'expectations.json', directory / 'regen.py',
                        *sorted((directory / 'fixtures').glob('*.bend'))]
+        inputs += [HERE / 'prechecks' / name for name in
+                   ('expectations.json', 'seed-parse.ts', 'check.py', 'README.md', 'SPEC.md')]
+        inputs += sorted((HERE / 'prechecks/fixtures').glob('*.bend'))
         record['inputs'] = {str(path.relative_to(ROOT)): digest(path) for path in inputs}
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3', 'wasm2wat')}
@@ -573,7 +614,7 @@ def main():
         jobs = []
         for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
             lanes[lane] = {}
-            for phase in ('check', 'eval', 'compile'):
+            for phase in ('parse', 'check', 'eval', 'compile'):
                 entry = COMPILE if phase == 'compile' else ROOT / f'src/{phase}-cli.bend'
                 executable = BUILD / (phase + suffix)
                 lanes[lane][phase] = [*runtime, executable]
@@ -589,11 +630,13 @@ def main():
         failed = [(row['name'], row['status']) for row in record['fixtures']
                   if row['status'] not in ('agreed', 'rejected', 'unsupported')]
         require(not failed, ('fixture failures', failed))
+        record['prechecks'] = precheck_replay(sys.modules[__name__], lanes)
         record['abi'] = abi_observations(controls, lanes)
         record['host'] = host_observations(rows, lanes)
         require({spec['name'] for spec in MUTANTS} == MUTANT_NAMES and len(MUTANTS) == len(MUTANT_NAMES),
                 'Each required semantic mutant must be configured exactly once')
         indexed = {row['case']['name']: row for row in rows}
+        indexed.update({row['case']['name']: row for row in precheck_rows(sys.modules[__name__])[1]})
         with ThreadPoolExecutor(max_workers=2) as pool:
             record['mutants'] = list(pool.map(lambda spec: mutation(spec, indexed, controls), MUTANTS))
         require(all(digest(ROOT / path) == expected for path, expected in record['inputs'].items()),

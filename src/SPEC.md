@@ -94,6 +94,8 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | Parsed constructor pattern followed by `=` (next token neither `=` nor `>`) in a body | `parse` | `destructuring-binding` |
 | Simple parameter type followed by `-`, `(`, `&`, `\|` or `[` | `parse` | `parameter-type` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
+| `Name<` entering an unmodeled type-argument expression (the diagnostic locates the first argument token) | `parse` | `type-expression` |
+| A gap inside `->`, or between a term/pattern name and `{` (the diagnostic locates the second token) | `parse` | `spacing` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
@@ -116,8 +118,11 @@ superseded, like the retired `generic-datatype` pin. `return_type_application`
 now states that `-> Name<` enters the typed-result grammar;
 `binding_type_application` is retired. `parameter_type_application` still
 holds for `P.parameter`, which the generic parameter path now bypasses for
-`Name<`. A malformed argument after `Name<`
-reports `Unsupported parse type-expression` at that argument. `parameter-type`
+`Name<`. A malformed argument after `Name<` retains the authorized prefix-only
+`Unsupported parse type-expression` pin at that argument, except for the
+recognized invalid `~` term token. The recognized prefix and the diagnostic
+token are distinct; equality with the seed's error offset alone does not
+establish that no prefix was recognized. `parameter-type`
 also covers `Type`, `Kind(..)` or `Quant` as the type of a non-binder
 parameter. `generic_header` states parser acceptance of a complete generic
 header; its filled proof is a parser equation, not a checker soundness theorem.
@@ -146,6 +151,14 @@ is Invalid `unknown-constructor`. The monomorphic checker still resolves such a
 pattern against the whole book; the seed rejects it. The default enum emitter still rejects fielded books; the
 fields-profile driver compiles generic families. Evidence, boundaries and
 proofs are in [`tests/compiler-generics/`](../tests/compiler-generics/README.md).
+
+The parse CLI additionally checks constructor declaration order before printing
+`Parsed`: only patterns require previously declared constructors, while term
+constructors retain forward references. `parse.bend::parse` remains the syntax
+tree builder; the checker retains its own generic pattern-order validation and
+its existing check-phase diagnostics. This does not repair the inherited
+monomorphic checker residual described above. Result colons may follow line
+breaks for both named and applied types, as in the seed.
 
 ## Binding and quantity semantics
 
@@ -359,3 +372,9 @@ parser-soundness obligations. Those obligations remain open, with the frozen
 application corpus and seed/evaluator/Wasm agreement as finite evidence
 ([generic law review](../tests/compiler-generics/LAW_REVIEW.md)). Subject
 relocation preserves every moved statement and proof verbatim.
+
+The parse CLI's declaration-availability traversal has three filled boundary
+laws and seed-frozen registered/unregistered witnesses. General traversal
+refinement to the seed's declaration-event parser remains open. The raw AST
+builder, parse observation and generic checker are distinct boundaries; these
+laws do not establish monomorphic checker soundness or general parser soundness.

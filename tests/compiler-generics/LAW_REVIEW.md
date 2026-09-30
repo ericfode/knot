@@ -75,3 +75,19 @@ refusal; nine newly frozen spacing fixtures preserve declaration-brace controls.
 `abstract_identity` reserves an abstract runtime-signature marker, with four
 literal evaluator host refusals and unchanged closed seed calls. General parser
 soundness and generic application acceptance remain open proof obligations.
+
+Round 6 adds an explicit parse-observation constructor set, with
+`parse-order.bend::{known,constructors,run,validate}`. The registered and unseen
+pattern guard laws quantify over the visible set, token, arguments and remaining
+fuel; the zero-budget law covers refusal. Declared Box and the two late-pattern
+fixtures inhabit the guard partitions. The complete proof entry has no holes.
+The AST traversal's general correspondence with seed declaration events remains
+an open proof obligation; the boundary laws and frozen CLI witnesses are finite
+evidence, not its discharge. Five new mutants restore the false-Invalid layout,
+false-Unsupported malformed tokens and unsound parse observation. Exact source
+identities, unchanged pins and dispositions are in [PRECHECKS.md](PRECHECKS.md)
+and the generics receipt's `prechecks` section. The parse CLI guard does not
+repair the inherited monomorphic checker residual. Visibility uses original
+source offsets; the existing reverse-sequence mutant must still reach its
+unchanged Parsed observation. The additional unordered-event mutant attacks
+that offset comparison directly.

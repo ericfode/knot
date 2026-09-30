@@ -189,7 +189,8 @@ def term_failure(+ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
     case Con{+h,t}:
       S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(h,")"),Bool.or(S.matches(h,"}"),
-        Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>")))))),u =>
+        Bool.or(S.matches(h,":"),Bool.or(S.matches(h,","),Bool.or(S.matches(h,"="),
+        Bool.or(S.matches(h,"\n"),S.matches(h,"<eof>"))))))),u =>
           invalid(ts,"expected-term"),u => unsupported(ts,"term-form"))
     case _: invalid(ts,"unexpected-end")
 
@@ -328,9 +329,12 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),Bool.and(S.identifier(typ),S.matches(colon,":")))),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),
+            Bool.and(S.identifier(typ),Bool.or(S.matches(colon,":"),
+              Bool.and(S.matches(colon,"\n"),starts(S.skip_lines(Con{colon,body}),":")))))),u =>
             adjacent(dash,arrow,u =>
-              then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest))),u =>
+              S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(Con{colon,body}),":"),start =>
+                then(run(n,Body{0},start),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)))),u =>
           S.choose(Result<S.Error,Parsed>,typed_result(tokens),u =>
             run(n,TypedResult{name,S.Sequence{params}},tokens),u => invalid(tokens,"function-result")))
         case _: invalid(tokens,"function-result")
@@ -341,7 +345,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+dash,Con{+arrow,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),S.matches(arrow,">")),u =>
             adjacent(dash,arrow,u => type_then(T.expression(n,tail),typ => rest =>
-              S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
+              S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),":"),body =>
                 then(run(n,Body{0},body),value => end => wrap_typed_function(name,params,typ,value,end))))),u =>
             invalid(tokens,"function-result"))
         case _: invalid(tokens,"function-result")

@@ -1161,3 +1161,27 @@ through erasure, and test exported host entries separately from closed internal
 calls. Keep laws grouped by subject with their proof import closure. The
 [round-5 report](../tests/compiler-generics/README.md#review-round-5) records the
 full deterministic run, exact coverage and remaining coordinator decisions.
+
+### 2026-09-29 — generics precheck replay and diagnostic contracts
+
+The executor conditions conflate the diagnostic span with the recognized prefix
+and impose a new alphabet on established diagnostic codes. The independent
+[round-6 replay](../tests/compiler-generics/PRECHECKS.md) fixes the actual layout,
+malformed-token and constructor-order defects and records six disputed condition
+fingerprints against unchanged pins. The parse-observation visibility guard has
+three filled boundary laws; general traversal refinement remains open.
+
+A direct frontend run omitted `KNOT_GATE_TIMEOUT_SCALE=4` and exhausted its
+30-second native-build guard under load. The raw failure is retained in ignored
+storage. Prevention: carry the runner's documented scale into direct checks;
+compare diagnostic fields and recognized prefixes separately from error-token
+locations. No live semantic or style judgment was requested or claimed.
+
+The unchanged frontend gate also caught two integration errors before the full
+run: accepting any newline after a result changed the missing-colon diagnostic,
+and traversing a mutated AST in list order changed reverse-sequence's frozen
+observation. Both are corrected without changing expectations: require the
+actual colon, and derive constructor visibility from original source offsets.
+The first census test run overlapped harness edits and rejected stale generated
+hashes (73/75); after regeneration it passes 75/75. Preserve literal controls
+and complete mutations before regenerating inventories and testing them.

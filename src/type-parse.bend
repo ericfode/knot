@@ -125,7 +125,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
               then(run(n,Items{},body),args => rest =>
                 then(apply(h,quantity,args,rest),value => end => run(n,Tail{value},end)))),u =>
             run(n,Tail{S.Variable{h}},t)),u =>
-            Fail{S.Unsupported{"parse","type-expression",S.at(h)}})))))))
+          S.choose(Result<S.Error,Parsed>,S.matches(h,"~"),u =>
+            invalid(tokens,"type-expression"),u =>
+            Fail{S.Unsupported{"parse","type-expression",S.at(h)}}))))))))
         case _: invalid(tokens,"type-expression")
     case 1n+ +n Tail{+value}:
       match tokens:

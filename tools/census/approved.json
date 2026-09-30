@@ -3750,6 +3750,10 @@
           "file": "src/parse.bend"
         },
         {
+          "module": "./parse-order.bend",
+          "file": "src/parse-order.bend"
+        },
+        {
           "module": "./diagnostic.bend",
           "file": "src/diagnostic.bend"
         }
@@ -3771,10 +3775,12 @@
         ],
         "src/parse-cli.bend::show_parse:definition": [
           "calls",
+          "captures",
           "constructors",
           "fields",
           "generics",
           "io",
+          "lambdas",
           "literals.nat",
           "matches",
           "patterns.nested",
@@ -10551,6 +10557,245 @@
           "quantities.arguments",
           "quantities.reusable",
           "rewrites",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-order-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./parse-order.bend",
+          "file": "src/parse-order.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-order-LAWS.bend::unseen_pattern:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-order-LAWS.bend::registered_pattern:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-order-LAWS.bend::no_order_budget:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-order-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./parse-order.bend",
+          "file": "src/parse-order.bend"
+        },
+        {
+          "module": "./parse-order-LAWS.bend",
+          "file": "src/parse-order-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-order-PROOF.bend::L.unseen_pattern:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
+          "types.base"
+        ],
+        "src/parse-order-PROOF.bend::L.registered_pattern:law_fill": [
+          "calls",
+          "captures",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "rewrites",
+          "types.base"
+        ],
+        "src/parse-order-PROOF.bend::L.no_order_budget:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-order.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-order.bend::Mode:datatype": [
+          "fields",
+          "generics",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base",
+          "types.data"
+        ],
+        "src/parse-order.bend::earlier:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/parse-order.bend::known:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-order.bend::constructors:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-order.bend::declarations:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-order.bend::run:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-order.bend::validate:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ]
       }
