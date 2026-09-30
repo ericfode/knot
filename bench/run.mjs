@@ -8,6 +8,7 @@ import { metric } from './lib/stats.mjs';
 import { loadSuite, positiveInteger } from './lib/suite.mjs';
 import { ROOT, LOCAL, SEED_COMMAND, run, observe, fileHash, fingerprint, sourceHashes, harnessHashes } from './lib/system.mjs';
 import { outcome, assertSameOutcome } from './lib/outcome.mjs';
+import { receiptJSON } from './lib/receipt.mjs';
 
 const LANES = ['native', 'bun'];
 const command = (lane, file) => lane === 'native' ? [file] : ['bun', '--no-env-file', file];
@@ -243,7 +244,7 @@ export function benchmark(options = {}) {
     result.failure = { phase, message: error.message, outcome: error.outcome ?? { classification: 'InternalFailure', phase: 'harness', code: 'evidence' } };
   } finally {
     result.finishedAt = new Date().toISOString();
-    writeFileSync(output, json(result));
+    writeFileSync(output, receiptJSON(result));
     console.log(output);
   }
   if (result.status !== 'passed') throw new Error(`benchmark invalid (${phase}): ${result.failure.message}`);

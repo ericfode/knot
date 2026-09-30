@@ -17,6 +17,18 @@ The default suite is **hillclimb**. Baselines live under
 `.local/bench/baselines/NAME.json`; the comparison accepts a name or a JSON path.
 Existing evidence is never overwritten. Builds, generated workloads, modules,
 worker requests and full raw results stay in ignored `.local/bench/`.
+Persisted results and verification receipts use `$ROOT` for the checkout,
+`.toolchain` for the seed directory, `$BEND_LIB` for installed packages and
+`$NODE` for the Node executable. Execution and worker requests retain real
+paths. Gate completion text names the exported tree as `$ROOT`, omitting its
+temporary `.local/gates` directory. Samples, run IDs, hashes and diagnostics
+are retained. Historical receipts can be normalized with explicit owned paths:
+
+```sh
+node bench/normalize-receipts.mjs bench/receipts/hillclimb-before.json.gz
+node bench/normalize-receipts.mjs --check bench/receipts/hillclimb-before.json.gz
+```
+
 See [HILLCLIMB.md](HILLCLIMB.md) for the procedure and a measured comparison.
 The [extension contract](SPEC.md) and [literal expectations](expectations.json)
 were fixed before implementing the new workloads.

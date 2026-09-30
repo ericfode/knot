@@ -123,3 +123,48 @@ npm run -s lint:style -- --preflight --json --task=bench/fixtures/refresh/CONTRA
 
 No environment file was read or copied, no provider or live Perch call was
 made, and no other worktree was modified. Shared receipts remain coordinator-owned.
+
+## C4 receipt path repair
+
+The pre-review's five executor conditions were confirmed and repaired. Receipt
+serialization now replaces checkout, seed, package-cache and Node installation
+paths with the tokens documented in [README.md](README.md). Gate completion
+paths identify the exported tree directly, without its temporary run directory.
+The helper is used by benchmark results and both verification receipt writers;
+the explicit-path migration command is `node bench/normalize-receipts.mjs`.
+Execution paths and worker requests remain usable local paths.
+
+An independent recursive comparison of the five original and migrated JSON
+payloads checked identical keys, array lengths and every non-path value. Only
+the following string values changed during migration:
+
+| Receipt | C4 fingerprint | Changed strings | Host hits before → after |
+| --- | --- | ---: | ---: |
+| hillclimb-after.json.gz | 78ee9daa6c137bc784d7 | 4,296 | 8,590 → 0 |
+| hillclimb-before.json.gz | a33a7130eaa41123721c | 4,296 | 8,590 → 0 |
+| refresh-edges.json | 3c4245db720aaf29ddae | 336 | 672 → 0 |
+| refresh-gates.json | 51c3e05fd642236be7fc | 5 | 5 → 0 |
+| validation.json | 50c103ab883f833da942 | 1 | 3 → 0 |
+
+Both historical hillclimb results still validate. Recomputing their comparison
+reproduces all **226 rows and verdicts** exactly, including the original
+regressions. The original payload hashes in `comparison.json` retain their
+meaning as hashes of the original ignored results; the normalized committed
+copies have these SHA-256 payload identities:
+
+| Receipt | Original payload SHA-256 | Portable payload SHA-256 |
+| --- | --- | --- |
+| hillclimb-before.json.gz | f0e428d8a0ed9964ec55cbbad45262306fb11879d2ad2606db4ff86a86cea90d | 1a64ebdf76f18a16a909dd09db4237dc59fe424e0686b88bbff4c87f405eb7d8 |
+| hillclimb-after.json.gz | ae7cf9e445297d6a7b71957f4c62c2644cedf8d95938fd9ac4126ba7af90b488 | e051ae0444e4534e3f06fbb10ebf8693f1c3f58368501c5da4b18d58739e45db |
+
+Four new tests check identical serialization across two checkout locations,
+unchanged execution state, prefix boundaries, temporary export paths and the
+independent C4 pattern across every benchmark receipt. Fresh `bench:verify`
+passes **57 unit tests**, the original two-lane smoke, the unchanged
+**201-program inventory / 31 measured programs / 38 runtime batches**, and
+all **four mutants in two lanes**. It regenerated the edge and verification
+receipts with the new harness identities. The **24 edge programs / 48 compiler,
+evaluator and Wasm observations / 24 byte-identical pairs** still pass.
+All 26 frozen edge-corpus files are byte-identical. `gates:verify` passes
+**18 tests**. Full registry revalidation follows this checkpoint; the gate
+results above are the preserved earlier observations.

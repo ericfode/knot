@@ -5,6 +5,7 @@ import { result } from './campaign-smoke.mjs';
 import { compileObservation } from '../run.mjs';
 import { measureWasm } from '../wasm-worker.mjs';
 import { ROOT, LOCAL, fileHash, sourceHashes, harnessHashes, run } from '../lib/system.mjs';
+import { receiptJSON } from '../lib/receipt.mjs';
 
 const manifest = 'bench/fixtures/refresh/expectations.json';
 const frozen = JSON.parse(readFileSync(path.join(ROOT, manifest), 'utf8'));
@@ -55,11 +56,11 @@ assert.deepEqual(sourceHashes(), result.environment.sourceHashes);
 assert.deepEqual(harnessHashes(), result.environment.harnessHashes);
 assert.equal(run(['git', 'rev-parse', 'HEAD']).stdout, result.environment.git.commit);
 
-writeFileSync(path.join(ROOT, 'bench/receipts/refresh-edges.json'), JSON.stringify({
+writeFileSync(path.join(ROOT, 'bench/receipts/refresh-edges.json'), receiptJSON({
   schemaVersion: 1, status: 'passed', command: 'npm run bench:verify', manifest, manifestSha256,
   seed: frozen.seed, sourceHashes: result.environment.sourceHashes, harnessHashes: result.environment.harnessHashes,
   counts: { programs: 24, frozenSeedChecks: 24, frozenSeedExecutions: 48, compilerLanes: 2,
     compilerObservations: 48, evaluatorObservations: 48, wasmBatches: 48, byteIdenticalPairs: 24 },
   note: 'Concrete differential correctness controls. These batches do not establish a performance comparison.', cases,
-}, null, 2) + '\n');
+}));
 console.log('Refresh edge gate passed: 24 new seed-frozen programs, 48 compiler/evaluator/Wasm observations, 24 byte-identical lane pairs.');
