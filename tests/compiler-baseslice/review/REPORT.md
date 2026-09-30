@@ -66,7 +66,7 @@ the proof receipt is not runtime reach.
 `review_*` counts. Its original seven fixtures, eight laws, five mutants, 31 calls
 and all frozen observations/assertions remain unchanged. The gate registry and
 all seven previously restored frozen harnesses remain unchanged. Census approval
-adds six helpers and the annotation helper's two-scrutinee match; generated source
+adds seven helpers and the annotation helper's two-scrutinee match; generated source
 manifests are current. No new compiler feature class is introduced.
 
 Reproduce the targeted runner with:
@@ -98,3 +98,18 @@ or follow-on increment actions. The refuted host-timeout finding remains retaine
 historical evidence; no host guard or program budget was changed here.
 
 Full-suite results will be recorded after this verified repair checkpoint.
+
+## Compatibility follow-up
+
+The first full run exposes a direct frozen caller in
+`tests/compiler-checker/bounds.bend`: the catalog's three-argument `parameters`
+entry must remain available. Scope tracking now lives in `parameters_in`, with
+the original entry delegating from an empty scope. The bounds entry checks under
+the seed again, and all six new helper laws still check with zero holes.
+
+Executing that entry then exposes its original shadowing witness: parameter
+names `N0`, `N1`, ... share the type name `N0`, so later annotations correctly
+stop with `Invalid check type-shadow` before the 256/257 boundary. This is the
+same confirmed finding, not a resource-limit failure. A separate seed-citing
+amendment renames these binders without changing a boundary assertion. The failed
+run and the intermediate eight-line bounds output are retained as evidence.
