@@ -1037,8 +1037,9 @@ adopt them or record its own, so that lockstep compares like with like.
   domain and the invocation, `$describable` and `$entry`). On round 6's source it reproduced the
   reviewer's 567 name for name (on the lines they have now). `python3 vm/check-core.py --study --heavy`
   runs each against the gate's own rows (the same jobs and the same `observed_wrong`, so a kill there is
-  a kill in the gate), group by group until a row shows a wrong observation or outlives its deadline, then
-  runs each survivor against the ten ceiling rows too, and writes `vm/receipts/study.json`. `--only
+  a kill in the gate), group by group until a clean row shows a wrong observation. Otherwise it records
+  the first hang or trap; a mutant with neither is a survivor. It runs each survivor against the ten
+  ceiling rows too, and writes `vm/receipts/study.json`. `--only
   NAME,NAME` runs the mutants whose names contain any of those words and writes no receipt.
 
   Review r0 found one first-kill witness moved when the timeout scale changed from 2 to 4:
@@ -1049,6 +1050,23 @@ adopt them or record its own, so that lockstep compares like with like.
   records whether the deadline or print-count guard fired. `by_group` and `by` are the first
   observations in that run, dependent on guards and scheduling; compare them with matching
   guards before attributing a difference to code. Outcome classifications remain separate.
+
+  *Review round 1 result*, with the same WAT and frozen expectations: 993 mutants in 3,585 measured
+  seconds, scale 2, 10 ordinary workers and 3 heavy mutant workers: **880 clean kills, 14 hangs,
+  27 traps, 72 survivors; 921/993 detected (92.7%)**, no crashes or unassemblable mutants, no
+  unexplained survivors or stale explanations. Every classification and all 72 explanations match
+  the earlier receipt. Heavy replay adds four clean kills and one trap. The receipt records 178
+  Timeout jobs (169 deadline, 9 print-count) and 42,486 Skipped jobs, with per-job deadlines; these
+  are job events, not mutant counts. Two clean kills retain earlier interruptions.
+
+  The one changed first witness is the same `$ctor:1919:i32.sub->i32.add@25`: still killed, now by
+  `inspection/lane:inspect-u32-snil`, after keys, describe, tags and display each time out at
+  40,000 ms and skip 46 following jobs in all. Its earlier witness was `tags/lane:tags-shape`;
+  review r0 at scale 4 found `keys/lane:keys-u32-3`. Thus the fresh killed-group counts are
+  keys 259 / tags 51 / inspection 161; the earlier run's were 259 / 52 / 160, and review r0's
+  260 / 51 / 160. The historical receipt has no interruption trace: the documented scale alone
+  does not establish equal opportunity for those earlier jobs to finish. See [REVIEW-R1.md](REVIEW-R1.md)
+  for the complete dispositions, build pins and all 22 gate counts.
 
   *Earlier result*, on `vm.wat` sha256 `96bc6c90…` (round 7; 2,783 s on 10 workers, a load of about 35;
   timeout scale 2, absent from that historical receipt at `02aab74d`): of the 993 mutants,
