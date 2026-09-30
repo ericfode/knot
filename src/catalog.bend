@@ -67,10 +67,60 @@ def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -
           S.bind(List<&2,C.Constructor>,List<&2,C.Constructor>,constructors(tail,Con{token,seen},U32.add(count,1)),rest => Done{Con{C.Constructor{token,Nil{}},rest}})))
     case _: C.internal(List<&2,C.Constructor>,"constructor-declaration-node")
 
-def nonempty(tokens: List<&2,C.Constructor>, +name: S.Token, data: Bool) -> Result<S.Error,C.Datatype>:
-  match tokens:
-    case Nil{}: C.invalid(C.Datatype,"empty-datatype",name)
-    case Con{h,t}: Done{C.Datatype{name,data,Con{h,t}}}
+def start(token: S.Token) -> U32:
+  match token:
+    case S.Token{text,S.At{lo,hi,line,column}}: lo
+
+def prior_constructor(ctors: List<&2,C.Constructor>, +name: S.Token) -> Bool:
+  match ctors:
+    case Nil{}: False{}
+    case Con{C.Constructor{+token,fields},tail}:
+      Bool.or(Bool.and(String.eq(S.text(token),S.text(name)),U32.is_le(start(token),start(name))),prior_constructor(tail,name))
+
+# Constructor patterns and bare pattern binders resolve at their source event.
+def constructor_before(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{token,data,ctors},tail}:
+      Bool.or(prior_constructor(ctors,name),constructor_before(tail,name))
+
+def pattern_constructor(+types: List<&2,C.Datatype>, +name: S.Token) -> Result<S.Error,ConstructorRef>:
+  S.choose(Result<S.Error,ConstructorRef>,constructor_before(types,name),u => find_constructor(types,name,0),u =>
+    C.invalid(ConstructorRef,"unknown-constructor",name))
+
+def prior_datatype(types: List<&2,C.Datatype>, +name: S.Token) -> Bool:
+  match types:
+    case Nil{}: False{}
+    case Con{C.Datatype{+token,data,ctors},tail}:
+      Bool.or(Bool.and(String.eq(S.text(token),S.text(name)),U32.is_le(start(token),start(name))),prior_datatype(tail,name))
+
+# One namespace, resolved at the source event: a pattern binder may not be a
+# declared constructor, and `+` may not name a declared datatype.
+def promotion(+types: List<&2,C.Datatype>, +token: S.Token, +promoted: Bool) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,Bool.and(promoted,prior_datatype(types,token)),u =>
+    C.invalid(Unit,"datatype-pattern-binder",token),u => Done{Unit{}})
+
+def binder(+types: List<&2,C.Datatype>, +token: S.Token, +promoted: Bool) -> Result<S.Error,Unit>:
+  S.choose(Result<S.Error,Unit>,constructor_before(types,token),u =>
+    C.invalid(Unit,"constructor-pattern-binder",token),u => promotion(types,token,promoted))
+
+# Every binder hides a datatype of its name from the types written after it.
+def hidden(-A: Type, seen: List<&2,S.Token>, +name: S.Token, next: Unit -> Result<S.Error,A>) -> Result<S.Error,A>:
+  S.choose(Result<S.Error,A>,named(seen,name),u => C.invalid(A,"type-shadowed",name),next)
+
+def visible(types: List<&2,C.Datatype>, +name: S.Token, seen: List<&2,S.Token>) -> Result<S.Error,TypeRef>:
+  S.bind(TypeRef,TypeRef,find_type(types,name,0),reference => hidden(TypeRef,seen,name,u => Done{reference}))
+
+# A parameter's type sees the parameters before it; the names left are what the result sees.
+def telescope(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>) -> Result<S.Error,List<&2,S.Token>>:
+  match nodes:
+    case Nil{}: Done{seen}
+    case Con{S.Parameter{+name,q,+type_name},+tail}:
+      hidden(List<&2,S.Token>,seen,type_name,u => telescope(tail,Con{name,seen}))
+    case _: C.internal(List<&2,S.Token>,"parameter-node")
+
+def datatype(tokens: List<&2,C.Constructor>, +name: S.Token, data: Bool) -> Result<S.Error,C.Datatype>:
+  Done{C.Datatype{name,data,tokens}}
 
 def collect_types(nodes: List<&2,S.Node>, +count: U32) -> Result<S.Error,List<&2,C.Datatype>>:
   match nodes:
@@ -78,7 +128,7 @@ def collect_types(nodes: List<&2,S.Node>, +count: U32) -> Result<S.Error,List<&2
     case Con{S.Datatype{+name,+data,+ctors},+tail}:
       S.choose(Result<S.Error,List<&2,C.Datatype>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Datatype>,name),u =>
         S.bind(List<&2,C.Constructor>,List<&2,C.Datatype>,constructors(ctors,Nil{},0),cs =>
-          S.bind(C.Datatype,List<&2,C.Datatype>,nonempty(cs,name,data),head =>
+          S.bind(C.Datatype,List<&2,C.Datatype>,datatype(cs,name,data),head =>
             S.bind(List<&2,C.Datatype>,List<&2,C.Datatype>,collect_types(tail,U32.add(count,1)),rest => Done{Con{head,rest}}))))
     case Con{S.Function{name,params,result,body},tail}: collect_types(tail,count)
     case _: C.internal(List<&2,C.Datatype>,"type-declaration-node")
@@ -125,10 +175,11 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
-        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
-          S.bind(TypeRef,List<&2,C.Signature>,find_type(types,result,0),reference =>
-            S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
-              Done{Con{signature(name,ps,reference),rest}}))))
+        S.bind(List<&2,S.Token>,List<&2,C.Signature>,telescope(params,Nil{}),names =>
+          S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
+            S.bind(TypeRef,List<&2,C.Signature>,visible(types,result,names),reference =>
+              S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
+                Done{Con{signature(name,ps,reference),rest}})))))
     case Con{S.Datatype{name,data,ctors},tail}: collect_signatures(tail,types,count)
     case _: C.internal(List<&2,C.Signature>,"function-declaration-node")
 
@@ -154,7 +205,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+          S.bind(TypeRef,List<&2,C.Parameter>,visible(types,type_name,seen),reference =>
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))

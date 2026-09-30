@@ -4,16 +4,22 @@ Profile `knot-structural-terms-1`, seed Bend 2.0.29 at
 `574b6d39a235b539eb19a5c532993a0abb3d11ad`. This extends the declaration catalog
 and preserves the `knot-enum-1` source-to-Wasm subprofile.
 
-Extend the existing monomorphic catalog with constructor arguments and flat
-constructor patterns whose fields are plain or `+` binders. Every argument is
-checked against its field's type and demand; erased arguments are checked but
-not executed. Constructor expressions still require an expected type. Nested
-constructor patterns and recursion remain explicit later capabilities.
+Extend the monomorphic catalog with constructor arguments and ordered pattern
+matrices: multiple scrutinees, wildcard and variable rows, nested constructors
+and plain or `+` field binders. Rows preserve source order; the first matching
+row supplies the body. Shadowed bodies are discarded. Every constructor
+combination must be covered, with zero rows valid for an empty datatype.
+Source pattern names and arities are checked before selecting bodies;
+constructor columns remain strict under earlier catch-all rows.
+Every constructor argument is checked against its field type and demand;
+erased arguments are checked but not executed. Constructor expressions require
+an expected type. Structural recursion follows its separate descent contract.
 
 A pattern field receives the product of declaration quantity and scrutinee
 quantity. A `+` pattern mark may promote quantity 1 over Data to quantity 2;
 quantity 0 stays erased. Field names may shadow parameters or earlier fields.
-Global constructor names cannot be used as bare field binders. Each occurrence
+A row may descend through several constructors before binding a field.
+Already-declared constructor names cannot be used as bare pattern binders. Each occurrence
 uses its lexical identity, not its display name.
 
 Matching replaces the scrutinee in the match frontier with its field binders.
@@ -28,11 +34,14 @@ Matching drops earlier unmatched parameters, replaces the parent position with
 the fields in declaration order, and retains later parameters. Local lets close
 the frontier. This preserves the pinned Bend surface restriction.
 
-Checked structural terms and independent tree evaluation do not establish a
-heap implementation. The emitter must reject fielded books until owned storage
-and lowering exist. Resource exhaustion is distinct from Invalid or Unsupported.
-The enum corpus remains the regression oracle. Field runtime storage, transfer,
-drop, structural recursion and GPU qualification remain milestone-1 obligations.
+The separate `knot-fields-wasm-1` emitter profile lowers completely checked
+structural terms and descending recursion to a bounded bump arena. The default
+enum profile retains its field capability rejection. Neither the evaluator's
+persistent trees nor the bump arena establish owned-storage reclamation.
+A zero-constructor datatype has no runtime value or valid host ordinal.
+Resource exhaustion is distinct from Invalid or Unsupported. The enum corpus
+remains byte-identical. General recursion, owned storage and GPU qualification
+remain separate obligations.
 
 ## Observations and bounds
 
@@ -61,7 +70,9 @@ the enum contract. Compiler rejection leaves existing output untouched.
 Catalog maxima remain 256 types/functions/constructors/fields/parameters in
 their respective scopes. Lexical IDs are bounded to 0..4095; adding at next ID
 4096 reports Exhausted before incrementing. Parser/checker depth and evaluator
-transition fuel are explicit budgets. Display has a separate work budget of
+transition fuel are explicit budgets. Expanded matches additionally receive
+4096 matrix steps, partitioned among constructor branches; an exhausted
+partition reports Exhausted check budget. Display has a separate work budget of
 4096 worklist transitions and a 65,536-character output cap. It reports
 `Exhausted inspect`, never truncated success; shared subtree expansion consumes
 that same total budget. A terminal return

@@ -68,6 +68,10 @@ GATES = (
          ('tests/compiler-bootstrap/receipts/progress.json', 'tests/compiler-bootstrap/receipts/reference.json')),
     Gate('classification', ('python3', 'tests/compiler-classification/check.py'),
          ('tests/compiler-classification/receipts/precision.json',)),
+    Gate('nest', ('python3', 'tests/compiler-nest/check.py'),
+         ('tests/compiler-nest/receipts/nest.json',)),
+    Gate('nest-review', ('python3', 'tests/compiler-nest/review.py'),
+         ('tests/compiler-nest/receipts/review.json',)),
     Gate('io-host', ('python3', '-B', 'tests/compiler-io/host-check.py'),
          ('tests/compiler-io/receipts/host.json',)),
     Gate('io-abi-2', ('python3', '-B', 'tests/compiler-io-abi-2/check.py'),
@@ -76,6 +80,30 @@ GATES = (
          ('tests/compiler-selfhost/receipts/selfhost.json',)),
     Gate('perch-cap', ('python3', '-B', 'tests/perch-context/check-round1.py'),
          ('tests/perch-context/receipts/round1.json',)),
+    Gate('nest-round3', ('python3', 'tests/compiler-nest/round3.py'),
+         ('tests/compiler-nest/receipts/round3.json',)),
+    Gate('nest-round4', ('python3', 'tests/compiler-nest/round4.py'),
+         ('tests/compiler-nest/receipts/round4.json',)),
+    Gate('nest-round6', ('python3', 'tests/compiler-nest/round6.py'),
+         ('tests/compiler-nest/receipts/round6.json',)),
+    Gate('nest-round7', ('python3', 'tests/compiler-nest/round7.py'),
+         ('tests/compiler-nest/receipts/round7.json', 'tests/compiler-nest/receipts/round7-letalias.json')),
+    Gate('nest-round8', ('python3', 'tests/compiler-nest/round8.py'),
+         ('tests/compiler-nest/receipts/round8.json', 'tests/compiler-nest/receipts/round8-typekind.json')),
+    Gate('nest-round9', ('python3', 'tests/compiler-nest/round9.py'),
+         ('tests/compiler-nest/receipts/round9.json',)),
+    Gate('nest-round10', ('python3', 'tests/compiler-nest/round10.py'),
+         ('tests/compiler-nest/receipts/round10.json',)),
+    Gate('nest-round11', ('python3', 'tests/compiler-nest/round11.py'),
+         ('tests/compiler-nest/receipts/round11.json',)),
+    Gate('nest-sweep11', ('python3', 'tests/compiler-nest/round11.py', '--sweep'),
+         ('tests/compiler-nest/receipts/round11-sweep.json',)),
+    Gate('nest-round12', ('python3', 'tests/compiler-nest/round12.py'),
+         ('tests/compiler-nest/receipts/round12.json',)),
+    Gate('nest-round13', ('python3', 'tests/compiler-nest/round13.py'),
+         ('tests/compiler-nest/receipts/round13.json',)),
+    Gate('nest-precheck', ('python3', 'tests/compiler-nest/precheck.py'),
+         ('tests/compiler-nest/receipts/precheck.json',)),
 )
 
 
@@ -290,6 +318,11 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
         for lane in ('native', 'bun'):
             wasm = json.loads((root / f'research/flat-store/receipts/{lane}-wasm.json').read_bytes())
             result[lane] = {k: wasm[k] for k in ('observations', 'instances', 'installed_boundary_states', 'lifecycle_checks')}
+    if gate.name in ('nest', 'nest-review', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7', 'nest-round8',
+                     'nest-round9', 'nest-round10', 'nest-round11', 'nest-sweep11', 'nest-round12', 'nest-round13'):
+        result.update(record['counts'])
+    if gate.name == 'nest-precheck':
+        result.update(record['counts'])
     if gate.name == 'io-host':
         for key in ('seed_fixtures', 'seed_runs', 'conformance_runs', 'cli_runs', 'errno', 'stress'):
             result[key] = record[key]

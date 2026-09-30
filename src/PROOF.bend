@@ -13,6 +13,13 @@ def L.word_source(extra):
     case 0n: {==}
     case 1n+n: {==}
 
+def L.name_words_witness(): {==}
+
+def L.malformed_word_source(extra):
+  match extra:
+    case 0n: {==}
+    case 1n+n: {==}
+
 def L.no_character_budget(c,tail):
   {==}
 
@@ -22,8 +29,78 @@ def L.no_parser_budget(tokens):
 def L.generic_header(at,rest):
   {==}
 
-def L.multiple_scrutinees(at,rest):
+def L.comma_scrutinees(at): {==}
+
+def L.multiple_scrutinees(at):
   {==}
+
+def L.header_joins_lines(at,rest): {==}
+
+def L.touches_witness(): {==}
+
+def L.touching_brace(pattern,x,y,z,rest,touch):
+  match pattern:
+    case True{}:
+      Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+        S.choose(Result<S.Error,P.Parsed>,found,
+          u => P.then(P.run(1n,P.Arguments{"}",True{}},Con{S.Token{"}",z},rest}),
+            args => after => P.wrap_call(S.Token{"On",x},True{},args,after)),
+          u => P.invalid(Con{S.Token{"{",y},Con{S.Token{"}",z},rest}},"detached-brace")),
+        S.touches(S.Token{"On",x},S.Token{"{",y}),True{},touch)
+    case False{}:
+      Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+        S.choose(Result<S.Error,P.Parsed>,found,
+          u => P.then(P.run(1n,P.Arguments{"}",False{}},Con{S.Token{"}",z},rest}),
+            args => after => P.wrap_call(S.Token{"On",x},True{},args,after)),
+          u => P.invalid(Con{S.Token{"{",y},Con{S.Token{"}",z},rest}},"detached-brace")),
+        S.touches(S.Token{"On",x},S.Token{"{",y}),True{},touch)
+
+def L.detached_brace(pattern,x,y,rest,gap):
+  match pattern:
+    case True{}:
+      Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+        S.choose(Result<S.Error,P.Parsed>,found,
+          u => P.then(P.run(0n,P.Arguments{"}",True{}},rest),
+            args => after => P.wrap_call(S.Token{"On",x},True{},args,after)),
+          u => P.invalid(Con{S.Token{"{",y},rest},"detached-brace")),
+        S.touches(S.Token{"On",x},S.Token{"{",y}),False{},gap)
+    case False{}:
+      Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+        S.choose(Result<S.Error,P.Parsed>,found,
+          u => P.then(P.run(0n,P.Arguments{"}",False{}},rest),
+            args => after => P.wrap_call(S.Token{"On",x},True{},args,after)),
+          u => P.invalid(Con{S.Token{"{",y},rest},"detached-brace")),
+        S.touches(S.Token{"On",x},S.Token{"{",y}),False{},gap)
+
+def L.joined_brace_witness(): {==}
+
+def L.marks_witness(): {==}
+
+def L.detached_plus(keyword,pattern,parent,column,rest): {==}
+
+def L.line_broken_scrutinees_witness(): {==}
+
+def L.detached_marker(rest): {==}
+
+def L.first_marker(rest): {==}
+
+def L.dotted_pattern_binder(at,rest): {==}
+
+def L.dotted_promotion_binder(at,rest): {==}
+
+def L.dotted_let_binder(at,rest): {==}
+
+def L.dotted_typed_let_binder(at,rest): {==}
+
+def L.unnamed_binder_is_invalid(at,rest): {==}
+
+def L.line_break_in_arguments(at,rest): {==}
+
+def L.line_break_after_element(at,head,rest): {==}
+
+def L.same_line_arm(at,value,rest): {==}
+
+def L.body_ends_at_line_break(at,value,rest): {==}
 
 def L.template_binder(at,rest):
   {==}
@@ -51,6 +128,8 @@ def L.parameter_type_application(at,rest):
 def L.return_type_application(at,rest):
   {==}
 
+def L.split_arrow(at,rest): {==}
+
 def L.binding_type_application(at,rest):
   {==}
 
@@ -59,3 +138,63 @@ def L.local_import(at,rest):
 
 def L.hash_import(at,rest):
   {==}
+
+def L.numeral_witness(): {==}
+
+def L.statement_witness(): {==}
+
+def L.numeral_column_is_unsupported(at,rest): {==}
+
+def L.same_line_statement(at,rest): {==}
+
+def L.let_ends_at_line_break(at,rest): {==}
+
+def L.split_before_colon_witness(): {==}
+
+def L.same_line_witness(): {==}
+
+def L.paren_on_a_later_line_is_no_call(): {==}
+
+def L.parenthesis_opens_a_column(): {==}
+
+def L.suffix_witness(): {==}
+
+def L.continues_witness(): {==}
+
+def L.lambda_witness(): {==}
+
+def L.promoted_term_witness(): {==}
+
+def L.suffix_ends_a_body(at,value,rest): {==}
+
+def L.marker_ends_no_body(): {==}
+
+def L.suffix_ends_a_let(at,rest): {==}
+
+def L.promoted_term_is_unsupported(): {==}
+
+def L.spaced_operator_after_a_let(rest): {==}
+
+def L.call_ends_a_body(at,value,rest): {==}
+
+def L.call_ends_a_let(at,rest): {==}
+
+def L.argument_promotion_is_unsupported(rest): {==}
+
+def L.glued_argument_operator_is_unsupported(rest): {==}
+
+def L.argument_hole_is_unsupported(at,head,rest): {==}
+
+def L.argument_at_is_invalid(at,head,rest): {==}
+
+def L.body_start_witness(): {==}
+
+def L.arm_body_may_start_with_a_term(rest): {==}
+
+def L.closer_starts_no_body(rest): {==}
+
+def L.forward_pattern_event_witness(): {==}
+
+def L.declared_pattern_event_witness(): {==}
+
+def L.forward_expression_event_witness(token,args): {==}

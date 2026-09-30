@@ -312,8 +312,10 @@ class ExecutionTests(unittest.TestCase):
         self.assertLessEqual({'frontend', 'checker', 'structural', 'fields', 'wasm', 'wasm-trust',
                               'fields-trust', 'structural-trust', 'owned-store', 'flat-store',
                               'recursion', 'fields-wasm', 'census', 'lint:verify', 'perch-context',
-                              'bootstrap', 'classification', 'io-host', 'io-abi-2',
-                              'selfhost', 'perch-cap'}, set(names))
+                              'bootstrap', 'classification', 'nest', 'nest-review', 'io-host', 'io-abi-2',
+                              'selfhost', 'nest-round3', 'nest-round4', 'nest-round6', 'nest-round7',
+                              'nest-round8', 'nest-round9', 'nest-round10', 'nest-round11',
+                              'nest-sweep11', 'nest-round12', 'nest-round13', 'nest-precheck', 'perch-cap'}, set(names))
         self.assertEqual({'wasm-trust': ('wasm',), 'fields-trust': ('fields',),
                           'structural-trust': ('structural',), 'flat-store': ('owned-store',)},
                          {g.name: g.needs for g in run.GATES if g.needs})
@@ -384,6 +386,19 @@ class SemanticMutantTests(unittest.TestCase):
             broken = mutant.schedule(gates, worker, 2)
         self.assertEqual('blocked', control[1]['status'])
         self.assertEqual('passed', broken[1]['status'])
+
+
+class HarnessTimeoutTests(unittest.TestCase):
+    def test_nest_guards_scale_with_the_runner_variable(self):
+        # The runner sets KNOT_GATE_TIMEOUT_SCALE for the hang guards inside gate
+        # scripts; a script that ignores it fails spuriously under campaign load.
+        code = ("import sys; sys.path.insert(0, 'tests/compiler-nest'); import check, regen; "
+                "print(check.run.__defaults__[0], regen.TIMEOUT)")
+        for scale, want in (('1', '120.0 60.0'), ('1000', '120000.0 60000.0')):
+            with self.subTest(scale=scale):
+                got = subprocess.run([sys.executable, '-B', '-c', code], cwd=HERE.parents[1], text=True,
+                                     capture_output=True, env={**os.environ, 'KNOT_GATE_TIMEOUT_SCALE': scale})
+                self.assertEqual((0, want), (got.returncode, got.stdout.strip()), got.stderr)
 
 
 if __name__ == '__main__':

@@ -32,6 +32,9 @@ def normal(+c: Char, +off: U32, +line: U32, +col: U32,
     Done{State{next,line,U32.add(col,1),Word{off,line,col,SCon{c,SNil{}}},tokens}},u =>
     Done{State{next,line,U32.add(col,1),Space{},Con{S.Token{SCon{c,SNil{}},a},tokens}}}))))))))
 
+def lexeme(+text: String, +at: S.At) -> Result<S.Error,S.Token>:
+  S.choose(Result<S.Error,S.Token>,S.malformed(text),u => Fail{S.Invalid{"lex","name",at}},u => Done{S.Token{text,at}})
+
 def step_at(+c: Char, state: State) -> Result<S.Error,State>:
   match state:
     case State{+off,+line,+col,Space{},tokens}:
@@ -44,7 +47,7 @@ def step_at(+c: Char, state: State) -> Result<S.Error,State>:
     case State{+off,+line,+col,Word{+start,+first_line,+first_col,+rev},+tokens}:
       S.choose(Result<S.Error,State>,S.word(Char.to_u32(c)),u =>
         Done{State{U32.add(off,1),line,U32.add(col,1),Word{start,first_line,first_col,SCon{c,rev}},tokens}},u =>
-        normal(c,off,line,col,Con{S.Token{String.reverse(rev),S.At{start,off,first_line,first_col}},tokens}))
+        S.bind(S.Token,State,lexeme(String.reverse(rev),S.At{start,off,first_line,first_col}),token => normal(c,off,line,col,Con{token,tokens})))
 
 def step(+c: Char, +state: State) -> Result<S.Error,State>:
   match state:
@@ -52,21 +55,21 @@ def step(+c: Char, +state: State) -> Result<S.Error,State>:
       S.choose(Result<S.Error,State>,U32.is_lt(off,65536),u => step_at(c,state),u =>
         Fail{S.Exhausted{"lex",S.At{off,off,line,col}}})
 
-def finish(state: State) -> List<&2,S.Token>:
+def finish(state: State) -> Result<S.Error,List<&2,S.Token>>:
   match state:
     case State{+off,line,col,Space{},tokens}:
-      List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},tokens})
+      Done{List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},tokens})}
     case State{+off,line,col,Comment{},tokens}:
-      List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},tokens})
+      Done{List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},tokens})}
     case State{+off,line,col,Word{start,first_line,first_col,rev},tokens}:
-      List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},
-        Con{S.Token{String.reverse(rev),S.At{start,off,first_line,first_col}},tokens}})
+      S.bind(S.Token,List<&2,S.Token>,lexeme(String.reverse(rev),S.At{start,off,first_line,first_col}),token =>
+        Done{List.reverse(&2,S.Token,Con{S.Token{"<eof>",S.At{off,off,line,col}},Con{token,tokens}})})
 
 # Fuel counts consumed characters, including whitespace and comments. The
 # caller caps it below 2^32-1, keeping all offsets/line/column additions exact.
 def scan(fuel: Nat, input: String, +state: State) -> Result<S.Error,List<&2,S.Token>>:
   match fuel input:
-    case _ SNil{}: Done{finish(state)}
+    case _ SNil{}: finish(state)
     case 0n SCon{c,tail}:
       match state:
         case State{+off,line,col,mode,tokens}:

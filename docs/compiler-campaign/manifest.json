@@ -23,10 +23,16 @@
       "name": "frontend-parsing",
       "files": [
         "src/syntax.bend",
-        "src/parse.bend"
+        "src/parse.bend",
+        "src/core.bend",
+        "src/catalog.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Tokens to the bounded syntax tree; parser depth and unsupported forms."
+      "notes": "Tokens to the bounded syntax tree, including constructor-pattern source events; core/catalog collaborators enter as interfaces and have their own groups.",
+      "selected_files": [
+        "src/syntax.bend",
+        "src/parse.bend"
+      ]
     },
     {
       "name": "diagnostics",
@@ -69,10 +75,14 @@
         "src/catalog.bend",
         "src/scope.bend",
         "src/patterns.bend",
-        "src/check.bend"
+        "src/check.bend",
+        "src/matrix.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
-      "notes": "Complete checking boundary and explicit unsupported capabilities."
+      "notes": "Checking and checked binary-spine coalescing in full; catalog, scope and matrix collaborators enter as interfaces and have their own groups.",
+      "selected_files": [
+        "src/check.bend"
+      ]
     },
     {
       "name": "evaluation",
@@ -103,7 +113,8 @@
         "src/catalog.bend",
         "src/check.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/matrix.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Enum and fielded terms to binary Wasm; checker collaborators enter as interfaces.",
@@ -134,7 +145,8 @@
         "src/patterns.bend",
         "src/scope.bend",
         "src/wasm-bytes.bend",
-        "src/wasm.bend"
+        "src/wasm.bend",
+        "src/matrix.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Source through checking to evaluation or Wasm, including all CLI entries; phase implementations enter as interfaces.",
@@ -153,10 +165,16 @@
         "src/LAWS.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/PROOF.bend"
+        "src/PROOF.bend",
+        "src/core.bend",
+        "src/catalog.bend"
       ],
       "task": "src/SPEC.md",
-      "notes": "Frontend boundary laws and their complete proof entry."
+      "notes": "Frontend boundary laws and their complete proof entry in full; syntax, lexer and parser enter as interfaces and have their own groups.",
+      "selected_files": [
+        "src/LAWS.bend",
+        "src/PROOF.bend"
+      ]
     },
     {
       "name": "checker-laws",
@@ -172,7 +190,8 @@
         "src/catalog.bend",
         "src/lex.bend",
         "src/parse.bend",
-        "src/patterns.bend"
+        "src/patterns.bend",
+        "src/matrix.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -200,7 +219,8 @@
         "src/lex.bend",
         "src/parse.bend",
         "src/patterns.bend",
-        "src/scope.bend"
+        "src/scope.bend",
+        "src/matrix.bend"
       ],
       "task": "src/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -231,7 +251,8 @@
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
         "src/scope.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/matrix.bend"
       ],
       "task": "research/compiler-structural/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -263,7 +284,8 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/matrix.bend"
       ],
       "task": "research/compiler-fields/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
@@ -297,13 +319,90 @@
         "src/parse.bend",
         "src/runtime-LAWS.bend",
         "src/runtime-PROOF.bend",
-        "src/wasm-bytes.bend"
+        "src/wasm-bytes.bend",
+        "src/matrix.bend"
       ],
       "task": "tests/compiler-recursion/SPEC.md",
       "notes": "Current law mechanism and proof entry in full; earlier proof-entry chains and other collaborators enter as interfaces.",
       "selected_files": [
         "src/recursion-LAWS.bend",
         "src/recursion-PROOF.bend"
+      ]
+    },
+    {
+      "name": "pattern-matrix",
+      "files": [
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/matrix.bend",
+        "src/check.bend"
+      ],
+      "task": "tests/compiler-nest/SPEC.md",
+      "notes": "Binary matrix expansion, live residual scopes and field opening in full; checking and catalogs enter as interfaces and have their own groups.",
+      "selected_files": [
+        "src/matrix.bend",
+        "src/scope.bend",
+        "src/patterns.bend"
+      ]
+    },
+    {
+      "name": "pattern-matrix-laws",
+      "files": [
+        "src/matrix-LAWS.bend",
+        "src/matrix-PROOF.bend",
+        "src/lowering-PROOF.bend",
+        "src/lowering-LAWS.bend",
+        "src/matrix.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/check.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend",
+        "src/recursion-PROOF.bend",
+        "src/fields-PROOF.bend",
+        "src/runtime-PROOF.bend",
+        "src/recursion-LAWS.bend",
+        "src/catalog-PROOF.bend",
+        "src/fields-LAWS.bend",
+        "src/check-PROOF.bend",
+        "src/runtime-LAWS.bend",
+        "src/eval.bend",
+        "src/catalog-LAWS.bend",
+        "src/PROOF.bend",
+        "src/check-LAWS.bend",
+        "src/wasm-bytes.bend",
+        "src/LAWS.bend",
+        "src/lex.bend",
+        "src/parse.bend"
+      ],
+      "task": "tests/compiler-nest/SPEC.md",
+      "notes": "All matrix statements and fills in full; implementation collaborators, the lowering-law chain and inherited proofs enter as interfaces. The general exhaustive-lowering law remains unmet.",
+      "selected_files": [
+        "src/matrix-LAWS.bend",
+        "src/matrix-PROOF.bend"
+      ]
+    },
+    {
+      "name": "lowering-laws",
+      "files": [
+        "src/lowering-LAWS.bend",
+        "src/lowering-PROOF.bend",
+        "src/matrix.bend",
+        "src/syntax.bend",
+        "src/core.bend",
+        "src/catalog.bend",
+        "src/scope.bend",
+        "src/patterns.bend"
+      ],
+      "task": "tests/compiler-nest/SPEC.md",
+      "notes": "The complete-lowering law for an irrefutable first row and its fill in full; the matrix expansion and its collaborators enter as interfaces.",
+      "selected_files": [
+        "src/lowering-LAWS.bend",
+        "src/lowering-PROOF.bend"
       ]
     }
   ],

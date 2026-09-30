@@ -15,6 +15,7 @@ type Token is Data:
 
 # The parser has a single recursive tree. Declaration/sequence variants never
 # appear in checked expressions; the resolver validates that invariant.
+# Matrix, Decision, Remainder and Alias are internal lowering states.
 type Node is Data:
   Variable{token: Token}
   Promotion{token: Token}
@@ -23,6 +24,10 @@ type Node is Data:
   Binding{token: Token, quantity: U32, annotation: Maybe<&2,Token>, value: Node, body: Node}
   Match{token: Token, value: Node, arms: List<&2,Node>}
   Arm{token: Token, pattern: Node, body: Node}
+  Matrix{token: Token, columns: List<&2,Node>, rows: List<&2,Node>, work: U32}
+  Decision{token: Token, column: Node, pattern: Node, yes: Node, no: Node}
+  Remainder{token: Token, level: U32, constructors: List<&2,Token>}
+  Alias{token: Token, level: U32, mark: U32, body: Node}
   Parameter{token: Token, quantity: U32, type_name: Token}
   Datatype{token: Token, reusable: Bool, constructors: List<&2,Node>}
   Function{token: Token, parameters: List<&2,Node>, result: Token, body: Node}
@@ -43,6 +48,15 @@ def column(t: Token) -> U32:
 def line(t: Token) -> U32:
   match t:
     case Token{s,At{lo,hi,line,col}}: line
+
+# Spans are half-open: [a,b) and [c,d) touch when b == c.
+def touches(name: Token, open: Token) -> Bool:
+  match name open:
+    case Token{s,At{a,b,i,j}} Token{t,At{c,d,k,l}}: U32.is_eq(b,c)
+
+# A header joins its lines. The seed reads a `(` that starts a line as the next term, not a call.
+def same_line(name: Token, open: Token) -> Bool:
+  U32.is_eq(line(name),line(open))
 
 def here(ts: List<&2,Token>) -> At:
   match ts:
@@ -83,6 +97,23 @@ def bind(-A: Data, -B: Data, result: Result<Error,A>, next: A -> Result<Error,B>
     case Fail{e}: Fail{e}
     case Done{x}: next(x)
 
+# A name is words joined by dots, each word alpha (alpha | digit)*. words
+# counts them from a word start, and is 0 when s is not a name.
+def words(+s: String, +open: Bool, +count: U32) -> U32:
+  match s:
+    case SNil{}: Bool.pick(U32,open,0,count)
+    case SCon{c,tail}:
+      +code = Char.to_u32(c)
+      choose(U32,alpha(code),u => words(tail,False{},Bool.pick(U32,open,U32.add(count,1),count)),u =>
+      choose(U32,Bool.and(Bool.not(open),Bool.or(digit(code),U32.is_eq(code,46))),u =>
+        words(tail,U32.is_eq(code,46),count),u => 0))
+
+# The seed reads every word that opens with alpha as a name.
+def malformed(+s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: Bool.and(alpha(Char.to_u32(c)),U32.is_eq(words(s,True{},0),0))
+
 def identifier_text(+s: String) -> Bool:
   match s:
     case SNil{}: False{}
@@ -90,6 +121,39 @@ def identifier_text(+s: String) -> Bool:
 
 def identifier(t: Token) -> Bool:
   identifier_text(text(t))
+
+# A numeral opens a literal pattern; Knot has no form for one.
+def numeral(+s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: digit(Char.to_u32(c))
+
+# A closer or a separator opens no term.
+def closes(+t: Token) -> Bool:
+  Bool.or(matches(t,")"),Bool.or(matches(t,"}"),Bool.or(matches(t,":"),Bool.or(matches(t,","),Bool.or(matches(t,"\n"),matches(t,"<eof>"))))))
+
+# The seed reads a name, `match` or a marker at a line's start as a statement.
+def statement(+t: Token) -> Bool:
+  Bool.or(identifier(t),Bool.or(matches(t,"match"),Bool.or(matches(t,"+"),matches(t,"-"))))
+
+# A body or a later statement may also open with a bracket, a numeral or a hole: the seed lays
+# any term out at any column.
+def body_start(+t: Token) -> Bool:
+  Bool.or(statement(t),Bool.or(matches(t,"("),Bool.or(matches(t,"["),Bool.or(numeral(text(t)),matches(t,"?")))))
+
+# The seed's infix operators, `+` and `-` aside, begin with one of these tokens.
+def infix(+t: Token) -> Bool:
+  Bool.or(matches(t,"*"),Bool.or(matches(t,"/"),Bool.or(matches(t,"%"),Bool.or(matches(t,"<"),
+    Bool.or(matches(t,">"),Bool.or(matches(t,"&"),matches(t,"|")))))))
+
+# A pattern binds one word; a dotted name refers to a declaration.
+def binder(+t: Token) -> Bool:
+  Bool.and(identifier(t),U32.is_eq(words(text(t),True{},0),1))
+
+# The seed reads `+` and `-` as a marker only where a name follows directly. A
+# space, comment or line break makes them an infix operator on the term before.
+def marks(t: Token, +next: Token) -> Bool:
+  Bool.and(touches(t,next),identifier(next))
 
 def skip_lines(ts: List<&2,Token>) -> List<&2,Token>:
   match ts:

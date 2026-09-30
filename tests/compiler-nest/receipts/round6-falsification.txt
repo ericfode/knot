@@ -1,0 +1,97 @@
+# Round-6 falsification of the detached-brace laws in src/LAWS.bend
+# (touches_witness, touching_brace, detached_brace, joined_brace_witness).
+# Each case copies src/, applies one textual mutation and runs
+# BEND_NO_TELEMETRY=1 bun .toolchain/bend-2.0.29-574b6d3/bend2/main.ts src/PROOF.bend
+# (first lines of output). The control is the unmutated copy.
+# The seed stops at the first failing term. When that is touching_brace, whose
+# proof mirrors the parser step, the case is rerun with touching_brace and its
+# fill removed, to show the next law the mutation falsifies.
+
+== control
+All terms check.
+(no Location line)
+   exit 0
+
+== ignore the touch (fields open at any brace)
+   parse.bend: S.choose(Result<S.Error,Parsed>,S.touches(name,open),u =>  =>  S.choose(Result<S.Error,Parsed>,True{},u =>
+Error:
+- expected : {Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.touching_brace
+43 |     case True{}:
+44>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+-- rerun without touching_brace
+Error:
+- expected : {Fail{syntax.Exhausted{"parse", syntax.here(rest)}} == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Fail{syntax.Exhausted{"parse", syntax.here(rest)}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.detached_brace
+43 |     case True{}:
+44>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+
+== compare lines instead of offsets
+   syntax.bend: U32.is_eq(b,c)  =>  U32.is_eq(i,k)
+Error:
+- expected : [True{}, True{}, False{}]
+- observed : [True{}, False{}, False{}]
+Location: LAWS.touches_witness
+38 | 
+39>| def L.touches_witness(): {==}
+   exit 1
+
+== shift the touching offset by one
+   syntax.bend: U32.is_eq(b,c)  =>  U32.is_eq(U32.add(b,1),c)
+Error:
+- expected : [False{}, True{}, False{}]
+- observed : [True{}, False{}, False{}]
+Location: LAWS.touches_witness
+38 | 
+39>| def L.touches_witness(): {==}
+   exit 1
+
+== confine the rule to patterns
+   parse.bend: S.choose(Result<S.Error,Parsed>,S.touches(name,open),u =>  =>  S.choose(Result<S.Error,Parsed>,Bool.or(Bool.not(pattern),S.touches(name,open)),u =>
+Error:
+- expected : {Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.touching_brace
+50 |     case False{}:
+51>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+-- rerun without touching_brace
+Error:
+- expected : {Fail{syntax.Exhausted{"parse", syntax.here(rest)}} == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Fail{syntax.Exhausted{"parse", syntax.here(rest)}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.detached_brace
+50 |     case False{}:
+51>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+
+== report a touching brace Invalid
+   parse.bend: S.choose(Result<S.Error,Parsed>,S.touches(name,open),u =>  =>  S.choose(Result<S.Error,Parsed>,Bool.not(S.touches(name,open)),u =>
+Error:
+- expected : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, Bool.not(syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y})), u => Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Done{parse.Parsed{syntax.Constructor{syntax.Token{"On", x}, []}, rest}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.touching_brace
+43 |     case True{}:
+44>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+-- rerun without touching_brace
+Error:
+- expected : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, Bool.not(syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y})), u => Fail{syntax.Exhausted{"parse", syntax.here(rest)}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+- observed : {syntax.choose(Result<&1, &1, syntax.Error, parse.Parsed>, syntax.touches(syntax.Token{"On", x}, syntax.Token{"{", y}), u => Fail{syntax.Exhausted{"parse", syntax.here(rest)}}, u => Fail{syntax.Invalid{"parse", "detached-brace", y}}) == Fail{syntax.Invalid{"parse", "detached-brace", y}} : Result<&1, &1, syntax.Error, parse.Parsed>}
+Location: LAWS.detached_brace
+43 |     case True{}:
+44>|       Equal.cong(Bool,Result<S.Error,P.Parsed>,found =>
+   exit 1
+
+== negate the touch predicate
+   syntax.bend: U32.is_eq(b,c)  =>  Bool.not(U32.is_eq(b,c))
+Error:
+- expected : [False{}, True{}, True{}]
+- observed : [True{}, False{}, False{}]
+Location: LAWS.touches_witness
+38 | 
+39>| def L.touches_witness(): {==}
+   exit 1

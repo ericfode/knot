@@ -1,0 +1,18 @@
+# Round13 witness laws: each mutation is one replacement in a copy of src/; the named proof entry is checked with the pinned seed
+# and must fail. `first failing law` is where the seed stops; it is the named law unless another law of the same file fails first.
+
+marker-gap-dropped                 PROOF.bend         law LAWS.detached_marker                                 first failing law: LAWS.detached_marker
+marker-gap-widened                 PROOF.bend         law LAWS.spaced_operator_after_a_let                     first failing law: LAWS.spaced_operator_after_a_let
+operator-code-term-form            PROOF.bend         law LAWS.suffix_ends_a_body                              first failing law: LAWS.suffix_ends_a_body
+every-suffix-an-operator           PROOF.bend         law LAWS.call_ends_a_body                                first failing law: LAWS.call_ends_a_body
+same-line-operator-statement       PROOF.bend         law LAWS.suffix_ends_a_let                               first failing law: LAWS.suffix_ends_a_let
+let-call-invalid                   PROOF.bend         law LAWS.call_ends_a_let                                 first failing law: LAWS.call_ends_a_let
+argument-promotion-invalid         PROOF.bend         law LAWS.argument_promotion_is_unsupported               first failing law: LAWS.argument_promotion_is_unsupported
+argument-glue-lost                 PROOF.bend         law LAWS.glued_argument_operator_is_unsupported          first failing law: LAWS.glued_argument_operator_is_unsupported
+argument-hole-invalid              PROOF.bend         law LAWS.argument_hole_is_unsupported                    first failing law: LAWS.argument_hole_is_unsupported
+argument-at-unsupported            PROOF.bend         law LAWS.argument_at_is_invalid                          first failing law: LAWS.argument_at_is_invalid
+body-start-without-paren           PROOF.bend         law LAWS.body_start_witness                              first failing law: LAWS.body_start_witness
+arm-body-statement-only            PROOF.bend         law LAWS.arm_body_may_start_with_a_term                  first failing law: LAWS.arm_body_may_start_with_a_term
+every-token-starts-a-body          PROOF.bend         law LAWS.closer_starts_no_body                           first failing law: LAWS.closer_starts_no_body
+weight-counts-no-arms              check-PROOF.bend   law check-LAWS.weight_counts_every_node                  first failing law: check-LAWS.weight_counts_every_node
+weight-never-stops                 check-PROOF.bend   law check-LAWS.weight_stops_when_spent                   first failing law: check-LAWS.weight_stops_when_spent

@@ -1,0 +1,190 @@
+{
+  "schema": 1,
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "fixtures": [
+    {
+      "name": "dotted-binder",
+      "file": "tests/compiler-nest/precheck-fixtures/dotted-binder.bend",
+      "sha256": "8583b8be9bce45eb8cc71edfa9e1d1f0a12c1ca8a2949386ace911ff665a931b",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\tdotted-binder\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a pattern (a binder or a constructor)",
+        "beg": 90
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x y:\n7>|     case a.b On{}: a.b\n  |          ^^^\n8 |     case _ _: Off{}\n"
+      }
+    },
+    {
+      "name": "forward-pattern",
+      "file": "tests/compiler-nest/precheck-fixtures/forward-pattern.bend",
+      "sha256": "208934010de44d636bfb175c0baea8e9bfe320269862593dab1c0b06e2cd86e0",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a declared constructor (unknown: probe.On)",
+        "beg": 71
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: On)\nLocation:\n4 |   match x y:\n5>|     case _ On{}: Off{}\n  |            ^^^^\n6 | \n"
+      }
+    },
+    {
+      "name": "dead-minus-list",
+      "file": "tests/compiler-nest/precheck-fixtures/dead-minus-list.bend",
+      "sha256": "4304fba29c0c7ed1dc310125dbacbc2a02fb8f7d70e13d5de3bbedf446f569ec",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a type for this operator (write (a - b : Nat))",
+        "beg": 101
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a - b : Nat))\nLocation:\n 9 |   On{}\n10>|   - x = [On{}]\n   |   ^\n11 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      }
+    },
+    {
+      "name": "dead-minus-value",
+      "file": "tests/compiler-nest/precheck-fixtures/dead-minus-value.bend",
+      "sha256": "6852b91f4976a02991fd0f8c9ffbcbde17862acac7649c0fc2ed0ad2c7ef8da9",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a type for this operator (write (a - b : Nat))",
+        "beg": 101
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a - b : Nat))\nLocation:\n 9 |   On{}\n10>|   - x = On{}\n   |   ^\n11 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      }
+    },
+    {
+      "name": "dead-minus-constructor",
+      "file": "tests/compiler-nest/precheck-fixtures/dead-minus-constructor.bend",
+      "sha256": "cc0ef3b84774b2f84aee498e00ba75b913d5bd6d7ed2437d70104aec3e2cb843",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a type for this operator (write (a - b : Nat))",
+        "beg": 101
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a - b : Nat))\nLocation:\n 9 |   On{}\n10>|   - x = Cell{On{}}\n   |   ^\n11 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      }
+    },
+    {
+      "name": "dead-minus-parens",
+      "file": "tests/compiler-nest/precheck-fixtures/dead-minus-parens.bend",
+      "sha256": "d60650b715505586fbaba6c9eb89bd56b2e4e584aa1c4b4e1bb98d90a7c82668",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a type for this operator (write (a - b : Nat))",
+        "beg": 101
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a - b : Nat))\nLocation:\n 9 |   On{}\n10>|   - x = (On{})\n   |   ^\n11 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      }
+    },
+    {
+      "name": "dead-minus-spaced-brace",
+      "file": "tests/compiler-nest/precheck-fixtures/dead-minus-spaced-brace.bend",
+      "sha256": "f3d0539e6c7bc7933256089589d54cd8f91d629b284fbff842d69c10bf4c56eb",
+      "knot": {
+        "exit": 3,
+        "diagnostic": "Unsupported\tparse\toperator\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a type for this operator (write (a - b : Nat))",
+        "beg": 101
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a type for this operator (write (a - b : Nat))\nLocation:\n 9 |   On{}\n10>|   - x = On {}\n   |   ^\n11 | \nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+      }
+    },
+    {
+      "name": "declared-pattern",
+      "file": "tests/compiler-nest/precheck-fixtures/declared-pattern.bend",
+      "sha256": "4eb638a7475c50af731c30cb627bc09f01c163b71897391c2c6a8d3b8e0fab0f",
+      "knot": {
+        "exit": 0
+      },
+      "seed_parse": {
+        "ok": true
+      },
+      "seed_check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "forward-expression",
+      "file": "tests/compiler-nest/precheck-fixtures/forward-expression.bend",
+      "sha256": "8dc449945cd1df8b205b41316766265c91235c73fe15bcc0daac7bc8770d983a",
+      "knot": {
+        "exit": 0
+      },
+      "seed_parse": {
+        "ok": true
+      },
+      "seed_check": {
+        "exit": 0,
+        "stdout": "All terms check.\n",
+        "stderr": ""
+      }
+    },
+    {
+      "name": "discarded-forward-pattern",
+      "file": "tests/compiler-nest/precheck-fixtures/discarded-forward-pattern.bend",
+      "sha256": "78db77035fc491e699e88074bc9d0dea498a74ffe230afdbdf2d7c5672504a88",
+      "knot": {
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunknown-constructor\t"
+      },
+      "seed_parse": {
+        "ok": false,
+        "exp": "a declared constructor (unknown: probe.On)",
+        "beg": 87
+      },
+      "seed_check": {
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: On)\nLocation:\n5 |     case _ _: y\n6>|     case _ On{}: Off{}\n  |            ^^^^\n7 | \n"
+      }
+    }
+  ]
+}

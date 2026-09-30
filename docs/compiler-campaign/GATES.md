@@ -48,6 +48,45 @@ Both check commands exit 0 only when all registered gates finish successfully
 and their required outputs are present and readable. The runner's self-test
 requires the existing gates by name (including `perch-context` and `bootstrap`)
 and unique names, so a new increment appends its gate and required name;
+this branch retains the main gates and appends `nest`, `nest-review`,
+`nest-round3`, `nest-round4`, `nest-round6`, `nest-round7`, `nest-round8`, `nest-round9`, `nest-round10`, `nest-round11`, `nest-sweep11`, `nest-round12` and `nest-round13`. `nest-review` checks the round-2 reviewer
+repros, enum whitelist, semantic repair mutants and fixed-seed 3,000-program
+comparison, whose generator includes lets of matched binders; `nest-round3` checks the round-3 repros (binder grammar, ordered
+empty binders, line-broken headers), `nest-round4` the round-4 recursion
+through rebuilt strict descendants and `nest-round6` the round-6 detached
+braces (a space, comment or line break between a constructor name and its
+`{`) and `nest-round7` the round-7 let promotions (a `+` row never raises a
+let binder's quantity) with the reviewer's 1,500-program let/alias generator
+and `nest-round8` the round-8 Type-kind promotions (a `+` binder's kind is
+judged where the match frontier binds it) with the reviewer's 3,000-program
+Type-kind generator, and `nest-round9` the round-9 lets of refined binders (an
+unannotated let of a binder that a positive branch refined to a constructor
+needs an annotation), the dotted-binder stopgap (every dotted binder is
+Unsupported) and the line-break stopgap (a line break in call or constructor
+arguments, or a second arm on an arm's line, is Unsupported), and
+`nest-round10` the round-10 glue rules (a `+` or `-` marker and a return arrow
+are read touching what follows: a spaced `+` between row columns, a spaced
+marker after a let and a split `->` are rejected, while a marker first in a body
+and a promotion that starts a row or follows a comma stay spaced) and the
+whitespace stopgaps (arguments separated by whitespace alone, `++y`, a let
+split across lines and an arm body at its `case` column are Unsupported), and
+`nest-round11` the round-11 audit (every row of every match is validated, in a
+discarded body too), the binder name rule (`+` names no earlier datatype), the
+hidden type name (a binder hides a datatype of its name from later types) and the
+layouts the parser answers Unsupported, with `nest-sweep11` running its parser
+mutants and `fuzz11.py`, 6,100 fixed-seed programs compared with the seed, each in
+both compiler lanes with its own semantic mutants, and `nest-round12` the round-12 first-row marks (a `+` on a field of
+the first row that starts a constructor marks that field in every row below its split), the term suffixes (an operator,
+a call, an index, an offload, a lambda after a term, and `+name` as a term, are Unsupported wherever a term ends) and
+the oracle's atomic wrapper writes, with 26 semantic mutants and `fuzz12.py`, 3,000 fixed-seed programs compared with
+the seed, and `nest-round13` the round-13 vocabulary and precision (an operator token that continues a term is
+`Unsupported parse operator`, another unmodeled form `term-form`; a spaced `+` or `-` after a let's value is Invalid only
+for the marker gap; `+name`, a glued `x+y` and a hole after an expression argument, and a body or statement that starts
+with a bracket, a numeral or a hole at another column, are Unsupported) and the core budget (a match's core may not exceed
+65,536 nodes, every copy counted), with 208 seed-frozen fixtures, the reviewer's 684-cell class grid and 64-form zoo
+in both lanes, 27 semantic mutants and the classification of the Bun lane's own fault on a large module as Exhausted
+(host). `fuzz12.py` now also draws the forms of both findings. The nest gates scale their
+harness timeouts with `KNOT_GATE_TIMEOUT_SCALE`, like the older gates.
 `bootstrap` runs the [E2E-2/E2E-3 harness](../../tests/compiler-bootstrap/README.md); `census` runs `tools/census/census.mjs
 --check`, so a new source file, import or feature class needs a reviewed
 `tools/census/approved.json` entry. Gate failures, missing executables,
@@ -70,6 +109,15 @@ mutants in all); its expectations are items 10 to 14 of the
 [context contract](../../tests/perch-context/CONTRACT.md).
 
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
+
+`nest-precheck` replays ten seed-frozen precheck probes and declaration-order
+controls through the parser, checker, evaluator and both emitters in both
+compiler lanes. A constructor pattern resolves at its source declaration event
+before `Parsed` is exposed; constructor expressions retain forward references.
+It also preserves the standing operator and dotted-binder prefix rulings,
+checks rejected compilation preserves existing artifacts, and kills three
+type-correct semantic mutants in both lanes. It writes only the owned
+`tests/compiler-nest/receipts/precheck.json`.
 
 - It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
 - It then runs Knot's `check-cli` and `eval-cli` on each case.
