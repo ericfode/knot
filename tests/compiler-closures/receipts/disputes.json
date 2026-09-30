@@ -1,0 +1,188 @@
+{
+  "disputes": [
+    {
+      "disposition": "disputed",
+      "evidence": "The full frozen source returns invert. Both seed native/Bun wrappers apply it to On{} and obtain Off{}. The unchanged src/CONTRACT.json host_boundary requires HostFailure invoke function-result for evaluator observation; syntax.Error.Host carries phase/code and no source span.",
+      "finding": "C1 crash/diagnostic-shape",
+      "fingerprints": [
+        "7c0871a3666be44005dc",
+        "5a7d3ec9413a356cc1ef"
+      ]
+    },
+    {
+      "disposition": "disputed",
+      "evidence": "61554f7c freezes the seed On{} function-field result before a1d68911. Its commit body names the amendment and seed observation but lacks a literal amend: marker. Restoring the old Unsupported catalog pin would contradict implemented support and the seed. Original row, fixture and seed observations remain unchanged.",
+      "finding": "C3 frozen-row-changed",
+      "fingerprints": [
+        "7932bed417c3f5b4c7d1"
+      ]
+    }
+  ],
+  "programs": [
+    {
+      "expected_wrapper_stdout": "On{}\n",
+      "file": "tests/compiler-structural/fixtures/function-field.bend",
+      "lanes": {
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/closures/dispute-seed-lanes/function-field.bend",
+              "-o",
+              ".local/closures/dispute-seed-lanes/function-field.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "run": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".local/closures/dispute-seed-lanes/function-field.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "On{}\n"
+          }
+        },
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/closures/dispute-seed-lanes/function-field.bend",
+              "-o",
+              ".local/closures/dispute-seed-lanes/function-field"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "run": {
+            "argv": [
+              ".local/closures/dispute-seed-lanes/function-field"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "On{}\n"
+          }
+        }
+      },
+      "seed": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-structural/fixtures/function-field.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-structural/fixtures/function-field.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "On{}\n"
+        }
+      ],
+      "sha256": "27cadd39f30c895da31bdf7871f9140d5df4ad89fdf94f52694042ee41290259",
+      "wrapper_source": "import Base\nimport ../../../tests/compiler-structural/fixtures/function-field.bend as F\n\ndef show(x: F.Flag) -> String:\n  match x:\n    case F.Off{}: \"Off{}\"\n    case F.On{}: \"On{}\"\n\ndef main() -> IO(Unit):\n  IO.print(show(F.main()))\n"
+    },
+    {
+      "expected_wrapper_stdout": "Off{}\n",
+      "file": "tests/compiler-closures/prechecks/b507406b7c59d768.bend",
+      "lanes": {
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/closures/dispute-seed-lanes/function-result.bend",
+              "-o",
+              ".local/closures/dispute-seed-lanes/function-result.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "run": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".local/closures/dispute-seed-lanes/function-result.js"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Off{}\n"
+          }
+        },
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/closures/dispute-seed-lanes/function-result.bend",
+              "-o",
+              ".local/closures/dispute-seed-lanes/function-result"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": ""
+          },
+          "run": {
+            "argv": [
+              ".local/closures/dispute-seed-lanes/function-result"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Off{}\n"
+          }
+        }
+      },
+      "seed": [
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/b507406b7c59d768.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "All terms check.\n"
+        },
+        {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/b507406b7c59d768.bend"
+          ],
+          "exit": 0,
+          "stderr": "",
+          "stdout": "invert\n"
+        }
+      ],
+      "sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2",
+      "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/b507406b7c59d768.bend as F\n\ndef show(x: F.Flag) -> String:\n  match x:\n    case F.Off{}: \"Off{}\"\n    case F.On{}: \"On{}\"\n\ndef main() -> IO(Unit):\n  IO.print(show(F.main()(F.On{})))\n"
+    }
+  ],
+  "schema": 1,
+  "seed_programs_status": "passed",
+  "source_commit": "946fe412c329d11709254f48635c763e409aa001"
+}

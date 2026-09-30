@@ -1,0 +1,306 @@
+{
+  "closure_receipt": {
+    "file": "tests/compiler-closures/receipts/closures.json",
+    "sha256": "57682d34db449443a6cbdf0cea0d98e2de1c29317dcf2c0cb24c0aaf4c1b7cf9"
+  },
+  "command": [
+    "npm",
+    "run",
+    "-s",
+    "gates",
+    "--",
+    "--jobs",
+    "1",
+    "--timeout",
+    "1800.0",
+    "--keep-scratch"
+  ],
+  "environment": {
+    "BEND_NO_TELEMETRY": "1",
+    "clang_optimization_override": "O1 via ignored local PATH wrapper"
+  },
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 40,
+        "declarations": 598,
+        "files": 42
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 127
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-closures/check.py"
+      ],
+      "counts": {
+        "agreed_fixtures": 49,
+        "blocked_calls": 19,
+        "blocked_fixtures": 1,
+        "boundaries": 14,
+        "boundary_probes": 14,
+        "byte_identity_checks": 49,
+        "check_observations": 174,
+        "checked_laws": 28,
+        "compile_observations": 174,
+        "evaluator_calls": 578,
+        "fixtures": 87,
+        "frozen_fixtures": 42,
+        "mutant_lane_kills": 10,
+        "mutants": 5,
+        "prechecks": {
+          "byte_identity_checks": 6,
+          "check_observations": 52,
+          "compile_observations": 52,
+          "eval_observations": 46,
+          "host_result_refusals": 2,
+          "mutant_lane_kills": 6,
+          "mutants": 3,
+          "parse_observations": 52,
+          "programs": 26,
+          "wasm_calls": 4
+        },
+        "proof_entries": 4,
+        "refresh_fixtures": 32,
+        "refresh_phase_observations": 192,
+        "refresh_seed_builds": 64,
+        "refresh_seed_calls": 40,
+        "refresh_seed_checks": 32,
+        "refresh_seed_rejections": 12,
+        "regression_fixtures": 11,
+        "regression_phase_observations": 66,
+        "regression_seed_calls": 8,
+        "regression_seed_rejections": 3,
+        "rejected_fixtures": 37,
+        "rejection_evaluator_observations": 76,
+        "seed_calls": 292,
+        "seed_rejections": 18,
+        "supplemental_probes": 2,
+        "supplemental_seed_calls": 8,
+        "wasm_calls": 578
+      },
+      "exit_code": 0,
+      "name": "closures",
+      "status": "passed"
+    }
+  ],
+  "host_build_limits": "Default O3 exceeded the frozen frontend 30-second host-build guard; the failed attempt is retained in history/integrity-first-gates.json. No performance pass is claimed.",
+  "limits": "Other increments own shared receipt refresh; blocked prerequisites are not passes.",
+  "receipt_counts": {
+    "identical": 63,
+    "semantic": 12,
+    "volatile-only": 6
+  },
+  "schema": 1,
+  "source_commit": "946fe412c329d11709254f48635c763e409aa001",
+  "status": "passed"
+}

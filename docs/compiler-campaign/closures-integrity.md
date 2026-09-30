@@ -1,5 +1,10 @@
 # Closures: scope and receipt integrity follow-up
 
+All fifteen registered gates pass with exit 0 at source checkpoint `946fe412`,
+using the disclosed native clang `-O1` host setting. The 19 generic chooser calls
+remain blocked and excluded from agreement. Committed-head precheck adjudication
+is recorded below; no live Perch or automatic style qualification is claimed.
+
 This round starts at `35b979bf` on `campaign/closures`. The comparison base
 reported by the unchanged precheck tool is `fa31fec0`; its main/tool reference
 is `b92b1359`. Earlier implementation, freezes and observations remain in Git.
@@ -45,8 +50,8 @@ is absent, although the seed observation and amendment are explicit. Rewriting
 the old commit is outside the executor boundary. Restoring its old Unsupported
 catalog expectation would contradict the seed, the capability and the frozen
 closure-field controls. This finding is disputed on that evidence; the row,
-source and seed observations remain unchanged. A fresh seed replay and full
-structural gate are required below before handoff.
+source and seed observations remain unchanged. Fresh seed replay in native/Bun and the complete structural gate both pass.
+The field book prints `On{}` in both seed lanes.
 
 ## Receipt repair
 
@@ -91,11 +96,107 @@ correctness evidence with a disclosed C optimization setting, not a speed result
 or a claim that the default `-O3` host timeout passed. The coordinator's newer
 shared hang guards and standard optimized build remain integration work.
 
-## Remaining verification
+## Fresh acceptance
 
-Fresh source/input hashes, committed-head C1/C3/C4 replay and the full
-fifteen-gate run are pending in this checkpoint. The old current `closures.json`
-is intentionally awaiting regeneration; it is not used to claim acceptance.
-The two previously documented HostFailure findings remain disputes
-until their frozen function-result probe is freshly replayed. Live semantic,
-law and five-axis/composition style qualification remains coordinator-owned.
+The accepted command was `BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 1
+--timeout 1800 --keep-scratch`, with the ignored local clang wrapper in PATH.
+It exits **0**: all **15** registered gates pass, each with exit **0**.
+[Current gate results](../../tests/compiler-closures/receipts/gates.json) record
+that host optimization setting and every exact count. [Current closure evidence](../../tests/compiler-closures/receipts/closures.json)
+is regenerated from this run. The evidence validator checks all **172** current
+input hashes against both this worktree and the exported snapshot; the receipt
+identity and reported closure counts also match. No shared receipt is refreshed.
+
+[Scope evidence](../../tests/compiler-closures/receipts/scope.json) confirms
+all compiler source remains at the starting source tree
+`8b1007574cb442060b514f2b7e6f8505042eac50`. All **123** original frozen control
+files remain byte-identical to `35b979bf`. Seven frozen scripts plus the shared
+runner tests match `fa31fec0` byte for byte. Original fixture values, expectations,
+laws, proof domains and mutants are preserved.
+
+Every row has status **passed** and exit **0**. Counts overlap; do not sum them.
+
+| Gate | Exact counts |
+| --- | --- |
+| `frontend` | `{"boundaries": 24, "fixtures": 14, "lane_observations": 28, "mutants": 4}` |
+| `checker` | `{"bound_observations": 16, "bounds": 2, "budgets": 10, "fixtures": 49, "lane_observations": 98, "mutants": 7}` |
+| `structural` | `{"bounds": 4, "fixtures": 16, "lane_observations": 64, "mutants": 7}` |
+| `fields` | `{"bound_observations": 12, "bounds": 2, "budgets": 36, "fixtures": 40, "host_boundaries": 6, "lane_observations": 240, "mutants": 9}` |
+| `wasm` | `{"boundaries": 44, "execution_lanes": 2, "fixtures": 25, "mutants": 7, "reference_calls": 90, "rejects": 64}` |
+| `wasm-trust` | `{"entries": 3, "proof_holes": 0}` |
+| `fields-trust` | `{"entries": 4, "proof_holes": 0}` |
+| `structural-trust` | `{"entries": 2, "proof_holes": 0}` |
+| `owned-store` | `{"cases": 3532, "execution_lanes": 2, "literal_witnesses": 15, "mutants": 6}` |
+| `flat-store` | `{"bun": {"installed_boundary_states": 2, "instances": 3534, "lifecycle_checks": 7, "observations": 13621}, "mutants": 9, "native": {"installed_boundary_states": 2, "instances": 3534, "lifecycle_checks": 7, "observations": 13621}}` |
+| `recursion` | `{"fixtures": 19, "mutants": 3}` |
+| `fields-wasm` | `{"boundaries": 30, "fixtures": 8, "mutants": 4}` |
+| `census` | `{"classes": 40, "declarations": 598, "files": 42}` |
+| `lint:verify` | `{"law_rules": 8, "tests": 127}` |
+| `closures` | `{"agreed_fixtures": 49, "blocked_calls": 19, "blocked_fixtures": 1, "boundaries": 14, "boundary_probes": 14, "byte_identity_checks": 49, "check_observations": 174, "checked_laws": 28, "compile_observations": 174, "evaluator_calls": 578, "fixtures": 87, "frozen_fixtures": 42, "mutant_lane_kills": 10, "mutants": 5, "prechecks": {"byte_identity_checks": 6, "check_observations": 52, "compile_observations": 52, "eval_observations": 46, "host_result_refusals": 2, "mutant_lane_kills": 6, "mutants": 3, "parse_observations": 52, "programs": 26, "wasm_calls": 4}, "proof_entries": 4, "refresh_fixtures": 32, "refresh_phase_observations": 192, "refresh_seed_builds": 64, "refresh_seed_calls": 40, "refresh_seed_checks": 32, "refresh_seed_rejections": 12, "regression_fixtures": 11, "regression_phase_observations": 66, "regression_seed_calls": 8, "regression_seed_rejections": 3, "rejected_fixtures": 37, "rejection_evaluator_observations": 76, "seed_calls": 292, "seed_rejections": 18, "supplemental_probes": 2, "supplemental_seed_calls": 8, "wasm_calls": 578}` |
+
+The closure gate replays all 32 refresh edges: 32 checks, 64 seed native/Bun
+builds, 40 seed executions and 192 Knot phase observations. Its 26 precheck
+programs add 52 parses, checks and compilations, 46 evaluator observations,
+two exact host-result refusals and four Node Wasm calls. All four proof entries
+fill 28 laws without holes. The original five mutants retain ten lane kills;
+the three added parser mutants retain six lane kills. Host timeouts and other
+process failures count as neither source rejection nor semantic mutant kills.
+
+## Fresh dispute evidence
+
+[Disputes](../../tests/compiler-closures/receipts/disputes.json) records fresh
+pinned-seed checks and executions, then builds/runs both native and Bun wrappers
+without changing either original source. The field book returns `On{}`. The full
+function-result book returns `invert`; applying that returned function to `On{}`
+returns `Off{}` in both seed lanes. Both Knot evaluator lanes in the full closure
+gate retain the documented `HostFailure invoke function-result`, exit 5.
+
+- **C1 `7c0871a3666be44005dc` — disputed:** HostFailure is the explicit result
+  ABI refusal in unchanged `src/CONTRACT.json`, not a compiler crash. Source
+  `b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2`
+  includes the `invert` body omitted by C1's 240-character display. Parsing,
+  checking and building that book succeed; observing its function result refuses.
+- **C1 `5a7d3ec9413a356cc1ef` — disputed:** `syntax.Error.Host` stores phase/code
+  without a source span. `diagnostic.error` emits the documented three-column
+  host diagnostic; the SPEC requires offsets where available. Inventing a source
+  span or changing the refusal class would alter the frozen host contract.
+- **C3 `7932bed417c3f5b4c7d1` — disputed:** the historical expectation-first
+  seed amendment is documented above and freshly validated. Its missing literal
+  commit-body marker does not justify restoring an obsolete Unsupported pin.
+
+## Committed-head prechecks
+
+Pending immediately after committing the acceptance evidence. The unchanged
+precheck tool/registry is from main `b92b13595bcbc265b823cb3cfdc38918e35953c9`;
+its C1/C3/C4 implementations were compared byte for byte to the read-only current
+main during this round. No tool, registry, coordinator ledger or old commit is
+rewritten to suppress a condition. The final replay must report C1/C3 disputes
+explicitly and no remaining executor C4 integrity finding.
+
+## Coordinator and other-increment remainder
+
+The main merge is forbidden to this executor and remains serial coordinator
+work: nest → modules → descent-2 → closures → literals-integ → generics → VM.
+No merge changed this worktree. Reconcile Scope and imported-constructor visibility,
+regenerate merged census/shared receipts, and rerun the standard optimized gates
+with the coordinator's newer shared host guards.
+
+All D26 items retain their seed observations and values:
+
+- `structural/function-field`: Checked catalog; default enum compilation still
+  refuses constructor fields. The seed prints `On{}`.
+- `nest/closure-parameter`: Unsupported parse term-form while lambda-match
+  shorthand remains absent, after accepting the arrow parameter; never Invalid.
+- `generics/closure-apply`: Checked when generic higher-order apply is supported;
+  otherwise Unsupported for the genuine missing capability. Generics must run
+  the unchanged 19 blocked `generic-choose-bind` calls.
+- `suffix-cont-lambda-let` and `letop-lambda-dead2`: after matrix support, Checked
+  if the remaining form soundly checks, otherwise genuine Unsupported. Their
+  original seed acceptance/`On{}` observations never become Invalid.
+
+D24 request-Default belongs to nest/core-default/VM. D21's general
+capture/application preservation theorem remains required and open in the source
+SPEC and LAW_REVIEW; finite agreement and the local laws do not discharge it.
+Live semantic/law qualification and Compression, Delight, Memetic identity,
+Anticipation, Payoff and composition ratings remain unrun, unqualified and
+coordinator-owned. Nothing in this report is an automatic style pass.
