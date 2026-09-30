@@ -61,7 +61,8 @@ def codex(label, prompt, schema, cwd):
         with SLOTS:
             log(f'start {label} (attempt {attempt})'); t = time.time()
             with open(RUN / 'logs' / f'{label}.log', 'a') as lf:
-                p = subprocess.run(['codex', 'exec', '-m', MODEL, '-c', 'model_reasoning_effort="max"', '-c', 'service_tier="fast"',
+                p = subprocess.run(['codex', 'exec', '-m', MODEL, '-c', 'model_reasoning_effort="max"',
+                                    '--ignore-user-config',  # standard tier: the user config selects service_tier "fast" (user, 2026-09-29 19:05: "turn off fast mode")
                                     '-s', 'danger-full-access',  # workspace-write keeps .git read-only, so commits fail (smoke test 2026-09-29)
                                     '-C', cwd, '--skip-git-repo-check', '--output-schema', str(sch), '-o', str(out), '-'],
                                    input=prompt, text=True, stdout=lf, stderr=subprocess.STDOUT, env=ENV)
