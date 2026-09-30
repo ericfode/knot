@@ -1,7 +1,7 @@
 {
   "closure_receipt": {
     "file": "tests/compiler-closures/receipts/closures.json",
-    "sha256": "57682d34db449443a6cbdf0cea0d98e2de1c29317dcf2c0cb24c0aaf4c1b7cf9"
+    "sha256": "6a97ef4d4b0c632aff558ccdbf99aa0ab9aa8ef7efdf342c4330a394ea527254"
   },
   "command": [
     "npm",
@@ -17,6 +17,8 @@
   ],
   "environment": {
     "BEND_NO_TELEMETRY": "1",
+    "SDKROOT": "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk",
+    "TMPDIR": "$ROOT/.local/closures/scratch",
     "clang_optimization_override": "O1 via ignored local PATH wrapper"
   },
   "gates": [
@@ -215,7 +217,7 @@
       ],
       "counts": {
         "classes": 40,
-        "declarations": 598,
+        "declarations": 620,
         "files": 42
       },
       "exit_code": 0,
@@ -250,7 +252,7 @@
         "boundary_probes": 14,
         "byte_identity_checks": 49,
         "check_observations": 174,
-        "checked_laws": 28,
+        "checked_laws": 33,
         "compile_observations": 174,
         "evaluator_calls": 578,
         "fixtures": 87,
@@ -282,6 +284,21 @@
         "regression_seed_rejections": 3,
         "rejected_fixtures": 37,
         "rejection_evaluator_observations": 76,
+        "review_r1": {
+          "agreed_fixtures": 29,
+          "byte_identity_checks": 29,
+          "check_observations": 84,
+          "compile_observations": 84,
+          "evaluator_observations": 84,
+          "lowering_safety_lane_kills": 2,
+          "mutants": 5,
+          "programs": 42,
+          "rejected_fixtures": 13,
+          "semantic_mutant_lane_kills": 8,
+          "timing_samples": 6,
+          "wasm_calls": 58,
+          "wide_host_controls": 18
+        },
         "seed_calls": 292,
         "seed_rejections": 18,
         "supplemental_probes": 2,
@@ -293,7 +310,7 @@
       "status": "passed"
     }
   ],
-  "host_build_limits": "Default O3 exceeded the frozen frontend 30-second host-build guard; the failed attempt is retained in history/integrity-first-gates.json. No performance pass is claimed.",
+  "host_build_limits": "This accepted run uses the explicit SDKROOT and ignored local clang -O1 wrapper. The earlier default-O3 frontend timeout remains archived in history/integrity-first-gates.json; no fresh default-O3 build or performance pass is claimed.",
   "limits": "Other increments own shared receipt refresh; blocked prerequisites are not passes.",
   "receipt_counts": {
     "identical": 63,
@@ -301,6 +318,6 @@
     "volatile-only": 6
   },
   "schema": 1,
-  "source_commit": "946fe412c329d11709254f48635c763e409aa001",
+  "source_commit": "5d702d857ea09aa43ec6455c4b7c67c2b5f4aefa",
   "status": "passed"
 }
