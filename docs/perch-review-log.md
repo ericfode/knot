@@ -941,3 +941,20 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-29 — BS1 seed/proof harness conventions
+
+BS1's oracle preparation first assumed that a native seed build could omit Base,
+then that imported modules could redeclare Base names. Both are rejected by the
+pinned seed. The corrected oracle imports the unmodified Base and keeps the
+consumer body identical to the excerpt qualification book. Two proof parser
+failures exposed the equality colon's placement inside its braces and the
+required parentheses on a nullary law fill. The proof audit also initially
+assumed file-path namespaces; `book_load(..., "", ...)` registers these laws as
+`LAWS.*`. No parser/build failure counted as a semantic mutant kill.
+
+Preventive procedure: check one minimal source/proof and inspect the seed's
+actual loaded names before constructing the full oracle or closure audit.
+[BS1's fixed oracle, proof boundary and witnesses](../tests/compiler-baseslice/enum/LAW_REVIEW.md)
+record the corrected representations. No model review or elapsed-effort estimate
+is claimed; Perch calls are coordinator-only for this increment.

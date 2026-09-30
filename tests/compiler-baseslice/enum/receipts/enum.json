@@ -1,0 +1,2092 @@
+{
+  "schema": 1,
+  "status": "pass",
+  "step": "BS1 enum-source qualification",
+  "profile": "knot-enum-1",
+  "inputs": {
+    "tests/compiler-baseslice/enum/expectations.json": "ddde6385ef9bc1cf9a2facce987ad7a9abaec9a6bd54830e040ba0fca70e6de5",
+    "tests/compiler-baseslice/enum/regen.py": "f1ad114e769115d77134ab079f9ded1372c9be0336539998ac7001b1933f5910",
+    "tests/compiler-baseslice/enum/check.py": "92f6aaa987140317658a58357c8ef91ce75625e474a69f50adddf851f5837309",
+    "tests/compiler-baseslice/enum/trust.ts": "251c88be2e4e09556d71bb2b62f83ffeb2450ccc96835eb71fa73e34ed76b191",
+    "tests/compiler-baseslice/enum/LAWS.bend": "d6f5b2e83e90bf208cea77c0fbed92848f605ac6f6af3a54a7957787eaea48e1",
+    "tests/compiler-baseslice/enum/PROOF.bend": "e4eabe959e853761c3ad7052c305abb8338213c0eec0f32788281e5b9f1ac85f",
+    "scripts/run-wasm.mjs": "40797c19ac289b7a3587d6ffddc82b0faf191c4ddbadec8d4b2df7d87b1995ca",
+    "src/LAWS.bend": "114ce8f726096b4f5efa581fb03704ab1abe45f608a59dd355ea2a28b9fbb5d8",
+    "src/PROOF.bend": "c4cd2d933718cf9532030b849234a363f31d5658008a942ab412e7816c279638",
+    "src/catalog-LAWS.bend": "3b4841bd9fb03d5404fb03c40128f7a495e674e31f7b0aceb40f8559186e8f6c",
+    "src/catalog-PROOF.bend": "f7cfa9ad281b28bb2d2a96a6a60798916c6b8ba6a48f445d55b33213d155b7c9",
+    "src/catalog.bend": "50e9262a92b35794773e1b2c8722301d180a0f291a012bb2fc79706e6a512ce0",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "3d899dc48082a85d6b537bd979376b54b4c820d62e53a74616bb16f3194148f2",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/diagnostic.bend": "ec85a682cf5dd66cc05c5ab9b0ac705974deb119b4873a9e8c38b7b91bc55ac0",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "e27ad43949c4846d94e4d862a109cb0bb8b92eec3bcf67869e1cb2faf8a438df",
+    "src/patterns.bend": "972ab0b84e1e3587e229a3ae4a030820c22681a94604a4839b4411668c21471f",
+    "src/recursion-LAWS.bend": "ba134766c603260ece37587e2931a8243b8620d10ddd0851bcf04cfd42c6ff47",
+    "src/recursion-PROOF.bend": "1ca9232b1d709ee5791b6bdcfb59ebc167ed047daf49d0a4229e554f0d3f8fae",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "c9536f3c2bcf3d9283578493ae18923ca70e82fcd543737f9f457bba204307e0",
+    "src/syntax.bend": "94806a94dae794f5e83a82537c1e8b4b066bac14430a116027ec9f49f21bc5b1",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "efd76356f4dc6bea21b822295e49c1d3d8c1bfc4d9a0101fa6e81d75458178e3",
+    "tests/compiler-baseslice/enum/fixtures/affine-reuse.bend": "29bce53bbf591e16c90cd3d8ef16f87fd03379e1ddf3cd58330db3179530de4c",
+    "tests/compiler-baseslice/enum/fixtures/boolean.bend": "12656c270d2a6b884bcdd07a201d97e2d0a378c9380b728c60b79860a4022841",
+    "tests/compiler-baseslice/enum/fixtures/cmp-unit.bend": "f10913a0c00f76364e22b387366737b5de11a588876e8da978081deeccca6de4",
+    "tests/compiler-baseslice/enum/fixtures/import-base.bend": "8b76c74e64708e40e8bde7a2674d570469efb77fc29290f344f18586b21d6fdf",
+    "tests/compiler-baseslice/enum/fixtures/missing-arm.bend": "3ff95154a607c6acaced4d40967dd88a059b4cfcd1f5da69573eb69cc5190f31",
+    "tests/compiler-baseslice/enum/fixtures/wrong-arity.bend": "e08107ecce894223214416bf8196cdf39f1cc16577508da6cb5c48c4d78189b5",
+    "tests/compiler-baseslice/enum/fixtures/wrong-type.bend": "30174dc93803a58b97176abb1bf15824173581848e1e3cbfa1f7a8c14887f34d"
+  },
+  "seed_reproduced": true,
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "declarations": [
+    {
+      "name": "Unit",
+      "lines": [
+        9,
+        10
+      ],
+      "sha256": "a5743f66439df390dbb1e886d8fa0b83c5c6054b5ea9120a18220d03110e7d57"
+    },
+    {
+      "name": "Bool",
+      "lines": [
+        12,
+        14
+      ],
+      "sha256": "28d8bb0c31ed70175aee5c1ca4c08b6b895b208fc479531fc6204a25ec2cc6f8"
+    },
+    {
+      "name": "Cmp",
+      "lines": [
+        16,
+        19
+      ],
+      "sha256": "391516e5b51ae946b341d28ef0acac783910bda24efc88e7159f891ce3d28a3c"
+    },
+    {
+      "name": "Bool.not",
+      "lines": [
+        425,
+        430
+      ],
+      "sha256": "2a99aaf6743923e7fc7222d5a54d028e4e4b6eaac9026332476e4a80dfb3d83d"
+    },
+    {
+      "name": "Bool.and",
+      "lines": [
+        432,
+        437
+      ],
+      "sha256": "6273864f3def2b6f540295e99e25a2eaaeae3355bbf9cad74e0ca14a9ca5e20b"
+    },
+    {
+      "name": "Bool.or",
+      "lines": [
+        439,
+        444
+      ],
+      "sha256": "83a05ee75523c906be6ac1c86a1a41e6e442d2235523df8e97e6753509213215"
+    },
+    {
+      "name": "Cmp.is_eq",
+      "lines": [
+        509,
+        516
+      ],
+      "sha256": "8d3e6cb5951a500ab3ef0e0578e4d8074eb9409cc581f4a41e59a90d79f93860"
+    }
+  ],
+  "proof": {
+    "entry": "tests/compiler-baseslice/enum/PROOF.bend",
+    "holes": 0,
+    "laws": [
+      "LAWS.and_associative",
+      "LAWS.de_morgan",
+      "LAWS.eq_is_equal",
+      "LAWS.gt_is_unequal",
+      "LAWS.lt_is_unequal",
+      "LAWS.not_involution",
+      "LAWS.or_associative",
+      "LAWS.unit_unique"
+    ],
+    "loaded_files": [
+      {
+        "path": "tests/compiler-baseslice/enum/PROOF.bend",
+        "sha256": "e4eabe959e853761c3ad7052c305abb8338213c0eec0f32788281e5b9f1ac85f"
+      },
+      {
+        "path": ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend",
+        "sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+      },
+      {
+        "path": "tests/compiler-baseslice/enum/LAWS.bend",
+        "sha256": "d6f5b2e83e90bf208cea77c0fbed92848f605ac6f6af3a54a7957787eaea48e1"
+      }
+    ],
+    "loaded_unsafe": [
+      "Array.fork",
+      "Array.join"
+    ],
+    "loaded_foreign": [
+      "Audio.close",
+      "Audio.open",
+      "Audio.write",
+      "Chan.close",
+      "Chan.new",
+      "Chan.recv",
+      "Chan.send",
+      "File.close",
+      "File.open",
+      "File.read",
+      "File.read_at",
+      "File.read_bytes",
+      "File.size",
+      "File.write",
+      "File.write_bytes",
+      "IO.args",
+      "IO.get_env",
+      "IO.now",
+      "IO.print",
+      "IO.print_err",
+      "IO.random_u32",
+      "IO.sleep",
+      "IO.spawn",
+      "IO.thread_count",
+      "IO.write",
+      "Listener.close",
+      "Process.run",
+      "Socket.close",
+      "TCP.accept",
+      "TCP.connect",
+      "TCP.listen",
+      "TCP.poll",
+      "TCP.recv",
+      "TCP.send",
+      "UDP.bind",
+      "UDP.poll",
+      "UDP.recv_from",
+      "UDP.send_to",
+      "Window.close",
+      "Window.frame",
+      "Window.open",
+      "Window.set_title"
+    ],
+    "limit": "Five universal finite-domain source laws and three ground equations; no compiler-refinement theorem. Whole loaded Base unsafe/foreign inventory is not runtime reach."
+  },
+  "builds": [
+    {
+      "lane": "native",
+      "phase": "check",
+      "entry": "src/check-cli.bend",
+      "sha256": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "eval",
+      "entry": "src/eval-cli.bend",
+      "sha256": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "native",
+      "phase": "compile",
+      "entry": "src/compile-cli.bend",
+      "sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "check",
+      "entry": "src/check-cli.bend",
+      "sha256": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "eval",
+      "entry": "src/eval-cli.bend",
+      "sha256": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    },
+    {
+      "lane": "bun",
+      "phase": "compile",
+      "entry": "src/compile-cli.bend",
+      "sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+      "observation": {
+        "exit": 0,
+        "stdout": "",
+        "stderr": ""
+      }
+    }
+  ],
+  "fixtures": [
+    {
+      "case": "boolean",
+      "require": "agree",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 0,
+            "stdout": "Checked\nBool.not(1:1)->1=case $0 [0=>v1.1;1=>v1.0]\nBool.and(1:1,1:1)->1=case $0 [0=>v1.0;1=>$1:1]\nBool.or(1:1,1:1)->1=case $0 [0=>$1:1;1=>v1.1]\nCmp.is_eq(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.0]\nneg(1:1)->1=call0($0:1)\nconjunction(1:1,1:1)->1=call1($0:1;$1:1)\ndisjunction(1:1,1:1)->1=call2($0:1;$1:1)\ncomposed(1:1,1:1,1:1)->1=call1(call2($0:1;$1:1);call0($2:1))\nreusable(2:1)->1=call2($0:1;call0($0:1))\nmain()->1=call4(v1.0)\n\n",
+            "stderr": ""
+          },
+          "compile": {
+            "exit": 0,
+            "stdout": "Built\t326\n",
+            "stderr": ""
+          },
+          "wasm_sha256": "6171ca9ee2515fd26ded02ae4dd1bebc575e72e5b41a868d5a8303f6dee4b1be",
+          "calls": [
+            {
+              "entry": "main",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "main",
+                "arguments": [],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "neg",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "neg",
+                "arguments": [
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "neg",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "neg",
+                "arguments": [
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  1,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  1,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  0,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  1,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  1,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  0,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  1,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "reusable",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "reusable",
+                "arguments": [
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "reusable",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "reusable",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            }
+          ]
+        },
+        "bun": {
+          "check": {
+            "exit": 0,
+            "stdout": "Checked\nBool.not(1:1)->1=case $0 [0=>v1.1;1=>v1.0]\nBool.and(1:1,1:1)->1=case $0 [0=>v1.0;1=>$1:1]\nBool.or(1:1,1:1)->1=case $0 [0=>$1:1;1=>v1.1]\nCmp.is_eq(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.0]\nneg(1:1)->1=call0($0:1)\nconjunction(1:1,1:1)->1=call1($0:1;$1:1)\ndisjunction(1:1,1:1)->1=call2($0:1;$1:1)\ncomposed(1:1,1:1,1:1)->1=call1(call2($0:1;$1:1);call0($2:1))\nreusable(2:1)->1=call2($0:1;call0($0:1))\nmain()->1=call4(v1.0)\n\n",
+            "stderr": ""
+          },
+          "compile": {
+            "exit": 0,
+            "stdout": "Built\t326\n",
+            "stderr": ""
+          },
+          "wasm_sha256": "6171ca9ee2515fd26ded02ae4dd1bebc575e72e5b41a868d5a8303f6dee4b1be",
+          "calls": [
+            {
+              "entry": "main",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "main",
+                "arguments": [],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "neg",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "neg",
+                "arguments": [
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "neg",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "neg",
+                "arguments": [
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  1,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "conjunction",
+              "ordinals": [
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "conjunction",
+                "arguments": [
+                  1,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  0,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "disjunction",
+              "ordinals": [
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "disjunction",
+                "arguments": [
+                  1,
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  0,
+                  0
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                0,
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  0,
+                  1,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                0,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  0,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                0,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  0,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                1,
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  1,
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "composed",
+              "ordinals": [
+                1,
+                1,
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "composed",
+                "arguments": [
+                  1,
+                  1,
+                  1
+                ],
+                "result": 0,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "reusable",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "reusable",
+                "arguments": [
+                  0
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            },
+            {
+              "entry": "reusable",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "reusable",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 326
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "cmp-unit",
+      "require": "agree",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 0,
+            "stdout": "Checked\nBool.not(1:1)->1=case $0 [0=>v1.1;1=>v1.0]\nBool.and(1:1,1:1)->1=case $0 [0=>v1.0;1=>$1:1]\nBool.or(1:1,1:1)->1=case $0 [0=>$1:1;1=>v1.1]\nCmp.is_eq(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.0]\nequal(1:2)->1=call3($0:2)\nrebuild(1:2)->2=case $0 [0=>v2.0;1=>v2.1;2=>v2.2]\nordering(1:1)->2=case $0 [0=>v2.0;1=>v2.2]\nsingleton()->0=v0.0\nmain()->1=call4(v2.0)\n\n",
+            "stderr": ""
+          },
+          "compile": {
+            "exit": 0,
+            "stdout": "Built\t304\n",
+            "stderr": ""
+          },
+          "wasm_sha256": "56d7b3b039cf1f0ffd92a3c4adc7d39a538189ca797c28bdda0176f782aac44a",
+          "calls": [
+            {
+              "entry": "main",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "main",
+                "arguments": [],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                2
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  2
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tLT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tEQ{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                2
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t2\tGT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  2
+                ],
+                "result": 2,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "ordering",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tLT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "ordering",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "ordering",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t2\tGT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "ordering",
+                "arguments": [
+                  1
+                ],
+                "result": 2,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "singleton",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t0\t0\tUnit{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "singleton",
+                "arguments": [],
+                "result": 0,
+                "bytes": 304
+              }
+            }
+          ]
+        },
+        "bun": {
+          "check": {
+            "exit": 0,
+            "stdout": "Checked\nBool.not(1:1)->1=case $0 [0=>v1.1;1=>v1.0]\nBool.and(1:1,1:1)->1=case $0 [0=>v1.0;1=>$1:1]\nBool.or(1:1,1:1)->1=case $0 [0=>$1:1;1=>v1.1]\nCmp.is_eq(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.0]\nequal(1:2)->1=call3($0:2)\nrebuild(1:2)->2=case $0 [0=>v2.0;1=>v2.1;2=>v2.2]\nordering(1:1)->2=case $0 [0=>v2.0;1=>v2.2]\nsingleton()->0=v0.0\nmain()->1=call4(v2.0)\n\n",
+            "stderr": ""
+          },
+          "compile": {
+            "exit": 0,
+            "stdout": "Built\t304\n",
+            "stderr": ""
+          },
+          "wasm_sha256": "56d7b3b039cf1f0ffd92a3c4adc7d39a538189ca797c28bdda0176f782aac44a",
+          "calls": [
+            {
+              "entry": "main",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "main",
+                "arguments": [],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t1\tTrue{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "equal",
+              "ordinals": [
+                2
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t1\t0\tFalse{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "equal",
+                "arguments": [
+                  2
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tLT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t1\tEQ{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  1
+                ],
+                "result": 1,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "rebuild",
+              "ordinals": [
+                2
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t2\tGT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "rebuild",
+                "arguments": [
+                  2
+                ],
+                "result": 2,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "ordering",
+              "ordinals": [
+                0
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t0\tLT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "ordering",
+                "arguments": [
+                  0
+                ],
+                "result": 0,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "ordering",
+              "ordinals": [
+                1
+              ],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t2\t2\tGT{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "ordering",
+                "arguments": [
+                  1
+                ],
+                "result": 2,
+                "bytes": 304
+              }
+            },
+            {
+              "entry": "singleton",
+              "ordinals": [],
+              "eval": {
+                "exit": 0,
+                "stdout": "Evaluated\t0\t0\tUnit{}\n",
+                "stderr": ""
+              },
+              "wasm": {
+                "validated": true,
+                "export": "singleton",
+                "arguments": [],
+                "result": 0,
+                "bytes": 304
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "case": "affine-reuse",
+      "require": "reject",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        },
+        "bun": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\taffine-reuse\t740:748:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        }
+      }
+    },
+    {
+      "case": "wrong-type",
+      "require": "reject",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        },
+        "bun": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\ttype-mismatch\t748:749:47:11\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        }
+      }
+    },
+    {
+      "case": "wrong-arity",
+      "require": "reject",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        },
+        "bun": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tcall-arity\t734:742:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        }
+      }
+    },
+    {
+      "case": "missing-arm",
+      "require": "reject",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        },
+        "bun": {
+          "check": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "eval": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "compile": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "existing_output": {
+            "exit": 2,
+            "stdout": "",
+            "stderr": "Invalid\tcheck\tmissing-arm\t740:745:47:2\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        }
+      }
+    },
+    {
+      "case": "import-base",
+      "require": "deferred",
+      "lanes": {
+        "native": {
+          "check": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "eval": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "compile": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "existing_output": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        },
+        "bun": {
+          "check": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "eval": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "compile": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "existing_output": {
+            "exit": 3,
+            "stdout": "",
+            "stderr": "Unsupported\tparse\tdeclaration-form\t0:6:1:0\n"
+          },
+          "preserved_sha256": "21609aae3191ea91e155a796cbad875af54bc3401ca6e2bb85648fb330068e06"
+        }
+      }
+    }
+  ],
+  "mutants": [
+    {
+      "name": "zero-tags",
+      "phase": "compile",
+      "file": "wasm.bend",
+      "source_sha256": "28716c7e14cdd114790ace21b6c4b12d237660943a9f3448bc359f6881c56482",
+      "build": {
+        "entry": ".local/baseslice/enum/knot/mutants/zero-tags/src/compile-cli.bend",
+        "sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+        "observation": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "witness": {
+        "case": "boolean",
+        "entry": "neg",
+        "ordinals": [
+          0
+        ]
+      },
+      "expected": {
+        "constructor": "True",
+        "tag": 1
+      },
+      "observation": {
+        "validated": true,
+        "export": "neg",
+        "arguments": [
+          0
+        ],
+        "result": 0,
+        "bytes": 326
+      },
+      "kill": "classified value disagreement"
+    },
+    {
+      "name": "inverted-case",
+      "phase": "compile",
+      "file": "wasm.bend",
+      "source_sha256": "424f93a5deefe623e1c58eff785c3bad7db7e1a6c740ed4f661c51a1c4f3bff3",
+      "build": {
+        "entry": ".local/baseslice/enum/knot/mutants/inverted-case/src/compile-cli.bend",
+        "sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+        "observation": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "witness": {
+        "case": "boolean",
+        "entry": "neg",
+        "ordinals": [
+          0
+        ]
+      },
+      "expected": {
+        "constructor": "True",
+        "tag": 1
+      },
+      "observation": {
+        "validated": true,
+        "export": "neg",
+        "arguments": [
+          0
+        ],
+        "result": 0,
+        "bytes": 326
+      },
+      "kill": "classified value disagreement"
+    },
+    {
+      "name": "aliased-arguments",
+      "phase": "compile",
+      "file": "wasm.bend",
+      "source_sha256": "7c204d377dd0f56a1a8d683667d7bda047ee0f2d41b0c09c05703dd4d5eabc0c",
+      "build": {
+        "entry": ".local/baseslice/enum/knot/mutants/aliased-arguments/src/compile-cli.bend",
+        "sha256": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+        "observation": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "witness": {
+        "case": "boolean",
+        "entry": "conjunction",
+        "ordinals": [
+          1,
+          0
+        ]
+      },
+      "expected": {
+        "constructor": "False",
+        "tag": 0
+      },
+      "observation": {
+        "validated": true,
+        "export": "conjunction",
+        "arguments": [
+          1,
+          0
+        ],
+        "result": 1,
+        "bytes": 326
+      },
+      "kill": "classified value disagreement"
+    },
+    {
+      "name": "constant-evaluator",
+      "phase": "eval",
+      "file": "eval.bend",
+      "source_sha256": "4a3bd1d61faa7424a51b7b3d09d611a993e92ae7404af91cc275b2969949cb64",
+      "build": {
+        "entry": ".local/baseslice/enum/knot/mutants/constant-evaluator/src/eval-cli.bend",
+        "sha256": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+        "observation": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "witness": {
+        "case": "boolean",
+        "entry": "neg",
+        "ordinals": [
+          0
+        ]
+      },
+      "expected": {
+        "constructor": "True",
+        "tag": 1
+      },
+      "observation": {
+        "exit": 0,
+        "stdout": "Evaluated\t1\t0\tFalse{}\n",
+        "stderr": ""
+      },
+      "kill": "classified value disagreement"
+    },
+    {
+      "name": "lost-type-boundary",
+      "phase": "check",
+      "file": "check.bend",
+      "source_sha256": "f161dcf203ff54237f7a524968571dc50b73193f30e3e2b0b8197b4fa1bbe1b6",
+      "build": {
+        "entry": ".local/baseslice/enum/knot/mutants/lost-type-boundary/src/check-cli.bend",
+        "sha256": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+        "observation": {
+          "exit": 0,
+          "stdout": "",
+          "stderr": ""
+        }
+      },
+      "witness": "wrong-type",
+      "observation": {
+        "exit": 0,
+        "stdout": "Checked\nBool.not(1:1)->1=case $0 [0=>v1.1;1=>v1.0]\nBool.and(1:1,1:1)->1=case $0 [0=>v1.0;1=>$1:1]\nBool.or(1:1,1:1)->1=case $0 [0=>$1:1;1=>v1.1]\nCmp.is_eq(1:2)->1=case $0 [0=>v1.0;1=>v1.1;2=>v1.0]\nbad(1:2)->1=call0($0:2)\nmain()->1=call4(v2.1)\n\n",
+        "stderr": ""
+      },
+      "kill": "accepted seed-rejected type boundary"
+    }
+  ],
+  "counts": {
+    "declarations": 7,
+    "fixtures": 7,
+    "agreed_books": 2,
+    "rejected_books": 4,
+    "deferred_books": 1,
+    "seed_calls": 32,
+    "seed_lane_observations": 64,
+    "reference_calls": 31,
+    "evaluator_observations": 62,
+    "wasm_observations": 62,
+    "byte_identical_modules": 2,
+    "execution_lanes": 2,
+    "laws": 8,
+    "proof_holes": 0,
+    "mutants": 5,
+    "output_preservation_checks": 10
+  }
+}
