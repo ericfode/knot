@@ -58,13 +58,13 @@ two host-result findings below; neither is treated as a C1 pass.
 
 The complete sources, seed verdicts and original fingerprints are in
 `tests/compiler-closures/prechecks.json`; the original C1 report is preserved in
-`tests/compiler-closures/receipts/prechecks-before.json`. The coordinator may
+`tests/compiler-closures/receipts/history/prechecks-before.json`. The coordinator may
 adjudicate the two disputes in its ledger. This executor changes neither C1 nor
 the coordinator ledger to suppress them.
 
 The committed-head replay at `947928ae0a82c8256cd06c73c1dd2dc8e660bed1`
 reports exactly those two fingerprints, zero check errors and exit **3**:
-[prechecks-after.json](../../tests/compiler-closures/receipts/prechecks-after.json).
+[prechecks-after.json](../../tests/compiler-closures/receipts/history/prechecks-after.json).
 It uses the unchanged C1 tool and registry exported from main
 `b92b13595bcbc265b823cb3cfdc38918e35953c9`, with `--only C1 --no-write --json
 --jobs 4` and that explicit `--main-ref`. No parser condition remains. C1's
@@ -82,11 +82,11 @@ counted as acceptance or a mutant kill.
 
 The accepted command was `BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 2
 --keep-scratch`: exit **0**, all **15** registered gates passed. The complete
-summary is [precheck-gates.json](../../tests/compiler-closures/receipts/precheck-gates.json);
+summary is [precheck-gates.json](../../tests/compiler-closures/receipts/history/precheck-gates.json);
 the full source/seed/runtime/proof/mutant receipt is
-[precheck-closures.json](../../tests/compiler-closures/receipts/precheck-closures.json).
+[precheck-closures.json](../../tests/compiler-closures/receipts/history/precheck-closures.json).
 All 176 accepted closure input hashes match this worktree. The
-[scope receipt](../../tests/compiler-closures/receipts/precheck-scope.json) checks
+[scope receipt](../../tests/compiler-closures/receipts/history/precheck-scope.json) checks
 all 100 original fixture/oracle/expectation/law/proof/mutant files byte for byte
 against `0dcc51a0`. The 32-program refresh still contributes 32 seed checks,
 64 native/Bun builds, 40 seed calls and 192 Knot phase observations.

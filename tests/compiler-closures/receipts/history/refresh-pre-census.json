@@ -1,4 +1,6 @@
 {
+  "basis": "Completed pre-census refresh run: fourteen gates passed; census failed solely on stale gate-source metadata. This is not an overall gate pass.",
+  "census_stderr": "Unsupported: Stale inventory: docs/compiler-campaign/inventory/accepted.json; review policy and run npm run census.\n(node:64516) ExperimentalWarning: stripTypeScriptTypes is an experimental feature and might change at any time\n(Use `node --trace-warnings ...` to show where the warning was created)\n",
   "normalized": {
     "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
     "gates": [
@@ -195,14 +197,10 @@
           "tools/census/census.mjs",
           "--check"
         ],
-        "counts": {
-          "classes": 40,
-          "declarations": 598,
-          "files": 42
-        },
-        "exit_code": 0,
+        "counts": {},
+        "exit_code": 1,
         "name": "census",
-        "status": "passed"
+        "status": "failed"
       },
       {
         "command": [
@@ -232,26 +230,14 @@
           "boundary_probes": 14,
           "byte_identity_checks": 49,
           "check_observations": 174,
-          "checked_laws": 28,
+          "checked_laws": 24,
           "compile_observations": 174,
           "evaluator_calls": 578,
           "fixtures": 87,
           "frozen_fixtures": 42,
           "mutant_lane_kills": 10,
           "mutants": 5,
-          "prechecks": {
-            "byte_identity_checks": 6,
-            "check_observations": 52,
-            "compile_observations": 52,
-            "eval_observations": 46,
-            "host_result_refusals": 2,
-            "mutant_lane_kills": 6,
-            "mutants": 3,
-            "parse_observations": 52,
-            "programs": 26,
-            "wasm_calls": 4
-          },
-          "proof_entries": 4,
+          "proof_entries": 3,
           "refresh_fixtures": 32,
           "refresh_phase_observations": 192,
           "refresh_seed_builds": 64,
@@ -282,7 +268,7 @@
     },
     "receipts": [
       {
-        "after_sha256": "1806d0b02ca10e874e36ad7f1c8a9489922d35adfcc2a21b5dedb36bc36fab96",
+        "after_sha256": "af0318d1cb6d03d6dda98e251df9afce6d49fbb409e79b6f1512eda7abcc664d",
         "before_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
         "changed_fields": [
           "/entries/0/loaded_files",
@@ -297,7 +283,7 @@
         "path": "research/compiler-fields/receipts/trust.json"
       },
       {
-        "after_sha256": "4f5e8acfa3622ac06257a65fae189ec0bc40d6db80d4167fe24b36dc5de594fa",
+        "after_sha256": "f2c33e8582515860a48ad3ddd713da1019b9183358d03c6db1a61b2c9a477db7",
         "before_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
         "changed_fields": [
           "/entries/0/loaded_files",
@@ -308,7 +294,7 @@
         "path": "research/compiler-structural/receipts/trust.json"
       },
       {
-        "after_sha256": "cb520a1ccda3bb0c18f48206403fb5ff565ce63f0c06110c777005ec765f8fe1",
+        "after_sha256": "ae91afba7f77e566dff8be7a9a0dfd613f6af8216632ac6814f982f664fa315b",
         "before_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
         "changed_fields": [
           "/entries/0/generated_js_sha256",
@@ -441,7 +427,7 @@
         "path": "research/owned-store/receipts/native.txt.gz"
       },
       {
-        "after_sha256": "e8a986935947d04b9c64b9a2292ad919b0f69dc2552d1a33ce64a0431487607f",
+        "after_sha256": "bdb4dfa54fb1345546c2071e2e38bd3d1958c6f5e7401d0c0b44abcf3462e3da",
         "before_sha256": "f1287e8ef0e084f95e22c5ec7fb5aa4d796362f829e2afcd8422a1ab521ff0ce",
         "changed_fields": [
           "/bounds/0/sha256",
@@ -464,9 +450,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -484,23 +467,14 @@
         "path": "tests/compiler-checker/receipts/checker.json"
       },
       {
-        "after_sha256": "2deeabebebf7e22a53dad158eba667ab1e78992a5602db620c70318cfb9b08ff",
+        "after_sha256": "6359c806c7f7e62625c18c0ca1787e9d2ee9486fda7c263efd11b6ae85dd67c5",
         "before_sha256": "de3529e4605bc3be6bee6ca0919223842b1d5c9d6cf5d9255f775e72910fcfbf",
         "changed_fields": [
-          "/builds/0/sha256",
-          "/builds/1/sha256",
-          "/builds/2/sha256",
-          "/builds/3/sha256",
-          "/builds/4/sha256",
-          "/builds/5/sha256",
           "/counts/agreed_fixtures",
           "/counts/byte_identity_checks",
           "/counts/check_observations",
-          "/counts/checked_laws",
           "/counts/compile_observations",
           "/counts/evaluator_calls",
-          "/counts/prechecks",
-          "/counts/proof_entries",
           "/counts/refresh_fixtures",
           "/counts/refresh_phase_observations",
           "/counts/refresh_seed_builds",
@@ -512,44 +486,10 @@
           "/counts/wasm_calls",
           "/fixtures",
           "/inputs/src~1SPEC.md",
-          "/inputs/src~1closure-types.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
-          "/inputs/src~1parse.bend",
           "/inputs/tests~1compiler-closures~1GATE.md",
           "/inputs/tests~1compiler-closures~1LAW_REVIEW.md",
           "/inputs/tests~1compiler-closures~1REFRESH.md",
           "/inputs/tests~1compiler-closures~1check.py",
-          "/inputs/tests~1compiler-closures~1precheck_replay.py",
-          "/inputs/tests~1compiler-closures~1precheck_seed.py",
-          "/inputs/tests~1compiler-closures~1prechecks.json",
-          "/inputs/tests~1compiler-closures~1prechecks~117f687c3264c749a.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~11c22fdcb989508cf.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1208aec1c0f9e691c.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~12ff438c1f4184afe.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~15c68e2f27577efa4.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~187039ce5820e1495.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~190b6a173d7d1496e.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1angle-argument-arrow.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1angle-argument-comment.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1angle-binding-closed.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1angle-nested-closed.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1angle-result-closed.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1arrow-params-comma.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1arrow-params-unseparated.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1b0cf5a4bd4584c8f.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1b507406b7c59d768.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1bf088fe4ef68f758.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1ce2883de6dd8ea76.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1e7f55ae9e39f6d41.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1ead8971a47e9b888.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1forward-term-allowed.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1grouped-typed-comparison-parameter.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1grouped-typed-comparison-result.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1nonleading-template-unseparated.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1pattern-declared.bend",
-          "/inputs/tests~1compiler-closures~1prechecks~1pattern-forward-complete.bend",
           "/inputs/tests~1compiler-closures~1refresh.json",
           "/inputs/tests~1compiler-closures~1refresh~1capture-function.bend",
           "/inputs/tests~1compiler-closures~1refresh~1capture-higher-order.bend",
@@ -584,16 +524,13 @@
           "/inputs/tests~1compiler-closures~1refresh~1reusable-partial-binding.bend",
           "/inputs/tests~1compiler-closures~1refresh~1shadow-named-function.bend",
           "/inputs/tests~1compiler-closures~1refresh_seed.py",
-          "/precheck_reference",
-          "/prechecks",
-          "/proofs",
           "/refresh_reference"
         ],
         "classification": "semantic",
         "path": "tests/compiler-closures/receipts/closures.json"
       },
       {
-        "after_sha256": "68c3ee209112778a7c9b57e230175cfbc2aa2b82d8af7fefdaf934805393aec8",
+        "after_sha256": "d83fc0b9329c762f448a2d2a8ced5be88d39009fe556e77caae375eaf601db0c",
         "before_sha256": "56c618bf2752b1e4a641db5dcf48acfb23d8ada3c3fa6533e3e3d677b89ad7f4",
         "changed_fields": [
           "/builds/0/sha256",
@@ -617,9 +554,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -634,7 +568,7 @@
         "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
       },
       {
-        "after_sha256": "40405d04cdd272f3ed632b2eb3707ad8c15c7cd8a517a2a247bd1877d05a62d0",
+        "after_sha256": "febf112fc66da00bef2de0e50acd2b5f83bd0eb019deb81d5d5da9b66c3dcf1d",
         "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
         "changed_fields": [
           "/bounds/0/sha256",
@@ -662,9 +596,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -680,7 +611,7 @@
         "path": "tests/compiler-fields/receipts/fields.json"
       },
       {
-        "after_sha256": "fc1689f860d310383af8729d7ef778a7a3970ac7fd6372884838f4afe3db6fdf",
+        "after_sha256": "cbafb6970bba88968bd45045c9de87e0fad3b6a6eecf54f4ac6d3afe81e7b647",
         "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
         "changed_fields": [
           "/builds/0/sha256",
@@ -706,9 +637,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -721,7 +649,7 @@
         "path": "tests/compiler-recursion/receipts/recursion.json"
       },
       {
-        "after_sha256": "e1dc1d0d35d4736fdeab2e1cdb2e2bde85795b18518ea41c1a6073529d39de9a",
+        "after_sha256": "9ac5dd619714c14a4c2877e1906fe33f1b7e7aab3f551d1f2aa2c7700953d8f4",
         "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
         "changed_fields": [
           "/builds/0/sha256",
@@ -753,9 +681,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -1075,7 +1000,7 @@
         "path": "tests/compiler-wasm/generated/three-colors.wat"
       },
       {
-        "after_sha256": "267aa607bb1a552870dfb6c71eb73751934f06ecebe134994b354537b1ce0d1e",
+        "after_sha256": "31b28c790f336deb8d633067c34bed8359602ab2b6cd386cc263ff749f76ba74",
         "before_sha256": "5e509615699d7154f0dac4007f37716360172f1280b0ab916532b4858eacf2b6",
         "changed_fields": [
           "/builds/0/sha256",
@@ -1099,9 +1024,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -1118,7 +1040,7 @@
         "path": "tests/compiler-wasm/receipts/wasm.json"
       },
       {
-        "after_sha256": "dfc95ab4c2d73ee02d73da4c9d9a9e4c54a875645918bdb45a5ae2a06fa25a15",
+        "after_sha256": "eafc25c43fa3e55a5b91f67855946dc192ce0a1aded40a7b23dd75c8eec2113f",
         "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
         "changed_fields": [
           "/boundaries/18/stderr",
@@ -1153,9 +1075,6 @@
           "/inputs/src~1core.bend",
           "/inputs/src~1diagnostic.bend",
           "/inputs/src~1eval.bend",
-          "/inputs/src~1parse-visibility-LAWS.bend",
-          "/inputs/src~1parse-visibility-PROOF.bend",
-          "/inputs/src~1parse-visibility.bend",
           "/inputs/src~1parse.bend",
           "/inputs/src~1scope.bend",
           "/inputs/src~1syntax.bend",
@@ -1169,334 +1088,7 @@
         "path": "tests/subsets/receipts/frontend.json"
       }
     ],
-    "snapshot_sha256": "10ebff846c5df2b6edf2d354d46a538802da8f587aee4fe5275dc91d14554d26",
-    "status": "passed"
-  },
-  "run": {
-    "directory": "/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-5prpg30h",
-    "gates": [
-      {
-        "command": [
-          "python3",
-          "tests/subsets/check_frontend.py"
-        ],
-        "counts": {
-          "boundaries": 24,
-          "fixtures": 14,
-          "lane_observations": 28,
-          "mutants": 4
-        },
-        "exit_code": 0,
-        "name": "frontend",
-        "seconds": 68.329184,
-        "status": "passed",
-        "stderr": "frontend.stderr",
-        "stdout": "frontend.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-checker/check.py"
-        ],
-        "counts": {
-          "bound_observations": 16,
-          "bounds": 2,
-          "budgets": 10,
-          "fixtures": 49,
-          "lane_observations": 98,
-          "mutants": 7
-        },
-        "exit_code": 0,
-        "name": "checker",
-        "seconds": 35.294057,
-        "status": "passed",
-        "stderr": "checker.stderr",
-        "stdout": "checker.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-structural/check.py"
-        ],
-        "counts": {
-          "bounds": 4,
-          "fixtures": 16,
-          "lane_observations": 64,
-          "mutants": 7
-        },
-        "exit_code": 0,
-        "name": "structural",
-        "seconds": 30.848725,
-        "status": "passed",
-        "stderr": "structural.stderr",
-        "stdout": "structural.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-fields/check.py"
-        ],
-        "counts": {
-          "bound_observations": 12,
-          "bounds": 2,
-          "budgets": 36,
-          "fixtures": 40,
-          "host_boundaries": 6,
-          "lane_observations": 240,
-          "mutants": 9
-        },
-        "exit_code": 0,
-        "name": "fields",
-        "seconds": 58.753521,
-        "status": "passed",
-        "stderr": "fields.stderr",
-        "stdout": "fields.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-wasm/check.py"
-        ],
-        "counts": {
-          "boundaries": 44,
-          "execution_lanes": 2,
-          "fixtures": 25,
-          "mutants": 7,
-          "reference_calls": 90,
-          "rejects": 64
-        },
-        "exit_code": 0,
-        "name": "wasm",
-        "seconds": 76.655293,
-        "status": "passed",
-        "stderr": "wasm.stderr",
-        "stdout": "wasm.stdout"
-      },
-      {
-        "command": [
-          "bun",
-          "tests/compiler-wasm/trust.ts"
-        ],
-        "counts": {
-          "entries": 3,
-          "proof_holes": 0
-        },
-        "exit_code": 0,
-        "name": "wasm-trust",
-        "seconds": 0.434785,
-        "status": "passed",
-        "stderr": "wasm-trust.stderr",
-        "stdout": "wasm-trust.stdout"
-      },
-      {
-        "command": [
-          "bun",
-          "tests/compiler-fields/trust.ts"
-        ],
-        "counts": {
-          "entries": 4,
-          "proof_holes": 0
-        },
-        "exit_code": 0,
-        "name": "fields-trust",
-        "seconds": 0.477938,
-        "status": "passed",
-        "stderr": "fields-trust.stderr",
-        "stdout": "fields-trust.stdout"
-      },
-      {
-        "command": [
-          "bun",
-          "tests/compiler-structural/trust.ts"
-        ],
-        "counts": {
-          "entries": 2,
-          "proof_holes": 0
-        },
-        "exit_code": 0,
-        "name": "structural-trust",
-        "seconds": 0.263576,
-        "status": "passed",
-        "stderr": "structural-trust.stderr",
-        "stdout": "structural-trust.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "research/owned-store/check.py"
-        ],
-        "counts": {
-          "cases": 3532,
-          "execution_lanes": 2,
-          "literal_witnesses": 15,
-          "mutants": 6
-        },
-        "exit_code": 0,
-        "name": "owned-store",
-        "seconds": 8.201676,
-        "status": "passed",
-        "stderr": "owned-store.stderr",
-        "stdout": "owned-store.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "research/flat-store/check.py"
-        ],
-        "counts": {
-          "bun": {
-            "installed_boundary_states": 2,
-            "instances": 3534,
-            "lifecycle_checks": 7,
-            "observations": 13621
-          },
-          "mutants": 9,
-          "native": {
-            "installed_boundary_states": 2,
-            "instances": 3534,
-            "lifecycle_checks": 7,
-            "observations": 13621
-          }
-        },
-        "exit_code": 0,
-        "name": "flat-store",
-        "seconds": 18.129045,
-        "status": "passed",
-        "stderr": "flat-store.stderr",
-        "stdout": "flat-store.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-recursion/check.py"
-        ],
-        "counts": {
-          "fixtures": 19,
-          "mutants": 3
-        },
-        "exit_code": 0,
-        "name": "recursion",
-        "seconds": 55.469663,
-        "status": "passed",
-        "stderr": "recursion.stderr",
-        "stdout": "recursion.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-fields-wasm/check.py"
-        ],
-        "counts": {
-          "boundaries": 30,
-          "fixtures": 8,
-          "mutants": 4
-        },
-        "exit_code": 0,
-        "name": "fields-wasm",
-        "seconds": 203.942099,
-        "status": "passed",
-        "stderr": "fields-wasm.stderr",
-        "stdout": "fields-wasm.stdout"
-      },
-      {
-        "command": [
-          "node",
-          "tools/census/census.mjs",
-          "--check"
-        ],
-        "counts": {
-          "classes": 40,
-          "declarations": 598,
-          "files": 42
-        },
-        "exit_code": 0,
-        "name": "census",
-        "seconds": 0.491973,
-        "status": "passed",
-        "stderr": "census.stderr",
-        "stdout": "census.stdout"
-      },
-      {
-        "command": [
-          "npm",
-          "run",
-          "-s",
-          "lint:verify"
-        ],
-        "counts": {
-          "law_rules": 8,
-          "tests": 127
-        },
-        "exit_code": 0,
-        "name": "lint:verify",
-        "seconds": 9.753897,
-        "status": "passed",
-        "stderr": "lint-verify.stderr",
-        "stdout": "lint-verify.stdout"
-      },
-      {
-        "command": [
-          "python3",
-          "tests/compiler-closures/check.py"
-        ],
-        "counts": {
-          "agreed_fixtures": 49,
-          "blocked_calls": 19,
-          "blocked_fixtures": 1,
-          "boundaries": 14,
-          "boundary_probes": 14,
-          "byte_identity_checks": 49,
-          "check_observations": 174,
-          "checked_laws": 28,
-          "compile_observations": 174,
-          "evaluator_calls": 578,
-          "fixtures": 87,
-          "frozen_fixtures": 42,
-          "mutant_lane_kills": 10,
-          "mutants": 5,
-          "prechecks": {
-            "byte_identity_checks": 6,
-            "check_observations": 52,
-            "compile_observations": 52,
-            "eval_observations": 46,
-            "host_result_refusals": 2,
-            "mutant_lane_kills": 6,
-            "mutants": 3,
-            "parse_observations": 52,
-            "programs": 26,
-            "wasm_calls": 4
-          },
-          "proof_entries": 4,
-          "refresh_fixtures": 32,
-          "refresh_phase_observations": 192,
-          "refresh_seed_builds": 64,
-          "refresh_seed_calls": 40,
-          "refresh_seed_checks": 32,
-          "refresh_seed_rejections": 12,
-          "regression_fixtures": 11,
-          "regression_phase_observations": 66,
-          "regression_seed_calls": 8,
-          "regression_seed_rejections": 3,
-          "rejected_fixtures": 37,
-          "rejection_evaluator_observations": 76,
-          "seed_calls": 292,
-          "seed_rejections": 18,
-          "supplemental_probes": 2,
-          "supplemental_seed_calls": 8,
-          "wasm_calls": 578
-        },
-        "exit_code": 0,
-        "name": "closures",
-        "seconds": 517.451774,
-        "status": "passed",
-        "stderr": "closures.stderr",
-        "stdout": "closures.stdout"
-      }
-    ],
-    "jobs": 2,
-    "started_at": "2026-09-30T01:23:58.692271+00:00",
-    "timeout_seconds": 1800,
-    "total_seconds": 737.043094
-  },
-  "schema": 1
+    "snapshot_sha256": "19f837cab7e80026f8fa8b9d226651017f4a70d58609f74545b6c8fb1802a520",
+    "status": "failed"
+  }
 }

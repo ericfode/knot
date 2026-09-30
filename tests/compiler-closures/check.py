@@ -371,7 +371,6 @@ def main():
               'fixtures': [], 'blocked': []}
     paths = [*sorted((ROOT / 'src').glob('*.bend')), ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json',
              COMPILE, HOST, *sorted(HERE.glob('*.py')), *sorted(HERE.glob('*.json')),
-             *sorted(HERE.glob('*.md')),
              *sorted(HERE.glob('*.mjs')), *sorted((HERE / 'fixtures').glob('*.bend')),
              *sorted((HERE / 'probes').glob('*.bend')), *sorted((HERE / 'regressions').glob('*.bend')),
              *sorted((HERE / 'refresh').glob('*.bend')), *sorted((HERE / 'prechecks').glob('*.bend'))]

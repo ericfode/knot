@@ -1,6 +1,72 @@
 {
-  "schema": 1,
-  "increment": "closures-refresh",
+  "census_inventory": {
+    "base": {
+      "classes": 45,
+      "declarations": 495,
+      "definitions": 321,
+      "files": 1,
+      "unique_declarations": 466
+    },
+    "base_closures": {
+      "compiler": {
+        "js": {
+          "base": 72,
+          "base_intrinsics": 20,
+          "declarations": 432,
+          "foreign": 6
+        },
+        "native": {
+          "base": 72,
+          "base_intrinsics": 19,
+          "declarations": 432,
+          "foreign": 6
+        }
+      },
+      "frontend": {
+        "js": {
+          "base": 40,
+          "base_intrinsics": 9,
+          "declarations": 100,
+          "foreign": 0
+        },
+        "native": {
+          "base": 40,
+          "base_intrinsics": 8,
+          "declarations": 100,
+          "foreign": 0
+        }
+      }
+    },
+    "compiler": {
+      "classes": 40,
+      "declarations": 581,
+      "definitions": 372,
+      "files": 39,
+      "unique_declarations": 501
+    },
+    "frontend_files": {
+      "classes": 31,
+      "declarations": 56,
+      "definitions": 48,
+      "files": 3,
+      "unique_declarations": 56
+    },
+    "packages": {
+      "classes": 34,
+      "declarations": 225,
+      "definitions": 201,
+      "files": 8,
+      "unique_declarations": 225
+    },
+    "published_imports": {
+      "classes": 26,
+      "declarations": 53,
+      "definitions": 48,
+      "files": 2,
+      "unique_declarations": 53
+    },
+    "status": "current"
+  },
   "command": [
     "npm",
     "run",
@@ -11,10 +77,10 @@
     "2",
     "--keep-scratch"
   ],
+  "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
   "environment": {
     "BEND_NO_TELEMETRY": "1"
   },
-  "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
   "gates": [
     {
       "command": [
@@ -277,6 +343,39 @@
       "status": "passed"
     }
   ],
+  "host_retries": [
+    {
+      "first_exit_code": 1,
+      "first_seconds": 31.478288,
+      "first_stderr": "Traceback (most recent call last):\n  File \"$GATE_RUN/worktree/tests/compiler-closures/check.py\", line 481, in <module>\n    main()\n    ~~~~^^\n  File \"$GATE_RUN/worktree/tests/compiler-closures/check.py\", line 395, in main\n    record['refresh_reference'] = successful(['python3', HERE / 'refresh_seed.py'], timeout=600)\n                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$GATE_RUN/worktree/tests/compiler-closures/check.py\", line 59, in successful\n    require(result['exit'] == 0, result)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$GATE_RUN/worktree/tests/compiler-closures/check.py\", line 30, in require\n    raise AssertionError(detail)\nAssertionError: {'argv': ['python3', 'tests/compiler-closures/refresh_seed.py'], 'exit': 1, 'stdout': '', 'stderr': 'Traceback (most recent call last):\\n  File \"$GATE_RUN/worktree/tests/compiler-closures/refresh_seed.py\", line 122, in <module>\\n    print(json.dumps(replay(args.write), sort_keys=True))\\n                     ~~~~~~^^^^^^^^^^^^\\n  File \"$GATE_RUN/worktree/tests/compiler-closures/refresh_seed.py\", line 95, in replay\\n    require(built[\\'exit\\'] == 0 and built[\\'stdout\\'] == \\'\\' and built[\\'stderr\\'] == \\'\\'\\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n            and output.is_file(), (case[\\'name\\'], lane, built))\\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"$GATE_RUN/worktree/tests/compiler-closures/refresh_seed.py\", line 31, in require\\n    raise AssertionError(detail)\\nAssertionError: (\\'closure-capture-after-let\\', \\'native\\', {\\'argv\\': [\\'bun\\', \\'.toolchain/bend-2.0.29-574b6d3/bend2/main.ts\\', \\'.local/compiler-closures/refresh-seed/closure-capture-after-let.bend\\', \\'-o\\', \\'.local/compiler-closures/refresh-seed/closure-capture-after-let\\'], \\'exit\\': 1, \\'stdout\\': \\'\\', \\'stderr\\': \\'Error: bend needs clang 14 or newer to build binaries (found no /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang, no clang); on Debian/Ubuntu: curl -fsSL https://apt.llvm.org/llvm.sh | sudo bash -s 19; on macOS: xcode-select --install\\\\n\\'})\\n'}\n",
+      "first_stderr_sha256": "431aca95e229d099445bec8b2fdbf35d84e1d868515f4a54e6ecef515c592076",
+      "gate": "closures",
+      "reason": "host clang discovery failed (found no clang)",
+      "retry_exit_code": 0,
+      "retry_status": "passed"
+    }
+  ],
+  "increment": "closures-refresh",
+  "measured": {
+    "gate_seconds": {
+      "census": 0.911561,
+      "checker": 39.265889,
+      "closures": 509.949092,
+      "fields": 133.254447,
+      "fields-trust": 0.597833,
+      "fields-wasm": 424.183488,
+      "flat-store": 22.256822,
+      "frontend": 145.814088,
+      "lint:verify": 10.998479,
+      "owned-store": 11.511421,
+      "recursion": 77.909511,
+      "structural": 72.069511,
+      "structural-trust": 0.250295,
+      "wasm": 127.626241,
+      "wasm-trust": 0.42104
+    },
+    "total_seconds": 911.131866
+  },
   "receipt_counts": {
     "identical": 63,
     "semantic": 11,
@@ -1104,106 +1203,7 @@
       "path": "tests/subsets/receipts/frontend.json"
     }
   ],
+  "schema": 1,
   "snapshot_sha256": "d739abc83ada269cb09e5bc617921e13caf34f1cbdf3b7200e88b68b0f656950",
-  "status": "passed",
-  "host_retries": [
-    {
-      "gate": "closures",
-      "reason": "host clang discovery failed (found no clang)",
-      "first_exit_code": 1,
-      "first_seconds": 31.478288,
-      "first_stderr_sha256": "431aca95e229d099445bec8b2fdbf35d84e1d868515f4a54e6ecef515c592076",
-      "first_stderr": "Traceback (most recent call last):\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/check.py\", line 481, in <module>\n    main()\n    ~~~~^^\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/check.py\", line 395, in main\n    record['refresh_reference'] = successful(['python3', HERE / 'refresh_seed.py'], timeout=600)\n                                  ~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/check.py\", line 59, in successful\n    require(result['exit'] == 0, result)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/check.py\", line 30, in require\n    raise AssertionError(detail)\nAssertionError: {'argv': ['python3', 'tests/compiler-closures/refresh_seed.py'], 'exit': 1, 'stdout': '', 'stderr': 'Traceback (most recent call last):\\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/refresh_seed.py\", line 122, in <module>\\n    print(json.dumps(replay(args.write), sort_keys=True))\\n                     ~~~~~~^^^^^^^^^^^^\\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/refresh_seed.py\", line 95, in replay\\n    require(built[\\'exit\\'] == 0 and built[\\'stdout\\'] == \\'\\' and built[\\'stderr\\'] == \\'\\'\\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n            and output.is_file(), (case[\\'name\\'], lane, built))\\n            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\\n  File \"/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-s4qe355e/worktree/tests/compiler-closures/refresh_seed.py\", line 31, in require\\n    raise AssertionError(detail)\\nAssertionError: (\\'closure-capture-after-let\\', \\'native\\', {\\'argv\\': [\\'bun\\', \\'.toolchain/bend-2.0.29-574b6d3/bend2/main.ts\\', \\'.local/compiler-closures/refresh-seed/closure-capture-after-let.bend\\', \\'-o\\', \\'.local/compiler-closures/refresh-seed/closure-capture-after-let\\'], \\'exit\\': 1, \\'stdout\\': \\'\\', \\'stderr\\': \\'Error: bend needs clang 14 or newer to build binaries (found no /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/clang, no clang); on Debian/Ubuntu: curl -fsSL https://apt.llvm.org/llvm.sh | sudo bash -s 19; on macOS: xcode-select --install\\\\n\\'})\\n'}\n",
-      "retry_status": "passed",
-      "retry_exit_code": 0
-    }
-  ],
-  "census_inventory": {
-    "status": "current",
-    "compiler": {
-      "files": 39,
-      "declarations": 581,
-      "unique_declarations": 501,
-      "definitions": 372,
-      "classes": 40
-    },
-    "frontend_files": {
-      "files": 3,
-      "declarations": 56,
-      "unique_declarations": 56,
-      "definitions": 48,
-      "classes": 31
-    },
-    "packages": {
-      "files": 8,
-      "declarations": 225,
-      "unique_declarations": 225,
-      "definitions": 201,
-      "classes": 34
-    },
-    "published_imports": {
-      "files": 2,
-      "declarations": 53,
-      "unique_declarations": 53,
-      "definitions": 48,
-      "classes": 26
-    },
-    "base": {
-      "files": 1,
-      "declarations": 495,
-      "unique_declarations": 466,
-      "definitions": 321,
-      "classes": 45
-    },
-    "base_closures": {
-      "frontend": {
-        "js": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 9,
-          "foreign": 0
-        },
-        "native": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 8,
-          "foreign": 0
-        }
-      },
-      "compiler": {
-        "js": {
-          "declarations": 432,
-          "base": 72,
-          "base_intrinsics": 20,
-          "foreign": 6
-        },
-        "native": {
-          "declarations": 432,
-          "base": 72,
-          "base_intrinsics": 19,
-          "foreign": 6
-        }
-      }
-    }
-  },
-  "measured": {
-    "total_seconds": 911.131866,
-    "gate_seconds": {
-      "frontend": 145.814088,
-      "checker": 39.265889,
-      "structural": 72.069511,
-      "fields": 133.254447,
-      "wasm": 127.626241,
-      "wasm-trust": 0.42104,
-      "fields-trust": 0.597833,
-      "structural-trust": 0.250295,
-      "owned-store": 11.511421,
-      "flat-store": 22.256822,
-      "recursion": 77.909511,
-      "fields-wasm": 424.183488,
-      "census": 0.911561,
-      "lint:verify": 10.998479,
-      "closures": 509.949092
-    }
-  }
+  "status": "passed"
 }

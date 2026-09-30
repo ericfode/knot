@@ -4,6 +4,22 @@ Run `BEND_NO_TELEMETRY=1 python3 tests/compiler-closures/check.py`.
 The gate writes `receipts/closures.json`; build products and source mutants stay
 under ignored `.local/compiler-closures/gate/`.
 
+After the whole registered suite passes, record the current closure receipt and
+the exact per-gate results with `python3 -B tests/compiler-closures/receipt_evidence.py
+--record .local/gates/RUN`. The recorder checks every current input against the
+exported snapshot before writing. Its default mode verifies the saved input
+hashes, closure receipt identity and reported counts. It changes only owned receipts.
+Shared receipts are refreshed by the coordinator.
+
+Earlier implementation, refresh, precheck and offline-preflight observations are
+in `receipts/history/`, with their original dates, measured times, hashes and
+outcomes. Only path spelling is normalized. They describe their recorded source
+commits, not the current worktree. The current `closures.json` is regenerated;
+historical source hashes and frozen expectations are never refreshed to HEAD.
+Documentation in this directory is not an executed gate input; fixture sources,
+frozen JSON expectations, host scripts and Bend compiler/proof sources remain
+hashed and checked.
+
 The original `FIXTURES.md`, `expectations.json`, `regen.py`, and 42 fixtures are
 immutable inputs. The gate runs `regen.py` first: all 292 seed entry calls,
 42 source checks, 18 seed rejections, fixture hashes, and seed hashes must still

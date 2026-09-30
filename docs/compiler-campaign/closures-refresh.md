@@ -83,7 +83,7 @@ belongs to those increments; this refresh changes none of its frozen outcomes.
 The first scratch run stopped after frontend, checker and structural native
 builds exceeded the old 30/45-second process hang guards. Its failure diagnostics
 and 16 selected runner-control results are retained in
-`tests/compiler-closures/receipts/refresh-host-failures.json`. The branch now
+`tests/compiler-closures/receipts/history/refresh-host-failures.json`. The branch now
 uses main's fourfold host guard, 1,800-second gate ceiling, resolved clang/SDK
 and one evidence-retaining clang-discovery retry. Seven hang-guard edits match
 observed main byte for byte. Source fuel/depth/allocation budgets and every
@@ -108,14 +108,14 @@ npm run -s gates -- --jobs 2 --keep-scratch
 ```
 
 All fifteen registered gates passed. The new
-[whole-run receipt](../../tests/compiler-closures/receipts/refresh-gates.json)
+[whole-run receipt](../../tests/compiler-closures/receipts/history/refresh-gates.json)
 retains every normalized result, receipt comparison, the full census inventory
 and the first clang-discovery failure. The closure gate retried that host fault
 once, then passed; the failed 31.478288-second attempt is not source evidence.
-The [closure receipt](../../tests/compiler-closures/receipts/refresh-closures.json)
+The [closure receipt](../../tests/compiler-closures/receipts/history/refresh-closures.json)
 records the expanded available-capability run. Its 144 input hashes match this
 working copy. The
-[scope receipt](../../tests/compiler-closures/receipts/refresh-scope.json)
+[scope receipt](../../tests/compiler-closures/receipts/history/refresh-scope.json)
 confirms all 99 original compiler/fixture/expectation files remain byte-identical
 to `a1d68911`. All existing shared receipts retain their historical bytes.
 

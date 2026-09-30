@@ -74,8 +74,8 @@ argument-checking path. Its fixed acceptance depths 5, 6 and 14, together with
 the immediately lower exhausting depths, remain independent regression gates.
 
 Offline preflight records no model ratings or semantic review. See
-`receipts/preflight-selection.json` for all changed Bend targets and intentional
-negative-parser exclusions, and `receipts/preflight.json` for context limits.
+`receipts/history/preflight-selection.json` for all changed Bend targets and intentional
+negative-parser exclusions, and `receipts/history/preflight.json` for context limits.
 Live Perch source and law-packet review belongs to the coordinator. None of the
 five style axes or the bounded composition is reported as qualified here.
 

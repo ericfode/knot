@@ -1,0 +1,727 @@
+{
+  "closure_receipt_sha256": "de3529e4605bc3be6bee6ca0919223842b1d5c9d6cf5d9255f775e72910fcfbf",
+  "command": [
+    "npm",
+    "run",
+    "-s",
+    "gates",
+    "--",
+    "--jobs",
+    "1"
+  ],
+  "complete_compiler_proofs": [
+    {
+      "entry": "src/PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/catalog-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/check-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/closure-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/closure-check-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/closure-types-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/fields-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/recursion-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    },
+    {
+      "entry": "src/runtime-PROOF.bend",
+      "exit": 0,
+      "stderr": "",
+      "stdout": "All terms check.\n"
+    }
+  ],
+  "completion_lines": {
+    "census": [],
+    "checker": [
+      "Checker gate passed: 49 reference fixtures, 98 checked observations, 10 depth and 16 catalog-bound observations, 7 semantic mutants; $ROOT/tests/compiler-checker/receipts/checker.json"
+    ],
+    "closures": [
+      "Closures gate passed for available capabilities: {\"agreed_fixtures\": 29, \"blocked_calls\": 19, \"blocked_fixtures\": 1, \"boundary_probes\": 14, \"byte_identity_checks\": 29, \"check_observations\": 110, \"checked_laws\": 24, \"compile_observations\": 110, \"evaluator_calls\": 538, \"frozen_fixtures\": 42, \"mutant_lane_kills\": 10, \"mutants\": 5, \"proof_entries\": 3, \"regression_fixtures\": 11, \"regression_phase_observations\": 66, \"regression_seed_calls\": 8, \"regression_seed_rejections\": 3, \"rejected_fixtures\": 25, \"rejection_evaluator_observations\": 52, \"seed_calls\": 292, \"seed_rejections\": 18, \"supplemental_probes\": 2, \"supplemental_seed_calls\": 8, \"wasm_calls\": 538}",
+      "Blocked (not passed): generic-choose-bind: generics; 19 unrun calls"
+    ],
+    "fields": [
+      "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; $ROOT/tests/compiler-fields/receipts/fields.json"
+    ],
+    "fields-trust": [],
+    "fields-wasm": [
+      "Fields Wasm gate passed: 8 fixtures, 32 seed calls, 64 evaluator and 64 Node observations, 50 frozen enum-byte checks, 30 boundary probes, 4 type-correct mutants killed in both lanes; 5 new checked laws. $ROOT/tests/compiler-fields-wasm/receipts/fields-wasm.json"
+    ],
+    "flat-store": [],
+    "frontend": [
+      "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream rejection observations"
+    ],
+    "lint:verify": [
+      "PASS: eight law rules; package/family/control packet coverage; one request per packet; named filtering; advisory finding exit 3; unrelated path excluded; controls present."
+    ],
+    "owned-store": [],
+    "recursion": [
+      "Recursion gate passed: 19 seed fixtures, 114 native/Bun phase observations, 4 fuel probes, 3 semantic mutants"
+    ],
+    "structural": [
+      "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; $ROOT/tests/compiler-structural/receipts/catalog.json"
+    ],
+    "structural-trust": [],
+    "wasm": [
+      "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. $ROOT/tests/compiler-wasm/receipts/wasm.json"
+    ],
+    "wasm-trust": []
+  },
+  "dependencies_sha256": "35e14f3bd6e2f088dfce1cee7f9ea4f1a9f2dd2313ddc4448e3993c1d17fe6a3",
+  "environment": {
+    "BEND_NO_TELEMETRY": "1"
+  },
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 64
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 40,
+        "declarations": 581,
+        "files": 39
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 127
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-closures/check.py"
+      ],
+      "counts": {
+        "agreed_fixtures": 29,
+        "blocked_calls": 19,
+        "blocked_fixtures": 1,
+        "boundaries": 14,
+        "boundary_probes": 14,
+        "byte_identity_checks": 29,
+        "check_observations": 110,
+        "checked_laws": 24,
+        "compile_observations": 110,
+        "evaluator_calls": 538,
+        "fixtures": 55,
+        "frozen_fixtures": 42,
+        "mutant_lane_kills": 10,
+        "mutants": 5,
+        "proof_entries": 3,
+        "regression_fixtures": 11,
+        "regression_phase_observations": 66,
+        "regression_seed_calls": 8,
+        "regression_seed_rejections": 3,
+        "rejected_fixtures": 25,
+        "rejection_evaluator_observations": 52,
+        "seed_calls": 292,
+        "seed_rejections": 18,
+        "supplemental_probes": 2,
+        "supplemental_seed_calls": 8,
+        "wasm_calls": 538
+      },
+      "exit_code": 0,
+      "name": "closures",
+      "status": "passed"
+    }
+  ],
+  "increment": "closures",
+  "limits": [
+    "generic-choose-bind: 19 required calls blocked on generics",
+    "live Perch review and style ratings unavailable in offline preflight"
+  ],
+  "prior_runs": [
+    {
+      "directory": "$GATE_RUN",
+      "reason": "fields exact checker-depth regression; repaired without changing assertions",
+      "status": "failed"
+    },
+    {
+      "directory": "$GATE_RUN",
+      "reason": "native build timeouts and one seed clang-discovery failure; retained as host failures",
+      "status": "failed"
+    }
+  ],
+  "receipt_classifications": [
+    {
+      "classification": "semantic",
+      "path": "research/compiler-fields/receipts/trust.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "research/compiler-structural/receipts/trust.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "research/compiler-wasm/receipts/trust.json"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/flat-store/receipts/bun-oracle.txt.gz"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/bun-wasm.json"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/flat-store/receipts/gate.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-accept-padding.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-erase-allocated-payload.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-ignore-arena.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-lose-free-tail.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-overwrite-on-rejection.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-reuse-generation.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-wrap-at-ceiling.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-write-on-reinit.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/mutant-zero-sentinel.json"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/flat-store/receipts/native-oracle.txt.gz"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/native-wasm.json"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/native.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "research/flat-store/receipts/store.wat"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/owned-store/receipts/bun.txt.gz"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/owned-store/receipts/gate.json"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/owned-store/receipts/inputs.json.gz"
+    },
+    {
+      "classification": "volatile-only",
+      "path": "research/owned-store/receipts/native.txt.gz"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-checker/receipts/checker.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-closures/receipts/closures.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-fields/receipts/fields.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-recursion/receipts/recursion.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-structural/receipts/catalog.json"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/argument-order.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/argument-order.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/branch-locals.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/branch-locals.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/branch-maximum.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/branch-maximum.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-argument.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-argument.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-promote.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-promote.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-reuse.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/data-reuse.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/duplicate-parameters.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/duplicate-parameters.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-affine-copy.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-affine-copy.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-binding.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-binding.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-cost.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-cost.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-forward-call.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-forward-call.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-forward.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/erased-forward.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/flag.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/flag.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/forward-type.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/forward-type.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-function-index.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-function-index.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-local-index.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-local-index.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-tags.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/high-tags.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/matched-duplicate.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/matched-duplicate.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/matched-return.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/matched-return.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/mixed-types.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/mixed-types.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/nested-match.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/nested-match.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/renamed.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/renamed.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/reordered-arms.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/reordered-arms.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/shadowing.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/shadowing.wat"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/three-colors.wasm"
+    },
+    {
+      "classification": "identical",
+      "path": "tests/compiler-wasm/generated/three-colors.wat"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/compiler-wasm/receipts/wasm.json"
+    },
+    {
+      "classification": "semantic",
+      "path": "tests/subsets/receipts/frontend.json"
+    }
+  ],
+  "receipt_counts": {
+    "identical": 63,
+    "semantic": 11,
+    "volatile-only": 7
+  },
+  "runner_verification": {
+    "command": [
+      "npm",
+      "run",
+      "-s",
+      "gates:verify"
+    ],
+    "exit": 0,
+    "log_sha256": "2507e374ad99f5b9bbee0e0b0fe660830c6d56eba945c4521351518dddca1827",
+    "semantic_mutants": 6,
+    "tests": 18
+  },
+  "schema": 1,
+  "snapshot_sha256": "9051a80ebc98095746ba94fcd6f9527e3d48155f79fc29b2a3e189b3ee1ac8c6",
+  "status": "passed"
+}

@@ -7,10 +7,15 @@
           "python3",
           "tests/subsets/check_frontend.py"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "boundaries": 24,
+          "fixtures": 14,
+          "lane_observations": 28,
+          "mutants": 4
+        },
+        "exit_code": 0,
         "name": "frontend",
-        "status": "failed"
+        "status": "passed"
       },
       {
         "command": [
@@ -192,7 +197,7 @@
         ],
         "counts": {
           "classes": 40,
-          "declarations": 596,
+          "declarations": 598,
           "files": 42
         },
         "exit_code": 0,
@@ -206,20 +211,68 @@
           "-s",
           "lint:verify"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "law_rules": 8,
+          "tests": 127
+        },
+        "exit_code": 0,
         "name": "lint:verify",
-        "status": "failed"
+        "status": "passed"
       },
       {
         "command": [
           "python3",
           "tests/compiler-closures/check.py"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "agreed_fixtures": 49,
+          "blocked_calls": 19,
+          "blocked_fixtures": 1,
+          "boundaries": 14,
+          "boundary_probes": 14,
+          "byte_identity_checks": 49,
+          "check_observations": 174,
+          "checked_laws": 28,
+          "compile_observations": 174,
+          "evaluator_calls": 578,
+          "fixtures": 87,
+          "frozen_fixtures": 42,
+          "mutant_lane_kills": 10,
+          "mutants": 5,
+          "prechecks": {
+            "byte_identity_checks": 6,
+            "check_observations": 52,
+            "compile_observations": 52,
+            "eval_observations": 46,
+            "host_result_refusals": 2,
+            "mutant_lane_kills": 6,
+            "mutants": 3,
+            "parse_observations": 52,
+            "programs": 26,
+            "wasm_calls": 4
+          },
+          "proof_entries": 4,
+          "refresh_fixtures": 32,
+          "refresh_phase_observations": 192,
+          "refresh_seed_builds": 64,
+          "refresh_seed_calls": 40,
+          "refresh_seed_checks": 32,
+          "refresh_seed_rejections": 12,
+          "regression_fixtures": 11,
+          "regression_phase_observations": 66,
+          "regression_seed_calls": 8,
+          "regression_seed_rejections": 3,
+          "rejected_fixtures": 37,
+          "rejection_evaluator_observations": 76,
+          "seed_calls": 292,
+          "seed_rejections": 18,
+          "supplemental_probes": 2,
+          "supplemental_seed_calls": 8,
+          "wasm_calls": 578
+        },
+        "exit_code": 0,
         "name": "closures",
-        "status": "failed"
+        "status": "passed"
       }
     ],
     "receipt_counts": {
@@ -229,7 +282,7 @@
     },
     "receipts": [
       {
-        "after_sha256": "8aa82fb73432b18fcd6a2ec210e25bd8970eabade79ce8907911dccebc4ce52b",
+        "after_sha256": "1806d0b02ca10e874e36ad7f1c8a9489922d35adfcc2a21b5dedb36bc36fab96",
         "before_sha256": "13f42c984e81f85e135dca9510cdaf01d354a953887593c48f44ad1e804a4b35",
         "changed_fields": [
           "/entries/0/loaded_files",
@@ -244,7 +297,7 @@
         "path": "research/compiler-fields/receipts/trust.json"
       },
       {
-        "after_sha256": "b691d2f98f876391f404ed7464e2b3851d5375710233a04edb307b35e05dda50",
+        "after_sha256": "4f5e8acfa3622ac06257a65fae189ec0bc40d6db80d4167fe24b36dc5de594fa",
         "before_sha256": "f02e2530d251f933d811304125d745d99b30b1ec8351c0f20ba1e469795daa74",
         "changed_fields": [
           "/entries/0/loaded_files",
@@ -255,7 +308,7 @@
         "path": "research/compiler-structural/receipts/trust.json"
       },
       {
-        "after_sha256": "42b2db3ee87514b46164b2fd79c2700a0660e1d72df54985d91c7219951ddae3",
+        "after_sha256": "cb520a1ccda3bb0c18f48206403fb5ff565ce63f0c06110c777005ec765f8fe1",
         "before_sha256": "ba47d15d9303c9b508ef615689ef331063770347cf95c23b6e5d664f2c00fcfd",
         "changed_fields": [
           "/entries/0/generated_js_sha256",
@@ -388,7 +441,7 @@
         "path": "research/owned-store/receipts/native.txt.gz"
       },
       {
-        "after_sha256": "dfba93c85e24f4383c9d18ed46fc8cd5345d2f95c4faddb9ec514699de25bafd",
+        "after_sha256": "e8a986935947d04b9c64b9a2292ad919b0f69dc2552d1a33ce64a0431487607f",
         "before_sha256": "f1287e8ef0e084f95e22c5ec7fb5aa4d796362f829e2afcd8422a1ab521ff0ce",
         "changed_fields": [
           "/bounds/0/sha256",
@@ -431,7 +484,7 @@
         "path": "tests/compiler-checker/receipts/checker.json"
       },
       {
-        "after_sha256": "a56cfffb9b78afa635f53f2746ce7b59d102c3a45e30d0aa19ff43e7e2c3f26d",
+        "after_sha256": "2deeabebebf7e22a53dad158eba667ab1e78992a5602db620c70318cfb9b08ff",
         "before_sha256": "de3529e4605bc3be6bee6ca0919223842b1d5c9d6cf5d9255f775e72910fcfbf",
         "changed_fields": [
           "/builds/0/sha256",
@@ -440,8 +493,23 @@
           "/builds/3/sha256",
           "/builds/4/sha256",
           "/builds/5/sha256",
-          "/counts",
-          "/failure",
+          "/counts/agreed_fixtures",
+          "/counts/byte_identity_checks",
+          "/counts/check_observations",
+          "/counts/checked_laws",
+          "/counts/compile_observations",
+          "/counts/evaluator_calls",
+          "/counts/prechecks",
+          "/counts/proof_entries",
+          "/counts/refresh_fixtures",
+          "/counts/refresh_phase_observations",
+          "/counts/refresh_seed_builds",
+          "/counts/refresh_seed_calls",
+          "/counts/refresh_seed_checks",
+          "/counts/refresh_seed_rejections",
+          "/counts/rejected_fixtures",
+          "/counts/rejection_evaluator_observations",
+          "/counts/wasm_calls",
           "/fixtures",
           "/inputs/src~1SPEC.md",
           "/inputs/src~1closure-types.bend",
@@ -517,16 +585,15 @@
           "/inputs/tests~1compiler-closures~1refresh~1shadow-named-function.bend",
           "/inputs/tests~1compiler-closures~1refresh_seed.py",
           "/precheck_reference",
+          "/prechecks",
           "/proofs",
-          "/qualification",
-          "/refresh_reference",
-          "/status"
+          "/refresh_reference"
         ],
         "classification": "semantic",
         "path": "tests/compiler-closures/receipts/closures.json"
       },
       {
-        "after_sha256": "0c0c6d1d400028dc84736d1f8c3dbe065f19363295bed69a209008c1dc63d284",
+        "after_sha256": "68c3ee209112778a7c9b57e230175cfbc2aa2b82d8af7fefdaf934805393aec8",
         "before_sha256": "56c618bf2752b1e4a641db5dcf48acfb23d8ada3c3fa6533e3e3d677b89ad7f4",
         "changed_fields": [
           "/builds/0/sha256",
@@ -567,7 +634,7 @@
         "path": "tests/compiler-fields-wasm/receipts/fields-wasm.json"
       },
       {
-        "after_sha256": "c304084a149bd45a56e13df32f6128760a79fc1035db38d52fafba1145a2e4b1",
+        "after_sha256": "40405d04cdd272f3ed632b2eb3707ad8c15c7cd8a517a2a247bd1877d05a62d0",
         "before_sha256": "d4b8ea5b69695eb23375c450f2a1ed9b90a969324b2d357aed4c5a1413859da7",
         "changed_fields": [
           "/bounds/0/sha256",
@@ -613,7 +680,7 @@
         "path": "tests/compiler-fields/receipts/fields.json"
       },
       {
-        "after_sha256": "f103a4db8ed1a4edb607568bfedcbc07a79ef261022123565a1831027f61ed4c",
+        "after_sha256": "fc1689f860d310383af8729d7ef778a7a3970ac7fd6372884838f4afe3db6fdf",
         "before_sha256": "48b82451cff86fee0c843adf9c1688be7fb38d25f8c1aeefda175bf6f4e72fbf",
         "changed_fields": [
           "/builds/0/sha256",
@@ -654,7 +721,7 @@
         "path": "tests/compiler-recursion/receipts/recursion.json"
       },
       {
-        "after_sha256": "5d8ad2f71ad3c1b1d8262e8b7db589421cdce2288927cb426b490a7c02a96855",
+        "after_sha256": "e1dc1d0d35d4736fdeab2e1cdb2e2bde85795b18518ea41c1a6073529d39de9a",
         "before_sha256": "95b9cbee2e97f20eeef689f3b6802259482abace8b9a287b89259ff7f44057ab",
         "changed_fields": [
           "/builds/0/sha256",
@@ -1008,7 +1075,7 @@
         "path": "tests/compiler-wasm/generated/three-colors.wat"
       },
       {
-        "after_sha256": "b040ac7d792380bd39a259fa2e2fedb51d8b30dea08ea00fcf1ed9901c2cd1d7",
+        "after_sha256": "267aa607bb1a552870dfb6c71eb73751934f06ecebe134994b354537b1ce0d1e",
         "before_sha256": "5e509615699d7154f0dac4007f37716360172f1280b0ab916532b4858eacf2b6",
         "changed_fields": [
           "/builds/0/sha256",
@@ -1051,13 +1118,24 @@
         "path": "tests/compiler-wasm/receipts/wasm.json"
       },
       {
-        "after_sha256": "6b6284b4f47caf21bc30ad1c4a3f2ed2ad8f0d42b229a02e44dcd92ba94cd216",
+        "after_sha256": "dfc95ab4c2d73ee02d73da4c9d9a9e4c54a875645918bdb45a5ae2a06fa25a15",
         "before_sha256": "3d110d90f66eaf460054dbbe0144cf96602e8fd13625d8f69629401c56e63f10",
         "changed_fields": [
           "/boundaries/18/stderr",
           "/boundaries/19/stderr",
-          "/classification",
-          "/failure",
+          "/classification/downstream_builds/0/sha256",
+          "/classification/downstream_builds/1/sha256",
+          "/classification/downstream_builds/2/sha256",
+          "/classification/downstream_builds/3/sha256",
+          "/classification/downstream_builds/4/sha256",
+          "/classification/downstream_builds/5/sha256",
+          "/classification/mutants/0/mutated_sha256",
+          "/classification/mutants/1/mutated_sha256",
+          "/classification/mutants/2/mutated_sha256",
+          "/classification/mutants/3/mutated_sha256",
+          "/classification/mutants/4/mutated_sha256",
+          "/classification/mutants/5/mutated_sha256",
+          "/classification/mutants/6/mutated_sha256",
           "/generated/.local~1compiler-frontend~1parse-cli",
           "/generated/.local~1compiler-frontend~1parse-cli.js",
           "/inputs/src~1catalog.bend",
@@ -1083,29 +1161,35 @@
           "/inputs/src~1syntax.bend",
           "/inputs/src~1wasm.bend",
           "/inputs/tests~1subsets~1check_frontend.py",
-          "/mutants",
-          "/status"
+          "/mutants/1/mutated_sha256",
+          "/mutants/2/mutated_sha256",
+          "/mutants/3/mutated_sha256"
         ],
         "classification": "semantic",
         "path": "tests/subsets/receipts/frontend.json"
       }
     ],
-    "snapshot_sha256": "bd97962f04f64962240cf308d7c54a7bcb034201a891c68e39676b324825743c",
-    "status": "failed"
+    "snapshot_sha256": "10ebff846c5df2b6edf2d354d46a538802da8f587aee4fe5275dc91d14554d26",
+    "status": "passed"
   },
   "run": {
-    "directory": "/Users/ericfode/src/knot/.claude/worktrees/campaign-closures/.local/gates/run-x0d6mcha",
+    "directory": "$GATE_RUN",
     "gates": [
       {
         "command": [
           "python3",
           "tests/subsets/check_frontend.py"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "boundaries": 24,
+          "fixtures": 14,
+          "lane_observations": 28,
+          "mutants": 4
+        },
+        "exit_code": 0,
         "name": "frontend",
-        "seconds": 16.062266,
-        "status": "failed",
+        "seconds": 68.329184,
+        "status": "passed",
         "stderr": "frontend.stderr",
         "stdout": "frontend.stdout"
       },
@@ -1124,7 +1208,7 @@
         },
         "exit_code": 0,
         "name": "checker",
-        "seconds": 33.791003,
+        "seconds": 35.294057,
         "status": "passed",
         "stderr": "checker.stderr",
         "stdout": "checker.stdout"
@@ -1142,7 +1226,7 @@
         },
         "exit_code": 0,
         "name": "structural",
-        "seconds": 35.845174,
+        "seconds": 30.848725,
         "status": "passed",
         "stderr": "structural.stderr",
         "stdout": "structural.stdout"
@@ -1163,7 +1247,7 @@
         },
         "exit_code": 0,
         "name": "fields",
-        "seconds": 76.44901,
+        "seconds": 58.753521,
         "status": "passed",
         "stderr": "fields.stderr",
         "stdout": "fields.stdout"
@@ -1183,7 +1267,7 @@
         },
         "exit_code": 0,
         "name": "wasm",
-        "seconds": 92.418201,
+        "seconds": 76.655293,
         "status": "passed",
         "stderr": "wasm.stderr",
         "stdout": "wasm.stdout"
@@ -1199,7 +1283,7 @@
         },
         "exit_code": 0,
         "name": "wasm-trust",
-        "seconds": 0.363414,
+        "seconds": 0.434785,
         "status": "passed",
         "stderr": "wasm-trust.stderr",
         "stdout": "wasm-trust.stdout"
@@ -1215,7 +1299,7 @@
         },
         "exit_code": 0,
         "name": "fields-trust",
-        "seconds": 0.479852,
+        "seconds": 0.477938,
         "status": "passed",
         "stderr": "fields-trust.stderr",
         "stdout": "fields-trust.stdout"
@@ -1231,7 +1315,7 @@
         },
         "exit_code": 0,
         "name": "structural-trust",
-        "seconds": 0.249375,
+        "seconds": 0.263576,
         "status": "passed",
         "stderr": "structural-trust.stderr",
         "stdout": "structural-trust.stdout"
@@ -1249,7 +1333,7 @@
         },
         "exit_code": 0,
         "name": "owned-store",
-        "seconds": 7.409392,
+        "seconds": 8.201676,
         "status": "passed",
         "stderr": "owned-store.stderr",
         "stdout": "owned-store.stdout"
@@ -1276,7 +1360,7 @@
         },
         "exit_code": 0,
         "name": "flat-store",
-        "seconds": 18.719033,
+        "seconds": 18.129045,
         "status": "passed",
         "stderr": "flat-store.stderr",
         "stdout": "flat-store.stdout"
@@ -1292,7 +1376,7 @@
         },
         "exit_code": 0,
         "name": "recursion",
-        "seconds": 61.538391,
+        "seconds": 55.469663,
         "status": "passed",
         "stderr": "recursion.stderr",
         "stdout": "recursion.stdout"
@@ -1309,7 +1393,7 @@
         },
         "exit_code": 0,
         "name": "fields-wasm",
-        "seconds": 227.374539,
+        "seconds": 203.942099,
         "status": "passed",
         "stderr": "fields-wasm.stderr",
         "stdout": "fields-wasm.stdout"
@@ -1322,12 +1406,12 @@
         ],
         "counts": {
           "classes": 40,
-          "declarations": 596,
+          "declarations": 598,
           "files": 42
         },
         "exit_code": 0,
         "name": "census",
-        "seconds": 0.86989,
+        "seconds": 0.491973,
         "status": "passed",
         "stderr": "census.stderr",
         "stdout": "census.stdout"
@@ -1339,11 +1423,14 @@
           "-s",
           "lint:verify"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "law_rules": 8,
+          "tests": 127
+        },
+        "exit_code": 0,
         "name": "lint:verify",
-        "seconds": 7.823526,
-        "status": "failed",
+        "seconds": 9.753897,
+        "status": "passed",
         "stderr": "lint-verify.stderr",
         "stdout": "lint-verify.stdout"
       },
@@ -1352,19 +1439,64 @@
           "python3",
           "tests/compiler-closures/check.py"
         ],
-        "counts": {},
-        "exit_code": 1,
+        "counts": {
+          "agreed_fixtures": 49,
+          "blocked_calls": 19,
+          "blocked_fixtures": 1,
+          "boundaries": 14,
+          "boundary_probes": 14,
+          "byte_identity_checks": 49,
+          "check_observations": 174,
+          "checked_laws": 28,
+          "compile_observations": 174,
+          "evaluator_calls": 578,
+          "fixtures": 87,
+          "frozen_fixtures": 42,
+          "mutant_lane_kills": 10,
+          "mutants": 5,
+          "prechecks": {
+            "byte_identity_checks": 6,
+            "check_observations": 52,
+            "compile_observations": 52,
+            "eval_observations": 46,
+            "host_result_refusals": 2,
+            "mutant_lane_kills": 6,
+            "mutants": 3,
+            "parse_observations": 52,
+            "programs": 26,
+            "wasm_calls": 4
+          },
+          "proof_entries": 4,
+          "refresh_fixtures": 32,
+          "refresh_phase_observations": 192,
+          "refresh_seed_builds": 64,
+          "refresh_seed_calls": 40,
+          "refresh_seed_checks": 32,
+          "refresh_seed_rejections": 12,
+          "regression_fixtures": 11,
+          "regression_phase_observations": 66,
+          "regression_seed_calls": 8,
+          "regression_seed_rejections": 3,
+          "rejected_fixtures": 37,
+          "rejection_evaluator_observations": 76,
+          "seed_calls": 292,
+          "seed_rejections": 18,
+          "supplemental_probes": 2,
+          "supplemental_seed_calls": 8,
+          "wasm_calls": 578
+        },
+        "exit_code": 0,
         "name": "closures",
-        "seconds": 278.884415,
-        "status": "failed",
+        "seconds": 517.451774,
+        "status": "passed",
         "stderr": "closures.stderr",
         "stdout": "closures.stdout"
       }
     ],
     "jobs": 2,
-    "started_at": "2026-09-30T01:13:13.032741+00:00",
+    "started_at": "2026-09-30T01:23:58.692271+00:00",
     "timeout_seconds": 1800,
-    "total_seconds": 491.335313
+    "total_seconds": 737.043094
   },
   "schema": 1
 }

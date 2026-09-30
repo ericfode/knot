@@ -45,10 +45,33 @@ closure-field controls. This finding is disputed on that evidence; the row,
 source and seed observations remain unchanged. A fresh seed replay and full
 structural gate are required below before handoff.
 
+## Receipt repair
+
+All eighteen earlier receipts are retained in `tests/compiler-closures/receipts/history/`.
+Their dates, measured times, source hashes, seed observations, runtime results
+and failures are unchanged. A structural comparison against `35b979bf` verifies
+that only path spelling changed: checkout paths become `$ROOT`, toolchain and
+package paths use `.toolchain`/`$BEND_LIB`, and transient gate directories use
+`$GATE_RUN`. Historical report and review links now point to those receipts.
+No historical hash is rewritten to describe the present source.
+
+The closure harness stops hashing local Markdown that it does not execute.
+It retains the accepted source contract, all Bend/proof sources, frozen JSON
+and fixture sources, and every host/gate script. `receipt_evidence.py` records
+a completed fifteen-gate run only after checking the current closure inputs
+against the exported snapshot. Its verification mode rereads the current input
+hashes, receipt identity and per-gate closure counts. It never refreshes shared
+receipts or implements source-language behavior.
+
+Both changed Python sources parse. The eighteen archival comparisons pass, and
+their metadata contains no checkout-specific or transient gate path. This
+checkpoint is an evidence-workflow change, not a fresh compiler acceptance.
+
 ## Remaining verification
 
-Receipt normalization, historical provenance, fresh source/input hashes,
-committed-head C1/C3/C4 replay and the full fifteen-gate run are pending in this
-checkpoint. The two previously documented HostFailure findings remain disputes
+Fresh source/input hashes, committed-head C1/C3/C4 replay and the full
+fifteen-gate run are pending in this checkpoint. The old current `closures.json`
+is intentionally awaiting regeneration; it is not used to claim acceptance.
+The two previously documented HostFailure findings remain disputes
 until their frozen function-result probe is freshly replayed. Live semantic,
 law and five-axis/composition style qualification remains coordinator-owned.

@@ -33,7 +33,7 @@ Both `BEND_NO_TELEMETRY=1 npm run -s gates -- --jobs 1` and
 `npm run -s gates:verify` exit 0. The complete runner has 15 passed gates.
 Counts below overlap and are not summed into an assertion total. Commands,
 source/dependency snapshot hashes and exact completion records are retained in
-[`receipts/gates.json`](../../tests/compiler-closures/receipts/gates.json).
+[`receipts/history/gates.json`](../../tests/compiler-closures/receipts/history/gates.json).
 The raw run is `.local/gates/run-irwij8mp/`.
 
 | Gate | Exact passed coverage |
@@ -105,7 +105,7 @@ those incomplete receipts do not supply acceptance evidence.
 
 All 33 changed Bend files were selected. The pinned parser rejects the two
 intentionally invalid scrutinee fixtures; their source hashes and exclusions
-are retained in `receipts/preflight-selection.json`. The remaining 31 files
+are retained in `receipts/history/preflight-selection.json`. The remaining 31 files
 have 458 parsed declarations. Offline preflight exits 3 with 63 truncated
 contexts, 88 incomplete role contexts, and an unavailable aggregate composition
 (over the 48,000-byte bound and containing unresolved context).
@@ -122,7 +122,7 @@ Payoff have no model ratings or distributions from an offline run. None is
 reported as meeting its quality target; potential profundity/Galaxy brain also
 remains unjudged. The coordinator must resolve context limits and run live
 source and law-packet review. Preflight receipts are retained beside the
-[closure receipt](../../tests/compiler-closures/receipts/closures.json).
+[closure receipt](../../tests/compiler-closures/receipts/history/implementation-closures.json).
 
 ## Limits and integration
 
