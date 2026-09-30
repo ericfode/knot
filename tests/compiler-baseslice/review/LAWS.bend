@@ -38,3 +38,8 @@ law dotted_name_witness:
 
 law simple_name_witness:
   {S.dotted("value") == False{} : Bool}
+
+law empty_datatype_is_unsupported:
+  for +name: S.Token
+  for data: Bool
+  {G.nonempty(Nil{},name,data) == Fail{S.Unsupported{"check","empty-datatype",S.at(name)}} : Result<S.Error,C.Datatype>}

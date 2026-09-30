@@ -112,16 +112,18 @@ def mutant(spec, build):
 
 def check(commands, build):
     document = json.loads(seed.EXPECTATIONS.read_text())
+    minor = json.loads((HERE / 'empty-datatype.json').read_text())
     record = {'status': 'incomplete'}
     paths = [HERE / name for name in ('regen.py', 'check.py', 'expectations.json',
                                      'LAWS.bend', 'PROOF.bend', 'trust.ts', 'bounds-oracle.py',
-                                     'receipts/bounds-amendment.json')]
+                                     'receipts/bounds-amendment.json', 'empty-datatype.json')]
     paths += sorted((HERE / 'fixtures').glob('*.bend'))
     paths += sorted((ROOT / 'src').glob('*.bend'))
     paths.append(ROOT / 'scripts/run-wasm.mjs')
     paths.append(ROOT / 'tests/compiler-checker/bounds.bend')
     record['inputs'] = {relative(p): sha(p.read_bytes()) for p in paths}
     require(seed.observations(document) == document['observations'], 'review seed oracle changed')
+    require(seed.observations(minor) == minor['observations'], 'empty-datatype seed oracle changed')
     record['seed_reproduced'] = True
     record['seed'] = document['observations']['seed_files']
     record['bounds_amendment'] = run(['python3', '-B', relative(HERE / 'bounds-oracle.py')])
@@ -131,20 +133,21 @@ def check(commands, build):
     require(proof['exit'] == 0 and proof['stderr'] == '', proof)
     record['proof'] = json.loads(proof['stdout'])
     record['fixtures'] = []
-    for case in document['cases']:
+    cases = document['cases'] + minor['cases']
+    for case in cases:
         lanes = {lane: observe(case, drivers, lane) for lane, drivers in commands.items()}
         if 'wasm_sha256' in lanes['native']:
             require(lanes['native']['wasm_sha256'] == lanes['bun']['wasm_sha256'],
                     ('review modules differ', case['name']))
         record['fixtures'].append({'name': case['name'], 'require': case['require'], 'lanes': lanes})
     record['mutants'] = [mutant(m, build) for m in MUTANTS]
-    agreed = sum(c['require'] == 'agree' for c in document['cases'])
-    compiled = sum(c['require'] == 'agree' and 'compile_diagnostic' not in c for c in document['cases'])
-    refused = len(document['cases']) - compiled
-    record['counts'] = {'fixtures': len(document['cases']), 'agreed_books': agreed,
-                        'rejected_books': sum(c['require'] == 'reject' for c in document['cases']),
-                        'unsupported_books': sum(c['require'] == 'unsupported' for c in document['cases']),
-                        'lane_observations': len(document['cases']) * 6,
+    agreed = sum(c['require'] == 'agree' for c in cases)
+    compiled = sum(c['require'] == 'agree' and 'compile_diagnostic' not in c for c in cases)
+    refused = len(cases) - compiled
+    record['counts'] = {'fixtures': len(cases), 'agreed_books': agreed,
+                        'rejected_books': sum(c['require'] == 'reject' for c in cases),
+                        'unsupported_books': sum(c['require'] == 'unsupported' for c in cases),
+                        'lane_observations': len(cases) * 6,
                         'evaluator_observations': agreed * 2, 'wasm_observations': compiled * 2,
                         'byte_identical_modules': compiled, 'output_preservation_checks': refused * 2,
                         'laws': len(record['proof']['laws']), 'proof_holes': record['proof']['holes'],

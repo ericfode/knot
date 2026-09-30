@@ -75,7 +75,7 @@ def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -
 
 def nonempty(tokens: List<&2,C.Constructor>, +name: S.Token, data: Bool) -> Result<S.Error,C.Datatype>:
   match tokens:
-    case Nil{}: C.invalid(C.Datatype,"empty-datatype",name)
+    case Nil{}: C.unsupported(C.Datatype,"empty-datatype",name)
     case Con{h,t}: Done{C.Datatype{name,data,Con{h,t}}}
 
 def collect_types(nodes: List<&2,S.Node>, +count: U32) -> Result<S.Error,List<&2,C.Datatype>>:

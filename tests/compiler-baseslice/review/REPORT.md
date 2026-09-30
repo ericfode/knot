@@ -82,18 +82,21 @@ The source-attribution minor is fixed: String.append, not Bool.or, accounts for
 the native source/intrinsic difference. The existing plan snapshot's counts and
 source inventory remain a labeled historical snapshot.
 
-Offline preflight on the five materially changed Bend files exits 3: 138 units,
-16 truncated contexts and one unavailable composition (66,615 bytes against
+Offline preflight on the five materially changed Bend files exits 3: 139 units,
+16 truncated contexts and one unavailable composition (66,781 bytes against
 48,000). It makes **zero provider requests**. Manifest context fitting belongs
 to the pending Perch-cap/coordinator work; no whole-project qualification is
 claimed. Conceptual compression, Delight, memetic identity, Anticipation and
 Payoff all remain **unrated**, with no distribution or quality pass available.
 Live semantic/style Perch remains coordinator-only.
 
-The empty-datatype minor belongs to the standing modules reconciliation, which
-requires accepting empty declarations and re-freezing that branch's expectations.
-This repair does not import an unmerged branch or change that independently owned
-boundary. Main integration, shared receipt refresh and BS2–BS8 remain coordinator
+The empty-datatype minor is repaired conservatively under the standing ruling:
+empty declarations report `Unsupported check empty-datatype`, never Invalid.
+Its separate immutable seed oracle reproduces two fresh freezes before this
+repair. One additional book and a seventh checked helper law exercise this
+classification without changing the original 26-fixture oracle or its six laws.
+Accepting empty declarations remains part of modules reconciliation. No unmerged
+branch is imported. Main integration, shared receipt refresh and BS2–BS8 remain coordinator
 or follow-on increment actions. The refuted host-timeout finding remains retained
 historical evidence; no host guard or program budget was changed here.
 

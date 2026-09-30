@@ -74,6 +74,8 @@ affine reuse and live inspection of erased values are invalid.
 Bare declared functions resolve after local values, then report
 `Unsupported check function-reference` until higher-order checking is implemented.
 A local value with the same name retains normal lexical identity.
+An empty datatype is seed-valid but outside this profile and reports
+`Unsupported check empty-datatype`.
 
 Duplicate arms are outside this profile and report Unsupported: the pinned
 reference can accept overlapping nullary patterns, choosing the first match.

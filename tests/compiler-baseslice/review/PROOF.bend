@@ -18,3 +18,6 @@ def L.dotted_name_witness():
 
 def L.simple_name_witness():
   {==}
+
+def L.empty_datatype_is_unsupported(name,data):
+  {==}
