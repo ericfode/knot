@@ -20,6 +20,13 @@ def L.no_character_budget(c,tail):
 def L.no_parser_budget(tokens):
   {==}
 
+def L.spaced_term_token(left,right,next,gap):
+  %Equal.sym(Bool,T.glued(left,right),False{},gap) :
+    {S.choose(Result<S.Error,P.Parsed>,_,u => next(Unit{}),u =>
+      Fail{S.Unsupported{"parse","spacing",S.at(right)}})
+     == Fail{S.Unsupported{"parse","spacing",S.at(right)}} : Result<S.Error,P.Parsed>}
+  {==}
+
 def L.generic_header(at):
   {==}
 

@@ -45,7 +45,7 @@ try {
 SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-boundaries',
            HERE / 'bare-families', HERE / 'value-arguments', HERE / 'empty-families',
            HERE / 'def-references', HERE / 'type-level-names', HERE / 'marked-binders',
-           HERE / 'pattern-order', HERE / 'spacing')
+           HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
@@ -129,12 +129,17 @@ MUTANTS = (
      'old': 'u => Bool.not(flush(from,h))', 'new': 'u => False{}',
      'witness': 'close-gap-parameter', 'phase': 'check',
      'actual': {'exit': 0, 'contains': 'Checked\n'}},
+    {'name': 'term-token-gap-glued', 'file': 'parse.bend',
+     'old': 'T.glued(left,right)', 'new': 'True{}',
+     'witness': 'arrow-gap-generic', 'phase': 'check',
+     'actual': {'exit': 0, 'contains': 'Checked\n'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
                 'term-argument-invalid', 'empty-family-invalid', 'empty-datatype-invalid',
                 'def-reference-free', 'type-level-definition-unknown', 'marked-binder-quantity',
-                'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued'}
+                'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued',
+                'term-token-gap-glued'}
 
 
 def require(condition, detail):

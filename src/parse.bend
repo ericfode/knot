@@ -34,6 +34,12 @@ def invalid(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
 def unsupported(+ts: List<&2,S.Token>, code: String) -> Result<S.Error,Parsed>:
   Fail{S.Unsupported{"parse",code,S.here(ts)}}
 
+# Term tokens are glued; declaration braces have their own grammar.
+def adjacent(+left: S.Token, +right: S.Token,
+  next: Unit -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
+  S.choose(Result<S.Error,Parsed>,T.glued(left,right),u => next(Unit{}),u =>
+    Fail{S.Unsupported{"parse","spacing",S.at(right)}})
+
 def starts(ts: List<&2,S.Token>, word: String) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -258,7 +264,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+            adjacent(name,open,u =>
+              then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest))),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"<"),u =>
             type_then(T.expression(n,tokens),value => rest => Done{Parsed{value,rest}}),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}}))),u =>
@@ -322,7 +329,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+dash,Con{+arrow,Con{+typ,Con{+colon,+body}}}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),Bool.and(S.matches(arrow,">"),Bool.and(S.identifier(typ),S.matches(colon,":")))),u =>
-            then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest)),u =>
+            adjacent(dash,arrow,u =>
+              then(run(n,Body{0},body),value => rest => wrap_function(name,S.Sequence{params},typ,value,rest))),u =>
           S.choose(Result<S.Error,Parsed>,typed_result(tokens),u =>
             run(n,TypedResult{name,S.Sequence{params}},tokens),u => invalid(tokens,"function-result")))
         case _: invalid(tokens,"function-result")
@@ -332,9 +340,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
       match tokens:
         case Con{+dash,Con{+arrow,+tail}}:
           S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),S.matches(arrow,">")),u =>
-            type_then(T.expression(n,tail),typ => rest =>
+            adjacent(dash,arrow,u => type_then(T.expression(n,tail),typ => rest =>
               S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
-                then(run(n,Body{0},body),value => end => wrap_typed_function(name,params,typ,value,end)))),u =>
+                then(run(n,Body{0},body),value => end => wrap_typed_function(name,params,typ,value,end))))),u =>
             invalid(tokens,"function-result"))
         case _: invalid(tokens,"function-result")
     case 1n+ +n MatchTail{+token,+value,+column}:

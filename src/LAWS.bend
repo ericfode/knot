@@ -22,6 +22,14 @@ law no_parser_budget:
   for +tokens: List<&2,S.Token>
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
 
+law spaced_term_token:
+  for +left: S.Token
+  for +right: S.Token
+  for next: Unit -> Result<S.Error,P.Parsed>
+  for gap: {T.glued(left,right) == False{} : Bool}
+  {P.adjacent(left,right,next)
+    == Fail{S.Unsupported{"parse","spacing",S.at(right)}} : Result<S.Error,P.Parsed>}
+
 # Parser-only header acceptance; the catalog separately requires constructors.
 # The parameter type touches the closing `>`, as lexed from `Type>`.
 law generic_header:
