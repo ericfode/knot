@@ -11,6 +11,11 @@ chats; a clean checkpoint does not require disturbing work still in progress.
    only when it matches the sources being committed; distinguish historical
    evidence from checks rerun now. A documentation or Git hygiene change does
    not justify rerunning unchanged paid model reviews.
+   Regenerate census after the last source or gate-driver edit, before the full
+   gate run: `npm run census:approve`, then `npm run census`, then
+   `npm run census:check`. Inspect and retain the approval summary. The accepted
+   inventory hashes gate drivers too; unchanged compiler feature counts do not
+   establish that this inventory is current.
 3. Stage explicit paths. Inspect `git diff --cached --stat`,
    `git diff --cached --check`, and the staged content. Check new files for
    credentials, dependency directories, caches, unintended binaries, and large

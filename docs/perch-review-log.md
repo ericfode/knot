@@ -941,3 +941,30 @@ separate "version 7" rubric needs reconciling against these anchors.
 Prevention: calibrate a rubric against recorded human preferences before
 optimizing code against it. v6's memetic target would have steered a paydown
 campaign toward the styles the user rejected.
+
+## 2026-09-29 — Close census after driver edits; isolate invalid preflight targets
+
+Descent-2's refresh regenerated census before carrying main's host hang guards
+into five inventoried drivers. The next full run passed their deterministic
+assertions but census refused stale `accepted.json` driver hashes. Regeneration
+changed only those five hashes; no fixture, source feature or expectation moved.
+The missing ordering check required another full run. `docs/GIT-WORKFLOW.md` now
+places census regeneration/check after the final driver edit and before gates.
+
+The same run exposed a refresh-only observer mismatch: the immutable freeze
+records `On{}`, while Knot's eval CLI frames it as `Evaluated\t0\t1\tOn{}`.
+The adapter now requires that exact frame, frozen value and enum tag; the freeze
+was not rewritten. A targeted replay of all 34 controls passed 204 phases using
+hash-verified prior builds. Checking the observer adapter before a full build
+would have caught the mismatch sooner.
+
+The refresh's offline style selection also contains five intentional negative
+programs that the pinned parser rejects. A combined explicit selection stops
+at such a target; per-file preflight preserves the 29 available files and 130
+declarations while recording those five exclusions. Changing a correct negative
+fixture to obtain a style context would corrupt its frozen observation. No live
+review or provider request was made.
+
+Evidence: [refresh report](compiler-campaign/DESCENT-2-REFRESH.md),
+[D26 controls](../tests/compiler-descent/receipts/refresh-reference.json) and
+[offline coverage](../tests/compiler-descent/receipts/refresh-style-preflight.json).

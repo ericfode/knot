@@ -316,6 +316,23 @@ Data records used as an independent pure model; source quantities are checked
 before execution. This does not establish an owning heap for general affine
 resources, a parallel runtime, or source compilation to the existing GPU probe.
 
+## Trust inventory: open proof obligations
+
+The two general pattern-matrix lowering laws remain required under coordinator
+decision D21. This branch carries checked ground instances and helper equations,
+not proofs of either general statement. Nest's later proofs and rulings must be
+reconciled when the coordinator integrates that increment.
+
+| Required law | Current evidence | Status |
+| --- | --- | --- |
+| An irrefutable first row lowers to that row's body | `matrix-LAWS.bend::irrefutable_lowering_selects_first`, the specialization/default/selection helper laws, and the frozen first-match and wildcard fixtures | Open general obligation. Success at a fixed work quota is not guaranteed; the seed-accepted `tests/compiler-nest/controls/matrix-work.bend` exhausts the 4,096-step quota. |
+| An exhaustive matrix lowers without a missing branch | `matrix-LAWS.bend::exhaustive_matrix_has_no_missing_branch` and the frozen multi-column, nested and empty-type fixtures | Open general obligation. Ground normalization does not establish arbitrary exhaustive lowering. |
+
+The descent algebra's 23 filled laws and the differential controls are separate
+evidence. They establish no general termination or compiler-refinement theorem.
+The bounded review is in
+[`tests/compiler-descent/LAW_REVIEW.md`](../tests/compiler-descent/LAW_REVIEW.md).
+
 ## Required evidence
 
 Compare accepted fixtures with the pinned reference interpreter and compare

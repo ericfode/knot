@@ -12,12 +12,14 @@ import shutil
 import subprocess
 import sys
 
+TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-descent/gate'
 RECEIPT = HERE / 'receipts/descent.json'
 REFERENCE = HERE / 'receipts/reference.json'
 RESOURCE_REFERENCE = HERE / 'receipts/resources-reference.json'
+REFRESH_REFERENCE = HERE / 'receipts/refresh-reference.json'
 SEED_DIR = ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2'
 SEED = ['bun', SEED_DIR / 'main.ts']
 HOST = ROOT / 'scripts/run-wasm.mjs'
@@ -49,12 +51,14 @@ def input_paths(manifest):
             HERE / 'bounds.json', HERE / 'work-bounds.json', HERE / 'bounds.bend',
             HERE / 'resources.json', RESOURCE_REFERENCE,
             *sorted((HERE / 'resources').glob('*.bend')),
+            HERE / 'refresh-expectations.json', REFRESH_REFERENCE,
+            *sorted((HERE / 'refresh-fixtures').glob('*.bend')),
             REFERENCE, HOST, ROOT / 'tests/compiler-fields-wasm/compile.bend',
             *(ROOT / case['file'] for case in manifest['fixtures'] + manifest['legacy']),
             *sorted(SEED_DIR.glob('*.ts')), SEED_DIR / 'base.bend']
 
 
-def run(argv, timeout=120):
+def run(argv, timeout=120*TIMEOUT_SCALE):
     command = [str(arg) for arg in argv]
     try:
         result = subprocess.run(command, cwd=ROOT, text=True, capture_output=True,
@@ -169,6 +173,28 @@ def resource_cases(record):
     return cases
 
 
+def refresh_cases(record):
+    manifest = json.loads((HERE / 'refresh-expectations.json').read_text())
+    cases = manifest['fixtures']
+    require(len(cases) >= 20 and len({case['name'] for case in cases}) == len(cases),
+            'Insufficient or duplicate refresh cases')
+    require({str(path.relative_to(ROOT)) for path in (HERE / 'refresh-fixtures').glob('*.bend')}
+            == {case['file'] for case in cases}, 'Refresh fixture manifest mismatch')
+    fixed = json.loads(REFRESH_REFERENCE.read_text())
+    require(fixed['status'] == 'passed', 'Refresh reference is not passed')
+    require(fixed['inputs'] == hashes([HERE / 'refresh-expectations.json', HERE / 'refresh-freeze.py',
+                                      *(ROOT / case['file'] for case in cases)]),
+            'Frozen refresh inputs changed')
+    require(fixed['seed'] == hashes([*SEED_DIR.glob('*.ts'), SEED_DIR / 'base.bend']),
+            'Refresh reference seed changed')
+    record['refresh_reference'] = {'file': str(REFRESH_REFERENCE.relative_to(ROOT)),
+                                   'sha256': digest(REFRESH_REFERENCE), 'observations': len(cases)}
+    record['refresh_oracle'] = run([sys.executable, HERE / 'refresh-freeze.py'], timeout=900)
+    line(record['refresh_oracle'],
+         f'Verified {len(cases)} refresh seed observations in book/native/bun lanes; no differences')
+    return manifest, cases
+
+
 def build_lanes(record):
     entries = {'check': ROOT / 'src/check-cli.bend', 'eval': ROOT / 'src/eval-cli.bend',
                'compile': ROOT / 'tests/compiler-fields-wasm/compile.bend'}
@@ -187,7 +213,7 @@ def build_lanes(record):
     return lanes
 
 
-def executed(module, expected, timeout=120):
+def executed(module, expected, timeout=120*TIMEOUT_SCALE):
     result = run(['node', HOST, PROFILE, module, expected['export'], *expected['arguments']], timeout=timeout)
     successful(result)
     observation = json.loads(result['stdout'])
@@ -197,14 +223,21 @@ def executed(module, expected, timeout=120):
     return result
 
 
-def fixtures(record, manifest, cases, lanes, *, target='fixtures', timeout=120):
+def fixtures(record, manifest, cases, lanes, *, target='fixtures', timeout=120*TIMEOUT_SCALE):
     new_names = {case['name'] for case in manifest['fixtures']}
     records = record[target]
     for index, case in enumerate(cases):
         source = ROOT / case['file']
+        expected = {phase: case[phase] for phase in PHASES}
+        if target == 'refresh' and case['eval']['exit'] == 0:
+            # The immutable refresh freeze pins the value, not the eval CLI frame.
+            # On is datatype 0 / constructor 1 in each accepted enum control.
+            require(case['eval']['stdout'] == case['seed']['stdout'] == 'On{}'
+                    and case['wasm']['result'] == 1, ('refresh value contract', case))
+            expected['eval'] = {'exit': 0, 'stdout': 'Evaluated\t0\t1\tOn{}'}
         item = {'name': case['name'], 'file': case['file'], 'sha256': digest(source),
                 'group': target if case['name'] in new_names else 'legacy',
-                'expected': {phase: case[phase] for phase in PHASES}, 'lanes': {}}
+                'expected': expected, 'lanes': {}}
         records.append(item)
         module_hashes = []
         for lane, commands in lanes.items():
@@ -212,7 +245,7 @@ def fixtures(record, manifest, cases, lanes, *, target='fixtures', timeout=120):
             actual['check'] = run([*commands['check'], source], timeout=timeout)
             observe(actual['check'], case['check'], 'check')
             actual['eval'] = run([*commands['eval'], source, *case.get('eval_args', ['main', 65536])], timeout=timeout)
-            observe(actual['eval'], case['eval'], 'eval')
+            observe(actual['eval'], expected['eval'], 'eval')
             output = BUILD / f'{target}-{index:03d}-{lane}.wasm'
             output.write_bytes(MARKER)
             actual['compile'] = run([*commands['compile'], source, output], timeout=timeout)
@@ -339,7 +372,20 @@ def counts(record):
     resource_observations = [(phase, result) for item in resources
                              for lane in item['lanes'].values() for phase, result in lane.items()
                              if phase in PHASES]
+    refresh = record['refresh']
+    refresh_observations = [(phase, result) for item in refresh
+                            for lane in item['lanes'].values() for phase, result in lane.items()
+                            if phase in PHASES]
     return {'seed_fixtures': record['reference']['observations'],
+            'refresh_seed_fixtures': record['refresh_reference']['observations'],
+            'refresh_accepted_books': sum(item['expected']['check']['exit'] == 0 for item in refresh),
+            'refresh_phase_observations': len(refresh_observations),
+            'refresh_evaluation_values': sum(phase == 'eval' and result['exit'] == 0
+                                             for phase, result in refresh_observations),
+            'refresh_wasm_values': sum('wasm' in lane for item in refresh for lane in item['lanes'].values()),
+            'refresh_module_hash_pairs': sum(item.get('module_bytes_equal', False) for item in refresh),
+            'refresh_preserved_artifacts': sum(lane.get('artifact_preserved', False)
+                                               for item in refresh for lane in item['lanes'].values()),
             'resource_seed_fixtures': record['resource_reference']['observations'],
             'resource_accepted_books': sum(item['expected']['check']['exit'] == 0 for item in resources),
             'resource_phase_observations': len(resource_observations),
@@ -377,7 +423,7 @@ def main():
     RECEIPT.parent.mkdir(parents=True, exist_ok=True)
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'incomplete',
               'profile': 'knot-fields-wasm-1', 'builds': [], 'proofs': [], 'fixtures': [],
-              'mutants': [], 'bounds': [], 'resources': []}
+              'mutants': [], 'bounds': [], 'resources': [], 'refresh': []}
     try:
         manifest = json.loads((HERE / 'expectations.json').read_text())
         cases = validate_manifest(manifest)
@@ -386,6 +432,9 @@ def main():
         record['seed_revision'] = manifest['seed_revision']
         verify_reference(record, cases)
         resources = resource_cases(record)
+        refresh_manifest, refresh = refresh_cases(record)
+        require(len({case['name'] for case in cases + resources + refresh}) == len(cases + resources + refresh),
+                'Refresh names overlap an existing case')
         require(not {case['name'] for case in cases}.intersection(case['name'] for case in resources),
                 'Resource case names overlap the original manifest')
         record['tools'] = {}
@@ -401,6 +450,7 @@ def main():
         # A short harness limit prevents an expansion regression from running unchecked.
         # A timeout fails this gate; it is never a matched language diagnostic.
         fixtures(record, {'fixtures': resources}, resources, lanes, target='resources', timeout=2)
+        fixtures(record, refresh_manifest, refresh, lanes, target='refresh')
         bounds(record)
         mutants(record, cases, mutations)
         validate_manifest(manifest)
@@ -419,6 +469,7 @@ def main():
           f"{total['accepted_books']} accepted books, {total['phase_observations']} phase observations; "
           f"{total['evaluation_values']} evaluator values, {total['wasm_values']} Wasm values; "
           f"{total['resource_seed_fixtures']} resource fixtures / {total['resource_phase_observations']} phases; "
+          f"{total['refresh_seed_fixtures']} refresh fixtures / {total['refresh_phase_observations']} phases; "
           f"{total['bounds_observations']} bounds observations; "
           f"{total['mutants']} mutants / {total['semantic_kills']} semantic kills")
 

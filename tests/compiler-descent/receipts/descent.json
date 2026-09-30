@@ -506,6 +506,13 @@
     "phase_observations": 228,
     "preserved_artifacts": 38,
     "proofs": 2,
+    "refresh_accepted_books": 15,
+    "refresh_evaluation_values": 30,
+    "refresh_module_hash_pairs": 15,
+    "refresh_phase_observations": 204,
+    "refresh_preserved_artifacts": 38,
+    "refresh_seed_fixtures": 34,
+    "refresh_wasm_values": 30,
     "rejected_phase_observations": 114,
     "resource_accepted_books": 1,
     "resource_evaluation_values": 2,
@@ -4605,7 +4612,7 @@
     "src/CONTRACT.json": "a486e89d79343c21b4041068bff09bbbf42c9c1f02e5b7ce0a6b4a324f6c3b2c",
     "src/LAWS.bend": "b7755dbd1da14516ecdb7484edace511e581e4c8671a287f2d23826264502e6d",
     "src/PROOF.bend": "b3808807d0ffdfaa14a1cebb5bf532f58836402b1e988c56d3b3c9bea9eca7c4",
-    "src/SPEC.md": "84c11ff1579246be8c5e4f766a7d4468c27fc0256db9917eb6a6f840a086b704",
+    "src/SPEC.md": "b40891f2b9ef243b9776978d737a722528408354b0c6f89febf3a27ca6071b33",
     "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
     "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
     "src/catalog.bend": "0b478dbbc0f07f60ade43c04dd53b9660f6410b1c5dd4d0ef191772d83986098",
@@ -4643,7 +4650,7 @@
     "tests/compiler-checker/fixtures/recursive-call.bend": "949f6edea1b6beb7ca9a560cdd47bb5ed17a3d71ef7e2bb9800ba70008a22119",
     "tests/compiler-descent/bounds.bend": "562693f1d1e756b85baaa17e1acb27e9a145578f402555abfa1fcc20c70e7ce6",
     "tests/compiler-descent/bounds.json": "22d9f8cc177a146055f152e279e82acbdde5c9122916e51c36411b8d8b67a345",
-    "tests/compiler-descent/check.py": "92e280b55f2d73c6cf0bc56ed44a9cba12111f382f7aa68790950528f400aa2b",
+    "tests/compiler-descent/check.py": "15e759a184c84e83289b923f386e96b8b7f9684bc1999778bdc410cc028f39a5",
     "tests/compiler-descent/expectations.json": "b9bc5ccf2ee287a6554ce867ff3dbf819ba62b28b384ce6fdbd57486082e45f1",
     "tests/compiler-descent/fixtures/alias-chain.bend": "bdd648df339a1b73e319c2bff68b5bcf4f453f1c8849c10d14405d610a535f92",
     "tests/compiler-descent/fixtures/alias-computed.bend": "23431d371a1b7d04b5c13b0da0c3b7852666059e1848c4bef1732e1c165420de",
@@ -4676,7 +4683,44 @@
     "tests/compiler-descent/freeze.py": "84e1630cf69ddd60143a35a6439414e3ee64fe2710d46a63917b80bfc4f1bf62",
     "tests/compiler-descent/mutants.json": "1e7c567903a4cb7ee8f23740f366d3993579d5cbb277b06e0d528c415451da36",
     "tests/compiler-descent/receipts/reference.json": "fd2dc895fccc6f23e988da702fdcbb19542e1dd0060547fdf17b4bf4835eeace",
+    "tests/compiler-descent/receipts/refresh-reference.json": "a670c564e9c6f11a70580f120eece71085030c4f20a395e8c86285007af953dc",
     "tests/compiler-descent/receipts/resources-reference.json": "d359a903189edc63db74bf911256c14181b7a61f1c6fd19f3fc35927ae851022",
+    "tests/compiler-descent/refresh-expectations.json": "640c9e8885ccca1b6716306b46a4f8b80ff8a89d8fff8924ff25a81e7c967c53",
+    "tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend": "9a2c1e5f979faa6ceab2129f36a4aee7d0bf9c74b102f6edc70debd29e2f16de",
+    "tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend": "09da86a7eacc3da83424fe1035fb84721b23a3da2ea5b69a17a187b0c1d0403d",
+    "tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend": "a253e30dfafd29e72bb570a6248a5e416e5762bf6224fd3c16d3f9a5e748cf34",
+    "tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend": "f00fe16966b619428455e401c347322a57ed81131644170eb047c970cff511b3",
+    "tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend": "6aed59e444b52a28f1adf015d41e49317958e2402882a64e4d2c532f2b4ddb91",
+    "tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend": "8a116cb28c33b8e1d6f51516181208bb474d624fdff000da00aa3855f4611b06",
+    "tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend": "d49565f7cbf5252654aa7380edc1be15a4522474be1f3ab4e8c8fc6b0111d36b",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend": "a49992ce8ba09addf073ac412da390c1b20536d555caf10cb058a3a2048a5d6f",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend": "d13ee77df74f57d0dc4c31bc3e82e8a7ee88ad6313d8c063f2ef4822e9d64957",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend": "c518db33a7727dafc3b83d6f277088f00b9363d8b012e1c080f69ae3c7a8a8ac",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend": "bf5700f2706e9409ba8e9c0138be3a52781bedbe1635a235fe06448c8afc90c8",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend": "0cbd9148a5128fa23391c1746a0db847b73acc5348b74451e981b59f1470b095",
+    "tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend": "de2e4b3239780463e94d0f528028da459a40f15dced40f4689d8485746a31c38",
+    "tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend": "4b4a1dbdf511abbe81c81ee2605213bc980b9f45323e6b8e6cb7adf757045048",
+    "tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend": "1a2111d944fe6189c91b28e6fedd97dce462280610371a49d93cd11185d92da6",
+    "tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend": "d8f72f493a8f395f03ddd7ff2f089a83176e5297f92bc06e090469c25f0bb2ad",
+    "tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend": "375c821187ab3ab8bc719dc7c11ffeae0693606cc74bbd10e6394a63b9ad2f9b",
+    "tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend": "779ec231bb64233f3cce5f9e823695d4ce9a3172b0c5b8664c5ad6f1f386b88e",
+    "tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend": "2f20a8d8dd94293171cff1a762295897c2358b01bc96144887cc1bbbb55c3da6",
+    "tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend": "f35596bf4571152cb45c1589e8bf102b480da3523cc9fbc9655904330505a5cc",
+    "tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend": "5eba8c9043400ac1d30f1f724cf7f3c08059b08678cc3543582fce2128c8efd5",
+    "tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend": "dd1666aaa4badd470be3926cbed5847ef20531c2200d6e30891cdb895e9824ee",
+    "tests/compiler-descent/refresh-fixtures/fourth-column.bend": "a128cb8fbb2d8c1f52e3c31596a13c717ca0efbf5b44a4bd85ef19e9d04d7791",
+    "tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend": "f155b44b9363d8e292dfd271b4aa3bc5cf020d33208824169779aeabd7f6f7db",
+    "tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend": "2eec0b21bde48769df193636a8483f6c13b7474aa7b3f8e9527f7267b2d2404f",
+    "tests/compiler-descent/refresh-fixtures/product-equal-alias.bend": "953f5ad1cf6577470d9a5430652468b24a780790c09fb7256a3ba6aa5143c550",
+    "tests/compiler-descent/refresh-fixtures/product-first-growth.bend": "e5179e2e956d2a657c85ba470a4fabe410e36f37f0358e9c78717c0a6e97f2b3",
+    "tests/compiler-descent/refresh-fixtures/product-last-growth.bend": "163dfe9bd20cc275ea05a263b7a9031ccd4a24bd9cb21525581b9e7c3643d45a",
+    "tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend": "e625328a5de5fc6eb84d9de80c3aff17316ccc1ca71b8047fcfb2f6b39d57c64",
+    "tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend": "f8aa158f6d216e30f598bc6bdb5d7c89fd6d66c32c9982c5a7b5e8e26d73293e",
+    "tests/compiler-descent/refresh-fixtures/product-third-shrink.bend": "012ba64359a57261a88118e494945221fce21d2e4421280272895353becb3f11",
+    "tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend": "9c6b6090071ecaf553e9406cffe3b52bbee54171e6bf3b2cf94068f098cd8c0a",
+    "tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend": "af207e29e72637acc0e1f63a13fb9d3c7e788b2d702f27967ae7f378eb5f353b",
+    "tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend": "4580b28b55b1017485304bdc2d3026b2a2504d2c45bd1f81ed0b56ffe28b02b2",
+    "tests/compiler-descent/refresh-freeze.py": "d439b15d629d9441fa85b9b9e7013d7005493b3ee2e1fa5bfd5b33a8054fb7c2",
     "tests/compiler-descent/resource-freeze.py": "e44d27a8fa9a7474fe974d3f5fc64798c3db91979be72794427d4e94e1b06655",
     "tests/compiler-descent/resources.json": "50046d339e05f21374fec8e8c7be3a0590a587ef029a4b526084bdf465180ed5",
     "tests/compiler-descent/resources/later-shared-alias.bend": "668384ab2e3e89f8c8e860c8ace065c00c46eefaa925995d4edeb5c5e47e457e",
@@ -5308,6 +5352,3626 @@
     "file": "tests/compiler-descent/receipts/reference.json",
     "observations": 38,
     "sha256": "fd2dc895fccc6f23e988da702fdcbb19542e1dd0060547fdf17b4bf4835eeace"
+  },
+  "refresh": [
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,2:1,2:1,1:1)->0=case $3 [0=>v0.1;1(1 $4:1;)=>call0($0:1;$1:1;$2:1;$4:1)]\nmain()->0=call0(v1.0;v1.1{v1.0};v1.1{v1.1{v1.0}};v1.1{v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-000-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t354\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "dc81528843f3db1cc0266778a0cc53431b3088b87ea001b3a7847eefc2ab3fbd",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-000-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":354}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,2:1,2:1,1:1)->0=case $3 [0=>v0.1;1(1 $4:1;)=>call0($0:1;$1:1;$2:1;$4:1)]\nmain()->0=call0(v1.0;v1.1{v1.0};v1.1{v1.1{v1.0}};v1.1{v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-000-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t354\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fourth-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "dc81528843f3db1cc0266778a0cc53431b3088b87ea001b3a7847eefc2ab3fbd",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-000-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":354}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "fourth-column",
+      "sha256": "a128cb8fbb2d8c1f52e3c31596a13c717ca0efbf5b44a4bd85ef19e9d04d7791"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,0:1,2:1,1:1)->0=case $3 [0=>v0.1;1(1 $4:1;)=>call0($0:1;v1.1{$1:1};$2:1;$4:1)]\nmain()->0=call0(v1.0;v1.0;v1.0;v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-001-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t239\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "04e17ab1899173a972a2f2eff6239b452e6fe830f770653f3bcd4c00148a59b4",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-001-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":239}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,0:1,2:1,1:1)->0=case $3 [0=>v0.1;1(1 $4:1;)=>call0($0:1;v1.1{$1:1};$2:1;$4:1)]\nmain()->0=call0(v1.0;v1.0;v1.0;v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-001-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t239\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-between-equal-columns.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "04e17ab1899173a972a2f2eff6239b452e6fe830f770653f3bcd4c00148a59b4",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-001-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":239}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "erased-between-equal-columns",
+      "sha256": "375c821187ab3ab8bc719dc7c11ffeae0693606cc74bbd10e6394a63b9ad2f9b"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nidentity(1:1)->1=$0:1\ndrain(1:1,2:1)->0=case $0 [0=>v0.1;1(1 $2:1;)=>call1($2:1;call0($1:1))]\nmain()->0=call1(v1.1{v1.1{v1.0}};v1.0)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-002-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t245\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "ac3bf50b52dddc99b127592c39bc24f854df36c1f020414dff1cda96afb96b27",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-002-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":245}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\nidentity(1:1)->1=$0:1\ndrain(1:1,2:1)->0=case $0 [0=>v0.1;1(1 $2:1;)=>call1($2:1;call0($1:1))]\nmain()->0=call1(v1.1{v1.1{v1.0}};v1.0)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-002-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t245\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/earlier-shrink-later-opaque.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "ac3bf50b52dddc99b127592c39bc24f854df36c1f020414dff1cda96afb96b27",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-002-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":245}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "earlier-shrink-later-opaque",
+      "sha256": "1a2111d944fe6189c91b28e6fedd97dce462280610371a49d93cd11185d92da6"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-003-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-003-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/equal-prefix-opaque-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t175:180:12:15\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "equal-prefix-opaque-column",
+      "sha256": "d8f72f493a8f395f03ddd7ff2f089a83176e5297f92bc06e090469c25f0bb2ad"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-004-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-004-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-scrutinee.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "alias-scrutinee",
+      "sha256": "f00fe16966b619428455e401c347322a57ed81131644170eb047c970cff511b3"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-005-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-005-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-before-parent-refinement.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t124:125:9:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "alias-before-parent-refinement",
+      "sha256": "09da86a7eacc3da83424fe1035fb84721b23a3da2ea5b69a17a187b0c1d0403d"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-006-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-006-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-then-nested-refinement.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "alias-then-nested-refinement",
+      "sha256": "d49565f7cbf5252654aa7380edc1be15a4522474be1f3ab4e8c8fc6b0111d36b"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-007-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-007-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/refined-alias-parent-equal.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t117:121:9:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "refined-alias-parent-equal",
+      "sha256": "af207e29e72637acc0e1f63a13fb9d3c7e788b2d702f27967ae7f378eb5f353b"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tunmatchable-binder\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-008-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-008-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-chain-scrutinee.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tunmatchable-binder\t139:145:10:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "alias-chain-scrutinee",
+      "sha256": "a253e30dfafd29e72bb570a6248a5e416e5762bf6224fd3c16d3f9a5e748cf34"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,1:1)->0=case $1 [0=>v0.1;1(1 $2:1;)=>let1 $3:1=$0:1 in call0($3:1;$2:1)]\nmain()->0=call0(v1.1{v1.0};v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-009-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t249\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "25433e3e7f54a95cded1965c0edb076eb1db20d7fc6a339b7e6340cd1a39ec36",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-009-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":249}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(2:1,1:1)->0=case $1 [0=>v0.1;1(1 $2:1;)=>let1 $3:1=$0:1 in call0($3:1;$2:1)]\nmain()->0=call0(v1.1{v1.0};v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-009-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t249\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-equal-prefix.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "25433e3e7f54a95cded1965c0edb076eb1db20d7fc6a339b7e6340cd1a39ec36",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-009-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":249}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "alias-shadow-equal-prefix",
+      "sha256": "6aed59e444b52a28f1adf015d41e49317958e2402882a64e4d2c532f2b4ddb91"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>let1 $2:1=$1:1 in call0($2:1)]\nmain()->0=call0(v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-010-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t207\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "6cedd1edc906dbb67fc50b5e76308cddd14fffdf71765ed3ac52b6b9cc8e740c",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-010-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":207}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=case $0 [0=>v0.1;1(1 $1:1;)=>let1 $2:1=$1:1 in call0($2:1)]\nmain()->0=call0(v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-010-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t207\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/alias-shadow-smaller-column.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "6cedd1edc906dbb67fc50b5e76308cddd14fffdf71765ed3ac52b6b9cc8e740c",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-010-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":207}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "alias-shadow-smaller-column",
+      "sha256": "8a116cb28c33b8e1d6f51516181208bb474d624fdff000da00aa3855f4611b06"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=case $0 [1(1 $1:1;)=>case $1 [1(1 $2:1;)=>case $2 [1(1 $3:1;)=>call0(v1.1{v1.1{$3:1}});0=>v0.1];0=>v0.1];0=>v0.1]\nmain()->0=call0(v1.1{v1.1{v1.1{v1.1{v1.1{v1.0}}}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-011-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t375\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "9dbcaa173ff3fea00625ad4eba67dcdc2f624d18416415d22104dd893578c0c2",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-011-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":375}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=case $0 [1(1 $1:1;)=>case $1 [1(1 $2:1;)=>case $2 [1(1 $3:1;)=>call0(v1.1{v1.1{$3:1}});0=>v0.1];0=>v0.1];0=>v0.1]\nmain()->0=call0(v1.1{v1.1{v1.1{v1.1{v1.1{v1.0}}}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-011-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t375\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/rebuild-two-level-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "9dbcaa173ff3fea00625ad4eba67dcdc2f624d18416415d22104dd893578c0c2",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-011-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":375}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "rebuild-two-level-shrink",
+      "sha256": "9c6b6090071ecaf553e9406cffe3b52bbee54171e6bf3b2cf94068f098cd8c0a"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $3 [0=>v0.1;1(1 $4:1;)=>call0(v2.0{$1:1;$2:1;$4:1})]]\nmain()->0=call0(v2.0{v1.1{v1.0};v1.1{v1.0};v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-012-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t398\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "cc125805276ca237a1219ce1fb38b9b2cfd2ee08707464161b1df7d2f8834e87",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-012-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":398}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $3 [0=>v0.1;1(1 $4:1;)=>call0(v2.0{$1:1;$2:1;$4:1})]]\nmain()->0=call0(v2.0{v1.1{v1.0};v1.1{v1.0};v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-012-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t398\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-third-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "cc125805276ca237a1219ce1fb38b9b2cfd2ee08707464161b1df7d2f8834e87",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-012-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":398}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "product-third-shrink",
+      "sha256": "012ba64359a57261a88118e494945221fce21d2e4421280272895353becb3f11"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $2 [0=>v0.1;1(1 $4:1;)=>call0(v2.0{$1:1;$4:1;$3:1})]]\nmain()->0=call0(v2.0{v1.1{v1.0};v1.1{v1.1{v1.0}};v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-013-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t398\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "b0284bb332dea243f2556210f2aa6521fc50bac065b9ce122f94228b4204940d",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-013-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":398}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $2 [0=>v0.1;1(1 $4:1;)=>call0(v2.0{$1:1;$4:1;$3:1})]]\nmain()->0=call0(v2.0{v1.1{v1.0};v1.1{v1.1{v1.0}};v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-013-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t398\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-middle-shrink.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "b0284bb332dea243f2556210f2aa6521fc50bac065b9ce122f94228b4204940d",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-013-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":398}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "product-middle-shrink",
+      "sha256": "e625328a5de5fc6eb84d9de80c3aff17316ccc1ca71b8047fcfb2f6b39d57c64"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-014-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-014-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-last-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "product-last-growth",
+      "sha256": "163dfe9bd20cc275ea05a263b7a9031ccd4a24bd9cb21525581b9e7c3643d45a"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-015-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-015-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-first-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t229:234:12:27\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "product-first-growth",
+      "sha256": "e5179e2e956d2a657c85ba470a4fabe410e36f37f0358e9c78717c0a6e97f2b3"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-016-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-016-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-equal-alias.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t274:279:14:6\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "product-equal-alias",
+      "sha256": "953f5ad1cf6577470d9a5430652468b24a780790c09fb7256a3ba6aa5143c550"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $3 [0=>v0.1;1(1 $4:1;)=>let1 $5:2=v2.0{$1:1;$2:1;$4:1} in call0($5:2)]]\nmain()->0=call0(v2.0{v1.0;v1.0;v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-017-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t354\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "aab2cb52c932854669bfc920ae83d761aee8cf5eed44675fd0dcf194728a7649",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-017-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":354}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [0(1 $1:1;1 $2:1;1 $3:1;)=>case $3 [0=>v0.1;1(1 $4:1;)=>let1 $5:2=v2.0{$1:1;$2:1;$4:1} in call0($5:2)]]\nmain()->0=call0(v2.0{v1.0;v1.0;v1.1{v1.1{v1.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-017-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t354\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/product-smaller-alias.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "aab2cb52c932854669bfc920ae83d761aee8cf5eed44675fd0dcf194728a7649",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-017-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":354}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "product-smaller-alias",
+      "sha256": "f8aa158f6d216e30f598bc6bdb5d7c89fd6d66c32c9982c5a7b5e8e26d73293e"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.1{v2.0;v2.0};v2.0};v2.0})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-018-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t374\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "4eaa98b47d35c84758550447ca4f8ee53682c3621a75adabdf4384f1e74e7e92",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-018-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":374}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.1{v2.0;v2.0};v2.0};v2.0})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-018-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t374\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-left-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "4eaa98b47d35c84758550447ca4f8ee53682c3621a75adabdf4384f1e74e7e92",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-018-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":374}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "fallback-left-subtree",
+      "sha256": "f35596bf4571152cb45c1589e8bf102b480da3523cc9fbc9655904330505a5cc"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $2 [1(1 $3:2;1 $4:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.0;v2.1{v2.0;v2.1{v2.0;v2.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-019-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t374\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "87a2f3eb12d10472a3e2822152476b0a753d3f9615e64fadcee49b350f865b58",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-019-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":374}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $2 [1(1 $3:2;1 $4:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.0;v2.1{v2.0;v2.1{v2.0;v2.0}}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-019-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t374\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-right-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "87a2f3eb12d10472a3e2822152476b0a753d3f9615e64fadcee49b350f865b58",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-019-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":374}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "fallback-right-subtree",
+      "sha256": "5eba8c9043400ac1d30f1f724cf7f3c08059b08678cc3543582fce2128c8efd5"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>case $2 [1(1 $5:2;1 $6:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.0;v2.0};v2.1{v2.0;v2.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-020-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t407\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "430b6dc601da6d0993ed618d79713ee7c764eb4459d3e6128c2ff9ce543e21b6",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-020-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":407}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>case $2 [1(1 $5:2;1 $6:2;)=>call0(v2.1{$3:2;$4:2});0=>v0.1];0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.0;v2.0};v2.1{v2.0;v2.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-020-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t407\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-two-refined-fields.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "430b6dc601da6d0993ed618d79713ee7c764eb4459d3e6128c2ff9ce543e21b6",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-020-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":407}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "fallback-two-refined-fields",
+      "sha256": "dd1666aaa4badd470be3926cbed5847ef20531c2200d6e30891cdb895e9824ee"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>let1 $5:2=v2.1{$3:2;$4:2} in call0($5:2);0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.0;v2.0};v2.0})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-021-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t329\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "8cf035a56980f43939cd8f068cd3f9cc36fe26e5b0ff39cdb7b074807112cf36",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-021-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":329}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:2)->0=case $0 [1(1 $1:2;1 $2:2;)=>case $1 [1(1 $3:2;1 $4:2;)=>let1 $5:2=v2.1{$3:2;$4:2} in call0($5:2);0=>v0.1];0=>v0.1]\nmain()->0=call0(v2.1{v2.1{v2.0;v2.0};v2.0})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-021-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t329\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/fallback-alias-subtree.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "8cf035a56980f43939cd8f068cd3f9cc36fe26e5b0ff39cdb7b074807112cf36",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-021-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":329}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "fallback-alias-subtree",
+      "sha256": "2f20a8d8dd94293171cff1a762295897c2358b01bc96144887cc1bbbb55c3da6"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1,0:1)->0=case $0 [0=>v0.1;1(1 $2:1;)=>call0($2:1;v1.1{$1:1})]\nmain()->0=call0(v1.1{v1.1{v1.0}};v1.0)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-022-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t203\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "a7ab91355010064f4a955fd72e85c753c817fe6e8f0e39dfb31127ef0257cca1",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-022-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":203}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1,0:1)->0=case $0 [0=>v0.1;1(1 $2:1;)=>call0($2:1;v1.1{$1:1})]\nmain()->0=call0(v1.1{v1.1{v1.0}};v1.0)\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-022-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t203\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/erased-last-column-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "a7ab91355010064f4a955fd72e85c753c817fe6e8f0e39dfb31127ef0257cca1",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-022-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":203}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "erased-last-column-growth",
+      "sha256": "779ec231bb64233f3cce5f9e823695d4ce9a3172b0c5b8664c5ad6f1f386b88e"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\terased-scrutinee\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\terased-scrutinee\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\terased-scrutinee\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-023-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-023-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/only-erased-middle-shrinks.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\terased-scrutinee\t121:126:8:8\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "only-erased-middle-shrinks",
+      "sha256": "f155b44b9363d8e292dfd271b4aa3bc5cf020d33208824169779aeabd7f6f7db"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-024-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-024-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/zero-argument-self-call.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t92:97:8:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "zero-argument-self-call",
+      "sha256": "4580b28b55b1017485304bdc2d3026b2a2504d2c45bd1f81ed0b56ffe28b02b2"
+    },
+    {
+      "expected": {
+        "check": {
+          "contains": "Checked\n",
+          "exit": 0
+        },
+        "compile": {
+          "exit": 0
+        },
+        "eval": {
+          "exit": 0,
+          "stdout": "Evaluated\t0\t1\tOn{}"
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=let0 $1:0=call0(v1.1{$0:1}) in v0.1\nmain()->0=call0(v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-025-bun.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t173\n"
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "3b27b96a515173ea1be85af897f1de589dc7e053d530d248f0a4d1006aeb4148",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-025-bun.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":173}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        },
+        "native": {
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Checked\ndrain(1:1)->0=let0 $1:0=call0(v1.1{$0:1}) in v0.1\nmain()->0=call0(v1.1{v1.1{v1.0}})\n\n"
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-025-native.wasm"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Built\t173\n"
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/dead-call-rebuilt-growth.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "Evaluated\t0\t1\tOn{}\n"
+          },
+          "module_sha256": "3b27b96a515173ea1be85af897f1de589dc7e053d530d248f0a4d1006aeb4148",
+          "wasm": {
+            "argv": [
+              "node",
+              "$ROOT/scripts/run-wasm.mjs",
+              "--profile=knot-fields-wasm-1",
+              "$ROOT/.local/compiler-descent/gate/refresh-025-native.wasm",
+              "main"
+            ],
+            "exit": 0,
+            "stderr": "",
+            "stdout": "{\"validated\":true,\"export\":\"main\",\"arguments\":[],\"result\":1,\"bytes\":173}\n"
+          },
+          "wasm_expected": {
+            "arguments": [],
+            "export": "main",
+            "result": 1
+          }
+        }
+      },
+      "module_bytes_equal": true,
+      "name": "dead-call-rebuilt-growth",
+      "sha256": "4b4a1dbdf511abbe81c81ee2605213bc980b9f45323e6b8e6cb7adf757045048"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\taffine-reuse\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-026-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-026-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/affine-alias-reuse.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\taffine-reuse\t258:262:17:6\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "affine-alias-reuse",
+      "sha256": "9a2c1e5f979faa6ceab2129f36a4aee7d0bf9c74b102f6edc70debd29e2f16de"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-027-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-027-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-partial.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-partial",
+      "sha256": "a49992ce8ba09addf073ac412da390c1b20536d555caf10cb058a3a2048a5d6f"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-028-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-028-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-retyped-constant.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t164:167:12:25\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-retyped-constant",
+      "sha256": "d13ee77df74f57d0dc4c31bc3e82e8a7ee88ad6313d8c063f2ef4822e9d64957"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-029-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-029-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root-source.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t227:230:15:25\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-root-source",
+      "sha256": "c518db33a7727dafc3b83d6f277088f00b9363d8b012e1c080f69ae3c7a8a8ac"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-030-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-030-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-root.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t203:206:13:21\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-root",
+      "sha256": "bf5700f2706e9409ba8e9c0138be3a52781bedbe1635a235fe06448c8afc90c8"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-031-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-031-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-swapped-fields.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t176:177:12:30\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-swapped-fields",
+      "sha256": "0cbd9148a5128fa23391c1746a0db847b73acc5348b74451e981b59f1470b095"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\trecursive-call\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-032-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-032-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/d26-rebuilt-unrefined-constant.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\trecursive-call\t160:163:12:21\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "d26-rebuilt-unrefined-constant",
+      "sha256": "de2e4b3239780463e94d0f528028da459a40f15dced40f4689d8485746a31c38"
+    },
+    {
+      "expected": {
+        "check": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        },
+        "compile": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        },
+        "eval": {
+          "diagnostic": "Invalid\tcheck\tmissing-arm\t",
+          "exit": 2
+        }
+      },
+      "file": "tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+      "group": "refresh",
+      "lanes": {
+        "bun": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/check.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/compile.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-033-bun.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "bun",
+              "$ROOT/.local/compiler-descent/gate/eval.js",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          }
+        },
+        "native": {
+          "artifact_preserved": true,
+          "check": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/check",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "compile": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/compile",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+              "$ROOT/.local/compiler-descent/gate/refresh-033-native.wasm"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          },
+          "eval": {
+            "argv": [
+              "$ROOT/.local/compiler-descent/gate/eval",
+              "$ROOT/tests/compiler-descent/refresh-fixtures/partial-coverage-control.bend",
+              "main",
+              "65536"
+            ],
+            "exit": 2,
+            "stderr": "Invalid\tcheck\tmissing-arm\t108:113:10:2\n",
+            "stdout": ""
+          }
+        }
+      },
+      "name": "partial-coverage-control",
+      "sha256": "2eec0b21bde48769df193636a8483f6c13b7474aa7b3f8e9527f7267b2d2404f"
+    }
+  ],
+  "refresh_oracle": {
+    "argv": [
+      "/opt/homebrew/opt/python@3.14/bin/python3.14",
+      "$ROOT/tests/compiler-descent/refresh-freeze.py"
+    ],
+    "exit": 0,
+    "stderr": "",
+    "stdout": "Verified 34 refresh seed observations in book/native/bun lanes; no differences\n"
+  },
+  "refresh_reference": {
+    "file": "tests/compiler-descent/receipts/refresh-reference.json",
+    "observations": 34,
+    "sha256": "a670c564e9c6f11a70580f120eece71085030c4f20a395e8c86285007af953dc"
   },
   "resource_oracle": {
     "argv": [
