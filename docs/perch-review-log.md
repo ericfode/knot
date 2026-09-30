@@ -962,3 +962,19 @@ and treat `no-coverage` as a finding.
 The widened rules then reviewed `tests/compiler-recursion/LAW_REVIEW.md`: 8 of
 8 checks came back clean, with a maximum broken probability of 0.70 on
 `law-observable-essence`.
+
+
+## 2026-09-29 — Inspect proof results before a repair checkpoint
+
+Bench-2's inference fixtures passed, but the new quantified helper proof did
+not normalize an unknown refined term. Commit `f1e180d8` was made before its
+proof log was inspected and incorrectly claimed proof acceptance and guessed
+counts. The follow-up preserves the law, splits all eight core term forms and
+imports the datatype explicitly. The seed now reports `All terms check.`
+Actual fixture counts are 47 phase observations, 11 absence guards, 11
+preservation guards and 7 Wasm executions in one Bun lane. No provider was
+called. [Final evidence and scope](../bench/REVIEW-R1.md).
+
+Prevention: require each proof command's exit independently, inspect its output,
+and derive reported counts from the receipt before staging. A later successful
+command must never hide an earlier proof failure.
