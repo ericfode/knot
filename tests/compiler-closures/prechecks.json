@@ -1,0 +1,1729 @@
+{
+  "basis": "Seed observations and C1 frozen programs, pinned before parser repair. No existing expectation changes.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "seed_files": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "17f687c3264c749a",
+      "file": "prechecks/17f687c3264c749a.bend",
+      "source_sha256": "17f687c3264c749a2071f2898a1a13236c098e5c521bb74507d4d5756705e7de",
+      "family": "annot",
+      "basis": "annot '+Flag<Flag': seed_offset=102, knot=Unsupported\tparse\tbinding-type\t102:103:9:10, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 102
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/17f687c3264c749a.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   +x: Flag<Flag = On{}\n   |           ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/17f687c3264c749a.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/17f687c3264c749a"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   +x: Flag<Flag = On{}\n   |           ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/17f687c3264c749a.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/17f687c3264c749a.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   +x: Flag<Flag = On{}\n   |           ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "1c22fdcb989508cf",
+      "file": "prechecks/1c22fdcb989508cf.bend",
+      "source_sha256": "1c22fdcb989508cf82a5176fdfec7ab8b43fe2ebc4cfc9c42030413d2a28ad7e",
+      "family": "annot",
+      "basis": "annot 'Flag<Flag': seed_offset=101, knot=Unsupported\tparse\tbinding-type\t101:102:9:9, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 101
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/1c22fdcb989508cf.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag<Flag = On{}\n   |          ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/1c22fdcb989508cf.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/1c22fdcb989508cf"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag<Flag = On{}\n   |          ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/1c22fdcb989508cf.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/1c22fdcb989508cf.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag<Flag = On{}\n   |          ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "208aec1c0f9e691c",
+      "file": "prechecks/208aec1c0f9e691c.bend",
+      "source_sha256": "208aec1c0f9e691c9567fb32d7efba10a8536e30ee489234c636375d8f12e8b9",
+      "family": "annot",
+      "basis": "annot '-Flag < x': seed_offset=103, knot=Unsupported\tparse\tbinding-type\t103:104:9:11, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 103
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/208aec1c0f9e691c.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   -x: Flag < x = On{}\n   |            ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/208aec1c0f9e691c.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/208aec1c0f9e691c"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   -x: Flag < x = On{}\n   |            ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/208aec1c0f9e691c.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/208aec1c0f9e691c.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n 8 | def f() -> Flag:\n 9>|   -x: Flag < x = On{}\n   |            ^\n10 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "2ff438c1f4184afe",
+      "file": "prechecks/2ff438c1f4184afe.bend",
+      "source_sha256": "2ff438c1f4184afe5a25050173e7386adb4ed4bf75af5049df3203f79fd5365d",
+      "family": "return",
+      "basis": "return 'Flag<-A: Type>': seed_offset=90, knot=Unsupported\tparse\tfunction-result\t90:91:8:15, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 90
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/2ff438c1f4184afe.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '<'\nLocation:\n7 | \n8>| def f() -> Flag<-A: Type>:\n  |                ^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/2ff438c1f4184afe.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/2ff438c1f4184afe"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : ':'\n- observed : '<'\nLocation:\n7 | \n8>| def f() -> Flag<-A: Type>:\n  |                ^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/2ff438c1f4184afe.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/2ff438c1f4184afe.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : ':'\n- observed : '<'\nLocation:\n7 | \n8>| def f() -> Flag<-A: Type>:\n  |                ^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "5c68e2f27577efa4",
+      "file": "prechecks/5c68e2f27577efa4.bend",
+      "source_sha256": "5c68e2f27577efa4a6775032796f9f7d33b8d9e9ed94ae7e8f4657cfa6fd6c7d",
+      "family": "params",
+      "basis": "params 'a: Flag -> Flag b: List<Flag> -c: Flag': seed=parse ok, knot=Invalid\tparse\targument-separator\t97:98:8:22",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/5c68e2f27577efa4.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nContext:\n- a : @_:Flag -> Flag\nLocation: f\n7 | \n8>| def f(a: Flag -> Flag b: List<Flag> -c: Flag) -> Flag:\n  |                          ^^^^^^^^^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/5c68e2f27577efa4.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/5c68e2f27577efa4"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nContext:\n- a : @_:Flag -> Flag\nLocation: f\n7 | \n8>| def f(a: Flag -> Flag b: List<Flag> -c: Flag) -> Flag:\n  |                          ^^^^^^^^^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/5c68e2f27577efa4.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/5c68e2f27577efa4.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nContext:\n- a : @_:Flag -> Flag\nLocation: f\n7 | \n8>| def f(a: Flag -> Flag b: List<Flag> -c: Flag) -> Flag:\n  |                          ^^^^^^^^^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "87039ce5820e1495",
+      "file": "prechecks/87039ce5820e1495.bend",
+      "source_sha256": "87039ce5820e1495748641db0cf7c7dc26f7a62bf1e00ee7a50f911c9fdb9175",
+      "family": "return",
+      "basis": "return 'Flag<Flag': seed_offset=90, knot=Unsupported\tparse\tfunction-result\t90:91:8:15, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 90
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/87039ce5820e1495.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag<Flag:\n  |                ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/87039ce5820e1495.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/87039ce5820e1495"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag<Flag:\n  |                ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/87039ce5820e1495.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/87039ce5820e1495.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag<Flag:\n  |                ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "90b6a173d7d1496e",
+      "file": "prechecks/90b6a173d7d1496e.bend",
+      "source_sha256": "90b6a173d7d1496e67adf5400eb66698ccdb5fadc6f2236894363ce109171ddf",
+      "family": "d4-seed-differential-grid",
+      "basis": "d4-seed-differential-grid 'r2b-annot-spaced-lt.bend': expected=Invalid, knot=Unsupported\tparse\tbinding-type\t65:66:6:10, at=a probe frozen as malformed",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 65
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/90b6a173d7d1496e.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag < x = On{}\n  |           ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/90b6a173d7d1496e.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/90b6a173d7d1496e"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag < x = On{}\n  |           ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/90b6a173d7d1496e.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/90b6a173d7d1496e.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag < x = On{}\n  |           ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "b0cf5a4bd4584c8f",
+      "file": "prechecks/b0cf5a4bd4584c8f.bend",
+      "source_sha256": "b0cf5a4bd4584c8f91ebba4abdae7a918aaa0027fb4ea50520d80e48de7f16ca",
+      "family": "return",
+      "basis": "return 'Flag < x': seed_offset=91, knot=Unsupported\tparse\tfunction-result\t91:92:8:16, at=the seed's error token",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 91
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/b0cf5a4bd4584c8f.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag < x:\n  |                 ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/b0cf5a4bd4584c8f.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/b0cf5a4bd4584c8f"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag < x:\n  |                 ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/b0cf5a4bd4584c8f.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/b0cf5a4bd4584c8f.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n7 | \n8>| def f() -> Flag < x:\n  |                 ^\n9 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "b507406b7c59d768",
+      "file": "prechecks/b507406b7c59d768.bend",
+      "source_sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2",
+      "family": "host-abi-type-kind-matrix",
+      "basis": "host-abi-type-kind-matrix '.local/probes/src/e6-main-returns-function.bend': line=HostFailure\tinvoke\tfunction-result",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/b507406b7c59d768.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/b507406b7c59d768-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/b507406b7c59d768"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/b507406b7c59d768-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/b507406b7c59d768.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/b507406b7c59d768.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n",
+        "run": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/b507406b7c59d768.bend"
+          ],
+          "exit": 0,
+          "stdout": "invert\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "bf088fe4ef68f758",
+      "file": "prechecks/bf088fe4ef68f758.bend",
+      "source_sha256": "bf088fe4ef68f758c6a289717a67923257b5a0425c1eb99d7c5751f0890beb90",
+      "family": "layout",
+      "basis": "layout 'move-type-0': seed=parse rejects at 49, knot=Parsed",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a declared constructor (unknown: probe.Off)",
+          "begin": 49
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/bf088fe4ef68f758.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/bf088fe4ef68f758.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/bf088fe4ef68f758"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/bf088fe4ef68f758.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/bf088fe4ef68f758.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "ce2883de6dd8ea76",
+      "file": "prechecks/ce2883de6dd8ea76.bend",
+      "source_sha256": "ce2883de6dd8ea76f39735d1cf70c982c11656435dc88885d3feee6f23666191",
+      "family": "d4-seed-differential-grid",
+      "basis": "d4-seed-differential-grid 'r1-return-lt.bend': expected=Invalid, knot=Unsupported\tparse\tfunction-result\t53:54:5:18, at=a probe frozen as malformed",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 53
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/ce2883de6dd8ea76.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n4 | \n5>| def main() -> Flag<Flag:\n  |                   ^\n6 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/ce2883de6dd8ea76.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/ce2883de6dd8ea76"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n4 | \n5>| def main() -> Flag<Flag:\n  |                   ^\n6 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/ce2883de6dd8ea76.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/ce2883de6dd8ea76.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n4 | \n5>| def main() -> Flag<Flag:\n  |                   ^\n6 |   On{}\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "e7f55ae9e39f6d41",
+      "file": "prechecks/e7f55ae9e39f6d41.bend",
+      "source_sha256": "e7f55ae9e39f6d4173f101bc4ad46131901901b8a04d85014316e20651cca7e1",
+      "family": "params",
+      "basis": "params 'a: Flag -> Flag b: Flag +c: Flag': seed=parse ok, knot=Invalid\tparse\targument-separator\t97:98:8:22",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/e7f55ae9e39f6d41.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/e7f55ae9e39f6d41-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/e7f55ae9e39f6d41"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/e7f55ae9e39f6d41-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/e7f55ae9e39f6d41.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/e7f55ae9e39f6d41.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n"
+      }
+    },
+    {
+      "name": "ead8971a47e9b888",
+      "file": "prechecks/ead8971a47e9b888.bend",
+      "source_sha256": "ead8971a47e9b888541afb96071b304f57d3bb617e60a1499d5b984da7303f98",
+      "family": "d4-seed-differential-grid",
+      "basis": "d4-seed-differential-grid 'r2-annot-lt.bend': expected=Invalid, knot=Unsupported\tparse\tbinding-type\t64:65:6:9, at=a probe frozen as malformed",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a type for this operator (write (a < b : Nat))",
+          "begin": 64
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/ead8971a47e9b888.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag<Flag = On{}\n  |          ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/ead8971a47e9b888.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/ead8971a47e9b888"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag<Flag = On{}\n  |          ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/ead8971a47e9b888.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/ead8971a47e9b888.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a type for this operator (write (a < b : Nat))\nLocation:\n5 | def main() -> Flag:\n6>|   x: Flag<Flag = On{}\n  |          ^\n7 |   x\nNote: we broke this after launch, sorry. Until 2.0.16 a bare operator meant Nat.\nThat was a bug: operators demand annotation. Wrap the expression and it'll work again.\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "angle-result-closed",
+      "file": "prechecks/angle-result-closed.bend",
+      "source_sha256": "1572e8531ae0faf4d8eafa44c8ecf0d1d2346ab8ca4977363a756d35be101135",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/angle-result-closed.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<Flag>:\n  |            ^^^^^^^^^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-result-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-result-closed"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<Flag>:\n  |            ^^^^^^^^^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-result-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-result-closed.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<Flag>:\n  |            ^^^^^^^^^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "angle-binding-closed",
+      "file": "prechecks/angle-binding-closed.bend",
+      "source_sha256": "60b55abf39ee46c33913c889299fe8abb0ed8566fadca7d570e385b7c29f86c5",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/angle-binding-closed.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n 8 | def f() -> Flag:\n 9>|   x: List<Flag> = On{}\n   |      ^^^^^^^^^\n10 |   x\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-binding-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-binding-closed"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n 8 | def f() -> Flag:\n 9>|   x: List<Flag> = On{}\n   |      ^^^^^^^^^\n10 |   x\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-binding-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-binding-closed.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n 8 | def f() -> Flag:\n 9>|   x: List<Flag> = On{}\n   |      ^^^^^^^^^\n10 |   x\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "arrow-params-unseparated",
+      "file": "prechecks/arrow-params-unseparated.bend",
+      "source_sha256": "daebf7b80e9f191e31777cc7affd824a4c9a3303696368f289b1a9e06acc0714",
+      "family": "paired-control",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/arrow-params-unseparated.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/arrow-params-unseparated-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/arrow-params-unseparated"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/arrow-params-unseparated-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/arrow-params-unseparated.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/arrow-params-unseparated.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n"
+      }
+    },
+    {
+      "name": "arrow-params-comma",
+      "file": "prechecks/arrow-params-comma.bend",
+      "source_sha256": "09dd93e06728df811951c11e9bc9f330e829cbd403734bb449e1321e92c630d2",
+      "family": "paired-control",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/arrow-params-comma.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/arrow-params-comma-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/arrow-params-comma"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/arrow-params-comma-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/arrow-params-comma.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/arrow-params-comma.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n"
+      }
+    },
+    {
+      "name": "forward-term-allowed",
+      "file": "prechecks/forward-term-allowed.bend",
+      "source_sha256": "98867f26e08f70e06727f185e1dbbdd82cde9c7f8eac4af61335b86237e8ee0f",
+      "family": "paired-control",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/forward-term-allowed.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/forward-term-allowed-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/forward-term-allowed"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/forward-term-allowed-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/forward-term-allowed.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/forward-term-allowed.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n",
+        "run": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/forward-term-allowed.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "pattern-declared",
+      "file": "prechecks/pattern-declared.bend",
+      "source_sha256": "27f0bf0890f4dc3f3c57aafd96f5f5c8c678c7e591def4587c6e5857595264d5",
+      "family": "paired-control",
+      "parse": "Parsed",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/pattern-declared.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/pattern-declared-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/pattern-declared"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              ".local/compiler-closures/precheck-seed/pattern-declared-build.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/pattern-declared.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          }
+        },
+        "wrapper_source": "import Base\nimport ../../../tests/compiler-closures/prechecks/pattern-declared.bend as F\n\ndef main() -> IO(Unit):\n  IO.print(\"checked\")\n",
+        "run": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/pattern-declared.bend"
+          ],
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "pattern-forward-complete",
+      "file": "prechecks/pattern-forward-complete.bend",
+      "source_sha256": "386ea382796675178d4dbee0af6e418f90b571d31428b406a57918304a498a1c",
+      "family": "paired-control",
+      "parse": "Invalid",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a declared constructor (unknown: probe.Off)",
+          "begin": 49
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/pattern-forward-complete.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/pattern-forward-complete.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/pattern-forward-complete"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/pattern-forward-complete.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/pattern-forward-complete.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: Off)\nLocation:\n2 |   match x:\n3>|     case Off{}: On{}\n  |          ^^^^^\n4 |     case On{}: Off{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "angle-nested-closed",
+      "file": "prechecks/angle-nested-closed.bend",
+      "source_sha256": "821d681da5680d6ccfeefbe9f5e38d3c343ab281c0b582750f9833225c8d3ead",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/angle-nested-closed.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<List<Flag>>:\n  |            ^^^^^^^^^^^^^^^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-nested-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-nested-closed"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<List<Flag>>:\n  |            ^^^^^^^^^^^^^^^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-nested-closed.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-nested-closed.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f() -> List<List<Flag>>:\n  |            ^^^^^^^^^^^^^^^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "angle-argument-arrow",
+      "file": "prechecks/angle-argument-arrow.bend",
+      "source_sha256": "123bd4312711b572ae8a7bdc25dc015016c48c5cc9adff1bf275143db9ffc6f9",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/angle-argument-arrow.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List<(Flag -> Flag)>) -> Flag:\n  |          ^^^^^^^^^^^^^^^^^^^\n9 |   On{}\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-argument-arrow.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-argument-arrow"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List<(Flag -> Flag)>) -> Flag:\n  |          ^^^^^^^^^^^^^^^^^^^\n9 |   On{}\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-argument-arrow.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-argument-arrow.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List<(Flag -> Flag)>) -> Flag:\n  |          ^^^^^^^^^^^^^^^^^^^\n9 |   On{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "angle-argument-comment",
+      "file": "prechecks/angle-argument-comment.bend",
+      "source_sha256": "428f47d282888d909c50b13dbf3f970a52d64a256b21e6bf344c932cf01658c3",
+      "family": "paired-control",
+      "parse": "Unsupported",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/prechecks/angle-argument-comment.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List< # type\n  |          ^^^^^^^^^^^^\n9 |   Flag>) -> Flag:\n"
+        },
+        "builds": {
+          "native": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-argument-comment.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-argument-comment"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List< # type\n  |          ^^^^^^^^^^^^\n9 |   Flag>) -> Flag:\n"
+          },
+          "bun": {
+            "argv": [
+              "bun",
+              "--no-env-file",
+              ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "tests/compiler-closures/prechecks/angle-argument-comment.bend",
+              "-o",
+              ".local/compiler-closures/precheck-seed/angle-argument-comment.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared datatype (unknown: List)\nLocation: f\n7 | \n8>| def f(x: List< # type\n  |          ^^^^^^^^^^^^\n9 |   Flag>) -> Flag:\n"
+          }
+        }
+      }
+    }
+  ],
+  "conditions": [
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tbinding-type\t102:103:9:10",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag:\n  +x: Flag<Flag = On{}\n  x\n",
+        "seed_offset": 102,
+        "sha256": "17f687c3264c749a2071f2898a1a13236c098e5c521bb74507d4d5756705e7de"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "50a03a8792a8b9894c1e",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "annot '+Flag<Flag': seed_offset=102, knot=Unsupported\tparse\tbinding-type\t102:103:9:10, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "17f687c3264c749a"
+      },
+      "value": {
+        "family": "annot"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tbinding-type\t101:102:9:9",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag:\n  x: Flag<Flag = On{}\n  x\n",
+        "seed_offset": 101,
+        "sha256": "1c22fdcb989508cf82a5176fdfec7ab8b43fe2ebc4cfc9c42030413d2a28ad7e"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "ea0565f3eff792ed950d",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "annot 'Flag<Flag': seed_offset=101, knot=Unsupported\tparse\tbinding-type\t101:102:9:9, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "1c22fdcb989508cf"
+      },
+      "value": {
+        "family": "annot"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tbinding-type\t103:104:9:11",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag:\n  -x: Flag < x = On{}\n  x\n",
+        "seed_offset": 103,
+        "sha256": "208aec1c0f9e691c9567fb32d7efba10a8536e30ee489234c636375d8f12e8b9"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "f19ffc84305b92a305d0",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "annot '-Flag < x': seed_offset=103, knot=Unsupported\tparse\tbinding-type\t103:104:9:11, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "208aec1c0f9e691c"
+      },
+      "value": {
+        "family": "annot"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tfunction-result\t90:91:8:15",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag<-A: Type>:\n  On{}\n",
+        "seed_offset": 90,
+        "sha256": "2ff438c1f4184afe5a25050173e7386adb4ed4bf75af5049df3203f79fd5365d"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "c690447b885ee6cc2209",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "return 'Flag<-A: Type>': seed_offset=90, knot=Unsupported\tparse\tfunction-result\t90:91:8:15, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "2ff438c1f4184afe"
+      },
+      "value": {
+        "family": "return"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "knot": "Invalid\tparse\targument-separator\t97:98:8:22",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(a: Flag -> Flag b: List<Flag> -c: Flag) -> Flag:\n  On{}\n",
+        "seed": "parse ok",
+        "sha256": "5c68e2f27577efa4a6775032796f9f7d33b8d9e9ed94ae7e8f4657cfa6fd6c7d"
+      },
+      "expected": "a seed-accepted form is Parsed, Checked or Unsupported, never Invalid",
+      "fingerprint": "3b2eda1f4b5e1e8da325",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "params 'a: Flag -> Flag b: List<Flag> -c: Flag': seed=parse ok, knot=Invalid\tparse\targument-separator\t97:98:8:22",
+      "rule": "d4-invalid",
+      "severity": "blocking",
+      "subject": {
+        "lane": "parse",
+        "probe": "5c68e2f27577efa4"
+      },
+      "value": {
+        "family": "params"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tfunction-result\t90:91:8:15",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag<Flag:\n  On{}\n",
+        "seed_offset": 90,
+        "sha256": "87039ce5820e1495748641db0cf7c7dc26f7a62bf1e00ee7a50f911c9fdb9175"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "235539630b8f69a78fdd",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "return 'Flag<Flag': seed_offset=90, knot=Unsupported\tparse\tfunction-result\t90:91:8:15, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "87039ce5820e1495"
+      },
+      "value": {
+        "family": "return"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "a probe frozen as malformed",
+        "expected": "Invalid",
+        "knot": "Unsupported\tparse\tbinding-type\t65:66:6:10",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef main() -> Flag:\n  x: Flag < x = On{}\n  x\n",
+        "sha256": "90b6a173d7d1496e67adf5400eb66698ccdb5fadc6f2236894363ce109171ddf"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "cfcbb259629cbd00f9dd",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "d4-seed-differential-grid 'r2b-annot-spaced-lt.bend': expected=Invalid, knot=Unsupported\tparse\tbinding-type\t65:66:6:10, at=a probe frozen as malformed",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "90b6a173d7d1496e"
+      },
+      "value": {
+        "family": "d4-seed-differential-grid"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "the seed's error token",
+        "knot": "Unsupported\tparse\tfunction-result\t91:92:8:16",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f() -> Flag < x:\n  On{}\n",
+        "seed_offset": 91,
+        "sha256": "b0cf5a4bd4584c8f91ebba4abdae7a918aaa0027fb4ea50520d80e48de7f16ca"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "effb0d9b0fa6aadec74f",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "return 'Flag < x': seed_offset=91, knot=Unsupported\tparse\tfunction-result\t91:92:8:16, at=the seed's error token",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "b0cf5a4bd4584c8f"
+      },
+      "value": {
+        "family": "return"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "line": "HostFailure\tinvoke\tfunction-result",
+        "outcome": "HostFailure exit 5",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  ",
+        "sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2"
+      },
+      "expected": "every lane ends in one of the five classified outcomes",
+      "fingerprint": "7c0871a3666be44005dc",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "host-abi-type-kind-matrix '.local/probes/src/e6-main-returns-function.bend': outcome=HostFailure exit 5, line=HostFailure\tinvoke\tfunction-result",
+      "rule": "crash",
+      "severity": "blocking",
+      "subject": {
+        "lane": "eval",
+        "probe": "b507406b7c59d768"
+      },
+      "value": {
+        "family": "host-abi-type-kind-matrix"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "line": "HostFailure\tinvoke\tfunction-result",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  ",
+        "sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2"
+      },
+      "expected": "a diagnostic is Class<TAB>phase<TAB>code<TAB>span",
+      "fingerprint": "5a7d3ec9413a356cc1ef",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "host-abi-type-kind-matrix '.local/probes/src/e6-main-returns-function.bend': line=HostFailure\tinvoke\tfunction-result",
+      "rule": "diagnostic-shape",
+      "severity": "major",
+      "subject": {
+        "lane": "eval",
+        "probe": "b507406b7c59d768"
+      },
+      "value": {
+        "family": "host-abi-type-kind-matrix"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "knot": "Checked",
+        "program": "def invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  invert\n\ntype Flag is Data:\n  Off{}\n",
+        "seed": "check rejects",
+        "sha256": "bf088fe4ef68f758c6a289717a67923257b5a0425c1eb99d7c5751f0890beb90"
+      },
+      "expected": "a seed-rejected form is never accepted or evaluated",
+      "fingerprint": "fb74984585bf12498b73",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "layout 'move-type-0': seed=check rejects, knot=Checked",
+      "rule": "unsound-accept",
+      "severity": "blocking",
+      "subject": {
+        "lane": "check",
+        "probe": "bf088fe4ef68f758"
+      },
+      "value": {
+        "family": "layout"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "knot": "Parsed",
+        "program": "def invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  invert\n\ntype Flag is Data:\n  Off{}\n",
+        "seed": "parse rejects at 49",
+        "sha256": "bf088fe4ef68f758c6a289717a67923257b5a0425c1eb99d7c5751f0890beb90"
+      },
+      "expected": "a seed-rejected form is never accepted or evaluated",
+      "fingerprint": "e7055099ff1fa9dfe53c",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "layout 'move-type-0': seed=parse rejects at 49, knot=Parsed",
+      "rule": "unsound-accept",
+      "severity": "blocking",
+      "subject": {
+        "lane": "parse",
+        "probe": "bf088fe4ef68f758"
+      },
+      "value": {
+        "family": "layout"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "a probe frozen as malformed",
+        "expected": "Invalid",
+        "knot": "Unsupported\tparse\tfunction-result\t53:54:5:18",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef main() -> Flag<Flag:\n  On{}\n",
+        "sha256": "ce2883de6dd8ea76f39735d1cf70c982c11656435dc88885d3feee6f23666191"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "47b3620a242687316f3a",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "d4-seed-differential-grid 'r1-return-lt.bend': expected=Invalid, knot=Unsupported\tparse\tfunction-result\t53:54:5:18, at=a probe frozen as malformed",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "ce2883de6dd8ea76"
+      },
+      "value": {
+        "family": "d4-seed-differential-grid"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "knot": "Invalid\tparse\targument-separator\t97:98:8:22",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(a: Flag -> Flag b: Flag +c: Flag) -> Flag:\n  On{}\n",
+        "seed": "check accepts",
+        "sha256": "e7f55ae9e39f6d4173f101bc4ad46131901901b8a04d85014316e20651cca7e1"
+      },
+      "expected": "a seed-accepted form is Parsed, Checked or Unsupported, never Invalid",
+      "fingerprint": "7a44f12fbd7cdb2346ea",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "params 'a: Flag -> Flag b: Flag +c: Flag': seed=check accepts, knot=Invalid\tparse\targument-separator\t97:98:8:22",
+      "rule": "d4-invalid",
+      "severity": "blocking",
+      "subject": {
+        "lane": "check",
+        "probe": "e7f55ae9e39f6d41"
+      },
+      "value": {
+        "family": "params"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "knot": "Invalid\tparse\targument-separator\t97:98:8:22",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ntype Cell is Data:\n  Cell{value: Flag}\n\ndef f(a: Flag -> Flag b: Flag +c: Flag) -> Flag:\n  On{}\n",
+        "seed": "parse ok",
+        "sha256": "e7f55ae9e39f6d4173f101bc4ad46131901901b8a04d85014316e20651cca7e1"
+      },
+      "expected": "a seed-accepted form is Parsed, Checked or Unsupported, never Invalid",
+      "fingerprint": "b3f2f3be7ed7728c6549",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "params 'a: Flag -> Flag b: Flag +c: Flag': seed=parse ok, knot=Invalid\tparse\targument-separator\t97:98:8:22",
+      "rule": "d4-invalid",
+      "severity": "blocking",
+      "subject": {
+        "lane": "parse",
+        "probe": "e7f55ae9e39f6d41"
+      },
+      "value": {
+        "family": "params"
+      }
+    },
+    {
+      "actor": "executor",
+      "check": "C1",
+      "evidence": {
+        "at": "a probe frozen as malformed",
+        "expected": "Invalid",
+        "knot": "Unsupported\tparse\tbinding-type\t64:65:6:9",
+        "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef main() -> Flag:\n  x: Flag<Flag = On{}\n  x\n",
+        "sha256": "ead8971a47e9b888541afb96071b304f57d3bb617e60a1499d5b984da7303f98"
+      },
+      "expected": "a program the seed rejects at the recognized token stays Invalid; a recognized valid prefix is listed in the SPEC prefix-only table",
+      "fingerprint": "5079cea62db9b4e3c57d",
+      "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+      "ledger": {
+        "entry": null,
+        "status": "new"
+      },
+      "observed": "d4-seed-differential-grid 'r2-annot-lt.bend': expected=Invalid, knot=Unsupported\tparse\tbinding-type\t64:65:6:9, at=a probe frozen as malformed",
+      "rule": "premature-unsupported",
+      "severity": "major",
+      "subject": {
+        "lane": "parse",
+        "probe": "ead8971a47e9b888"
+      },
+      "value": {
+        "family": "d4-seed-differential-grid"
+      }
+    }
+  ],
+  "precheck_tool_main": "b92b13595bcbc265b823cb3cfdc38918e35953c9"
+}
