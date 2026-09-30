@@ -7376,29 +7376,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.case_result",
-            "file": "src/check.bend",
-            "via": "src/check.match_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.check",
             "file": "src/check.bend",
             "via": "src/driver.source",
@@ -7418,20 +7395,6 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.checked_function",
-            "file": "src/check.bend",
-            "via": "src/check.function_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.Checked",
-              "src/core.Function",
-              "src/core.Signature"
             ],
             "dynamic_calls": []
           },
@@ -7633,8 +7596,8 @@
               "Result",
               "U32",
               "src/check.Mode",
-              "src/check.checked_function",
               "src/check.run",
+              "src/checked-terms.checked_function",
               "src/core.Catalog",
               "src/core.Function",
               "src/core.Signature",
@@ -7694,27 +7657,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.let_result",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/scope.remove",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.lookup",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -7749,8 +7691,8 @@
               "Result",
               "String",
               "U32",
-              "src/check.case_result",
               "src/check.patterns",
+              "src/checked-terms.case_result",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Datatype",
@@ -7883,50 +7825,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.prepend_argument",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.prepend_arm",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Binding",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.alternatives",
-              "src/scope.remove_fields",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -7996,14 +7894,14 @@
               "src/check.callable",
               "src/check.constructor",
               "src/check.expected",
-              "src/check.let_result",
               "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
-              "src/check.prepend_argument",
-              "src/check.prepend_arm",
               "src/check.rebuilt",
               "src/check.variable",
+              "src/checked-terms.let_result",
+              "src/checked-terms.prepend_argument",
+              "src/checked-terms.prepend_arm",
               "src/core.Catalog",
               "src/core.Checked",
               "src/core.Parameter",
@@ -8045,6 +7943,108 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/checked-terms.case_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.match_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.checked_function",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.Checked",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.let_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/scope.remove",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_argument",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_arm",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Binding",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.alternatives",
+              "src/scope.remove_fields",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/compile-cli.arguments",
@@ -8305,7 +8305,7 @@
           {
             "key": "src/core.Checked",
             "file": "src/core.bend",
-            "via": "src/check.checked_function",
+            "via": "src/check.run",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -9581,7 +9581,7 @@
           {
             "key": "src/scope.alternatives",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9886,7 +9886,7 @@
           {
             "key": "src/scope.remove",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9901,7 +9901,7 @@
           {
             "key": "src/scope.remove_fields",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9969,7 +9969,7 @@
           {
             "key": "src/scope.sequential",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -13537,29 +13537,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.case_result",
-            "file": "src/check.bend",
-            "via": "src/check.match_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.check",
             "file": "src/check.bend",
             "via": "src/driver.source",
@@ -13579,20 +13556,6 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.checked_function",
-            "file": "src/check.bend",
-            "via": "src/check.function_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.Checked",
-              "src/core.Function",
-              "src/core.Signature"
             ],
             "dynamic_calls": []
           },
@@ -13794,8 +13757,8 @@
               "Result",
               "U32",
               "src/check.Mode",
-              "src/check.checked_function",
               "src/check.run",
+              "src/checked-terms.checked_function",
               "src/core.Catalog",
               "src/core.Function",
               "src/core.Signature",
@@ -13855,27 +13818,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.let_result",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/scope.remove",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.lookup",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -13910,8 +13852,8 @@
               "Result",
               "String",
               "U32",
-              "src/check.case_result",
               "src/check.patterns",
+              "src/checked-terms.case_result",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Datatype",
@@ -14044,50 +13986,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.prepend_argument",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.prepend_arm",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "String",
-              "U32",
-              "src/core.Binding",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.alternatives",
-              "src/scope.remove_fields",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -14157,14 +14055,14 @@
               "src/check.callable",
               "src/check.constructor",
               "src/check.expected",
-              "src/check.let_result",
               "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
-              "src/check.prepend_argument",
-              "src/check.prepend_arm",
               "src/check.rebuilt",
               "src/check.variable",
+              "src/checked-terms.let_result",
+              "src/checked-terms.prepend_argument",
+              "src/checked-terms.prepend_arm",
               "src/core.Catalog",
               "src/core.Checked",
               "src/core.Parameter",
@@ -14206,6 +14104,108 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/checked-terms.case_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.match_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.checked_function",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.Checked",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.let_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/scope.remove",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_argument",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_arm",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/core.Binding",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.alternatives",
+              "src/scope.remove_fields",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/compile-cli.arguments",
@@ -14466,7 +14466,7 @@
           {
             "key": "src/core.Checked",
             "file": "src/core.bend",
-            "via": "src/check.checked_function",
+            "via": "src/check.run",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -15742,7 +15742,7 @@
           {
             "key": "src/scope.alternatives",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16047,7 +16047,7 @@
           {
             "key": "src/scope.remove",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16062,7 +16062,7 @@
           {
             "key": "src/scope.remove_fields",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -16130,7 +16130,7 @@
           {
             "key": "src/scope.sequential",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -19091,20 +19091,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.case_result",
-            "file": "src/check.bend",
-            "via": "src/check.match_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.check",
             "file": "src/check.bend",
             "via": "src/driver.source",
@@ -19117,16 +19103,6 @@
               "src/core.internal",
               "src/syntax.bind"
             ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.checked_function",
-            "file": "src/check.bend",
-            "via": "src/check.function_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -19256,8 +19232,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/check.checked_function",
               "src/check.run",
+              "src/checked-terms.checked_function",
               "src/scope.parameters",
               "src/syntax.bind"
             ],
@@ -19295,20 +19271,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.let_result",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/scope.remove",
-              "src/scope.sequential",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.lookup",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -19331,8 +19293,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/check.case_result",
               "src/check.patterns",
+              "src/checked-terms.case_result",
               "src/core.invalid",
               "src/scope.reference",
               "src/syntax.bind"
@@ -19408,34 +19370,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.prepend_argument",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.prepend_arm",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.internal",
-              "src/scope.alternatives",
-              "src/scope.remove_fields"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -19481,14 +19415,14 @@
               "src/check.callable",
               "src/check.constructor",
               "src/check.expected",
-              "src/check.let_result",
               "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
-              "src/check.prepend_argument",
-              "src/check.prepend_arm",
               "src/check.rebuilt",
               "src/check.variable",
+              "src/checked-terms.let_result",
+              "src/checked-terms.prepend_argument",
+              "src/checked-terms.prepend_arm",
               "src/core.exhausted",
               "src/core.internal",
               "src/core.invalid",
@@ -19514,6 +19448,72 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/checked-terms.case_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.match_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.checked_function",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.let_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/scope.remove",
+              "src/scope.sequential",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_argument",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_arm",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.internal",
+              "src/scope.alternatives",
+              "src/scope.remove_fields"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/compile-cli.arguments",
@@ -20412,7 +20412,7 @@
           {
             "key": "src/scope.alternatives",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20636,7 +20636,7 @@
           {
             "key": "src/scope.remove",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20649,7 +20649,7 @@
           {
             "key": "src/scope.remove_fields",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20690,7 +20690,7 @@
           {
             "key": "src/scope.sequential",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -23745,28 +23745,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.case_result",
-            "file": "src/check.bend",
-            "via": "src/check.match_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.check",
             "file": "src/check.bend",
             "via": "src/driver.source",
@@ -23785,20 +23763,6 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.checked_function",
-            "file": "src/check.bend",
-            "via": "src/check.function_body",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/core.Checked",
-              "src/core.Function",
-              "src/core.Signature"
             ],
             "dynamic_calls": []
           },
@@ -23994,8 +23958,8 @@
               "Result",
               "U32",
               "src/check.Mode",
-              "src/check.checked_function",
               "src/check.run",
+              "src/checked-terms.checked_function",
               "src/core.Catalog",
               "src/core.Checked",
               "src/core.Function",
@@ -24054,27 +24018,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.let_result",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/scope.remove",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.lookup",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -24109,8 +24052,8 @@
               "Result",
               "U32",
               "Unit",
-              "src/check.case_result",
               "src/check.patterns",
+              "src/checked-terms.case_result",
               "src/core.Binding",
               "src/core.Checked",
               "src/core.Datatype",
@@ -24240,48 +24183,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/check.prepend_argument",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.sequential",
-              "src/syntax.Error",
-              "src/syntax.Token",
-              "src/syntax.bind"
-            ],
-            "dynamic_calls": []
-          },
-          {
-            "key": "src/check.prepend_arm",
-            "file": "src/check.bend",
-            "via": "src/check.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/core.Binding",
-              "src/core.Checked",
-              "src/core.Term",
-              "src/core.internal",
-              "src/scope.alternatives",
-              "src/scope.remove_fields",
-              "src/syntax.Error"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/check.rebuilt",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -24351,14 +24252,14 @@
               "src/check.callable",
               "src/check.constructor",
               "src/check.expected",
-              "src/check.let_result",
               "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
-              "src/check.prepend_argument",
-              "src/check.prepend_arm",
               "src/check.rebuilt",
               "src/check.variable",
+              "src/checked-terms.let_result",
+              "src/checked-terms.prepend_argument",
+              "src/checked-terms.prepend_arm",
               "src/core.Binding",
               "src/core.Catalog",
               "src/core.Checked",
@@ -24402,6 +24303,105 @@
             "dynamic_calls": [
               "next"
             ]
+          },
+          {
+            "key": "src/checked-terms.case_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.match_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.checked_function",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.function_body",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/core.Checked",
+              "src/core.Function",
+              "src/core.Signature"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.let_result",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/scope.remove",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_argument",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/checked-terms.prepend_arm",
+            "file": "src/checked-terms.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/core.Binding",
+              "src/core.Checked",
+              "src/core.Term",
+              "src/core.internal",
+              "src/scope.alternatives",
+              "src/scope.remove_fields",
+              "src/syntax.Error"
+            ],
+            "dynamic_calls": []
           },
           {
             "key": "src/compile-cli.arguments",
@@ -25924,7 +25924,7 @@
           {
             "key": "src/scope.alternatives",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26224,7 +26224,7 @@
           {
             "key": "src/scope.remove",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26239,7 +26239,7 @@
           {
             "key": "src/scope.remove_fields",
             "file": "src/scope.bend",
-            "via": "src/check.prepend_arm",
+            "via": "src/checked-terms.prepend_arm",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -26306,7 +26306,7 @@
           {
             "key": "src/scope.sequential",
             "file": "src/scope.bend",
-            "via": "src/check.let_result",
+            "via": "src/checked-terms.let_result",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

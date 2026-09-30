@@ -4,6 +4,7 @@ import ./core.bend as C
 import ./catalog.bend as G
 import ./scope.bend as E
 import ./patterns.bend as P
+import ./checked-terms.bend as R
 
 type Mode is Data:
   Rebuild{term: C.Term}
@@ -95,18 +96,6 @@ def call_result(value: C.Checked, +token: S.Token, +index: U32, +result: U32, cu
         C.unsupported(C.Checked,"recursive-call",token),u => Done{C.Checked{C.Application{token,index,result,items},result,uses}})
     case _ _: C.internal(C.Checked,"arguments-result")
 
-def prepend_argument(head: C.Checked, tail: C.Checked, token: S.Token) -> Result<S.Error,C.Checked>:
-  match head tail:
-    case C.Checked{+term,type_id,uses} C.Checked{C.Sequence{+items},ignored,rest}:
-      S.bind(List<&2,U32>,C.Checked,E.sequential(uses,rest,token),merged => Done{C.Checked{C.Sequence{Con{term,items}},0,merged}})
-    case _ _: C.internal(C.Checked,"argument-list")
-
-def let_result(value: C.Checked, body: C.Checked, +token: S.Token, +level: U32, q: U32) -> Result<S.Error,C.Checked>:
-  match value body:
-    case C.Checked{+initial,+type_id,uses} C.Checked{+result,+result_type,body_uses}:
-      S.bind(List<&2,U32>,C.Checked,E.sequential(uses,E.remove(body_uses,level),token),merged =>
-        Done{C.Checked{C.Let{token,level,q,type_id,initial,result},result_type,merged}})
-
 def pattern_arity(+reference: G.ConstructorRef, args: List<&2,S.Node>, +token: S.Token, params: List<&2,C.Parameter>) -> Result<S.Error,G.ConstructorRef>:
   S.choose(Result<S.Error,G.ConstructorRef>,Nat.is_eq(List.length(&2,S.Node,args),List.length(&2,C.Parameter,params)),u => Done{reference},u => C.invalid(G.ConstructorRef,"pattern-arity",token))
 
@@ -140,19 +129,6 @@ def patterns(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +type_id: U32,
         S.bind(U32,Unit,pattern_id(reference,type_id,seen,arm),tag => patterns(tail,types,type_id,Con{tag,seen},token)))
     case _: C.internal(Unit,"arm-node")
 
-def prepend_arm(tag: U32, +fields: List<&2,C.Binding>, head: C.Checked, tail: C.Checked) -> Result<S.Error,C.Checked>:
-  match head tail:
-    case C.Checked{body,type_id,uses} C.Checked{C.Sequence{items},ignored,rest}:
-      Done{C.Checked{C.Sequence{Con{C.Branch{tag,fields,body},items}},0,E.alternatives(E.remove_fields(fields,uses),rest)}}
-    case _ _: C.internal(C.Checked,"arm-list")
-
-def case_result(branches: C.Checked, inspected: C.Checked, +token: S.Token, level: U32, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
-  match branches inspected wanted:
-    case C.Checked{C.Sequence{+items},ignored,uses} C.Checked{term,source_type,scrutinee_uses} Some{+type_id}:
-      S.bind(List<&2,U32>,C.Checked,E.sequential(scrutinee_uses,uses,token),merged => Done{C.Checked{C.Case{token,level,type_id,items},type_id,merged}})
-    case _ _ None{}: C.internal(C.Checked,"uninferred-match")
-    case _ _ _: C.internal(C.Checked,"match-result")
-
 def call_body(reference: G.FunctionRef, +token: S.Token, +wanted: Maybe<&2,U32>, current: U32, scope: E.Scope, next: List<&2,C.Parameter> -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
   match reference:
     case G.FunctionRef{+index,C.Signature{name,params,+result}}:
@@ -170,7 +146,7 @@ def match_body(binding: C.Binding, +token: S.Token, +arms: List<&2,S.Node>, type
     case C.Binding{+name,+level,+q,+type_id,+param,+known} Some{target}:
       S.bind(Unit,C.Checked,patterns(arms,types,type_id,Nil{},token),u =>
         S.bind(C.Checked,C.Checked,E.reference(C.Binding{name,level,q,type_id,param,known},token,scope),inspected =>
-          S.bind(C.Checked,C.Checked,next(level),branches => case_result(branches,inspected,token,level,wanted))))
+          S.bind(C.Checked,C.Checked,next(level),branches => R.case_result(branches,inspected,token,level,wanted))))
     case _ None{}: C.invalid(C.Checked,"annotation-required",token)
 
 def arm_body(reference: G.ConstructorRef, next: U32 -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
@@ -205,7 +181,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
         S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann,scope),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
-              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))
+              S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => R.let_result(initial,checked,token,next,q))))))
     case 1n+ +n Expression{S.Match{+token,value,+arms},+wanted} C.Catalog{types,sigs} _:
       S.bind(C.Binding,C.Checked,E.scrutinee(value,scope),binding =>
         match_body(binding,token,arms,types,scope,wanted,level =>
@@ -215,7 +191,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
     case 1n+ +n Arguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
       S.bind(C.Checked,C.Checked,run(n,Expression{head,Some{type_id}},catalog,current,E.live_scope(scope,q)),checked =>
-        S.bind(C.Checked,C.Checked,run(n,Arguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
+        S.bind(C.Checked,C.Checked,run(n,Arguments{tail,rest,token},catalog,current,scope),remaining => R.prepend_argument(checked,remaining,token)))
     case 1n+ +n Arguments{nodes,params,token} _ _: C.invalid(C.Checked,"call-arity",token)
     case 1n+ +n Arms{Nil{},token,level,wanted} _ _:
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
@@ -225,7 +201,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           S.bind(P.Fields,C.Checked,P.branch(scope,level,reference,pat,types),opened =>
             arm_scope(opened,bound => +fields =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,bound),checked =>
-                S.bind(C.Checked,C.Checked,run(n,Arms{tail,token,level,wanted},catalog,current,scope),remaining => prepend_arm(tag,fields,checked,remaining)))))))
+                S.bind(C.Checked,C.Checked,run(n,Arms{tail,token,level,wanted},catalog,current,scope),remaining => R.prepend_arm(tag,fields,checked,remaining)))))))
     case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
     case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
       Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
@@ -239,17 +215,13 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
       Done{C.Checked{C.Sequence{Nil{}},0,Nil{}}}
     case 1n+ +n RebuildArguments{Con{head,+tail},Con{C.Parameter{name,q,type_id},+rest},+token} _ _:
       S.bind(C.Checked,C.Checked,run(n,Rebuild{head},catalog,current,E.live_scope(scope,q)),checked =>
-        S.bind(C.Checked,C.Checked,run(n,RebuildArguments{tail,rest,token},catalog,current,scope),remaining => prepend_argument(checked,remaining,token)))
+        S.bind(C.Checked,C.Checked,run(n,RebuildArguments{tail,rest,token},catalog,current,scope),remaining => R.prepend_argument(checked,remaining,token)))
     case 1n+ +n RebuildArguments{terms,params,token} _ _: C.internal(C.Checked,"refinement-arity")
-
-def checked_function(signature: C.Signature, checked: C.Checked) -> C.Function:
-  match checked:
-    case C.Checked{term,type_id,uses}: C.Function{signature,term}
 
 def function_body(+signature: C.Signature, body: S.Node, +catalog: C.Catalog, index: U32, depth: Nat) -> Result<S.Error,C.Function>:
   match signature:
     case C.Signature{name,params,result}:
-      S.bind(C.Checked,C.Function,run(depth,Expression{body,Some{result}},catalog,index,E.parameters(params,0,Nil{})),checked => Done{checked_function(signature,checked)})
+      S.bind(C.Checked,C.Function,run(depth,Expression{body,Some{result}},catalog,index,E.parameters(params,0,Nil{})),checked => Done{R.checked_function(signature,checked)})
 
 def functions(nodes: List<&2,S.Node>, +sigs: List<&2,C.Signature>, +catalog: C.Catalog, +index: U32, +depth: Nat) -> Result<S.Error,List<&2,C.Function>>:
   match nodes:

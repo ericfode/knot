@@ -1153,6 +1153,10 @@
         {
           "module": "./patterns.bend",
           "file": "src/patterns.bend"
+        },
+        {
+          "module": "./checked-terms.bend",
+          "file": "src/checked-terms.bend"
         }
       ],
       "declarations": {
@@ -1369,40 +1373,6 @@
           "quantities.reusable",
           "types.base"
         ],
-        "src/check.bend::prepend_argument:definition": [
-          "calls",
-          "captures",
-          "constructors",
-          "fields",
-          "generics",
-          "lambdas",
-          "literals.string",
-          "literals.u32",
-          "matches",
-          "matches.multi",
-          "patterns.nested",
-          "patterns.variable",
-          "patterns.wildcard",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/check.bend::let_result:definition": [
-          "calls",
-          "captures",
-          "constructors",
-          "fields",
-          "generics",
-          "lambdas",
-          "matches",
-          "matches.multi",
-          "patterns.variable",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
         "src/check.bend::pattern_arity:definition": [
           "calls",
           "captures",
@@ -1479,41 +1449,6 @@
           "quantities.arguments",
           "quantities.reusable",
           "recursion",
-          "types.base"
-        ],
-        "src/check.bend::prepend_arm:definition": [
-          "calls",
-          "constructors",
-          "fields",
-          "generics",
-          "literals.string",
-          "literals.u32",
-          "matches",
-          "matches.multi",
-          "patterns.nested",
-          "patterns.variable",
-          "patterns.wildcard",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
-          "types.base"
-        ],
-        "src/check.bend::case_result:definition": [
-          "calls",
-          "captures",
-          "constructors",
-          "fields",
-          "generics",
-          "lambdas",
-          "literals.string",
-          "matches",
-          "matches.multi",
-          "patterns.nested",
-          "patterns.variable",
-          "patterns.wildcard",
-          "quantities.affine",
-          "quantities.arguments",
-          "quantities.reusable",
           "types.base"
         ],
         "src/check.bend::call_body:definition": [
@@ -1629,13 +1564,6 @@
           "quantities.reusable",
           "recursion",
           "types.base"
-        ],
-        "src/check.bend::checked_function:definition": [
-          "constructors",
-          "fields",
-          "matches",
-          "patterns.variable",
-          "quantities.affine"
         ],
         "src/check.bend::function_body:definition": [
           "calls",
@@ -6433,6 +6361,104 @@
           "quantities.affine",
           "quantities.arguments",
           "types.base"
+        ]
+      }
+    },
+    "src/checked-terms.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./core.bend",
+          "file": "src/core.bend"
+        },
+        {
+          "module": "./scope.bend",
+          "file": "src/scope.bend"
+        }
+      ],
+      "declarations": {
+        "src/checked-terms.bend::prepend_argument:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/checked-terms.bend::let_result:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/checked-terms.bend::prepend_arm:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/checked-terms.bend::case_result:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.string",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/checked-terms.bend::checked_function:definition": [
+          "constructors",
+          "fields",
+          "matches",
+          "patterns.variable",
+          "quantities.affine"
         ]
       }
     }
