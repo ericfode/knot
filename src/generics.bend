@@ -185,7 +185,7 @@ def annotation(node: Maybe<&2,S.Node>, +families: List<&2,G.Family>, +env: Envir
           S.choose(Result<S.Error,Maybe<&2,T.Expr>>,Bool.or(G.is_sort(value),G.is_quant(value)),u =>
             C.unsupported(Maybe<&2,T.Expr>,"type-level-binding",token),u => Done{Some{value}})))
 
-def old_annotation(node: Maybe<&2,S.Token>) -> S.Node:
+def named_annotation(node: Maybe<&2,S.Token>) -> S.Node:
   match node:
     case None{}: S.Sequence{Nil{}}
     case Some{token}: S.Variable{token}
@@ -347,7 +347,7 @@ def run(fuel: Nat, mode: Mode, +catalog: G.Catalog, +current: U32, +env: Environ
         S.bind(G.FunctionRef,Checked,callable(reference,token,current,env),call =>
           call_body(call,token,wanted,current,env,params => result => run(n,Arguments{args,params,Nil{},0,result,token},catalog,current,env))))
     case 1n+ +n Expression{S.Binding{token,q,ann,value,body},wanted} _ _:
-      run(n,Expression{S.TypedBinding{token,q,old_annotation(ann),value,body},wanted},catalog,current,env)
+      run(n,Expression{S.TypedBinding{token,q,named_annotation(ann),value,body},wanted},catalog,current,env)
     case 1n+ +n Expression{S.TypedBinding{+token,+q,+ann,+value,+body},+wanted} G.Catalog{+families,sigs} _:
       S.bind(Maybe<&2,T.Expr>,Checked,annotation(binding_annotation(ann),families,env,n,token),target =>
         S.bind(Checked,Checked,run(n,Expression{value,target},catalog,current,live_scope(env,q)),initial =>

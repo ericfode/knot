@@ -47,7 +47,8 @@ SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-bo
            HERE / 'def-references', HERE / 'type-level-names', HERE / 'marked-binders',
            HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
-          'src/catalog-PROOF.bend')
+          'src/catalog-PROOF.bend', 'src/generic-catalog-PROOF.bend',
+          'src/type-parse-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 # Harness hang guard only, as in the other gates; the runner scales it under load.
 TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
