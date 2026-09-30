@@ -1,0 +1,1414 @@
+{
+  "schema": 1,
+  "step": "BS1 enum-source qualification",
+  "seed": {
+    "version": "2.0.29",
+    "commit": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "launcher": "scripts/bend-reference"
+  },
+  "base_sha256": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+  "declarations": [
+    {
+      "name": "Unit",
+      "lines": [
+        9,
+        10
+      ],
+      "sha256": "a5743f66439df390dbb1e886d8fa0b83c5c6054b5ea9120a18220d03110e7d57"
+    },
+    {
+      "name": "Bool",
+      "lines": [
+        12,
+        14
+      ],
+      "sha256": "28d8bb0c31ed70175aee5c1ca4c08b6b895b208fc479531fc6204a25ec2cc6f8"
+    },
+    {
+      "name": "Cmp",
+      "lines": [
+        16,
+        19
+      ],
+      "sha256": "391516e5b51ae946b341d28ef0acac783910bda24efc88e7159f891ce3d28a3c"
+    },
+    {
+      "name": "Bool.not",
+      "lines": [
+        425,
+        430
+      ],
+      "sha256": "2a99aaf6743923e7fc7222d5a54d028e4e4b6eaac9026332476e4a80dfb3d83d"
+    },
+    {
+      "name": "Bool.and",
+      "lines": [
+        432,
+        437
+      ],
+      "sha256": "6273864f3def2b6f540295e99e25a2eaaeae3355bbf9cad74e0ca14a9ca5e20b"
+    },
+    {
+      "name": "Bool.or",
+      "lines": [
+        439,
+        444
+      ],
+      "sha256": "83a05ee75523c906be6ac1c86a1a41e6e442d2235523df8e97e6753509213215"
+    },
+    {
+      "name": "Cmp.is_eq",
+      "lines": [
+        509,
+        516
+      ],
+      "sha256": "8d3e6cb5951a500ab3ef0e0578e4d8074eb9409cc581f4a41e59a90d79f93860"
+    }
+  ],
+  "constructors": {
+    "Bool": [
+      "False",
+      "True"
+    ],
+    "Cmp": [
+      "LT",
+      "EQ",
+      "GT"
+    ],
+    "Unit": [
+      "Unit"
+    ],
+    "Answer": [
+      "No",
+      "Yes"
+    ]
+  },
+  "cases": [
+    {
+      "name": "boolean",
+      "require": "agree",
+      "calls": [
+        {
+          "entry": "main",
+          "result_type": "Bool",
+          "arguments": [],
+          "ordinals": []
+        },
+        {
+          "entry": "neg",
+          "result_type": "Bool",
+          "arguments": [
+            "False"
+          ],
+          "ordinals": [
+            0
+          ]
+        },
+        {
+          "entry": "neg",
+          "result_type": "Bool",
+          "arguments": [
+            "True"
+          ],
+          "ordinals": [
+            1
+          ]
+        },
+        {
+          "entry": "conjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "False"
+          ],
+          "ordinals": [
+            0,
+            0
+          ]
+        },
+        {
+          "entry": "conjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "True"
+          ],
+          "ordinals": [
+            0,
+            1
+          ]
+        },
+        {
+          "entry": "conjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "False"
+          ],
+          "ordinals": [
+            1,
+            0
+          ]
+        },
+        {
+          "entry": "conjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "True"
+          ],
+          "ordinals": [
+            1,
+            1
+          ]
+        },
+        {
+          "entry": "disjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "False"
+          ],
+          "ordinals": [
+            0,
+            0
+          ]
+        },
+        {
+          "entry": "disjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "True"
+          ],
+          "ordinals": [
+            0,
+            1
+          ]
+        },
+        {
+          "entry": "disjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "False"
+          ],
+          "ordinals": [
+            1,
+            0
+          ]
+        },
+        {
+          "entry": "disjunction",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "True"
+          ],
+          "ordinals": [
+            1,
+            1
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "False",
+            "False"
+          ],
+          "ordinals": [
+            0,
+            0,
+            0
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "False",
+            "True"
+          ],
+          "ordinals": [
+            0,
+            0,
+            1
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "True",
+            "False"
+          ],
+          "ordinals": [
+            0,
+            1,
+            0
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "False",
+            "True",
+            "True"
+          ],
+          "ordinals": [
+            0,
+            1,
+            1
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "False",
+            "False"
+          ],
+          "ordinals": [
+            1,
+            0,
+            0
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "False",
+            "True"
+          ],
+          "ordinals": [
+            1,
+            0,
+            1
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "True",
+            "False"
+          ],
+          "ordinals": [
+            1,
+            1,
+            0
+          ]
+        },
+        {
+          "entry": "composed",
+          "result_type": "Bool",
+          "arguments": [
+            "True",
+            "True",
+            "True"
+          ],
+          "ordinals": [
+            1,
+            1,
+            1
+          ]
+        },
+        {
+          "entry": "reusable",
+          "result_type": "Bool",
+          "arguments": [
+            "False"
+          ],
+          "ordinals": [
+            0
+          ]
+        },
+        {
+          "entry": "reusable",
+          "result_type": "Bool",
+          "arguments": [
+            "True"
+          ],
+          "ordinals": [
+            1
+          ]
+        }
+      ]
+    },
+    {
+      "name": "cmp-unit",
+      "require": "agree",
+      "calls": [
+        {
+          "entry": "main",
+          "result_type": "Bool",
+          "arguments": [],
+          "ordinals": []
+        },
+        {
+          "entry": "equal",
+          "result_type": "Bool",
+          "arguments": [
+            "LT"
+          ],
+          "ordinals": [
+            0
+          ]
+        },
+        {
+          "entry": "equal",
+          "result_type": "Bool",
+          "arguments": [
+            "EQ"
+          ],
+          "ordinals": [
+            1
+          ]
+        },
+        {
+          "entry": "equal",
+          "result_type": "Bool",
+          "arguments": [
+            "GT"
+          ],
+          "ordinals": [
+            2
+          ]
+        },
+        {
+          "entry": "rebuild",
+          "result_type": "Cmp",
+          "arguments": [
+            "LT"
+          ],
+          "ordinals": [
+            0
+          ]
+        },
+        {
+          "entry": "rebuild",
+          "result_type": "Cmp",
+          "arguments": [
+            "EQ"
+          ],
+          "ordinals": [
+            1
+          ]
+        },
+        {
+          "entry": "rebuild",
+          "result_type": "Cmp",
+          "arguments": [
+            "GT"
+          ],
+          "ordinals": [
+            2
+          ]
+        },
+        {
+          "entry": "ordering",
+          "result_type": "Cmp",
+          "arguments": [
+            "False"
+          ],
+          "ordinals": [
+            0
+          ]
+        },
+        {
+          "entry": "ordering",
+          "result_type": "Cmp",
+          "arguments": [
+            "True"
+          ],
+          "ordinals": [
+            1
+          ]
+        },
+        {
+          "entry": "singleton",
+          "result_type": "Unit",
+          "arguments": [],
+          "ordinals": []
+        }
+      ]
+    },
+    {
+      "name": "affine-reuse",
+      "require": "reject",
+      "seed_reason": "consumed more than once",
+      "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+    },
+    {
+      "name": "wrong-type",
+      "require": "reject",
+      "seed_reason": "Bool",
+      "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+    },
+    {
+      "name": "wrong-arity",
+      "require": "reject",
+      "seed_reason": "a function type",
+      "diagnostic": "Invalid\tcheck\tcall-arity\t"
+    },
+    {
+      "name": "missing-arm",
+      "require": "reject",
+      "seed_reason": "True",
+      "diagnostic": "Invalid\tcheck\tmissing-arm\t"
+    },
+    {
+      "name": "import-base",
+      "require": "deferred",
+      "calls": [
+        {
+          "entry": "main",
+          "result_type": "Answer",
+          "arguments": [],
+          "ordinals": []
+        }
+      ],
+      "diagnostic": "Unsupported\tparse\tdeclaration-form\t"
+    }
+  ],
+  "observations": {
+    "seed_files": {
+      ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    },
+    "fixtures": [
+      {
+        "case": "boolean",
+        "source_sha256": "12656c270d2a6b884bcdd07a201d97e2d0a378c9380b728c60b79860a4022841",
+        "seed_source": "import Base\n\ndef neg(x: Bool) -> Bool:\n  Bool.not(x)\n\ndef conjunction(a: Bool, b: Bool) -> Bool:\n  Bool.and(a,b)\n\ndef disjunction(a: Bool, b: Bool) -> Bool:\n  Bool.or(a,b)\n\ndef composed(a: Bool, b: Bool, c: Bool) -> Bool:\n  Bool.and(Bool.or(a,b),Bool.not(c))\n\ndef reusable(+x: Bool) -> Bool:\n  Bool.or(x,Bool.not(x))\n\ndef main() -> Bool:\n  neg(False{})\n",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.main()\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "neg",
+            "arguments": [
+              "False"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.neg(False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "neg",
+            "arguments": [
+              "True"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.neg(True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "conjunction",
+            "arguments": [
+              "False",
+              "False"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.conjunction(False{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "conjunction",
+            "arguments": [
+              "False",
+              "True"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.conjunction(False{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "conjunction",
+            "arguments": [
+              "True",
+              "False"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.conjunction(True{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "conjunction",
+            "arguments": [
+              "True",
+              "True"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.conjunction(True{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "disjunction",
+            "arguments": [
+              "False",
+              "False"
+            ],
+            "ordinals": [
+              0,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.disjunction(False{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "disjunction",
+            "arguments": [
+              "False",
+              "True"
+            ],
+            "ordinals": [
+              0,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.disjunction(False{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "disjunction",
+            "arguments": [
+              "True",
+              "False"
+            ],
+            "ordinals": [
+              1,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.disjunction(True{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "disjunction",
+            "arguments": [
+              "True",
+              "True"
+            ],
+            "ordinals": [
+              1,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.disjunction(True{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "False",
+              "False",
+              "False"
+            ],
+            "ordinals": [
+              0,
+              0,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(False{},False{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "False",
+              "False",
+              "True"
+            ],
+            "ordinals": [
+              0,
+              0,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(False{},False{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "False",
+              "True",
+              "False"
+            ],
+            "ordinals": [
+              0,
+              1,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(False{},True{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "False",
+              "True",
+              "True"
+            ],
+            "ordinals": [
+              0,
+              1,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(False{},True{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "True",
+              "False",
+              "False"
+            ],
+            "ordinals": [
+              1,
+              0,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(True{},False{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "True",
+              "False",
+              "True"
+            ],
+            "ordinals": [
+              1,
+              0,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(True{},False{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "True",
+              "True",
+              "False"
+            ],
+            "ordinals": [
+              1,
+              1,
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(True{},True{},False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "composed",
+            "arguments": [
+              "True",
+              "True",
+              "True"
+            ],
+            "ordinals": [
+              1,
+              1,
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.composed(True{},True{},True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "reusable",
+            "arguments": [
+              "False"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.reusable(False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "reusable",
+            "arguments": [
+              "True"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.reusable(True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          }
+        ]
+      },
+      {
+        "case": "cmp-unit",
+        "source_sha256": "f10913a0c00f76364e22b387366737b5de11a588876e8da978081deeccca6de4",
+        "seed_source": "import Base\n\ndef equal(c: Cmp) -> Bool:\n  Cmp.is_eq(c)\n\ndef rebuild(c: Cmp) -> Cmp:\n  match c:\n    case LT{}: LT{}\n    case EQ{}: EQ{}\n    case GT{}: GT{}\n\ndef ordering(b: Bool) -> Cmp:\n  match b:\n    case False{}: LT{}\n    case True{}: GT{}\n\ndef singleton() -> Unit:\n  Unit{}\n\ndef main() -> Bool:\n  equal(LT{})\n",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.main()\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "equal",
+            "arguments": [
+              "LT"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.equal(LT{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "equal",
+            "arguments": [
+              "EQ"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.equal(EQ{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "True{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "True",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "equal",
+            "arguments": [
+              "GT"
+            ],
+            "ordinals": [
+              2
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Bool:\n  F.equal(GT{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "False{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "False",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "rebuild",
+            "arguments": [
+              "LT"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Cmp:\n  F.rebuild(LT{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "LT{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "LT{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "LT",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "rebuild",
+            "arguments": [
+              "EQ"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Cmp:\n  F.rebuild(EQ{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "EQ{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "EQ{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "EQ",
+              "tag": 1
+            }
+          },
+          {
+            "entry": "rebuild",
+            "arguments": [
+              "GT"
+            ],
+            "ordinals": [
+              2
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Cmp:\n  F.rebuild(GT{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "GT{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "GT{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "GT",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "ordering",
+            "arguments": [
+              "False"
+            ],
+            "ordinals": [
+              0
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Cmp:\n  F.ordering(False{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "LT{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "LT{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "LT",
+              "tag": 0
+            }
+          },
+          {
+            "entry": "ordering",
+            "arguments": [
+              "True"
+            ],
+            "ordinals": [
+              1
+            ],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Cmp:\n  F.ordering(True{})\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "GT{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "GT{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "GT",
+              "tag": 2
+            }
+          },
+          {
+            "entry": "singleton",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> Unit:\n  F.singleton()\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "Unit{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "Unit{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "Unit",
+              "tag": 0
+            }
+          }
+        ]
+      },
+      {
+        "case": "affine-reuse",
+        "source_sha256": "29bce53bbf591e16c90cd3d8ef16f87fd03379e1ddf3cd58330db3179530de4c",
+        "seed_source": "import Base\n\ndef bad(x: Bool) -> Bool:\n  Bool.and(x,x)\n\ndef main() -> Bool:\n  bad(True{})\n",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: bad\n2 | \n3>| def bad(x: Bool) -> Bool:\n  |         ^\n4 |   Bool.and(x,x)\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: bad\n2 | \n3>| def bad(x: Bool) -> Bool:\n  |         ^\n4 |   Bool.and(x,x)\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: bad\n2 | \n3>| def bad(x: Bool) -> Bool:\n  |         ^\n4 |   Bool.and(x,x)\n"
+        }
+      },
+      {
+        "case": "wrong-type",
+        "source_sha256": "30174dc93803a58b97176abb1bf15824173581848e1e3cbfa1f7a8c14887f34d",
+        "seed_source": "import Base\n\ndef bad(x: Cmp) -> Bool:\n  Bool.not(x)\n\ndef main() -> Bool:\n  bad(EQ{})\n",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Bool\n- observed : Cmp\nContext:\n- x : Cmp\nLocation: bad\n3 | def bad(x: Cmp) -> Bool:\n4>|   Bool.not(x)\n  |            ^\n5 | \n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Bool\n- observed : Cmp\nContext:\n- x : Cmp\nLocation: bad\n3 | def bad(x: Cmp) -> Bool:\n4>|   Bool.not(x)\n  |            ^\n5 | \n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Bool\n- observed : Cmp\nContext:\n- x : Cmp\nLocation: bad\n3 | def bad(x: Cmp) -> Bool:\n4>|   Bool.not(x)\n  |            ^\n5 | \n"
+        }
+      },
+      {
+        "case": "wrong-arity",
+        "source_sha256": "e08107ecce894223214416bf8196cdf39f1cc16577508da6cb5c48c4d78189b5",
+        "seed_source": "import Base\n\ndef main() -> Bool:\n  Bool.not(False{},True{})\n",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a function type\n- observed : Bool\nLocation: main\n3 | def main() -> Bool:\n4>|   Bool.not(False{},True{})\n  |   ^^^^^^^^^^^^^^^^^^^^^^^^\n5 | \n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a function type\n- observed : Bool\nLocation: main\n3 | def main() -> Bool:\n4>|   Bool.not(False{},True{})\n  |   ^^^^^^^^^^^^^^^^^^^^^^^^\n5 | \n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a function type\n- observed : Bool\nLocation: main\n3 | def main() -> Bool:\n4>|   Bool.not(False{},True{})\n  |   ^^^^^^^^^^^^^^^^^^^^^^^^\n5 | \n"
+        }
+      },
+      {
+        "case": "missing-arm",
+        "source_sha256": "3ff95154a607c6acaced4d40967dd88a059b4cfcd1f5da69573eb69cc5190f31",
+        "seed_source": "import Base\n\ndef bad(x: Bool) -> Bool:\n  match x:\n    case False{}: True{}\n\ndef main() -> Bool:\n  bad(False{})\n",
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : cases for True\n- observed : \\{}\nLocation: bad\n3 | def bad(x: Bool) -> Bool:\n4>|   match x:\n  |   ^^^^^^^^\n5 |     case False{}: True{}\n"
+        },
+        "interpreter": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : cases for True\n- observed : \\{}\nLocation: bad\n3 | def bad(x: Bool) -> Bool:\n4>|   match x:\n  |   ^^^^^^^^\n5 |     case False{}: True{}\n"
+        },
+        "native_check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : cases for True\n- observed : \\{}\nLocation: bad\n3 | def bad(x: Bool) -> Bool:\n4>|   match x:\n  |   ^^^^^^^^\n5 |     case False{}: True{}\n"
+        }
+      },
+      {
+        "case": "import-base",
+        "source_sha256": "8b76c74e64708e40e8bde7a2674d570469efb77fc29290f344f18586b21d6fdf",
+        "seed_source": "import Base\n\ntype Answer is Data:\n  No{}\n  Yes{}\n\ndef answer(x: Bool) -> Answer:\n  match x:\n    case False{}: No{}\n    case True{}: Yes{}\n\ndef main() -> Answer:\n  answer(Bool.not(False{}))\n",
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "calls": [
+          {
+            "entry": "main",
+            "arguments": [],
+            "ordinals": [],
+            "wrapper": "import Base\nimport ./program.bend as F\n\ndef main() -> F.Answer:\n  F.main()\n",
+            "interpreter": {
+              "exit": 0,
+              "stdout": "program.Yes{}\n",
+              "stderr": ""
+            },
+            "native": {
+              "exit": 0,
+              "stdout": "program.Yes{}\n",
+              "stderr": ""
+            },
+            "result": {
+              "constructor": "Yes",
+              "tag": 1
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "type_ids": {
+    "Unit": 0,
+    "Bool": 1,
+    "Cmp": 2
+  }
+}
