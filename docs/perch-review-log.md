@@ -1591,3 +1591,15 @@ Judgment: confirmed for both minor semantic findings.
 Change and why: rank the complete encoded saving, including byte/count digits and array commas; recompute after each cut. The first warning's common setup cost is accounted for. Use the scalar comparator already established by the locale fix.
 Clean / broken / held-out evidence and deterministic checks: 59 offline context tests pass: 40 original controls, three additive controls, and 16 semantic mutants. Independent projections pin a one-cut exact-cap witness and a ranking change after the first cut. The Unicode witness chooses U+E000 before U+10000. Three new mutants separately break summary collation, counter savings and scalar comparison; all are killed by assertions. Existing frozen expectations remain unchanged; the tier-skipping mutant is re-expressed at the new loop with its same witness.
 Remaining uncertainty / next trigger: the minimum-boundary finding remains for the next commit. Full gates and the complete additive gate registration follow that repair; no live calibration is claimed.
+
+
+## 2026-09-29 — perch-cap round 1: restore the required failure boundary
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `f12e1054`; contract amendment before the boundary implementation.
+Evidence links and usage receipt IDs: the second confirmed finding in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; executor prompt `perch-cap.md:28`; [additive expectations](../tests/perch-context/round1-expectations.json). The new controls independently reproduce the 66,659-byte rejection on the seed-accepted 400-datatype witness and a 61,649-byte rejection on a seed-accepted type/law witness.
+Waste or missed behavior / measured effort (or unknown): the prior local contract substituted exhaustion of collaborator entries for the prompt's primary/task/names minimum. The retained metadata was not tested at that boundary. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider call; all witnesses run on pinned seed Bend 2.0.29 at `574b6d3` with telemetry disabled.
+Judgment: confirmed. No D1–D26 decision or standing coordinator ruling accepts the broader failure condition.
+Change and why: amend CONTRACT items 10 and 12–14 to restore the original prompt and preserve honest type/law evidence. Compact metadata before omitting contract text. Any unavoidable omitted contract stays complete in provenance, has its qualified name and explicit reason, and withholds qualification through truncation. Existing JSON pins and compiler assertions remain unchanged.
+Clean / broken / held-out evidence and deterministic checks: seed checks succeed for the new boundary witnesses; the two acceptance controls intentionally fail before implementation with the exact oversize errors above. Ordinary early-return states and type closure controls stay binding.
+Remaining uncertainty / next trigger: execute the boundary repair against these already-fixed requirements, register all additive controls/mutants and run every deterministic gate. Names-only calibration remains coordinator-only and unmeasured.

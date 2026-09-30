@@ -240,14 +240,21 @@ line, and keeping only the first line saves 337 of 13,357 bytes, far too little.
   so every such state is byte-identical to what it was. Over the compiler
   manifest, all 957 declaration states and 17 composition states have the same
   hashes as before, and the official preflight receipt is byte-identical.
-- **Never cut.** The primary source, the task or cohort text, datatypes and laws.
-  The step throws `Style context too large after names-only summaries` only when no
-  cuttable entry is left. The message reports the bytes that remain: primary
-  source, task, collaborator list and retained datatypes, laws and notes. The
-  retained group is never truncated (the type closure and law contracts stay
-  whole), so the failure can occur although the primary source, the task and the
-  names alone would fit.
-- **Advisory.** The tier sets neither `truncated` nor a role-context gap, so it is
+- **Required minimum.** Primary source and task/cohort text are never shortened.
+  If collaborator cuts do not suffice, compact duplicate audit rows and source
+  locations first, preserving complete datatype and law text. The full metadata
+  remains in `provenance.state_metadata`, pinned by a judge-visible digest.
+  Only if contract text still cannot fit may it become marked names-only entries.
+  Preserve the complete omitted entries in `provenance.omitted_contracts`, file
+  hashes and summary rows; add `context-state-contract-limit` and set `truncated`
+  in both provenance and state. That missing type/law evidence withholds
+  qualification and the supporting-role exemption. Detailed audit/import
+  metadata may be retained only in provenance to reach the complete names
+  minimum; its omission is explicit and its digest participates in state identity.
+  Throw `Style context too large after names-only summaries` only when complete
+  primary, task, all context names and mandatory cut markers exceed the cap.
+  The error reports that minimum and its encoded byte breakdown.
+- **Advisory.** Helper/caller cuts alone set neither `truncated` nor a role-context gap, so the ordinary tier is
   never a structural blocker and never changes the role exemption. How the judge
   rates a declaration whose collaborators are only names is not calibrated. Read a
   rating whose receipt lists `context-state-names-only` rows as advisory evidence,

@@ -78,6 +78,12 @@ oracle, not acceptance of incomplete proofs or implementations. The adversarial
 
 ## Encoded-state fitting (perch-cap increment; fixed before implementation)
 
+Review round 1 (2026-09-29) amends items 10, 12–14 to restore the executor
+prompt's original failure boundary. The seed accepts both the 400-datatype
+witness and the large type/law witnesses in `perch-context-round1.test.mjs`.
+The earlier exhaustion-only wording broadened the permitted failure condition;
+it was not a coordinator ruling. Existing frozen JSON expectations stay intact.
+
 Tooling only: no rubric, target, Bend source or accepted contract changes. The
 60,000-byte encoded-state cap (task and metadata included) and the 48,000-byte
 composition cap do not move. A declaration state that is still over the cap once
@@ -87,11 +93,15 @@ of failing. Shaping source to fit a tool cap is not a fix.
 10. **Order.** Every fitting step takes the largest saving first, then path, then
     name. The interface tier keeps its saving (the source bytes it removes). The
     names tier's saving is the encoded-state bytes the cut removes, including the
-    change to its `summarized` row; a cut that cannot shrink the state is skipped.
+    change to its `summarized` row, byte/count digits and array commas. Recompute
+    after each cut; the first warning has a shared setup cost. Subsequent cuts
+    that cannot shrink the state are skipped.
     The choice is a function of the entries alone: the order in which `calls` and
     `called_by` were filled never changes which entries are cut. The names tier
     compares path and name by code point, so the process locale never changes its
-    choice. The interface tier's tie-break is unchanged (the runtime's collation),
+    choice, including supplementary Unicode scalars. Canonicalize summary rows
+    on entering the names tier and after adding a row. The interface tier's
+    tie-break is unchanged (the runtime's collation),
     which keeps every state that fits today byte-identical.
 11. **Names-only entry.** A helper or caller entry that is not yet a name (an
     interface summary, or a body the interface tier kept because its interface
@@ -106,17 +116,28 @@ of failing. Shaping source to fit a tool cap is not a fix.
     `names_only: {count, note}` saying which context was cut to names.
     `provenance.source_bytes` and `context_notes.source_bytes` fall by the source
     bytes removed and still equal the supplied source. The files behind names-only
-    entries stay in `provenance.files` with their hashes. Neither `truncated` nor a
-    role-context gap is set: the tier is advisory, never a structural blocker.
-13. **Nothing else is cut.** The primary source, the task or cohort text, the
-    datatypes and the laws are byte-identical. Every state that fits today is
+    entries stay in `provenance.files` with their hashes. Helper/caller cuts alone
+    set neither `truncated` nor a role-context gap and remain advisory. Required
+    type/law omissions have the stronger guarantees in item 13.
+13. **Primary, task and contract evidence.** The primary source and task or
+    cohort text are never shortened. When collaborator cuts do not suffice,
+    compact duplicate audit rows and source locations first, retaining complete
+    type/law source. Preserve the full omitted metadata in provenance and pin it
+    with a judge-visible digest. If contract source still cannot fit, retain its
+    path and qualified name, complete omitted entry in `provenance.omitted_contracts`,
+    source-file hashes, a `context-state-names-only` row and a
+    `context-state-contract-limit` unresolved reason. Set both provenance and
+    judge-visible `truncated`: missing contract evidence never qualifies as
+    complete context or earns the supporting-role exemption. Every state that fits today is
     byte-identical, with no marker and no row change, because the tier runs only
     where the fitting used to throw. Over the whole compiler manifest the state
     hashes before and after are equal.
-14. **Failure.** The fitting throws only when no cuttable entry is left and the
-    state still exceeds the cap. The error names the case (`after names-only
-    summaries`) and reports the bytes that remain: the primary source, the task,
-    the names-only entries and the retained datatypes, laws and notes.
+14. **Failure.** Throw only if the required minimum exceeds the cap: complete
+    primary and task, all context paths and qualified names, and mandatory cut
+    markers. Detailed audit/import metadata remains in provenance when it cannot
+    be supplied. The error names the case (`after names-only summaries`), states
+    that this required minimum exceeds the cap, and reports the encoded bytes
+    for primary, task, collaborator names, datatype/law names and markers.
 
 Controls: a unit that is over the cap after every interface summary fits, with
 its marker, its rows, its source-byte accounting and an untouched primary source
