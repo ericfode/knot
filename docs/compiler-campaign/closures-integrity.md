@@ -3,8 +3,11 @@
 This round starts at `35b979bf` on `campaign/closures`. The comparison base
 reported by the unchanged precheck tool is `fa31fec0`; its main/tool reference
 is `b92b1359`. Earlier implementation, freezes and observations remain in Git.
-Only this worktree is written. No branch merge, rebase, push, `.env` access,
-provider call or live Perch review is part of this executor round.
+Repository edits and builds stay in this worktree. No branch merge, rebase,
+push, `.env` access, provider call or live Perch review is part of this executor
+round. One early runner-control invocation used Python's default OS temporary
+directory; the harness removed those test directories. Later commands explicitly
+set `TMPDIR` to this worktree's ignored `.local/closures/scratch/` directory.
 
 ## Scope repair
 
@@ -66,6 +69,27 @@ receipts or implements source-language behavior.
 Both changed Python sources parse. The eighteen archival comparisons pass, and
 their metadata contains no checkout-specific or transient gate path. This
 checkpoint is an evidence-workflow change, not a fresh compiler acceptance.
+Independent negative controls confirm that the recorder refuses the old stale
+current receipt and a retained failed full-suite run before writing acceptance.
+
+## Host-build control
+
+The first serial full-suite attempt hit the frozen frontend script's 30-second
+hang guard while building `src/compile-cli.bend` with the seed's default clang
+`-O3`. Checker and structural completed successfully. The executor interrupted
+the remaining run after that confirmed host timeout; it is not a complete
+suite or an acceptance. Its exact timeout, interruption and runner diagnostics
+are retained in `receipts/history/integrity-first-gates.json`.
+
+An ignored local clang wrapper appends `-O1` to native seed build invocations.
+The same complete `compile-cli.bend` entry then builds successfully in a measured
+21.29416024987586 seconds under the unchanged 30-second guard. The pinned seed
+files, frozen scripts/assertions, source resource budgets and program expectations
+do not change. The full suite is rerun under this explicit host-build setting;
+all native/Bun differential results and Wasm bytes must still agree. This is
+correctness evidence with a disclosed C optimization setting, not a speed result
+or a claim that the default `-O3` host timeout passed. The coordinator's newer
+shared hang guards and standard optimized build remain integration work.
 
 ## Remaining verification
 

@@ -1,0 +1,36 @@
+{
+  "command": [
+    "npm",
+    "run",
+    "-s",
+    "gates",
+    "--",
+    "--jobs",
+    "1",
+    "--timeout",
+    "1800",
+    "--keep-scratch"
+  ],
+  "failure": "Frontend native compile-cli build exceeded the frozen 30-second host hang guard. No source expectation failed. Checker and structural completed; no whole-suite acceptance.",
+  "frontend_stderr": "Traceback (most recent call last):\n  File \"$GATE_RUN/worktree/tests/subsets/check_frontend.py\", line 291, in <module>\n    main()\n    ~~~~^^\n  File \"$GATE_RUN/worktree/tests/subsets/check_frontend.py\", line 272, in main\n    classification(record['classification'], classification_manifest, lanes, source_paths)\n    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$GATE_RUN/worktree/tests/subsets/check_frontend.py\", line 88, in classification\n    built = successful([SEED, ROOT / 'src' / (phase + '-cli.bend'), '-o', output])\n  File \"$GATE_RUN/worktree/tests/subsets/check_frontend.py\", line 42, in successful\n    require(result['exit'] == 0, result)\n    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$GATE_RUN/worktree/tests/subsets/check_frontend.py\", line 21, in require\n    raise AssertionError(message)\nAssertionError: {'argv': ['$GATE_RUN/worktree/scripts/bend-reference', '$GATE_RUN/worktree/src/compile-cli.bend', '-o', '$GATE_RUN/worktree/.local/compiler-frontend/classification-compile'], 'exit': None, 'outcome': 'Exhausted', 'budget_seconds': 30, 'stdout': '', 'stderr': ''}\n",
+  "native_optimization": "O3",
+  "runner_stderr": "frontend: failed (85.22s)\nchecker: passed (35.70s)\nstructural: passed (65.05s)\nSummary: $GATE_RUN/summary.json\nTraceback (most recent call last):\n  File \"$ROOT/scripts/gates/run.py\", line 414, in <module>\n    sys.exit(main())\n             ~~~~^^\n  File \"$ROOT/scripts/gates/run.py\", line 370, in main\n    results = schedule(GATES, lambda gate: execute(gate, scratch, logs, env, args.timeout), args.jobs)\n  File \"$ROOT/scripts/gates/run.py\", line 268, in schedule\n    finished, _ = wait(running, return_when=FIRST_COMPLETED)\n                  ~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/concurrent/futures/_base.py\", line 299, in wait\n    waiter.event.wait(timeout)\n    ~~~~~~~~~~~~~~~~~^^^^^^^^^\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/threading.py\", line 670, in wait\n    signaled = self._cond.wait(timeout)\n  File \"/opt/homebrew/Cellar/python@3.14/3.14.3_1/Frameworks/Python.framework/Versions/3.14/lib/python3.14/threading.py\", line 369, in wait\n    waiter.acquire()\n    ~~~~~~~~~~~~~~^^\nKeyboardInterrupt\n",
+  "runner_summary": {
+    "normalized": {
+      "gates": [],
+      "receipts": [],
+      "status": "host-failure"
+    },
+    "run": {
+      "directory": "$GATE_RUN",
+      "jobs": 1,
+      "started_at": "2026-09-30T01:51:44.963126+00:00",
+      "timeout_seconds": 1800.0,
+      "total_seconds": 195.551051
+    },
+    "schema": 1
+  },
+  "schema": 1,
+  "source_commit": "a8fc391d",
+  "status": "interrupted-after-frontend-host-timeout"
+}

@@ -86,7 +86,7 @@ def record(run_dir: Path):
         'source_commit': subprocess.check_output(['git', '-C', str(ROOT), 'rev-parse', 'HEAD'], text=True).strip(),
         'command': ['npm', 'run', '-s', 'gates', '--', '--jobs', str(summary['run']['jobs']),
                     '--timeout', str(summary['run']['timeout_seconds']), '--keep-scratch'],
-        'environment': {'BEND_NO_TELEMETRY': '1', 'clang': 'ignored local PATH wrapper'},
+        'environment': {'BEND_NO_TELEMETRY': '1'},
         'status': 'passed',
         'gates': portable(rows),
         'receipt_counts': summary['normalized']['receipt_counts'],
