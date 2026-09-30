@@ -275,7 +275,10 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `python3 vm/check-core.py --study [--heavy]` runs the 993 systematic
   single-token mutants of `vm/study.py` against these rows instead, and writes
   `vm/receipts/study.json`; `vm/CORE.md` gives its result and why each survivor
-  survives. The gate prints the time of each stage on stderr.
+  survives. Study receipts record timeout scale, worker counts, group order,
+  configured guards and every timed-out or skipped job, including interruptions
+  before a later clean kill. First-kill attribution depends on those guards and
+  scheduling. The gate prints stage and study progress on stderr.
 
 It writes only `vm/receipts/core.json`. [vm/CORE.md](../../vm/CORE.md) records
 its conventions and open spec points.

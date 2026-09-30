@@ -1179,7 +1179,7 @@ def run_study(groups: dict, source: str, args: list) -> int:
 
     def strike(item, order=STUDY_ORDER):
         index, mutant = item
-        row = {'mutant': mutant[0]}
+        row = {'mutant': mutant[0], 'interruptions': []}
         wasm = BUILD / f'study-{index}.wasm'
         try:
             wasm.write_bytes(build.assemble(build.test_source(study.apply(source, mutant))))
@@ -1194,6 +1194,12 @@ def run_study(groups: dict, source: str, args: list) -> int:
                 out = run_group(batch, group)
             except AssertionError as failure:
                 return {**row, 'result': 'crashed', 'group': group, 'by': str(failure)[-120:]}
+            interrupted = [{'id': j['id'], 'status': out[j['id']]['status'], 'deadline_ms': deadline(j, group),
+                            **({'guard': out[j['id']]['timeout_guard']} if 'timeout_guard' in out[j['id']] else {}),
+                            **({'print_limit': out[j['id']]['print_limit']} if 'print_limit' in out[j['id']] else {})}
+                           for j in jobs if out[j['id']]['status'] in ('Timeout', 'Skipped')]
+            if interrupted:
+                row['interruptions'].append({'group': group, 'jobs': interrupted})
             wrong = [j['id'] for j in jobs if clean(out[j['id']]) and observed_wrong(j, out[j['id']])]
             if wrong:
                 return {**row, 'result': 'killed', 'group': group, 'by': wrong[0]}
@@ -1204,9 +1210,20 @@ def run_study(groups: dict, source: str, args: list) -> int:
                         unclean = {**row, 'result': result, 'group': group, 'by': ids[0]}
                         break
         return unclean or {**row, 'result': 'survived'}
-    rows = pool(strike, list(enumerate(mutants)), workers=workers)
+    progress, lock = [0], threading.Lock()
+
+    def counted(item):
+        row = strike(item)
+        with lock:
+            progress[0] += 1
+            if progress[0] % 100 == 0 or progress[0] == len(mutants):
+                print(f'study: {progress[0]}/{len(mutants)} finished in {round(time.monotonic() - started)} s', file=sys.stderr, flush=True)
+        return row
+
+    rows = pool(counted, list(enumerate(mutants)), workers=workers)
     if '--heavy' in args:  # what the rows of about 4 GiB add, for the survivors only
         again = [(i, m) for (i, m), r in zip(enumerate(mutants), rows) if r['result'] == 'survived']
+        print(f'study: {len(again)} survivors through the heavy groups', file=sys.stderr, flush=True)
         for (i, _), r in zip(again, pool(lambda item: strike(item, HEAVY), again, workers=max(1, workers // 3))):
             rows[i] = {**r, 'heavy': True}
     tally = {}
@@ -1221,6 +1238,15 @@ def run_study(groups: dict, source: str, args: list) -> int:
             first = by_group.setdefault(r['result'], {})
             first[r['group']] = first.get(r['group'], 0) + 1
     receipt = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'vm_wat_sha256': sha(source.encode()),
+               'inputs': {p.name: sha(p.read_bytes()) for p in (HERE / 'check-core.py', HARNESS)},
+               'guards': {'timeout_scale': SCALE, 'workers': workers, 'heavy_workers': max(1, workers // 3),
+                          'default_job_deadline_ms': 30_000, 'group_job_deadlines_ms': GUARD,
+                          'harness_timeout_ms': int(1_200_000 * SCALE), 'max_timeouts_per_batch': 1,
+                          'heavy_max_timeouts_per_batch': None, 'group_order': STUDY_ORDER,
+                          'heavy_groups': HEAVY if '--heavy' in args else []},
+               'witness_attribution': 'First observed killing job in this run; guard and scheduling dependent.',
+               'interruptions': {status: sum(j['status'] == status for r in rows for g in r['interruptions'] for j in g['jobs'])
+                                 for status in ('Timeout', 'Skipped')},
                'mutants': len(rows), 'tally': tally, 'by_group': by_group,
                'survivors': [{'mutant': m, 'reason': study.EQUIVALENT.get(m)} for m in survivors],
                'elapsed_seconds': round(time.monotonic() - started), 'rows': rows}

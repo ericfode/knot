@@ -7,13 +7,16 @@ and where the spec needed an interpretation. Gate `vm-core` (`vm/check-core.py`)
 is the evidence.
 
 ```sh
+export BEND_NO_TELEMETRY=1
+export PATH=/Users/ericfode/.bun/bin:$PATH
+bun --version                      # must be 1.3.14; a different Bun fails io-host's frozen reference
 python3 vm/build.py                 # the pinned wat2wasm reassembles vm/vm.wasm byte for byte
 python3 vm/build.py --write         # after a reviewed edit of vm.wat: rebuild and re-pin
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FN FUEL [ORDINALS...]
 BEND_NO_TELEMETRY=1 node scripts/run-wasm-io.mjs vm/vm.wasm SANDBOX -- IMAGE FUEL -- [ARGS...]
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --freeze         # rewrite core/seeded.json and core/lane.json from the seed
-BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=2 python3 vm/check-core.py --study --heavy --jobs 10  # the 993 systematic mutants (2,783 s at a load of about 35)
+BEND_NO_TELEMETRY=1 KNOT_GATE_TIMEOUT_SCALE=2 python3 vm/check-core.py --study --heavy --jobs 10  # the 993 systematic mutants; guards recorded in the receipt
 BEND_NO_TELEMETRY=1 python3 vm/check-core.py --study --only NAME,NAME  # the mutants whose names contain one of these (no receipt)
 ```
 
@@ -1038,9 +1041,18 @@ adopt them or record its own, so that lockstep compares like with like.
   runs each survivor against the ten ceiling rows too, and writes `vm/receipts/study.json`. `--only
   NAME,NAME` runs the mutants whose names contain any of those words and writes no receipt.
 
-  *Result*, on `vm.wat` sha256 `96bc6c90…` (round 7; 2,783 s on 10 workers, a load of about 35; the
-  run's `KNOT_GATE_TIMEOUT_SCALE` was 2, which the receipt does not record, so that load could not turn
-  a slow row into a hang): of the 993 mutants, **880 show a wrong observation** (4 only on a ceiling
+  Review r0 found one first-kill witness moved when the timeout scale changed from 2 to 4:
+  `$ctor:1919:i32.sub->i32.add@25`, from `tags/lane:tags-shape` to `keys/lane:keys-u32-3`.
+  Its killed classification and all 72 survivor explanations agreed. Receipts now record the
+  scale, workers, group order, job and harness guards, source hashes of the gate and harness,
+  and every timed-out or skipped job, even when a later group gives a clean kill. A timeout
+  records whether the deadline or print-count guard fired. `by_group` and `by` are the first
+  observations in that run, dependent on guards and scheduling; compare them with matching
+  guards before attributing a difference to code. Outcome classifications remain separate.
+
+  *Earlier result*, on `vm.wat` sha256 `96bc6c90…` (round 7; 2,783 s on 10 workers, a load of about 35;
+  timeout scale 2, absent from that historical receipt at `02aab74d`): of the 993 mutants,
+  **880 show a wrong observation** (4 only on a ceiling
   row), **14 are killed only by a hang** (`$select`'s search, `$ctor`'s walk, and loops of `$enter`,
   `$serve`, `$describable` and `$entry` that never end) and **27 only by a trap** (an out-of-bounds
   store or load: `append`'s block, describe's worklist arithmetic, the String cells' immediate tests,

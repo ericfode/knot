@@ -24,7 +24,7 @@ import {fileURLToPath} from 'node:url';
 const MAX_PRINTS = 1_000_000;
 
 class Stop extends Error {
-  constructor(status, exit) { super(status); Object.assign(this, {status, exit}); }
+  constructor(status, exit, guard = null) { super(status); Object.assign(this, {status, exit, guard}); }
 }
 
 // `bump` and `HL` are 64-bit (a heap may end exactly at 4 GiB): their high words follow.
@@ -143,7 +143,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     },
     print(p, n) {
       stdout.push(Buffer.from(text(p, n) + '\n'));
-      if (++prints > MAX_PRINTS) throw new Stop('Timeout', 4);  // a run that prints without end is a hang: stopped before it fills the process
+      if (++prints > MAX_PRINTS) throw new Stop('Timeout', 4, 'print-count');  // a run that prints without end is a hang: stopped before it fills the process
     },
     die(code, p, n) {
       stderr.push(Buffer.from(text(p, n) + '\n'));
@@ -171,7 +171,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
   };
   instance = await WebAssembly.instantiate(module, {knot_io: io});
   const x = instance.exports;
-  let status = 'Completed', exit = 0;
+  let status = 'Completed', exit = 0, timeoutGuard = null;
   const execute = () => {
     try {
       if (limits) x.vm_limits(limits.frames, BigInt(limits.heap));
@@ -198,7 +198,7 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
         }
       }
     } catch (error) {
-      if (error instanceof Stop) ({status, exit} = error);
+      if (error instanceof Stop) ({status, exit, guard: timeoutGuard} = error);
       else if (error instanceof WebAssembly.RuntimeError) [status, exit] = ['Trap', 5];
       else if (error instanceof RangeError) [status, exit] = ['HostStack', 4];
       else throw error;
@@ -209,11 +209,13 @@ export async function runVM({module, files = {}, argv = [], limits = null, trace
     try { vm.runInThisContext('knotExecute()', {timeout: deadline}); } catch (error) {
       if (error?.code !== 'ERR_SCRIPT_EXECUTION_TIMEOUT') throw error;
       [status, exit] = ['Timeout', 4];
+      timeoutGuard = 'deadline';
     }
   } else execute();
   const state = x.vm_dump ? registers(x) : null;
   return {status, exit, stdout: Buffer.concat(stdout).toString(), stderr: Buffer.concat(stderr).toString(),
     state, steps, yields, audited, broken, booted, atomic,
+    ...(status === 'Timeout' ? {timeout_guard: timeoutGuard, ...(timeoutGuard === 'print-count' ? {print_limit: MAX_PRINTS} : {})} : {}),
     // host calls made for requests: every `print`, less the one a completed Book's result is described with
     effects: prints - (entry === 0 && status === 'Completed' ? 1 : 0)};
 }
