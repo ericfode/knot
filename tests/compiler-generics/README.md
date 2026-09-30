@@ -47,7 +47,9 @@ body, with erased arguments absent from its live signature.
 | [Marked quantity binders](marked-binders/README.md) | 9 | 3 | Frozen in `8bac386` before the parser repair |
 | [Constructor pattern order](pattern-order/README.md) | 8 | 7 | Frozen in `2345731` before the pattern-order repair; binding variant `d3fe024` |
 | [Token spacing](spacing/README.md) | 18 | 14 | Frozen in `8b26748` before the spacing repair |
-| Total | 138 | 217 | 83 seed-valid programs and 55 seed rejections |
+| [Term token gaps](token-gaps/README.md) | 9 | 6 | Frozen in `a50dcef2` before the position-aware adjacency repair |
+| [Abstract host signatures](host-boundaries/README.md) | 1 | 3 | Closed seed calls and separate literal host refusals frozen in `35e6ea14` before the abstract marker repair |
+| Total | 148 | 226 | 86 seed-valid programs and 62 seed rejections |
 
 The original `closure-apply` and `template-twice` pins remain. Optional
 `match-erased-type` and `alias-type` remain Unsupported. Five independent literal
@@ -70,6 +72,8 @@ ABI controls inspect erased parameter counts without invoking generic exports.
 | Quantity gap glued | `quantity-gap-argument` | Accepts the seed-rejected `& 2` |
 | Meet gap glued | `meet-gap` | Accepts the seed-rejected `< & >` |
 | Closing gap glued | `close-gap-parameter` | Accepts the seed-rejected `Seq<&2,Flag >` |
+| Term token gap glued | `arrow-gap-generic` and six companions | Accepts seed-rejected spaced arrows and constructor terms/patterns |
+| Abstract signature projected to datatype zero | `abstract-entry`, host `identity(1)` | Fabricates `Green{}` instead of refusing the uninstantiated host signature |
 
 Each mutant is seed-typechecked and exercised in native and Bun lanes. A parser
 failure, host/internal error, exhausted budget or invalid Wasm cannot count as
@@ -96,8 +100,9 @@ and the quantity meet algebra. `src/type-erasure-PROOF.bend` fills 18 laws,
 including erased evaluator transitions with their one-step fuel adjustment and
 `abstract_identity`. The catalog and type-parsing proof pairs fill three laws
 each, relocated verbatim by subject. `src/check-PROOF.bend` fills `def_reference`,
-`src/catalog-PROOF.bend` fills `empty_datatype`, and the frontend proof fills
-`term_argument` and `marked_binder`; the gate runs the frontend, types,
+`src/catalog-PROOF.bend` fills `empty_datatype`, and the type-parsing proof fills
+`term_argument`, `marked_binder` and `spaced_quantity`; the frontend imports it.
+The gate runs the frontend, types,
 erasure, catalog, generic-catalog and type-parsing proof entries (the catalog
 entry chains the check laws).
 The complete frontend proof fills the restated generic-header acceptance law,
@@ -170,7 +175,101 @@ review. Compression, Delight, memetic identity, Anticipation and Payoff are all
 unreviewed; no numeric ratings or automatic style pass are claimed. General
 parser/application acceptance obligations remain open under D21 in src/SPEC.md.
 
-Full gate verification is recorded below after execution.
+**Full verification.** The only full run in this round was `npm run -s gates`,
+started at `2026-09-30T00:20:40.759045+00:00` (UTC): exit 0, all 21 gates passed,
+with four runner workers, timeout scale 4 and a 1,800-second per-gate limit.
+Measured suite wall time: **1046.274220 seconds**. The code,
+fixture and gate inputs in this run match the committed implementation;
+subsequent changes record evidence and documentation only.
+
+Generics took **571.432318 seconds**, leaving
+**1228.567682 seconds** before the limit. There were 65 load samples,
+one every 15 seconds after export began; the sampled one-minute host load
+ranged from **40.263184 to 80.744629** across the full run. This is an
+observed completion under load, not a controlled speedup comparison. The
+[normalized generics receipt](receipts/generics.json) is refreshed from that run;
+shared receipts are left for the coordinator.
+
+Normalized-summary SHA-256:
+`6ffac89f2d1e9b657a4b212d8f2bcb1fa8cba38892d22539abe703322e6af1ab`.
+Snapshot SHA-256:
+`dccc168cf47e1d50b437bd2a1bd993aa33a28e3cbde09b2c305e70cdc735a8ff`.
+The 89 regenerated artifacts classify as 64 identical,
+9 volatile-only and 16 semantic. Raw execution logs remain ignored in
+`.local/gates/run-vm76we4z/`; no raw runner summary is added to git.
+
+The table preserves every count returned by the shared runner. Generics owns
+its additional coverage validation, recorded immediately below it.
+
+| Gate | Status / exit | Measured seconds | Exact runner counts |
+| --- | --- | ---: | --- |
+| frontend | passed / 0 | 265.772203 | `{"boundaries":24,"fixtures":14,"lane_observations":28,"mutants":4}` |
+| checker | passed / 0 | 111.021032 | `{"bound_observations":16,"bounds":2,"budgets":10,"fixtures":49,"lane_observations":98,"mutants":7}` |
+| structural | passed / 0 | 134.687610 | `{"bounds":4,"fixtures":16,"lane_observations":64,"mutants":7}` |
+| fields | passed / 0 | 249.138340 | `{"bound_observations":12,"bounds":2,"budgets":36,"fixtures":40,"host_boundaries":6,"lane_observations":240,"mutants":9}` |
+| wasm | passed / 0 | 168.567930 | `{"boundaries":44,"execution_lanes":2,"fixtures":25,"mutants":7,"reference_calls":90,"rejects":64}` |
+| wasm-trust | passed / 0 | 1.101924 | `{"entries":3,"proof_holes":0}` |
+| fields-trust | passed / 0 | 1.877627 | `{"entries":4,"proof_holes":0}` |
+| structural-trust | passed / 0 | 0.707893 | `{"entries":2,"proof_holes":0}` |
+| owned-store | passed / 0 | 19.874794 | `{"cases":3532,"execution_lanes":2,"literal_witnesses":15,"mutants":6}` |
+| flat-store | passed / 0 | 35.490597 | `{"bun":{"installed_boundary_states":2,"instances":3534,"lifecycle_checks":7,"observations":13621},"mutants":9,"native":{"installed_boundary_states":2,"instances":3534,"lifecycle_checks":7,"observations":13621}}` |
+| recursion | passed / 0 | 272.174578 | `{"fixtures":19,"mutants":3}` |
+| fields-wasm | passed / 0 | 483.322585 | `{"boundaries":30,"fixtures":8,"mutants":4}` |
+| census | passed / 0 | 14.088013 | `{"classes":41,"declarations":719,"files":44}` |
+| perch-context | passed / 0 | 83.959371 | `{"fixtures":33,"mutants":8}` |
+| lint:verify | passed / 0 | 16.352454 | `{"law_rules":8,"tests":168}` |
+| bootstrap | passed / 0 | 145.809617 | `{"corpus":908,"mutants":54,"reached":2,"stages":8}` |
+| classification | passed / 0 | 10.319174 | `{"fixtures":17,"mutants":7}` |
+| io-host | passed / 0 | 33.850700 | `{"cli_runs":6,"conformance_runs":86,"errno":[2,9,20,21,22,92],"fixtures":20,"host_boundaries":22,"mutants":6,"review":{"empty_write":4,"mutants":3,"oracle_controls":14,"secret_paths":21,"seed_runs":12},"seed_fixtures":40,"seed_runs":109,"stress":{"left_binds":100000,"right_binds":100000}}` |
+| io-abi-2 | passed / 0 | 157.094693 | `{"case_mode":"insensitive","fixtures":43,"host_boundaries":25,"mutants":5,"mutants_killed":5,"parity":153,"read_observations":21,"reference_observations":64,"seed_exhausted":2,"seed_observations":61}` |
+| selfhost | passed / 0 | 468.463582 | `{"blocked":63,"cases":65,"d4_gaps":5,"judge_mutants":20,"mutants":3,"passed":2}` |
+| generics | passed / 0 | 571.432318 | `{"fixtures":148,"mutants":17}` |
+
+Generics detailed counts (the gate verifies these before recording a pass):
+
+```json
+{
+  "abi_arity_observations": 10,
+  "abi_module_probes": 8,
+  "additional_mutant_witness_kills": 12,
+  "agreed_fixtures": 41,
+  "blocked_fixtures": 0,
+  "byte_identical_modules": 41,
+  "check_observations": 296,
+  "compile_observations": 296,
+  "evaluator_agreements": 342,
+  "execution_lanes": 2,
+  "fixtures": 148,
+  "host_refusals": 4,
+  "mutant_lane_kills": 34,
+  "mutants": 17,
+  "negative_phase_observations": 642,
+  "preserved_artifacts": 214,
+  "proof_entries": 6,
+  "rejected_fixtures": 62,
+  "seed_calls": 226,
+  "seed_invalid": 62,
+  "seed_valid": 86,
+  "unsupported_fixtures": 45,
+  "wasm_agreements": 342
+}
+```
+
+The selfhost gate's verdict includes 2 passing and 63 blocked cases out of 65,
+with 5 D4 gaps; it does not claim self-hosting completion. Bootstrap reaches 2
+of 8 stages. IO-ABI-2 retains 2 seed-exhausted observations. Those limits remain
+explicit. Independent wrapper controls passed 18/18, census controls 75/75,
+and native/Bun executable cache controls 10/10. The final owned receipt refresh
+matches all 227 recorded input hashes and retains all 138 prior fixture
+requirements. Its coverage counts recompute exactly; `npm run -s census:check`
+still reports current after the refresh. No shared receipt is refreshed or
+campaign capability promoted.
+
+Remaining coordinator work: main integration, the separate D26 closure pin and
+mutant reconciliation, the pending assertion/pin rulings in RULINGS.md, shared
+receipt refresh, and live semantic/style review through bounded manifest groups.
+The monomorphic forward-pattern residual, cell-valued Wasm host-export boundary
+and general D21 acceptance obligations remain with their stated owners.
 
 ## Review round 4
 

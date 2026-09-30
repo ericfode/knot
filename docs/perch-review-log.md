@@ -1137,3 +1137,27 @@ implementation. Claim an ordering only when `git log` shows it. When an
 authorization lands, update every data field that names it in the same commit.
 Keep a running ledger of assertion changes from the first one, not after
 review.
+
+## 2026-09-29 — Generics review round 5: token positions and abstract host types
+
+The coordinator's manual review confirmed that erased whitespace let the
+generic path accept seed-invalid spaced arrows and constructor terms/patterns.
+Datatype constructor declarations allow the same brace gap, so token text
+alone cannot decide the rule. Nine [token-gap fixtures](../tests/compiler-generics/token-gaps/README.md)
+were frozen before the shared adjacency guard; seven are seed-invalid and two
+keep the valid positions. A restoration mutant must fail on all seven negative
+witnesses in both lanes.
+
+The review also found an abstract runtime signature projected to datatype zero:
+a direct host call fabricated a constructor of the first datatype. Separate
+[closed seed calls and literal host controls](../tests/compiler-generics/host-boundaries/README.md)
+precede the reserved abstract marker and evaluator CLI refusal. Its restoration
+mutant demonstrates the fabricated value. The Wasm adapter's cell-valued export
+boundary remains with that owner. No live Perch finding or style pass is claimed.
+
+Prevention: pair spacing controls by syntactic position and generic/monomorphic
+dispatch before broadening parser reach. Preserve unresolved type identity
+through erasure, and test exported host entries separately from closed internal
+calls. Keep laws grouped by subject with their proof import closure. The
+[round-5 report](../tests/compiler-generics/README.md#review-round-5) records the
+full deterministic run, exact coverage and remaining coordinator decisions.
