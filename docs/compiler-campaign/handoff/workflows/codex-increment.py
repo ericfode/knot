@@ -132,8 +132,9 @@ def review(stage):
 def precheck(stage):
     out = RUN / f'precheck-{stage}'
     up = [] if BASE == 'main' else ['--upstream', f"{BASE.removeprefix('campaign/')}={BASE}"]
-    subprocess.run(['python3', '-B', 'scripts/prechecks/run.py', '--head', f'campaign/{ID}', *up, '--inc', ID, '--json', '--out', str(out)],
-                   cwd=KNOT, stdout=subprocess.DEVNULL, stderr=open(RUN / 'logs' / f'precheck-{stage}.log', 'w'), env=ENV)
+    if not (out / 'report.json').exists():  # one precheck per stage, so a restart replays the same facts and hits the call cache
+      subprocess.run(['python3', '-B', 'scripts/prechecks/run.py', '--head', f'campaign/{ID}', *up, '--inc', ID, '--json', '--out', str(out)],
+                     cwd=KNOT, stdout=subprocess.DEVNULL, stderr=open(RUN / 'logs' / f'precheck-{stage}.log', 'w'), env=ENV)
     try:
         rep = json.loads((out / 'report.json').read_text())
     except Exception:
