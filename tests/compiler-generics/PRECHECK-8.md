@@ -53,7 +53,13 @@ zero provider requests/responses. The reading hypothesis is one consistent
 layout boundary for the existing leading/non-leading distinction. Compression,
 Delight, memetic identity, Anticipation and Payoff each remain unreviewed.
 
-Full committed-head gate acceptance is recorded separately after execution.
+Full committed-head acceptance is recorded in [PRECHECK-8-GATES.md](PRECHECK-8-GATES.md):
+`npm run -s gates` on `01ab7834` exits 0; all 21 gates pass. The owned gate
+retains 148 main fixtures and now kills 37 type-correct mutants in both lanes,
+with nine proof entries and all 60 prechecks passing. All 307 owned input
+hashes match; the normalized owned receipt and census metadata are refreshed.
+Fresh C1 covers 923 programs, removes both fixed fingerprints and retains
+exactly the 26 earlier dispute/notice fingerprints. It remains partial, exit 3.
 Closures reconciliation, assertion/pin rulings, shared receipt refresh, live
 review and integration retain their existing coordinator owners.
 

@@ -723,4 +723,11 @@ prechecks and nine proof entries, and kills the new restoration mutant on five
 witnesses in both lanes. All original 148 main fixtures and 36 prior mutants
 remain required; the registered gate now requires 37 mutants. Offline review
 has complete context and zero provider calls; all five style axes remain
-unreviewed. Final full-suite acceptance follows in PRECHECK-8-GATES.md.
+unreviewed. [PRECHECK-8-GATES.md](PRECHECK-8-GATES.md) records final acceptance
+on `01ab7834`: all 21 gates pass, suite time 649.917790 seconds and generics
+447.273152 seconds under measured load. All 307 owned receipt inputs match.
+The 37 mutants produce 74 lane kills and 38 additional witness kills; all
+60 prechecks and nine complete proof entries pass. C1 retains its 26 known
+dispute/notice fingerprints and is explicitly partial, exit 3. All prior frozen
+expectations remain unchanged. Shared receipts and live review retain their
+coordinator owners.
