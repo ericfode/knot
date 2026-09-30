@@ -1,0 +1,3006 @@
+{
+  "schema": 1,
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "seed_files": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "contiguous-type-result",
+      "file": "review-r1/contiguous-type-result.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "9b214848f7a9006b2e38475ed2d95f95ba87f0776141c86ca3502439d1d6a4f9",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-type-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-result.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-type-result.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-type-result.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-type-result",
+      "file": "review-r1/split-type-result.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "f9d600082c7a9f8838a9078257fc8c6f8c503a355e9c36712bce0c9cf36fbefa",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-type-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def make() -> T - > T:\n  |                   ^\n4 |   x => x\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-result"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def make() -> T - > T:\n  |                   ^\n4 |   x => x\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-result.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def make() -> T - > T:\n  |                   ^\n4 |   x => x\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "contiguous-type-parameter",
+      "file": "review-r1/contiguous-type-parameter.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "2dc7fba7fa278238f5c3fae1a59993b9d7587ce76120c883f933707d09d8b38c",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-type-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-parameter.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-type-parameter.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-type-parameter.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-type-parameter",
+      "file": "review-r1/split-type-parameter.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "8731e476baaca3483f209c1dab3548a0692d21c1f67d0b3fdea7c9a563ffe6c4",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-type-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def use(f: T - > T) -> T:\n  |                ^\n4 |   f(K{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-parameter"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def use(f: T - > T) -> T:\n  |                ^\n4 |   f(K{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-parameter.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n2 |   K{}\n3>| def use(f: T - > T) -> T:\n  |                ^\n4 |   f(K{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "contiguous-type-binding",
+      "file": "review-r1/contiguous-type-binding.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "a90678e7695a4fcc847f720228b2c14f9d1364cbeb1f0a483a61c3d1128dc547",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-type-binding.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-type-binding.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-type-binding.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-type-binding.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-type-binding",
+      "file": "review-r1/split-type-binding.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "411f1d5858512492d30b8983e3b1c22b7e7c1c5e67979c0ec942357654862858",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-type-binding.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def main() -> T:\n4>|   f : T - > T = x => x\n  |           ^\n5 |   f(K{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-binding.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-binding"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def main() -> T:\n4>|   f : T - > T = x => x\n  |           ^\n5 |   f(K{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-type-binding.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-type-binding.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def main() -> T:\n4>|   f : T - > T = x => x\n  |           ^\n5 |   f(K{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "contiguous-lambda-result",
+      "file": "review-r1/contiguous-lambda-result.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "9b214848f7a9006b2e38475ed2d95f95ba87f0776141c86ca3502439d1d6a4f9",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-lambda-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-result.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-lambda-result.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-lambda-result.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-lambda-result",
+      "file": "review-r1/split-lambda-result.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "3eee1aee9cfabee711a712b4693e5f46a036ebf1801a0bd692838b1374045425",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-lambda-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def make() -> T -> T:\n4>|   x = > x\n  |       ^\n5 | def main() -> T:\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-lambda-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-lambda-result"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def make() -> T -> T:\n4>|   x = > x\n  |       ^\n5 | def main() -> T:\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-lambda-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-lambda-result.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '>'\nLocation:\n3 | def make() -> T -> T:\n4>|   x = > x\n  |       ^\n5 | def main() -> T:\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "contiguous-lambda-argument",
+      "file": "review-r1/contiguous-lambda-argument.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "2dc7fba7fa278238f5c3fae1a59993b9d7587ce76120c883f933707d09d8b38c",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-lambda-argument.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-lambda-argument.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-lambda-argument.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-lambda-argument",
+      "file": "review-r1/split-lambda-argument.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "9bb4142d846d577710f93123f3da7f924f5a5266e7495c5390dacde7fe161f6e",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-lambda-argument.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n5 | def main() -> T:\n6>|   use(x = > x)\n  |         ^\n7 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-lambda-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-lambda-argument"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n5 | def main() -> T:\n6>|   use(x = > x)\n  |         ^\n7 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-lambda-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-lambda-argument.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n5 | def main() -> T:\n6>|   use(x = > x)\n  |         ^\n7 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "contiguous-header",
+      "file": "review-r1/contiguous-header.bend",
+      "area": "operators",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "96ea113c58baf5d9d37586e1da87add523fa230552a506ad5b20bc9b12c5768f",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/contiguous-header.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-header.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-header"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/contiguous-header"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/contiguous-header.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/contiguous-header.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/contiguous-header.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/contiguous-header.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/contiguous-header.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "split-header",
+      "file": "review-r1/split-header.bend",
+      "area": "operators",
+      "knot": {
+        "require": "reject"
+      },
+      "result": null,
+      "source_sha256": "c38ead54961e9176c6158aa2ea98ff7c044f1352d37b8aae968a9268f9341d32",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/split-header.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n2 |   K{}\n3>| def main() - > T:\n  |            ^\n4 |   K{}\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-header.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-header"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n2 |   K{}\n3>| def main() - > T:\n  |            ^\n4 |   K{}\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/split-header.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/split-header.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : '->' (a def with no return type fills a law; no law named main is in scope)\n- observed : '-'\nLocation:\n2 |   K{}\n3>| def main() - > T:\n  |            ^\n4 |   K{}\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "shadow-let",
+      "file": "review-r1/shadow-let.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "36921507b75b56d1f3bab0e8bf5ffb0a5b08a8192cdf7431fd39a00c62295e45",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-let.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : T -> T = x => x\n  |       ^\n6 |   f(K{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-let"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : T -> T = x => x\n  |       ^\n6 |   f(K{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-let.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : T -> T = x => x\n  |       ^\n6 |   f(K{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-let",
+      "file": "review-r1/scope-control-let.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "e4c910dc0f200d40c69865522fd38f6e62013f4d055ffe1c744361364acb3af9",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-let.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-let"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-let"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-let.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-let.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-let.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-let.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-parameter",
+      "file": "review-r1/shadow-parameter.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "fce864e70a616626203739b99beb5d9fd3f04698ef6b4845b846f838c5d44693",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T, f: T -> T) -> T:\n  |                  ^\n4 |   K{}\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-parameter"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T, f: T -> T) -> T:\n  |                  ^\n4 |   K{}\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-parameter.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T, f: T -> T) -> T:\n  |                  ^\n4 |   K{}\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-parameter",
+      "file": "review-r1/scope-control-parameter.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "91c3a0028b886546b7480207cf023648b5a93d91bfcc1e0fff716fbe2992e401",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-parameter.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-parameter.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-parameter.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-parameter.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-result",
+      "file": "review-r1/shadow-result.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "952d4f764c15597f0b43152b8d9b49063667c87dd2e2cc5d8c52c818998d3f5e",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T) -> T -> T:\n  |                  ^\n4 |   x => x\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-result"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T) -> T -> T:\n  |                  ^\n4 |   x => x\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-result.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: bad\n2 |   K{}\n3>| def bad(T: T) -> T -> T:\n  |                  ^\n4 |   x => x\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-result",
+      "file": "review-r1/scope-control-result.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "3bc28a4a50d8699fd0d26f461e92eb00aae4614a501455dfb104cddae13995f3",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-result.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-result"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-result"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-result.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-result.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-result.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-result.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-result.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-lambda",
+      "file": "review-r1/shadow-lambda.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "7310bfa69f55393fbcdacb59162196d10b2c399984067c97071f39ada5e6b001",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-lambda.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   f : T -> T = T =>\n5>|     g : T -> T = x => x\n  |         ^\n6 |     g(T)\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-lambda.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-lambda"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   f : T -> T = T =>\n5>|     g : T -> T = x => x\n  |         ^\n6 |     g(T)\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-lambda.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-lambda.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   f : T -> T = T =>\n5>|     g : T -> T = x => x\n  |         ^\n6 |     g(T)\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-lambda",
+      "file": "review-r1/scope-control-lambda.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "22d36fd949c9908f6a91d27856c27211c4d118c16f69683bfdec6d827de90cf0",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-lambda.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-lambda.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-lambda.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-lambda.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-nested-domain",
+      "file": "review-r1/shadow-nested-domain.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "358d20c74db6be90f5bdafe73267a2820fb0a60a0168ebd757b23c0444c5a06a",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-nested-domain.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : (T -> T) -> T = g => g(K{})\n  |        ^\n6 |   f(x => x)\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-nested-domain.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-nested-domain"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : (T -> T) -> T = g => g(K{})\n  |        ^\n6 |   f(x => x)\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-nested-domain.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-nested-domain.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   f : (T -> T) -> T = g => g(K{})\n  |        ^\n6 |   f(x => x)\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-nested-domain",
+      "file": "review-r1/scope-control-nested-domain.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "3aea38d023a6a3144524b8fa9b0098a637818775707890d88a3c94e28a3b7059",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-nested-domain.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-nested-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-nested-domain.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-nested-domain.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-field",
+      "file": "review-r1/shadow-field.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "d49ed64357318acc6e48de41d575e4f9f37ad95d74526ac518a939cbefe93e55",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-field.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: Box\n3 | type Box is Type:\n4>|   Box{T: T, f: T -> T}\n  |                ^\n5 | def main() -> T:\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-field.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-field"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: Box\n3 | type Box is Type:\n4>|   Box{T: T, f: T -> T}\n  |                ^\n5 | def main() -> T:\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-field.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-field.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: Box\n3 | type Box is Type:\n4>|   Box{T: T, f: T -> T}\n  |                ^\n5 | def main() -> T:\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-field",
+      "file": "review-r1/scope-control-field.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "b15172754b58c15e83c2c690719efc467f2535165ba4f1085314011f07053380",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-field.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-field.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-field"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-field"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-field.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-field.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-field.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-field.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-field.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-nominal",
+      "file": "review-r1/shadow-nominal.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "unsupported"
+      },
+      "result": null,
+      "source_sha256": "55630970f7862d93e7515f04a0c2debe591bcc628e8ce8bdc95c19eb575007ce",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/shadow-nominal.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   x : T = K{}\n  |       ^\n6 |   x\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-nominal.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-nominal"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   x : T = K{}\n  |       ^\n6 |   x\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/review-r1/shadow-nominal.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/shadow-nominal.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Type\n- observed : T\nContext:\n- T : T\nLocation: main\n4 |   T : T = K{}\n5>|   x : T = K{}\n  |       ^\n6 |   x\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "scope-control-nominal",
+      "file": "review-r1/scope-control-nominal.bend",
+      "area": "shadowing",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "65501ebd098fea4747fd287241549f3b097f5a619cd62dec36303600309683bf",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/scope-control-nominal.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/scope-control-nominal.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/scope-control-nominal.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/scope-control-nominal.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-arrow-newline-same-indent",
+      "file": "review-r1/layout-arrow-newline-same-indent.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "747edf41c347e87b21e2dfc0560491ff1924b9369cbb4577299a6b32d9dc0075",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-arrow-newline-same-indent.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-arrow-newline-same-indent.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-arrow-newline-same-indent.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-arrow-newline",
+      "file": "review-r1/layout-arrow-newline.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "3c79a70fd3706a3bbe6dedba9a42bc8097f12c5c06a202e937ebc4cb8d446a8f",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-arrow-newline.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-arrow-newline.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-arrow-newline.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-arrow-newline.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-continuation-dedent",
+      "file": "review-r1/layout-continuation-dedent.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "892c934a7bb2878e2d42e5aec5cbfa92c3793ee5a70f8fe818a54b8d0009728a",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-continuation-dedent.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-dedent.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-continuation-dedent.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-continuation-dedent.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-continuation-deeper",
+      "file": "review-r1/layout-continuation-deeper.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "05cde1934490b307c004299e8913030b628055cc97f0a59c384975b840bc7218",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-continuation-deeper.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-continuation-deeper.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-continuation-deeper.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-continuation-deeper.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-continuation",
+      "file": "review-r1/layout-continuation.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "0c06c650c07cce893a9059b9f572d95ef8a9d9952df183608769b65c3b7b8e2c",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-continuation.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-continuation"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-continuation.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-continuation.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-continuation.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-continuation.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-continuation.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-control",
+      "file": "review-r1/layout-control.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "a1cf672f6c2877813fe20c1fb57934e0268d92e0a8c0176d175fbc2134b20efe",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-control.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-control.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-control"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-control"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-control.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-control.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-control.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-control.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-control.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-semicolon-promoted-argument",
+      "file": "review-r1/layout-semicolon-promoted-argument.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "5fe4ba91265b00277914c73ad8f024da204badf169f9be459aa16dbbc947a8b1",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-semicolon-promoted-argument.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-argument.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-semicolon-promoted-argument.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-semicolon-promoted-let",
+      "file": "review-r1/layout-semicolon-promoted-let.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "84ec3dc88c1f10afeee9dcebfd4e3ffe18f538f35b35e77ce60fa0af9845e10e",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-semicolon-promoted-let.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-semicolon-promoted-let.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-semicolon-promoted-let.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-semicolon-then-newline",
+      "file": "review-r1/layout-semicolon-then-newline.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "8bc7baaeb82c6634245ff17cac60976c860afd9fc05c89ded0db2b684d7e2fb9",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-semicolon-then-newline.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-semicolon-then-newline.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-semicolon-then-newline.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-semicolon-two-lets",
+      "file": "review-r1/layout-semicolon-two-lets.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "6b539264930cf4e0f28f818d48c89686070f7773a56d6e5e627cbf56f25c9329",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-semicolon-two-lets.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-semicolon-two-lets.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-semicolon-two-lets.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "layout-semicolon",
+      "file": "review-r1/layout-semicolon.bend",
+      "area": "layouts",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "ac6bdfec0caaacaa0f51370a11e2da082637fc92a58ef5ae0250d2eddd4f89e2",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/layout-semicolon.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/layout-semicolon"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/layout-semicolon.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/layout-semicolon.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/layout-semicolon.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "wide-partial-38",
+      "file": "review-r1/wide-partial-38.bend",
+      "area": "wide-tail",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "a9d4c289155cfd0937401be6f01be5485079d9f4f7fda4daee75f30ade119999",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/wide-partial-38.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-38.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-38"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/wide-partial-38"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-38.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-38.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/wide-partial-38.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/wide-partial-38.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/wide-partial-38.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "wide-partial-39",
+      "file": "review-r1/wide-partial-39.bend",
+      "area": "wide-tail",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "403b52ec5b69d072f0bdd00d192706ad236efeeafa196e60e75bf9559f0f556d",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/wide-partial-39.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-39.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-39"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/wide-partial-39"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-39.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-39.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/wide-partial-39.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/wide-partial-39.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/wide-partial-39.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "wide-partial-64",
+      "file": "review-r1/wide-partial-64.bend",
+      "area": "wide-tail",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "bca4da2dd273b2339b1c3b176f5c13c1c3e13fedd7d5f048b5ca49434e19183f",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/wide-partial-64.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-64.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-64"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/wide-partial-64"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/wide-partial-64.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/wide-partial-64.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/wide-partial-64.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/wide-partial-64.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/wide-partial-64.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "ordinary-signature-128",
+      "file": "review-r1/ordinary-signature-128.bend",
+      "area": "performance",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "df4408d9e84d0d5d1bdc349a4974bcfdf15351047dd0a2aa3375910557fac337",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/ordinary-signature-128.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-128.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/ordinary-signature-128.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/ordinary-signature-128.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "ordinary-signature-192",
+      "file": "review-r1/ordinary-signature-192.bend",
+      "area": "performance",
+      "knot": {
+        "require": "agree"
+      },
+      "result": 0,
+      "source_sha256": "b91a6fde9fc3a02a1350a2fe9213b3010ca24f5de375066ce52fa73feb603e41",
+      "seed": {
+        "check": {
+          "argv": [
+            "bun",
+            "--no-env-file",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/review-r1/ordinary-signature-192.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192.bend",
+                "-o",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                "--no-env-file",
+                ".local/compiler-closures/review-r1-seed/ordinary-signature-192.js"
+              ],
+              "exit": 0,
+              "stdout": "K{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/review-r1-seed/ordinary-signature-192.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/review-r1/ordinary-signature-192.bend as F\n\ndef show(x: F.T) -> IO(Unit):\n  match x:\n    case F.K{}: IO.print(\"K{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    }
+  ]
+}
