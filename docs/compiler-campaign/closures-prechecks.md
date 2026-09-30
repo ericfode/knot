@@ -62,6 +62,15 @@ The complete sources, seed verdicts and original fingerprints are in
 adjudicate the two disputes in its ledger. This executor changes neither C1 nor
 the coordinator ledger to suppress them.
 
+The committed-head replay at `947928ae0a82c8256cd06c73c1dd2dc8e660bed1`
+reports exactly those two fingerprints, zero check errors and exit **3**:
+[prechecks-after.json](../../tests/compiler-closures/receipts/prechecks-after.json).
+It uses the unchanged C1 tool and registry exported from main
+`b92b13595bcbc265b823cb3cfdc38918e35953c9`, with `--only C1 --no-write --json
+--jobs 4` and that explicit `--main-ref`. No parser condition remains. C1's
+undeclared helper lanes and absent `d4_targets` remain unavailable evidence,
+not a claimed pass. This evidence checkpoint changes no accepted gate input.
+
 ## Verification and integration boundary
 
 The first full run failed frontend on the AST-order guard, lint:verify on the

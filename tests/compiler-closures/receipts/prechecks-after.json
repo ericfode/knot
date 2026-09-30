@@ -1,0 +1,130 @@
+{
+ "base": {
+  "commit": "fa31fec064ba0993ed31205fd4b4fdc00df5d761",
+  "kind": "main",
+  "stacked_on": [],
+  "tree": "964271ff9c5a70d713d9d0f6a882ed94e6db6f29"
+ },
+ "checks": [
+  {
+   "conditions": [
+    {
+     "actor": "executor",
+     "check": "C1",
+     "evidence": {
+      "line": "HostFailure\tinvoke\tfunction-result",
+      "outcome": "HostFailure exit 5",
+      "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  ",
+      "sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2"
+     },
+     "expected": "every lane ends in one of the five classified outcomes",
+     "fingerprint": "7c0871a3666be44005dc",
+     "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+     "ledger": {
+      "entry": null,
+      "status": "new"
+     },
+     "observed": "host-abi-type-kind-matrix '.local/probes/src/e6-main-returns-function.bend': outcome=HostFailure exit 5, line=HostFailure\tinvoke\tfunction-result",
+     "rule": "crash",
+     "severity": "blocking",
+     "subject": {
+      "lane": "eval",
+      "probe": "b507406b7c59d768"
+     },
+     "value": {
+      "family": "host-abi-type-kind-matrix"
+     }
+    },
+    {
+     "actor": "executor",
+     "check": "C1",
+     "evidence": {
+      "line": "HostFailure\tinvoke\tfunction-result",
+      "program": "type Flag is Data:\n  Off{}\n  On{}\n\ndef invert(x: Flag) -> Flag:\n  match x:\n    case Off{}: On{}\n    case On{}: Off{}\n\ndef eat(-v: Flag, x: Flag) -> Flag:\n  x\n\ndef app(f: Flag -> Flag, x: Flag) -> Flag:\n  f(x)\n\ndef main() -> Flag -> Flag:\n  ",
+      "sha256": "b507406b7c59d76848eda88770afed980dd4a861ba9bbc3a10292b90f6588ef2"
+     },
+     "expected": "a diagnostic is Class<TAB>phase<TAB>code<TAB>span",
+     "fingerprint": "5a7d3ec9413a356cc1ef",
+     "fix_hint": "The probe is frozen in tests/prechecks/registry when it came from review; replay it with the CLI lane.",
+     "ledger": {
+      "entry": null,
+      "status": "new"
+     },
+     "observed": "host-abi-type-kind-matrix '.local/probes/src/e6-main-returns-function.bend': line=HostFailure\tinvoke\tfunction-result",
+     "rule": "diagnostic-shape",
+     "severity": "major",
+     "subject": {
+      "lane": "eval",
+      "probe": "b507406b7c59d768"
+     },
+     "value": {
+      "family": "host-abi-type-kind-matrix"
+     }
+    }
+   ],
+   "id": "C1",
+   "name": "probe-differential",
+   "notes": [],
+   "outcome": "conditions",
+   "reason": "",
+   "rules_not_applicable": {
+    "reference-crash": "the tree has no vm/serializer.py and vm/registry.json",
+    "roundtrip": "the tree has no vm/serializer.py and vm/registry.json"
+   },
+   "rules_run": [
+    "lane-build",
+    "d4-invalid",
+    "unsound-accept",
+    "crash",
+    "value-disagreement",
+    "premature-unsupported",
+    "diagnostic-shape"
+   ],
+   "rules_unavailable": {
+    "helper-divergence": "no helper lanes are declared (lanes.helpers)",
+    "incomplete-repair": "the manifest declares no d4_targets: nothing was promised to repair"
+   },
+   "seconds": 10.491
+  }
+ ],
+ "exit": 3,
+ "fail_on": "major",
+ "head": {
+  "commit": "947928ae0a82c8256cd06c73c1dd2dc8e660bed1",
+  "dirty": false,
+  "tree": "78a9aa5cae20f6808b4f3150cb485d4d09211c58",
+  "worktree": false
+ },
+ "incomplete": [
+  {
+   "check": "C1",
+   "name": "probe-differential",
+   "outcome": "conditions",
+   "reason": "",
+   "rules": {
+    "helper-divergence": "no helper lanes are declared (lanes.helpers)",
+    "incomplete-repair": "the manifest declares no d4_targets: nothing was promised to repair"
+   }
+  }
+ ],
+ "increment": "closures",
+ "ledger": {
+  "entries": 0,
+  "source": "empty"
+ },
+ "main_ref": "b92b13595bcbc265b823cb3cfdc38918e35953c9",
+ "manifest": "defaults",
+ "schema": 2,
+ "summary": {
+  "counts": {
+   "blocking/new": 1,
+   "major/new": 1
+  },
+  "errors": 0,
+  "exit": 3,
+  "failing": 2,
+  "incomplete": 1,
+  "strict": false
+ },
+ "tier": "fast"
+}
