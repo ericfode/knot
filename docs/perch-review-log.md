@@ -1615,3 +1615,15 @@ Judgment: confirmed and repaired.
 Change and why: compact source locations and duplicate audit rows first, retaining complete metadata and a visible digest. The 400-datatype witness keeps all type/law source. Contract text that still cannot fit becomes explicitly marked names, with complete omitted entries and file hashes in provenance, contract-limit reasons, and truncation in provenance/state. Metadata/import compaction cannot grant complete-context qualification. At the literal minimum per-entry names-only markers suffice; optional notes/digests cannot move the failure boundary. Primary and task never change.
 Clean / broken / held-out evidence and deterministic checks: all 65 offline context tests pass: 47 controls and 18 assertion-killed semantic mutants. Seed checks pass for the locale, datatype and two type/law fixtures. Exact minimum fits; one byte below fails with the new required-minimum diagnostic. Main's 957 declaration and 17 composition hashes match the base (974/974). `gates:verify` passes 20 tests; `lint:verify` previously passed 192 tests plus eight law-rule wiring controls and runs again in the full gate. Offline catalog lists 57 rules with dotenv loading disabled; an initial guard deliberately blocked the CLI's unconditional environment-loader entry before any file read.
 Remaining uncertainty / next trigger: full registered gates and owned receipt refresh follow this implementation checkpoint. Judge calibration remains unmeasured; required contract cuts are structural limits, and ordinary collaborator cuts remain advisory.
+
+
+## 2026-09-29 — perch-cap checkpoint: refresh generated census dependencies
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, implementation `32af13bb`.
+Evidence links and usage receipt IDs: first full gate attempt `.local/gates/run-n1fcd36r/`; census logs and `census-check.log` under `.local/perch-cap/review-round1/`.
+Waste or missed behavior / measured effort (or unknown): expanded `tests/perch-context/check.py` changed its generated census input hash. The first full run correctly refused the stale inventory. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no Perch model; deterministic census only.
+Judgment: confirmed stale generated evidence.
+Change and why: `npm run -s census` updates exactly the check.py SHA-256 in `inventory/accepted.json` and that inventory's dependent SHA-256 in `inventory/selfhost.json`. No census policy, classification, fixture outcome or compiler expectation changes.
+Clean / broken / held-out evidence and deterministic checks: inspect the two one-line diffs; `npm run -s census:check` exits 0 on the refreshed artifacts.
+Remaining uncertainty / next trigger: run the complete gate command again. Prevention: after changing the context gate's check.py, regenerate and check census inventories before exporting a full gate run.

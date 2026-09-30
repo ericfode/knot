@@ -288,3 +288,11 @@ committed HEAD; bind the archive's commit using a read-only object alternate,
 then `git update-ref HEAD <archived-commit>` inside the scratch export. Keep
 telemetry disabled and environment-file loading disabled for this offline
 catalog command. See the round-1 verification report for the execution recipe.
+
+
+Perch-context checkpoint procedure: when `tests/perch-context/check.py` changes,
+run `npm run -s census` and `npm run -s census:check` before the full gate export.
+Review the generated input hashes in `inventory/accepted.json` and the dependent
+hash in `inventory/selfhost.json`; this refresh changes no census policy or
+compiler expectations. Refresh only the owned context receipt after fresh
+execution, and leave unrelated gate receipts for the coordinator.
