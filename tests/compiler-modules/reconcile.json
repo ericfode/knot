@@ -1,0 +1,3257 @@
+{
+  "schema": "knot-modules-reconciliation-1",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+    "sha256": {
+      "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+      "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+      "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+      "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+    }
+  },
+  "purpose": "Coordinator reconciliation; seed frozen before repairs. Native and Bun seed cross-checks.",
+  "implementation_at_freeze": "85dcfb2a",
+  "fixtures": [
+    {
+      "name": "spm-mod",
+      "file": "spm-mod/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "spm-mod/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/spm-mod/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def on() -> Flag:\n6>|   On {}\n  |      ^\n7 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "spm-mod/lib/m.bend",
+        "spm-mod/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def on() -> Flag:\n6>|   On {}\n  |      ^\n7 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def on() -> Flag:\n6>|   On {}\n  |      ^\n7 | \n"
+        }
+      }
+    },
+    {
+      "name": "spm-entry",
+      "file": "spm-entry/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "spm-entry/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/spm-entry/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 |   match x:\n 9>|     case M.Off {}: Dark{}\n   |                 ^\n10 |     case M.On{}: Lit{}\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "spm-entry/lib/m.bend",
+        "spm-entry/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 |   match x:\n 9>|     case M.Off {}: Dark{}\n   |                 ^\n10 |     case M.On{}: Lit{}\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 |   match x:\n 9>|     case M.Off {}: Dark{}\n   |                 ^\n10 |     case M.On{}: Lit{}\n"
+        }
+      }
+    },
+    {
+      "name": "spm-base",
+      "file": "spm-base/main.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "spm-base/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/spm-base/main.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Light:\n13>|   see(Bool.not(False {}))\n   |                       ^\n14 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "spm-base/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Light:\n13>|   see(Bool.not(False {}))\n   |                       ^\n14 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n12 | def main() -> Light:\n13>|   see(Bool.not(False {}))\n   |                       ^\n14 | \n"
+        }
+      }
+    },
+    {
+      "name": "tc2",
+      "file": "tc2/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "tc2/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/tc2/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "tc2/lib/b.bend",
+        "tc2/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../tc2/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../tc2/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "em-absurd",
+      "file": "em-absurd/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "em-absurd/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/em-absurd/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "em-absurd/lib/v.bend",
+        "em-absurd/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../em-absurd/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../em-absurd/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "em-param",
+      "file": "em-param/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "em-param/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/em-param/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "em-param/lib/v.bend",
+        "em-param/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../em-param/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../em-param/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "em-entry",
+      "file": "em-entry/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "em-entry/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/em-entry/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "em-entry/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../em-entry/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../em-entry/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "em-hash",
+      "file": "em-hash/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "em-hash/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/em-hash/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "bundle": "../../../.local/compiler-modules/gate/reconcile/em-hash/lib",
+      "loaded_files": [
+        "em-hash/main.bend",
+        "em-hash/lib/0xabababababababababababababababab/v.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../em-hash/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../em-hash/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "sf-empty-main",
+      "file": "sf-empty/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sf-empty/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sf-empty/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sf-empty/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sf-empty/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sf-empty/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "sf-empty-mid",
+      "file": "sf-empty/mid.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sf-empty/mid.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sf-empty/mid.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sf-empty/mid.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sf-empty/mid.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sf-empty/mid.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "sf-empty-data",
+      "file": "sf-empty/data.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sf-empty/data.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sf-empty/data.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sf-empty/data.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sf-empty/data.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sf-empty/data.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "sf-absurd",
+      "file": "sf-absurd/main.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sf-absurd/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sf-absurd/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sf-absurd/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sf-absurd/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sf-absurd/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "base-empty-datatype",
+      "file": "empty-param/main.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "empty-param/main.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/empty-param/main.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "loaded_files": [
+        "empty-param/main.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../empty-param/main.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../empty-param/main.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "single-detached-ret-space",
+      "file": "sp/ret-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/ret-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/ret-space.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def f(x: Light) -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "plain": {
+        "exit": 2,
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "sp/ret-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def f(x: Light) -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def f(x: Light) -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        }
+      }
+    },
+    {
+      "name": "single-detached-pattern-space",
+      "file": "sp/pattern-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/pattern-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/pattern-space.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n6 |   match x:\n7>|     case Dark {}: Lit{}\n  |                ^\n8 |     case Lit{}: Dark{}\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "plain": {
+        "exit": 2,
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "sp/pattern-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n6 |   match x:\n7>|     case Dark {}: Lit{}\n  |                ^\n8 |     case Lit{}: Dark{}\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n6 |   match x:\n7>|     case Dark {}: Lit{}\n  |                ^\n8 |     case Lit{}: Dark{}\n"
+        }
+      }
+    },
+    {
+      "name": "single-detached-arg-space",
+      "file": "sp/arg-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/arg-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/arg-space.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 | def main() -> Light:\n 9>|   g(Lit {})\n   |          ^\n10 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "plain": {
+        "exit": 2,
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "sp/arg-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 | def main() -> Light:\n 9>|   g(Lit {})\n   |          ^\n10 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n 8 | def main() -> Light:\n 9>|   g(Lit {})\n   |          ^\n10 | \n"
+        }
+      }
+    },
+    {
+      "name": "single-detached-main-space",
+      "file": "sp/main-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/main-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/main-space.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def main() -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "plain": {
+        "exit": 2,
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "sp/main-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def main() -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n5 | def main() -> Light:\n6>|   Lit {}\n  |       ^\n7 | \n"
+        }
+      }
+    },
+    {
+      "name": "single-detached-ret-newline",
+      "file": "sp/ret-newline.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/ret-newline.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/ret-newline.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n6 |   Lit\n7>|   {}\n  |   ^\n8 | \n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 2,
+        "outcome": "Invalid",
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "plain": {
+        "exit": 2,
+        "diagnostic_prefix": "Invalid\tparse\tdetached-brace\t"
+      },
+      "loaded_files": [
+        "sp/ret-newline.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n6 |   Lit\n7>|   {}\n  |   ^\n8 | \n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n6 |   Lit\n7>|   {}\n  |   ^\n8 | \n"
+        }
+      }
+    },
+    {
+      "name": "touch-control-call-space",
+      "file": "sp/call-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/call-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/call-space.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sp/call-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sp/call-space.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sp/call-space.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "touch-control-decl-space",
+      "file": "sp/decl-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/decl-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/decl-space.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sp/decl-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sp/decl-space.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sp/decl-space.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "touch-control-def-space",
+      "file": "sp/def-space.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "sp/def-space.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/sp/def-space.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "plain": {
+        "obligation": "match-seed"
+      },
+      "loaded_files": [
+        "sp/def-space.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../sp/def-space.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../sp/def-space.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-0-0",
+      "file": "matrix/matrix-nested-0-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-0-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-0-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-0-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-0-1",
+      "file": "matrix/matrix-nested-0-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-0-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-0-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-0-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-0-2",
+      "file": "matrix/matrix-nested-0-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-0-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-0-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-0-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-0-3",
+      "file": "matrix/matrix-nested-0-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-0-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-0-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-0-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-0-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-1-0",
+      "file": "matrix/matrix-nested-1-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-1-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-1-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-1-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-1-1",
+      "file": "matrix/matrix-nested-1-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-1-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-1-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-1-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-1-2",
+      "file": "matrix/matrix-nested-1-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-1-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-1-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-1-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-1-3",
+      "file": "matrix/matrix-nested-1-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-1-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-1-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-1-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-1-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-2-0",
+      "file": "matrix/matrix-nested-2-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-2-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-2-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-2-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-2-1",
+      "file": "matrix/matrix-nested-2-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-2-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-2-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-2-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-2-2",
+      "file": "matrix/matrix-nested-2-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-2-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-2-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-2-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-2-3",
+      "file": "matrix/matrix-nested-2-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-2-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-2-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-2-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-2-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-3-0",
+      "file": "matrix/matrix-nested-3-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-3-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-3-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-3-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-3-1",
+      "file": "matrix/matrix-nested-3-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-3-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-3-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-3-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-3-2",
+      "file": "matrix/matrix-nested-3-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-3-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-3-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-3-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-3-3",
+      "file": "matrix/matrix-nested-3-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-3-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-3-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-3-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-3-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-4-0",
+      "file": "matrix/matrix-nested-4-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-4-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-4-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-4-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-4-1",
+      "file": "matrix/matrix-nested-4-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-4-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-4-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-4-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-4-2",
+      "file": "matrix/matrix-nested-4-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-4-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-4-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-4-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-4-3",
+      "file": "matrix/matrix-nested-4-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-4-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-4-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-4-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-4-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-5-0",
+      "file": "matrix/matrix-nested-5-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-5-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-5-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-5-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-5-1",
+      "file": "matrix/matrix-nested-5-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-5-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-5-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-5-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-5-2",
+      "file": "matrix/matrix-nested-5-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-5-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-5-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-5-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-nested-5-3",
+      "file": "matrix/matrix-nested-5-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-nested-5-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-nested-5-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-nested-5-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-nested-5-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-0",
+      "file": "matrix/matrix-columns-0.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-0.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-0.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-0.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-0.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-1",
+      "file": "matrix/matrix-columns-1.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-1.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-1.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-1.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-1.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-2",
+      "file": "matrix/matrix-columns-2.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-2.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-2.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-2.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-2.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-2.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-3",
+      "file": "matrix/matrix-columns-3.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-3.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-3.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-3.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-3.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-3.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-4",
+      "file": "matrix/matrix-columns-4.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-4.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-4.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-4.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-4.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-4.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-5",
+      "file": "matrix/matrix-columns-5.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-5.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-5.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-5.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-5.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-5.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-6",
+      "file": "matrix/matrix-columns-6.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-6.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-6.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-6.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-6.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-6.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "matrix-columns-7",
+      "file": "matrix/matrix-columns-7.bend",
+      "modules": [],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "matrix/matrix-columns-7.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/matrix/matrix-columns-7.bend"
+          ],
+          "exit": 0,
+          "stdout": "Lit{}\n",
+          "stderr": "",
+          "constructor": "Lit",
+          "tag": 1
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "match-seed",
+        "requires": []
+      },
+      "compile_expected": {
+        "exit": 3,
+        "diagnostic_prefix": "Unsupported\tcheck\tconstructor-fields\t"
+      },
+      "loaded_files": [
+        "matrix/matrix-columns-7.bend",
+        "matrix/lib/tree.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-7.Lit{}\n",
+          "stderr": ""
+        },
+        "bun": {
+          "exit": 0,
+          "stdout": "../matrix/matrix-columns-7.Lit{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-0-0",
+      "file": "literal/literal-qualified-0-0.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-0-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-0-0.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-0-0.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-0-1",
+      "file": "literal/literal-qualified-0-1.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-0-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-0-1.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-0-1.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-1-0",
+      "file": "literal/literal-qualified-1-0.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-1-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-1-0.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-1-0.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-1-1",
+      "file": "literal/literal-qualified-1-1.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-1-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-1-1.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-1-1.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-2-0",
+      "file": "literal/literal-qualified-2-0.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-2-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-2-0.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-2-0.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-2-1",
+      "file": "literal/literal-qualified-2-1.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-2-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-2-1.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-2-1.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-3-0",
+      "file": "literal/literal-qualified-3-0.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-3-0.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-3-0.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-3-0.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    },
+    {
+      "name": "literal-qualified-3-1",
+      "file": "literal/literal-qualified-3-1.bend",
+      "modules": [
+        "Base"
+      ],
+      "calls": [
+        {
+          "export": "main",
+          "arguments": [],
+          "run": "literal/literal-qualified-3-1.bend",
+          "argv": [
+            "bun",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "/Users/ericfode/src/knot/.claude/worktrees/campaign-modules/.local/compiler-modules/gate/reconcile/literal/literal-qualified-3-1.bend"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      ],
+      "result": {
+        "type": "Light",
+        "constructors": [
+          "Dark",
+          "Lit"
+        ]
+      },
+      "knot": {
+        "obligation": "reject",
+        "exit": 3,
+        "outcome": "Unsupported",
+        "diagnostic_prefix": "Unsupported\tparse\tterm-form\t"
+      },
+      "loaded_files": [
+        "literal/literal-qualified-3-1.bend",
+        "literal/lib/types.bend"
+      ],
+      "seed_lanes": {
+        "native": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        },
+        "bun": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a fresh name (duplicate declaration: Word)\n- observed : 'Word'\nLocation:\n2 | \n3>| def Word() -> Type:\n  |     ^^^^\n4 |   U32\n"
+        }
+      }
+    }
+  ],
+  "sources": {
+    "em-absurd/lib/v.bend": "f34bf74a6871f698181c755b39802bd8445db30fb22e06a1396e46c848a7b1dd",
+    "em-absurd/main.bend": "5825e228707a218d4e9ca019d003b7cff8e450cc94c3be138260c261d26ac510",
+    "em-entry/main.bend": "1abee2121f59375c842666b1c6d4a09367e4a0c14463c0909f43a268f4baf2a6",
+    "em-hash/lib/0xabababababababababababababababab/v.bend": "bce0d4b1ae6e101d35a0a295defcafd355279b59af9ec247480ece3c07623530",
+    "em-hash/main.bend": "c123957b6eedb6bab4bbc50559bec02806d866dc0fdc2c1a5d3a007eeed2d7cb",
+    "em-param/lib/v.bend": "da5347c3c747d6c3c3f9135beaeb8c089d1efbf79019bfbb2e67d27352d1cf18",
+    "em-param/main.bend": "0de693bd1f6dfec37e91deec03ea3df36a71dc78d428eaae355759d5cec34f6c",
+    "empty-param/main.bend": "7d16569d07559d47464ea0c393452a9a615e2dc0757cd418f316caa053479b99",
+    "literal/lib/types.bend": "0ec920cc6297c73a87ed7db8c94697d8dffc802378bbf166be516f1284841984",
+    "literal/literal-qualified-0-0.bend": "88d5d683677f11638b5d88252fd3229061686a81b2a80d1deb75fafadbf41020",
+    "literal/literal-qualified-0-1.bend": "38ea96dc5d678016e23d28befa8d578bf5925fcd17ca2f1675b36ed9a59c4533",
+    "literal/literal-qualified-1-0.bend": "5e7b5dfb6406062440be7c35047e70477c3d08d0e04500f51d6d4e00826d0294",
+    "literal/literal-qualified-1-1.bend": "5f11160b8ea18b5740c420641f61601485905a1060099c466aad71b4f6a2ee35",
+    "literal/literal-qualified-2-0.bend": "e57469173e54d198f6d6f6d9a82f1c1b08048b2bf3da455d10cada5957c467f1",
+    "literal/literal-qualified-2-1.bend": "af098769ccf3511489d1a4739d0353cf9c01afd07ee169aa6f989114aef87f3e",
+    "literal/literal-qualified-3-0.bend": "ef1b259f7e9ac00fe2d502418b4e894e2f6a22cdd1c91397494ba4f21e7732da",
+    "literal/literal-qualified-3-1.bend": "a713886afb23255106d338dbde62cb53aaa73d69594ac688d7eb94b9f40b7872",
+    "matrix/lib/tree.bend": "21eab1ec8ecba712ad1b279e7e2d5454bca1920a4eb216a01e88de816182714b",
+    "matrix/matrix-columns-0.bend": "1e6a84039c6ac0f6a4d11ad8ee8754ddec9914ab6aba15186830340f6dca39ca",
+    "matrix/matrix-columns-1.bend": "40aac5482bd1eea51294f4d740d037ac1edd46580aab50dc34af1d45e7fe9844",
+    "matrix/matrix-columns-2.bend": "1a9c1e750913457ff5ddf1292bde2d37433eecd9fd139f74006786d01bc700ac",
+    "matrix/matrix-columns-3.bend": "cb938191e9ed13d80cc441c54d3a846cd25451b8078fd55c5b29aceea0fee332",
+    "matrix/matrix-columns-4.bend": "fbcb3b187fe3f627785a77ca31bee72a3f0660a6bead0810ea243aca07285f0a",
+    "matrix/matrix-columns-5.bend": "56966d78b24ccb53ea46baaffe14d15c417ba00ae29a11d383dafe99ec171578",
+    "matrix/matrix-columns-6.bend": "1e6a84039c6ac0f6a4d11ad8ee8754ddec9914ab6aba15186830340f6dca39ca",
+    "matrix/matrix-columns-7.bend": "40aac5482bd1eea51294f4d740d037ac1edd46580aab50dc34af1d45e7fe9844",
+    "matrix/matrix-nested-0-0.bend": "d780d36c7e9e508c1d528ca1d1c79fb3945183a05da37f008e33e1ecb4d9c2cf",
+    "matrix/matrix-nested-0-1.bend": "96aeff551587fd39df3aae69bcd90801581b245c9e57b24dc6b926da2544ab29",
+    "matrix/matrix-nested-0-2.bend": "9195ad8129535db47c7ec92034bc9ccc7adf53a84c57a8f4655c1228208c0fd9",
+    "matrix/matrix-nested-0-3.bend": "f01c31463a1d20a896d6273c6b0889ae8422ccb6c75d93a180c8c2d88ed00a93",
+    "matrix/matrix-nested-1-0.bend": "0209e423f9cc54b504fb149ab2bcd8c7d273cd5f75874e27a05f9a6ccd7bbcef",
+    "matrix/matrix-nested-1-1.bend": "f0835790c03079c9607df9126175e6a1c498ca80614ce3cccc291d2926dc1ce4",
+    "matrix/matrix-nested-1-2.bend": "7455fd477d3cdef37c5bfab149dce174d35b3115b7292d54570f7671161a36d1",
+    "matrix/matrix-nested-1-3.bend": "830acd584531b8a415f0c5a04b2fd72c0117c9af7a6fb15c1d590dd6d6202b8f",
+    "matrix/matrix-nested-2-0.bend": "aacf3a5e9bfd7792c9c3f8f1a1847cb10a9b5c8cb4f41315f227796c5165b8e5",
+    "matrix/matrix-nested-2-1.bend": "5ad0bfc562ed8ecde18bc696690af3a7135415b3ef07ea70e06325ae7915c74c",
+    "matrix/matrix-nested-2-2.bend": "b1e4a5a4d5b5e5deb45e1979f21917000d660571bf6b5c764d98555ae0686896",
+    "matrix/matrix-nested-2-3.bend": "2db9542a1be05ab20bf963009f7b7f84400a4620543e94330c9a4449588645e4",
+    "matrix/matrix-nested-3-0.bend": "eb114450fb9863d87405634c64c6bf2455ef5c10979256a45ed9d607472622d7",
+    "matrix/matrix-nested-3-1.bend": "c5d4fe83d2021cdf9749621e33e71e2d0159fa6ced41729384a4f52448bf4a01",
+    "matrix/matrix-nested-3-2.bend": "6e370219f763cc960a979e78467e99da1df66811ff420562826320cc375752db",
+    "matrix/matrix-nested-3-3.bend": "5cf18d0cd45486d3a0b5669e2de72f9efe2172a701abc3b243e6fbef3064f136",
+    "matrix/matrix-nested-4-0.bend": "7fbdff51644eb3269f954be6fd20f5437cb3f2d5c06bac2fcba28aef5ff9d3b7",
+    "matrix/matrix-nested-4-1.bend": "0ddccccb657216f5e0decb696327fda66b025d7afbb6d80e1dfced33b7d73b37",
+    "matrix/matrix-nested-4-2.bend": "31b868c497208a1ef82165cdfc2cd5f1692d059d419468f688cabb4005d4359a",
+    "matrix/matrix-nested-4-3.bend": "7e8661b696979a6c805d00428d0173a85f37d64ad0a5c0164a5297bcef384513",
+    "matrix/matrix-nested-5-0.bend": "c410180b6587b7f7301779332effbe675878fdc527f43b493d1d3cb6d3af035b",
+    "matrix/matrix-nested-5-1.bend": "5f9c1d2ed5817446992033fa63ff4ea586eaa35642e8badd57fb9bda692915e4",
+    "matrix/matrix-nested-5-2.bend": "b6f577a831c0962ccf9fbd4ab9b98eae6ca0c034a662d7ce18234b386513db87",
+    "matrix/matrix-nested-5-3.bend": "dad4c87004bb1bf54b59d156ee3203e0a8ce56f54b3be84a58a5a81c3599e165",
+    "sf-absurd/main.bend": "2141d44b0b12d3cc404ba03d79362898ea726859a189e440f1e467dc85ba298a",
+    "sf-empty/data.bend": "c0cd675886d4b0a26db5552cb330ee93149c16c440e876b05ca8f69503e6f8a3",
+    "sf-empty/main.bend": "2fa884fe7423aa2d92e75249552e74685eb7f35a813c57e91b681b395514522a",
+    "sf-empty/mid.bend": "1abee2121f59375c842666b1c6d4a09367e4a0c14463c0909f43a268f4baf2a6",
+    "sp/arg-space.bend": "dd23fd920fbf1357a26ae0bfbe5aa9fb65b79eb58facbfaf76e2ada4369ffa4d",
+    "sp/call-space.bend": "eaf46c02e1059674c84634e4c5882422f3090e0e6bb76af981189acca691567b",
+    "sp/decl-space.bend": "dbaa3a0be8d52a72df8cfc3f8c7d6e99d823e6b3ad2cfa71c1a0ffbc4618ed7d",
+    "sp/def-space.bend": "71bcd92fe371cd3fcd10075c457b4783223570bd39978343268721d5c823e987",
+    "sp/fields-space.bend": "181b1f76ca0b4f7c3f5df53d0d2908fc0daec5c6f6d2b1b890eaa99b850451ba",
+    "sp/main-space.bend": "1898f7b3de76018f63bdfc09c2ee5a81b45bde03928cf523f56fe6e06930f8cb",
+    "sp/pattern-space.bend": "c729c82fce473e165900ffb98d565419a36a5f48e2c31153eecef3d76adcd87c",
+    "sp/ret-newline.bend": "c92b18de7f3976584fe2c1a4e3fd7a97c2ea3068f33ecea115ec7caed8a32cbc",
+    "sp/ret-space.bend": "0d137eb03f35f08caf80545a92728d6688995a0c30b52c25f82684ac2ffe90c2",
+    "spm-base/main.bend": "7a4ca8ad8dcf5b56af681077548a0f3eecad062895cd50b5f304c0ccd916e4e5",
+    "spm-entry/lib/m.bend": "58c60c23a0c65825ab2388f2618c8bab29e0d8d3a7643bc14d66d72e824d02c7",
+    "spm-entry/main.bend": "2392ba3b4f19d1c22e579dff388b75a60841067228805424e1012672efd72a7f",
+    "spm-mod/lib/m.bend": "9400bf0217c1ff0f772f00082a4c5282195c29205192065d8bc149c804ac6f1a",
+    "spm-mod/main.bend": "e2eebafcc26c290c522fa30cbb34629fd59978ffab0686f5d67cff3b8926cab3",
+    "tc2/lib/b.bend": "53f168b650a74a3a10286e69798bf131285cef988f5b675dc475044a98fc7179",
+    "tc2/main.bend": "864670d4b42b780b515a6bae51863c2df898eb64bf0e9386904f5c859343aa26"
+  }
+}
