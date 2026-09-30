@@ -399,7 +399,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 118,
+          "declarations": 119,
           "base": 39,
           "base_intrinsics": 9,
           "foreign": 0
@@ -798,6 +798,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -1086,6 +1108,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -1407,7 +1430,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1798,7 +1821,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2433,7 +2456,7 @@
           {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse.adjacent",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -2451,7 +2474,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 118,
+          "declarations": 119,
           "base": 39,
           "base_intrinsics": 8,
           "foreign": 0
@@ -2850,6 +2873,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -3138,6 +3183,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -3459,7 +3505,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3850,7 +3896,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4485,7 +4531,7 @@
           {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse.adjacent",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -4503,7 +4549,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 96,
+          "declarations": 97,
           "base": 27,
           "base_intrinsics": 9,
           "foreign": 0
@@ -4707,6 +4753,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4882,6 +4944,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -5106,7 +5169,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5368,7 +5431,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5810,7 +5873,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 132,
+          "declarations": 133,
           "base": 53,
           "base_intrinsics": 9,
           "foreign": 0
@@ -6283,6 +6346,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -6563,6 +6647,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -6875,7 +6960,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -7259,7 +7344,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -7895,7 +7980,7 @@
           {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse.adjacent",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -8034,7 +8119,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 531,
+          "declarations": 532,
           "base": 73,
           "base_intrinsics": 20,
           "foreign": 6
@@ -13454,6 +13539,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generics.named_annotation",
+            "file": "src/generics.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generics.occupied",
             "file": "src/generics.bend",
             "via": "src/generics.callable",
@@ -13496,21 +13596,6 @@
             "dynamic_calls": [
               "next"
             ]
-          },
-          {
-            "key": "src/generics.old_annotation",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "src/syntax.Node",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
           },
           {
             "key": "src/generics.open_fields",
@@ -13795,8 +13880,8 @@
               "src/generics.live_scope",
               "src/generics.lookup",
               "src/generics.matched",
+              "src/generics.named_annotation",
               "src/generics.occurrence",
-              "src/generics.old_annotation",
               "src/generics.pattern",
               "src/generics.prepend_argument",
               "src/generics.prepend_arm",
@@ -14093,6 +14178,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -14381,6 +14488,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -15971,7 +16079,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18130,7 +18238,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 531,
+          "declarations": 532,
           "base": 73,
           "base_intrinsics": 19,
           "foreign": 6
@@ -23550,6 +23658,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generics.named_annotation",
+            "file": "src/generics.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generics.occupied",
             "file": "src/generics.bend",
             "via": "src/generics.callable",
@@ -23592,21 +23715,6 @@
             "dynamic_calls": [
               "next"
             ]
-          },
-          {
-            "key": "src/generics.old_annotation",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "src/syntax.Node",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
           },
           {
             "key": "src/generics.open_fields",
@@ -23891,8 +23999,8 @@
               "src/generics.live_scope",
               "src/generics.lookup",
               "src/generics.matched",
+              "src/generics.named_annotation",
               "src/generics.occurrence",
-              "src/generics.old_annotation",
               "src/generics.pattern",
               "src/generics.prepend_argument",
               "src/generics.prepend_arm",
@@ -24189,6 +24297,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "String",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -24477,6 +24607,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -26067,7 +26198,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -28226,7 +28357,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 462,
+          "declarations": 463,
           "base": 59,
           "base_intrinsics": 20,
           "foreign": 6
@@ -31545,6 +31676,16 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generics.named_annotation",
+            "file": "src/generics.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generics.occupied",
             "file": "src/generics.bend",
             "via": "src/generics.callable",
@@ -31571,16 +31712,6 @@
             "dynamic_calls": [
               "next"
             ]
-          },
-          {
-            "key": "src/generics.old_annotation",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [],
-            "dynamic_calls": []
           },
           {
             "key": "src/generics.open_fields",
@@ -31778,8 +31909,8 @@
               "src/generics.live_scope",
               "src/generics.lookup",
               "src/generics.matched",
+              "src/generics.named_annotation",
               "src/generics.occurrence",
-              "src/generics.old_annotation",
               "src/generics.pattern",
               "src/generics.prepend_argument",
               "src/generics.prepend_arm",
@@ -31961,6 +32092,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -32136,6 +32283,7 @@
               "U32.is_eq",
               "U32.is_gt",
               "U32.is_le",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -33244,7 +33392,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -34735,7 +34883,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 569,
+          "declarations": 570,
           "base": 111,
           "base_intrinsics": 23,
           "foreign": 6
@@ -40191,6 +40339,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/generics.named_annotation",
+            "file": "src/generics.bend",
+            "via": "src/generics.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Maybe",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/generics.occupied",
             "file": "src/generics.bend",
             "via": "src/generics.callable",
@@ -40232,21 +40395,6 @@
             "dynamic_calls": [
               "next"
             ]
-          },
-          {
-            "key": "src/generics.old_annotation",
-            "file": "src/generics.bend",
-            "via": "src/generics.run",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Maybe",
-              "src/syntax.Node",
-              "src/syntax.Token"
-            ],
-            "dynamic_calls": []
           },
           {
             "key": "src/generics.open_fields",
@@ -40534,8 +40682,8 @@
               "src/generics.live_scope",
               "src/generics.lookup",
               "src/generics.matched",
+              "src/generics.named_annotation",
               "src/generics.occurrence",
-              "src/generics.old_annotation",
               "src/generics.pattern",
               "src/generics.prepend_argument",
               "src/generics.prepend_arm",
@@ -40823,6 +40971,27 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse.adjacent",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Result",
+              "Unit",
+              "src/parse.Parsed",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/type-parse.glued"
+            ],
+            "dynamic_calls": [
+              "next"
+            ]
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -41103,6 +41272,7 @@
               "U32.is_le",
               "src/parse.Mode",
               "src/parse.Parsed",
+              "src/parse.adjacent",
               "src/parse.body_end",
               "src/parse.expect",
               "src/parse.generic_parameter",
@@ -42666,7 +42836,7 @@
           {
             "key": "src/type-parse.glued",
             "file": "src/type-parse.bend",
-            "via": "src/type-parse.run",
+            "via": "src/parse.adjacent",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
