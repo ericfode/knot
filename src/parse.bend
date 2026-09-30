@@ -35,6 +35,11 @@ def starts(ts: List<&2,S.Token>, word: String) -> Bool:
     case Nil{}: False{}
     case Con{head,tail}: S.matches(head,word)
 
+def adjacent(left: S.Token, right: S.Token) -> Bool:
+  match left right:
+    case S.Token{a,S.At{lo,end,line,column}} S.Token{b,S.At{start,hi,row,col}}:
+      U32.is_eq(end,start)
+
 def scrutinee(ts: List<&2,S.Token>) -> Bool:
   match ts:
     case Nil{}: False{}
@@ -207,7 +212,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(open,"("),u =>
             then(run(n,Arguments{")",pattern},tail),args => rest => wrap_call(name,False{},args,rest)),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(open,"{"),u =>
-            then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+            S.choose(Result<S.Error,Parsed>,adjacent(name,open),u =>
+              then(run(n,Arguments{"}",pattern},tail),args => rest => wrap_call(name,True{},args,rest)),u =>
+              invalid(Con{open,tail},"detached-brace")),u =>
             Done{Parsed{S.Variable{name},Con{open,tail}}})),u =>
             term_failure(tokens)))
         case _: invalid(tokens,"term")

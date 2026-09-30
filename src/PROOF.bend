@@ -17,6 +17,11 @@ def L.no_character_budget(c,tail):
 def L.no_parser_budget(tokens):
   {==}
 
+def L.detached_constructor_brace(pattern,rest):
+  match pattern:
+    case False{}: {==}
+    case True{}: {==}
+
 def L.generic_header(at,rest):
   {==}
 

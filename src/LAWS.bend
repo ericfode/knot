@@ -21,6 +21,12 @@ law no_parser_budget:
   for +tokens: List<&2,S.Token>
   {P.parse(0n,tokens) == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,P.Parsed>}
 
+law detached_constructor_brace:
+  for pattern: Bool
+  for +rest: List<&2,S.Token>
+  {P.run(1n,P.Term{pattern},Con{S.Token{"On",S.At{0,2,1,0}},Con{S.Token{"{",S.At{3,4,1,3}},rest}})
+    == Fail{S.Invalid{"parse","detached-brace",S.At{3,4,1,3}}} : Result<S.Error,P.Parsed>}
+
 # Prefix classification does not validate the unconsumed suffix.
 law generic_header:
   for +at: S.At
