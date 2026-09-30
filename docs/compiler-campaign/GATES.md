@@ -64,6 +64,11 @@ delta ([IO-ABI.md](IO-ABI.md#knot-io-2-delta)). Its counts record the foreign
 reference, seed-witness, read, parity and mutant totals; it writes
 `tests/compiler-io-abi-2/receipts/{host,reference}.json`.
 
+Since then the perch-cap increment, the names-only tier of the encoded-state fitting, has
+added seven controls and five mutants to the Perch context gate (40 controls and 13
+mutants in all); its expectations are items 10 to 14 of the
+[context contract](../../tests/perch-context/CONTRACT.md).
+
 The joint increment adds `selfhost`, the [self-hosting joint suite](../../tests/compiler-selfhost/README.md).
 
 - It first reproduces 65 frozen cases on the seed's interpreter and native lanes.
@@ -259,3 +264,52 @@ independent completion record. Keep the compiler's Invalid, Unsupported,
 Exhausted, host and internal observations intact inside the retained evidence;
 wrapper process failures are a separate summary status, never a judgment of
 the source language.
+
+
+## perch-cap review round 1 (2026-09-29)
+
+The additive round-1 controls are frozen separately in
+`tests/perch-context/round1-expectations.json`; the earlier frozen JSON rows stay
+unchanged. The current `perch-context` gate runs 47 controls and 18 semantic
+mutants (65 tests), the complete seed signature control, and two byte-identical
+compiler-manifest preflights. Seven new controls cover complete state hashes
+across locales, exact recomputed savings, Unicode scalar ties, the seed-accepted
+400-datatype boundary, explicit contract omissions, the exact required names
+minimum and one byte below it, and oversized audit/import metadata. Five new
+mutants separately break summary order, counter savings, scalar comparison,
+minimum fitting and contract truncation. Existing mutants retain their witnesses
+at the repaired mutation sites. No compiler assertion or rubric changes.
+
+Use the frozen io-host observation's Bun **1.3.14**. On this host it is installed
+at `/Users/ericfode/.bun/bin/bun`; select that directory first on PATH and verify
+`bun --version` before the gate run. Bun 1.3.11 is a different frozen observation,
+not a reason to amend io-host's expectations. Scratch `lint:rules` also needs a
+committed HEAD; bind the archive's commit using a read-only object alternate,
+then `git update-ref HEAD <archived-commit>` inside the scratch export. Keep
+telemetry disabled and environment-file loading disabled for this offline
+catalog command. See the round-1 verification report for the execution recipe.
+
+
+Perch-context checkpoint procedure: when `tests/perch-context/check.py` changes,
+run `npm run -s census` and `npm run -s census:check` before the full gate export.
+Review the generated input hashes in `inventory/accepted.json` and the dependent
+hash in `inventory/selfhost.json`; this refresh changes no census policy or
+compiler expectations. Refresh only the owned context receipt after fresh
+execution, and leave unrelated gate receipts for the coordinator.
+
+## perch-cap frozen-runner correction (2026-09-29)
+
+Pre-review C3 requires `tests/perch-context/check.py` to remain byte-identical
+to the campaign base `88f02bf1`. The added review-round-1 coverage now runs in
+the separate `perch-cap` gate, appended to the registry and required-name set.
+Its entry is `python3 -B tests/perch-context/check-round1.py`; its owned output
+is `tests/perch-context/receipts/round1.json`. Generic receipt counting reads
+the fixture and mutant arrays without changing any existing gate branch.
+
+The restored `perch-context` gate retains 40 controls, 13 mutants, the seed
+signature check and two identical manifest preflights. The additive gate holds
+the unchanged round-1 expectations: seven controls and five assertion-killed
+mutants, 12 tests. The combined coverage remains 47 controls and 18 mutants.
+Both test families also run under `lint:verify`; no mutation witness or frozen
+expectation is removed. The registry now contains 21 gates. The earlier
+20-gate executions above remain historical evidence of their recorded revisions.

@@ -1522,3 +1522,143 @@ Remaining uncertainty / next trigger:
   - Two agents printed held-out head names.
   - Dev keeps the post-cutoff vm-spec tip `63e63203` and vm-model `07e6db73` (reviewed 18:37Z), as the design did.
   - The two post-review tips `60e80693` and `2c1f3d70` were reserved for held-out before any search.
+
+## 2026-09-29 — Encoded-state cap: the tool's limit was shaping the source
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `fitInterfaceContext` in `scripts/perch-context-interfaces.mjs`, branch `campaign/perch-cap` from main `88f02bf1`. Measured on the motivating tree `campaign/literals-integ` at `6617f09b` (it contains `8ea6faf`), exported with `git archive` into scratch and given the changed tool there. Nothing on that branch was edited.
+
+Evidence links and usage receipt IDs:
+- `8ea6faf` ("Fit check.bend::run under the Perch state cap"): its message records `tests/perch-context` failing on `check.bend::run` at 64,553 bytes against the 60,000-byte state bound (the measure counts the 104 to 113 declarations `run` reaches, at about 320 bytes each with their notes), and the four changes made to fit.
+- Those changes, across `8ea6faf`, `84c24df8` and `39f7b778`: the two `C.exhausted` uses in `check.bend` spelled out, the rows of `run` reordered, one local `then`, and the tasks of three groups swapped for verbatim excerpts. The originals are `research/compiler-fields/SPEC.md` (`checking`), `tests/compiler-modules/SPEC.md` (`module-loading`) and `tests/compiler-nest/SPEC.md` (`pattern-matrix-laws` and `pattern-matrix-proofs`). Their owners had not signed off the excerpts.
+- The measured margin was 59 bytes (`run` is 59,941 at the branch tip; three other units sit at 59,935 to 59,950).
+- No provider was involved and no `.perch/usage` receipt exists. The controls and mutants are in `tests/perch-context/`; the contract is in its `CONTRACT.md` items 10 to 14.
+
+Waste or missed behavior / measured effort (or unknown): the fitting had two tiers (full body, interface summary) and then threw. The encoded-state bound counts task and metadata, so a tree that adds one row, or restores a task of a few KB, fails the `perch-context` gate. On the branch the only way to pass was to change correct code and task files to fit a tool limit, which AGENTS.md forbids ("never change correct code to satisfy a model"). The measure-and-reshape rounds were not timed: unknown.
+
+Rule + hash / requested and resolved model (or unknown): none; offline tooling, no model asked. Rubric v8 (`b0747948…`) and every target are unchanged.
+
+Judgment: confirmed. A structural tooling defect, not a model finding.
+
+Change and why:
+- A third tier: when the interface tier is exhausted, each collaborator entry left becomes `{path, name, representation: "names-only"}`, largest saving first, then path, then name, until the state fits. That covers an interface summary and a body that the interface tier kept because its interface was no smaller. A signature is not kept: on `run` 103 of 105 interfaces are one line and keeping only the first line saves 337 of 13,357 bytes.
+- The names tier's saving is the exact drop in encoded bytes; a cut that cannot shrink the state is skipped.
+- Each cut keeps one `summarized` row with reason `context-state-names-only`, and `context_notes` gains `names_only: {count, note}`, so the judge is told which context was cut. Neither exists when nothing is cut.
+- The primary source, the task, datatypes and laws are never shortened. The error after the tier reports the bytes that remain, per part. Both caps are unchanged.
+- The names tier breaks ties by code point (path, then name), so its choice does not depend on the process locale. The interface tier's tie-break is unchanged: it still uses `localeCompare`, so among exactly equal savings its choice follows the locale (`da_DK` orders `Zed` before `zed`). It was left alone so that every state that fits today stays byte-identical by construction. Measured in scratch and not applied: the same code-point tie-break on the interface tier moves no state of the compiler manifest on main (974 of 974 identical) or of `literals-integ` as it stands (2,749 of 2,749), so it is a safe follow-up, though not a proof for every tree.
+- Not done, by decision: cutting datatypes or laws (CONTRACT item 1 keeps the type closure whole), setting `truncated` or a role-context gap (that would make the advisory tier a structural blocker), and adding fields to the preflight report (that would move existing receipts).
+
+Clean / broken / held-out evidence and deterministic checks:
+- Byte identity. Over the whole compiler manifest on main, all 957 declaration states and 17 composition states have the same hash before and after (974 of 974); four of those units use the interface tier. The official `--preflight --manifest … --output` receipt is byte-identical (722,704 bytes, sha256 `044303f7…`). On `literals-integ` as it stands, 2,713 declaration and 36 composition states are identical (2,749 of 2,749).
+- `check.bend::run`, three ways (the old tool throws in (b) and (c)):
+
+  | tree | raw | after every interface | fitted | names-only |
+  | --- | --- | --- | --- | --- |
+  | (a) branch as it is | 68,192 | 60,520 (the fit returns earlier, at 59,941) | 59,941 | 0 |
+  | (b) `C.exhausted(C.Checked,token)` restored at both uses | 68,447 | 60,784 | 59,834 | 4 |
+  | (c) and the three original tasks restored | 73,295 | 65,632 | 59,881 | 27 |
+
+- Which units need the tier. In (b), one of 2,713: `run`. In (c), 53: `checking` 1 (`run`, 27 cuts), `pattern-matrix-laws` 40 (12 to 40 cuts, 2,721 to 8,146 bytes over before), `pattern-matrix-proofs` 11 (13 to 19 cuts), `module-loading` 1 (`load.bend::body`, 15). Every one fits; the largest state is 59,979.
+- Compositions. The three largest are `literal-source-machine` 47,639, `checking` 47,311 and `pattern-matrix-proofs` 46,848 of 48,000, in (b) and (c) alike. The composition bound counts source bytes only and the task is not source, so restoring the original tasks cannot make a group unavailable, and none is. The margins are 361, 689 and 1,152 bytes. The split of the matrix group in `39f7b778` (its union was 51,860 bytes against 48,000) is already the honest fix for that bound, and it stays.
+- Gates. `npm run -s gates` on the final tree passes 20 of 20. Its receipt classes equal those of the run on main: 65 identical, 21 volatile-only and 2 semantic, and the two semantic ones are bootstrap `progress.json` and `reference.json`, already semantic on main. The `perch-context` receipt is volatile-only (key order); only its input digests, lists and test count moved.
+- Controls and mutants. Seven controls (forty in all) and five mutants (thirteen in all) are killed by assertion: marker dropped, primary source shortened, tier skipped, tie-break dropped (the choice then depends on the order the entries were filled in) and row not recorded. The order control includes a tie between `Pa` and `pa`, which code point and most locales order differently; the tests pass under the default, `en_US.UTF-8` and `da_DK.UTF-8`. Held-out: the three generated stress inputs the backlog listed as too large. Before, all three threw at the interface tier. Now `deep-call.bend` fits (252 declarations), `deep-stack.bend`'s 162 declarations fit (its composition is over 48,000 as a file, which is a separate bound), and `scale-catalog/main.bend` still fails, correctly: 723 collaborators (720 cut), a collaborator list of 81,057 bytes and 85,393 bytes of datatypes, laws and notes retained.
+
+Remaining uncertainty / next trigger:
+- How the judge rates a declaration whose collaborators are only names is not calibrated, so the tier stays advisory. Its rows show in receipts as `context-state-names-only`; no live review of a names-only state was made.
+- The tier can fail although the primary source, the task and the names alone would fit, because datatypes, laws and notes are kept whole. `run` carries 8,200 bytes of datatypes and 6,147 bytes of `unresolved` notes. Compacting the notes would help, but it changes every state, so it needs its own measured increment.
+- The coordinator applies the reverts on `literals-integ` after this merges. 53 units will then carry names-only rows, and a live review of a few of them is the first calibration evidence to collect.
+- The composition margins above are thin. If a merge pushes a group over 48,000, the smallest honest fix is a smaller selected group, not a change to source.
+
+
+## 2026-09-29 — perch-cap round 1: canonical complete names-only states
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `e02a06b1`; `scripts/perch-context-interfaces.mjs` and its offline controls.
+Evidence links and usage receipt IDs: confirmed locale witness in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; additive requirements frozen in `2a3f4f82` ([round-1 expectations](../tests/perch-context/round1-expectations.json)); [production-hash control](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): existing tests compared cut order without exercising locale-sensitive interface-row insertion. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider or live Perch call; rubric unchanged.
+Judgment: confirmed. Equal cuts still had different complete state hashes.
+Change and why: canonicalize summary rows only after both earlier returns, and after adding each names-only row. Compare Unicode scalar sequences rather than UTF-16 code units. Existing early-return states are preserved.
+Clean / broken / held-out evidence and deterministic checks: 54 offline tests pass (40 existing controls, 13 existing semantic mutants, one new complete-state locale control). The new fixture passes the pinned seed checker. Both locales encode 59,829 bytes with SHA-256 `a3713c8ccedd645eee88edd3620dc032ee1c7b5d3d616d7247c7df46a5dc9d7c`; production `prepareStyleTargets` reports the same hash. Full gate execution follows the boundary repair.
+Remaining uncertainty / next trigger: the confirmed minimum-boundary finding and exact-saving defect remain for this review round. Names-only judge calibration remains unmeasured and advisory.
+
+
+## 2026-09-29 — perch-cap round 1: exact savings and scalar ties
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `db6035e2`.
+Evidence links and usage receipt IDs: review's `independent-context.mjs` in `/private/tmp/knot-codex/perch-cap/scratch/`; [additive independent whole-state controls](../tests/perch-context-round1.test.mjs).
+Waste or missed behavior / measured effort (or unknown): a one-byte saving omitted by the old formula caused an unnecessary second signature cut. UTF-16 comparison contradicted the documented scalar order. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): offline tooling only; rubric and provider configuration unchanged.
+Judgment: confirmed for both minor semantic findings.
+Change and why: rank the complete encoded saving, including byte/count digits and array commas; recompute after each cut. The first warning's common setup cost is accounted for. Use the scalar comparator already established by the locale fix.
+Clean / broken / held-out evidence and deterministic checks: 59 offline context tests pass: 40 original controls, three additive controls, and 16 semantic mutants. Independent projections pin a one-cut exact-cap witness and a ranking change after the first cut. The Unicode witness chooses U+E000 before U+10000. Three new mutants separately break summary collation, counter savings and scalar comparison; all are killed by assertions. Existing frozen expectations remain unchanged; the tier-skipping mutant is re-expressed at the new loop with its same witness.
+Remaining uncertainty / next trigger: the minimum-boundary finding remains for the next commit. Full gates and the complete additive gate registration follow that repair; no live calibration is claimed.
+
+
+## 2026-09-29 — perch-cap round 1: restore the required failure boundary
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after `f12e1054`; contract amendment before the boundary implementation.
+Evidence links and usage receipt IDs: the second confirmed finding in `/private/tmp/knot-codex/perch-cap/findings-r0.md`; executor prompt `perch-cap.md:28`; [additive expectations](../tests/perch-context/round1-expectations.json). The new controls independently reproduce the 66,659-byte rejection on the seed-accepted 400-datatype witness and a 61,649-byte rejection on a seed-accepted type/law witness.
+Waste or missed behavior / measured effort (or unknown): the prior local contract substituted exhaustion of collaborator entries for the prompt's primary/task/names minimum. The retained metadata was not tested at that boundary. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no provider call; all witnesses run on pinned seed Bend 2.0.29 at `574b6d3` with telemetry disabled.
+Judgment: confirmed. No D1–D26 decision or standing coordinator ruling accepts the broader failure condition.
+Change and why: amend CONTRACT items 10 and 12–14 to restore the original prompt and preserve honest type/law evidence. Compact metadata before omitting contract text. Any unavoidable omitted contract stays complete in provenance, has its qualified name and explicit reason, and withholds qualification through truncation. Existing JSON pins and compiler assertions remain unchanged.
+Clean / broken / held-out evidence and deterministic checks: seed checks succeed for the new boundary witnesses; the two acceptance controls intentionally fail before implementation with the exact oversize errors above. Ordinary early-return states and type closure controls stay binding.
+Remaining uncertainty / next trigger: execute the boundary repair against these already-fixed requirements, register all additive controls/mutants and run every deterministic gate. Names-only calibration remains coordinator-only and unmeasured.
+
+
+## 2026-09-29 — perch-cap round 1: fit the literal minimum with honest contract limits
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, `campaign/perch-cap` after contract amendment `9e91a4a7`.
+Evidence links and usage receipt IDs: [fixed round-1 controls](../tests/perch-context/round1-expectations.json) and [independent assertions](../tests/perch-context-round1.test.mjs). Local logs are `.local/perch-cap/review-round1/`.
+Waste or missed behavior / measured effort (or unknown): the former last tier exhausted helpers while retained metadata still forced failure. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): unchanged rubric; no model, provider or live Perch call.
+Judgment: confirmed and repaired.
+Change and why: compact source locations and duplicate audit rows first, retaining complete metadata and a visible digest. The 400-datatype witness keeps all type/law source. Contract text that still cannot fit becomes explicitly marked names, with complete omitted entries and file hashes in provenance, contract-limit reasons, and truncation in provenance/state. Metadata/import compaction cannot grant complete-context qualification. At the literal minimum per-entry names-only markers suffice; optional notes/digests cannot move the failure boundary. Primary and task never change.
+Clean / broken / held-out evidence and deterministic checks: all 65 offline context tests pass: 47 controls and 18 assertion-killed semantic mutants. Seed checks pass for the locale, datatype and two type/law fixtures. Exact minimum fits; one byte below fails with the new required-minimum diagnostic. Main's 957 declaration and 17 composition hashes match the base (974/974). `gates:verify` passes 20 tests; `lint:verify` previously passed 192 tests plus eight law-rule wiring controls and runs again in the full gate. Offline catalog lists 57 rules with dotenv loading disabled; an initial guard deliberately blocked the CLI's unconditional environment-loader entry before any file read.
+Remaining uncertainty / next trigger: full registered gates and owned receipt refresh follow this implementation checkpoint. Judge calibration remains unmeasured; required contract cuts are structural limits, and ordinary collaborator cuts remain advisory.
+
+
+## 2026-09-29 — perch-cap checkpoint: refresh generated census dependencies
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, implementation `32af13bb`.
+Evidence links and usage receipt IDs: first full gate attempt `.local/gates/run-n1fcd36r/`; census logs and `census-check.log` under `.local/perch-cap/review-round1/`.
+Waste or missed behavior / measured effort (or unknown): expanded `tests/perch-context/check.py` changed its generated census input hash. The first full run correctly refused the stale inventory. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no Perch model; deterministic census only.
+Judgment: confirmed stale generated evidence.
+Change and why: `npm run -s census` updates exactly the check.py SHA-256 in `inventory/accepted.json` and that inventory's dependent SHA-256 in `inventory/selfhost.json`. No census policy, classification, fixture outcome or compiler expectation changes.
+Clean / broken / held-out evidence and deterministic checks: inspect the two one-line diffs; `npm run -s census:check` exits 0 on the refreshed artifacts.
+Remaining uncertainty / next trigger: run the complete gate command again. Prevention: after changing the context gate's check.py, regenerate and check census inventories before exporting a full gate run.
+
+
+## 2026-09-29 — perch-cap receipt-refresh correction
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, receipt checkpoint `a822604d`.
+Evidence links and usage receipt IDs: retained normalized context receipt from `.local/gates/run-n1fcd36r/normalized/tests/perch-context/receipts/context.json`.
+Waste or missed behavior / measured effort (or unknown): the runner had removed its scratch source before the refresh lookup. The shell continued after that failed lookup and committed the older local receipt. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no model call; deterministic receipt handling.
+Judgment: confirmed operator error; the prior commit's input-validation claim is superseded here.
+Change and why: copy the retained fresh normalized receipt only after its 65-test status and every input SHA-256 match the current worktree. Keep the earlier commit and correct it in a new one.
+Clean / broken / held-out evidence and deterministic checks: all recorded input hashes now match; 47 controls and 18 mutants passed in the exported gate. Compiler group observations remain unchanged.
+Remaining uncertainty / next trigger: run the complete gate command against the refreshed census and context receipt. Prevention: use `set -e` for dependent validation/commit commands and the retained normalized path after gate cleanup.
+
+
+## 2026-09-29 — perch-cap round 1: final deterministic disposition
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, executable inputs at `8a265822`; evidence-only commits follow.
+Evidence links and usage receipt IDs: [full report](compiler-campaign/perch-cap-review-round1.md), [exact gate/measurement artifact](compiler-campaign/perch-cap-review-round1-measurements.json), `.local/gates/run-_a32vyij/summary.json`.
+Waste or missed behavior / measured effort (or unknown): final full gate execution measured 450.800934 seconds; no repair-effort estimate is inferred from it.
+Rule + hash / requested and resolved model (or unknown): rubric unchanged; 0 provider/live Perch requests.
+Judgment: both major and all four minor r0 findings fixed; none disputed.
+Change and why: complete-state canonicalization, exact recomputed savings/scalar ties, original minimum boundary with honest contract limits, and reproducible Bun/scratch-HEAD selection.
+Clean / broken / held-out evidence and deterministic checks: 20/20 registered gates exit 0; context 47 controls/18 mutants; lint 192 tests/8 law rules; wrapper verification 20 tests; catalog 57 rules. All 974 main manifest hashes and the complete preflight receipt are byte-identical. Final receipt classes are 65 identical, 21 volatile-only and 2 bootstrap semantic; only the owned context receipt is refreshed.
+Remaining uncertainty / next trigger: coordinator integration, shared bootstrap receipt refresh, motivating-branch reconciliation and live calibration. Contract omissions withhold qualification; ordinary names-only contexts remain advisory.
+
+
+### 2026-09-29 / perch-cap pre-review C3 / prior head 591d451d
+
+- Evidence links and usage receipt IDs: executor condition `24d9a4ea7e06181d0715`; `tests/perch-context/check.py` differed from base `88f02bf1`; the previous coverage is in `compiler-campaign/perch-cap-review-round1.md`.
+- Waste or missed behavior / measured effort: unknown. Additive tests were wired through a frozen runner without coordinator authorization. A commit message cannot authorize that edit.
+- Rule + hash / requested and resolved model: deterministic `C3.frozen-edit`; no provider or live Perch call.
+- Judgment: confirmed. Restore the frozen runner byte-for-byte instead of seeking an exception.
+- Change and why: isolate the unchanged seven round-1 controls and five mutants in the additive `perch-cap` gate and its own receipt. Keep the original context gate, expectations and all regression witnesses binding; generic receipt counting needs no existing-branch edit.
+- Clean / broken / held-out evidence and deterministic checks: the restored context gate passes 40 controls and 13 assertion-killed mutants; the additive gate passes seven controls and five assertion-killed mutants. Both remain selected by `lint:verify`. Full gates pass 21/21, exit 0 (430.961106 seconds); gates:verify passes 20 tests, lint:verify passes 192 tests and eight law-rule controls, and the guarded rule catalog lists 57 rules. Exact per-gate counts are in compiler-campaign/perch-cap-precheck-fix.md.
+- Remaining uncertainty / next trigger: names-only judge calibration remains unmeasured and advisory. Future review additions use a new gate entry and receipt rather than editing a frozen runner; any necessary nonadditive change remains a coordinator decision.
