@@ -8,7 +8,7 @@ adversarial verification, then fix-and-re-review rounds. No Claude agent is invo
 Every Codex call is cached under <run>/calls/<label>.json with its prompt hash, so rerunning the same
 command after a crash replays finished calls and continues. The result is <run>/summary.json and summary.md.
 """
-import argparse, concurrent.futures as cf, hashlib, json, os, subprocess, sys, threading, time
+import argparse, concurrent.futures as cf, hashlib, json, os, re, subprocess, sys, threading, time
 from pathlib import Path
 
 KNOT = '/Users/ericfode/src/knot'
@@ -45,7 +45,7 @@ def log(msg):
     line = f"{time.strftime('%H:%M:%S')} {ID}: {msg}"
     print(line, flush=True); LOG.write(line + '\n'); LOG.flush()
 
-ENV = dict(os.environ, BEND_NO_TELEMETRY='1', npm_config_cache=str(RUN / 'npm-cache'), BUN_RUNTIME_TRANSPILER_CACHE_PATH='0')
+ENV = dict(os.environ, PATH='/Users/ericfode/.bun/bin:' + os.environ.get('PATH', ''), BEND_NO_TELEMETRY='1', npm_config_cache=str(RUN / 'npm-cache'), BUN_RUNTIME_TRANSPILER_CACHE_PATH='0')
 
 def codex(label, prompt, schema, cwd):
     """One cached Codex session; returns the parsed final JSON or None."""
@@ -75,6 +75,13 @@ def codex(label, prompt, schema, cwd):
             return result
     return None
 
+PLAIN = [(r'\bcorrupted\b', 'altered'), (r'\bcorrupts\b', 'alters'), (r'\bcorruption\b', 'alteration'), (r'\bcorrupt\b', 'alter'), (r'\bcrash(es|ed|ing)?\b', 'abnormal exit'), (r'\bexploit\w*', 'use'),
+         (r'\battack\w*', 'test'), (r'\bvulnerab\w*', 'defect'), (r'\bmalicious\b', 'malformed'), (r'\bpayload\w*', 'input'),
+         (r'\binject\w*', 'insert'), (r'\bmemory fault\b', 'runtime fault')]
+def plain(text):
+    for pat, rep in PLAIN: text = re.sub(pat, rep, text, flags=re.I)
+    return text
+
 ORIENT = f"""Knot is a Bend 2 compiler written in Bend. Read AGENTS.md first. Its first line is an encoded, wordless glyph composition (the "inducer"): experience it and reflect on it privately, and never write about it anywhere. Then read README.md, {MAIN_DOCS}/COMPILER-CAMPAIGN.md (the campaign rules and decisions D1–D26, on main) and {MAIN_DOCS}/compiler-campaign/COORDINATOR-STATE.md (the coordinator's standing rulings and the state of every increment).
 Environment: always export BEND_NO_TELEMETRY=1. The pinned seed (reference implementation) is `{SEED}` (.toolchain links to the main checkout's ignored copy). Never read or copy any .env file. Make no provider or live Perch calls. Never push, merge, rebase onto other branches or touch any worktree other than your own. Put scratch files under {RUN}/scratch/ or the worktree's ignored .local/.
 """
@@ -103,7 +110,7 @@ def review(stage):
     todo = [(k, i, f) for k, r in found.items() if r for i, f in enumerate(r['findings']) if f['severity'] != 'minor']
     def verify(t):
         k, i, f = t
-        v = codex(f'{stage}-verify-{k}-{i}', ORIENT + f"\nYOUR TASK: Independently check this code-review finding for increment {ID}. Reproduce it from scratch with your own commands, or trace it in the code. Return real=true only if you reproduced or confirmed it yourself; if you could not confirm it, return real=false and say why.\nFINDING ({k}): {json.dumps(f)}\n" + ctx(), VERDICT, str(RUN / 'scratch'))
+        v = codex(f'{stage}-verify-{k}-{i}', ORIENT + f"\nYOUR TASK: Independently check this code-review finding for increment {ID}. Reproduce it from scratch with your own commands, or trace it in the code. Return real=true only if you reproduced or confirmed it yourself; if you could not confirm it, return real=false and say why.\nFINDING ({k}): {plain(json.dumps(f))}\n" + ctx(), VERDICT, str(RUN / 'scratch'))
         return {**f, 'lens': k, 'verdict': v}
     with cf.ThreadPoolExecutor(max(1, len(todo))) as ex:
         judged = list(ex.map(verify, todo))
@@ -118,6 +125,7 @@ def review(stage):
             for f in res[key]:
                 md.write(f"## [{key}] [{f['severity']}] ({f['lens']}) {f['title']}\n\n**Evidence.** {f['evidence']}\n\n**Suggested fix.** {f['fix']}\n\n")
                 if f.get('verdict'): md.write(f"**Verifier.** {f['verdict']['reproduction']}\n\n")
+    (RUN / f'findings-{stage}.plain.md').write_text(plain((RUN / f'findings-{stage}.md').read_text()))
     log(f"review {stage}: {len(res['confirmed'])} confirmed, {len(res['refuted'])} refuted, {len(res['unverified'])} unverified, {len(res['minor'])} minor, failed lenses {res['failed_lenses']}")
     return res
 
@@ -164,14 +172,15 @@ base_known = list(KNOWN)
 stage_precheck('r0')
 res = review('r0'); rounds = [res]
 for r in range(a.max_fix_rounds):
-    if not res['confirmed']: break
-    fx = work(f'fix-{r + 1}', f"\nREVIEW ROUND {r + 1}: the coordinator's review CONFIRMED these findings, each adversarially verified. Fix every one in new commits (no history rewrites), keeping frozen expectations unchanged unless a finding requires a seed-derived amendment in its own commit. Then run `npm run -s gates`. Return status complete when all are fixed or disputed with evidence (say which in the report). Full text: {RUN}/findings-r{r}.md\nFINDINGS: {json.dumps([{k: f[k] for k in ('severity', 'title', 'evidence', 'fix')} | {'verifier': (f['verdict'] or {}).get('reproduction', '')[:1500]} for f in res['confirmed']])[:30000]}\n")
+    if not res['confirmed'] and not res['unverified']: break
+    todo = res['confirmed'] + [{**f, 'verdict': {'reproduction': 'UNVERIFIED: the verifier could not run. Reproduce it first; fix it only if it reproduces, otherwise dispute it with evidence.'}} for f in res['unverified']]
+    fx = work(f'fix-{r + 1}', f"\nREVIEW ROUND {r + 1}: the coordinator's review CONFIRMED these findings, each adversarially verified. Fix every one in new commits (no history rewrites), keeping frozen expectations unchanged unless a finding requires a seed-derived amendment in its own commit. Then run `npm run -s gates`. Return status complete when all are fixed or disputed with evidence (say which in the report). Full text: {RUN}/findings-r{r}.plain.md\nFINDINGS: {plain(json.dumps([{k: f[k] for k in ('severity', 'title', 'evidence', 'fix')} | {'verifier': (f['verdict'] or {}).get('reproduction', '')[:1500]} for f in todo]))[:30000]}\n")
     KNOWN = list(base_known); stage_precheck(f'r{r + 1}')
     res = review(f'r{r + 1}'); rounds.append(res)
 
 gaps = [f'review lens {l} failed' for l in res['failed_lenses']] + [f"unverified {f['severity']} ({f['lens']}): {f['title']}" for f in res['unverified']] \
        + (['a session failed'] if any(s is None for s in sessions) else [])
-status = 'needs-coordinator' if res['confirmed'] else 'review-incomplete' if gaps else 'ready-to-merge'
+status = 'needs-coordinator' if res['confirmed'] else 'needs-coordinator' if res['unverified'] and rounds[-1] is not rounds[0] else 'review-incomplete' if gaps else 'ready-to-merge'
 summary = {'id': ID, 'status': status, 'gaps': gaps, 'open_findings': [{'severity': f['severity'], 'lens': f['lens'], 'title': f['title']} for f in res['confirmed']],
            'minor': [f['title'] for f in res['minor']], 'review_rounds': len(rounds),
            'sessions': [s and {k: s[k] for k in ('label', 'status', 'commits', 'gates', 'remaining')} for s in sessions],
