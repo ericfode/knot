@@ -1,6 +1,11 @@
 # Review round 1
 
-Starting head: `9c2c749e`. Both major review-r0 findings are confirmed.
+Both confirmed major review-r0 findings are fixed, with no dispute.
+Unannotated reconstructed-parent aliases are Invalid; all eleven seed-valid
+layout controls are accepted. `npm run -s gates` on `268bc9ac` passes all 21
+gates. [REVIEW-R1-GATES.md](REVIEW-R1-GATES.md) records every exact result.
+
+Starting head: `9c2c749e`.
 The additive `prechecks/review-r0-expectations.json` freezes the exact reported
 sources before any repair, including the two inherited datatype layouts.
 Sixteen seed parser/checker observations and fourteen interpreter values were
@@ -10,10 +15,10 @@ seed checker with `an annotated term (cannot infer)`. Ordinary variable and
 matched-field aliases remain inferable; the annotated parent alias is accepted.
 No earlier fixture, expectation, law or assertion is changed.
 
-The proposed repair keeps reconstruction's checking and inference boundaries
+The repair keeps reconstruction's checking and inference boundaries
 distinct, and normalizes layout only at header/type delimiters. Required
-delimiters and source-adjacency checks stay in force. These frozen targets are
-not yet implemented or qualified by this checkpoint.
+delimiters and source-adjacency checks stay in force. The reported controls were
+frozen before their repairs; the accepted mechanisms are recorded below.
 
 Use `export PATH=/Users/ericfode/.bun/bin:$PATH` before the gates: that runtime
 is Bun 1.3.14, as frozen by io-host. Keep `BEND_NO_TELEMETRY=1` and use
@@ -34,7 +39,7 @@ implementation-count expectation is amended from 48 to 49 in a commit of its
 own (D7); no source-language verdict, value or capability assertion changes.
 Raw independent names are in ignored `.local/generics/review-r1/frontend-count.json`.
 
-The reviewed approval delta is two law/proof files, six new law statements and
+The reviewed approval delta is two law/proof files, eight new law statements and
 their fills, `generics.variable` and `parse.layout_head`. No new feature class,
 dependency profile, package edit or promoted semantic evidence is authorized by
 this inventory amendment. The inventory's old recursion-Wasm disposition stays
@@ -90,3 +95,14 @@ complete layout proof entry still passes. The census is regenerated/current;
 offline preflight still has 29 complete groups, 1,267 units, 51 files, no
 truncation/blockers and no provider requests. The old failing export remains
 separate from the corrected implementation and its next full run.
+
+## Final qualification
+
+`npm run -s gates` on `268bc9ac` exits 0: all 21 gates pass.
+[REVIEW-R1-GATES.md](REVIEW-R1-GATES.md) records every exact count, measured
+time, source/evidence identity and the preserved first-run frontend failure.
+The owned gate passes 51 precheck controls, nine complete proof entries and
+36 mutants in both lanes; all original controls remain unchanged. Both major
+findings and the two inherited layout cases are fixed, with no dispute.
+Shared receipts, live review, dependent increments and landing-history actions
+remain explicitly coordinator-owned.

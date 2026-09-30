@@ -116,7 +116,7 @@ source offsets; the existing reverse-sequence mutant must still reach its
 unchanged Parsed observation. The additional unordered-event mutant attacks
 that offset comparison directly.
 
-## Header layout — current reported probes
+## Header layout — precheck round 7
 
 `parse.bend::run` normalizes existing line tokens at three header boundaries:
 the result arrow after parameters, the monomorphic kind colon and the generic

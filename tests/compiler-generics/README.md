@@ -707,3 +707,10 @@ a clean pre-review result or a compiler-wide soundness claim. Offline style
 preflight has 28 bounded groups with zero blockers and zero provider requests;
 all five style axes remain unreviewed. Shared receipts, live Perch, closures
 D26 reconciliation and the existing pin rulings remain coordinator actions.
+
+Review round 1 is accepted deterministically on `268bc9ac`: all 21 gates
+pass. The owned gate retains 148 main fixtures and now passes 51 precheck
+controls, nine complete proof entries and 36 mutants in both lanes.
+[REVIEW-R1-GATES.md](REVIEW-R1-GATES.md) records exact counts, measured
+under-load times, evidence hashes and remaining coordinator actions. All five
+style axes remain unreviewed; boundary proofs do not discharge D21 obligations.
