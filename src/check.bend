@@ -55,11 +55,13 @@ def constructor(+reference: G.ConstructorRef, +args: List<&2,S.Node>, +token: S.
       S.choose(Result<S.Error,C.Checked>,Nat.is_eq(List.length(&2,S.Node,args),List.length(&2,C.Parameter,params)),u =>
         S.bind(C.Checked,C.Checked,next(Unit{}),value => constructor_result(reference,token,wanted,params,value)),u => C.invalid(C.Checked,"constructor-arity",token))
 
-def variable(+binding: C.Binding, +token: S.Token, +scope: E.Scope, next: C.Term -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
-  match binding:
-    case C.Binding{name,level,q,type_id,param,Some{C.Construct{origin,typ,tag,params,args}}}:
+def variable(+binding: C.Binding, +token: S.Token, +scope: E.Scope, wanted: Maybe<&2,U32>, next: C.Term -> Result<S.Error,C.Checked>) -> Result<S.Error,C.Checked>:
+  match binding wanted:
+    case C.Binding{name,level,q,type_id,param,Some{known}} None{}:
+      C.invalid(C.Checked,"annotation-required",token)
+    case C.Binding{name,level,q,type_id,param,Some{C.Construct{origin,typ,tag,params,args}}} _:
       next(C.Construct{origin,typ,tag,params,args})
-    case _: E.reference(binding,token,scope)
+    case _ _: E.reference(binding,token,scope)
 
 def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
   match bindings:
@@ -176,7 +178,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
     case 1n+ +n Expression{S.Variable{+token},+wanted} _ _:
       S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
-        S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
+        S.bind(C.Checked,C.Checked,variable(binding,token,scope,wanted,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>
         S.bind(List<&2,C.Parameter>,C.Checked,G.field_signature(reference,types),+params =>
@@ -214,9 +216,9 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
     case 1n+ +n Arms{nodes,token,level,wanted} _ _: C.internal(C.Checked,"arm-node")
     case 1n+ +n Rebuild{C.Value{token,+type_id,tag}} _ _:
       Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
-    case 1n+ +n Rebuild{C.Reference{+token,level,type_id}} _ E.Scope{bindings,next,open,live,smaller}:
+    case 1n+ +n Rebuild{C.Reference{+token,level,+type_id}} _ E.Scope{bindings,next,open,live,smaller}:
       S.bind(C.Binding,C.Checked,E.find_level(bindings,level),binding =>
-        variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)))
+        variable(binding,token,scope,Some{type_id},term => run(n,Rebuild{term},catalog,current,scope)))
     case 1n+ +n Rebuild{C.Construct{+token,+type_id,+tag,+params,args}} _ _:
       S.bind(C.Checked,C.Checked,run(n,RebuildArguments{args,params,token},catalog,current,scope),value => rebuilt(value,token,type_id,tag,params))
     case 1n+ +n Rebuild{other} _ _: C.internal(C.Checked,"refinement-node")

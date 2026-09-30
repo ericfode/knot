@@ -42,6 +42,19 @@ law refined_constructor_is_fresh:
    == Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
    : Result<S.Error,C.Checked>}
 
+law refined_variable_requires_annotation:
+  for name: S.Token
+  for level: U32
+  for q: U32
+  for type_id: U32
+  for param: Bool
+  for known: C.Term
+  for +token: S.Token
+  for scope: E.Scope
+  for next: C.Term -> Result<S.Error,C.Checked>
+  {K.variable(C.Binding{name,level,q,type_id,param,Some{known}},token,scope,None{},next)
+    == Fail{S.Invalid{"check","annotation-required",S.at(token)}} : Result<S.Error,C.Checked>}
+
 law nearest_binding_wins:
   for +tail: List<&2,C.Binding>
   for +level: U32

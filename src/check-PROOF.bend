@@ -12,6 +12,8 @@ def L.erased_occurrence_preserves_identity(token,level,type_id):
   {==}
 def L.refined_constructor_is_fresh(token,type_id,tag):
   {==}
+def L.refined_variable_requires_annotation(name,level,q,type_id,param,known,token,scope,next):
+  {==}
 def L.nearest_binding_wins(tail,level):
   {==}
 def L.no_checker_budget(node):
