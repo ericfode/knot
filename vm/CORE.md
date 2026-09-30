@@ -66,15 +66,20 @@ first defect. A resource limit of §4 is no refusal: an image past one stops
 `Exhausted` kind 2 with the limit as its cause (choice 14), and the gate
 compares that in the reference's own words (`Exhausted 2 records`). The gate
 requires this on:
-- the 71 frozen controls, counted against SPEC §4's own figure (20 byte-level,
-  9 at the limits, 42 plan-level). Each equals its frozen refusal, and the
-  VM's own outcome registers name the outcome the refusal gives;
-- 3,720 seeded single mutations of the goldens: 3,431 refused, and 289 admitted
-  and run to a clean outcome;
-- 7,741 images that set one word of a limit (each section's record count, each
+- the 211 frozen controls, counted against SPEC §4's own figure (124 byte-level,
+  9 at the limits, 78 plan-level). Before any VM runs, `refusal_expectation`
+  derives the complete exit, empty stdout, stderr and outcome registers from the
+  reference codec's first verdict and §11's host contract. Both the production
+  module and the test build must equal that expectation; the test build must
+  make zero entries and effects. The same expectation is used by mutant jobs;
+- 4,440 seeded single mutations of the goldens: refused images must equal that
+  complete independent refusal, and admitted images run to a clean outcome;
+- 9,810 images that set one word of a limit (each section's record count, each
   function's arity and `slots`, each Closure's `slots`) to values around its
-  limit and, for a count, around the fit of two words per record: all refused,
-  516 of them at a limit.
+  limit and, for a count, around the fit of two words per record: every refusal
+  is compared with the complete independent expectation, including zero entries
+  and effects. Their mutant jobs also derive expectations from the reference,
+  rather than copying a VM observation.
 
 A refusal is read only from a run that stopped before `vm_boot` returned. A run
 that got past boot and failed `ill-typed` inspected a word at run time (§6). It
@@ -852,20 +857,25 @@ adopt them or record its own, so that lockstep compares like with like.
 - **Small host stack.** A generated 200,000-deep nested expression, and the
   deep runs, under `node --stack-size=64`. The call graph of `vm.wasm` has no
   cycle and no `call_indirect`.
-- **Malformed images.** As above: 71 frozen controls, nine of them at §4's
+- **Malformed images.** As above: 211 frozen controls, nine of them at §4's
   limits (each `Exhausted` kind 2 on one side, malformed or invalid on the
-  other), 3,720 fuzz images and 7,741 limit-word images, with no trap and no
+  other), 4,440 fuzz images and 9,810 limit-word images, with no trap and no
   crash of the reference codec (a crash fails the gate, and `crash_fails`
   checks that it does). The
   VM of `6f78bd2` refused 2,190 of the limit-word images differently from the
   reference codec: 1,674 counts that the remaining words cannot hold (it read
   `record-length`), 468 `limits` and 48 Closure `closure-slots`
   (.local/vm-core/logs/r6-limit-words-prefix.log).
-- **Mutants.** One hundred and thirty-eight, each killed by a wrong observation in a named group
+- **Mutants.** One hundred and thirty-nine, each killed by a wrong observation in a named group
   (seven by a trap and one by a hang, below; the 87 that came before round 7 are listed first):
   - arm selection, slot off-by-one, Nat bound and x % 0 (goldens);
   - fuel (fuel boundaries);
   - validator offset (goldens and controls);
+  - output during a magic refusal (`loader-refusal-prints`, controls): exit and
+    stderr still name the correct refusal, but stdout and the effect count
+    violate the independent loader expectation. Review r0 reproduced a faulty
+    baseline that printed `--\n`, then copied those bytes into its mutant jobs;
+    the revised baseline rejects it before any such job is constructed;
   - quantum state loss (quantum re-entry);
   - tail release (display bound);
   - host-stack recursion (call graph);

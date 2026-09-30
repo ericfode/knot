@@ -226,7 +226,16 @@ checks `vm/vm.wat`, the WAT `knot-vm-1`:
 - `check-spec.py`'s 13 argument controls run through the real host to their
   frozen verdicts, or, where the words are admitted, as the reference
   evaluation runs them.
-- One hundred and thirty-eight WAT mutants are each killed by a wrong observation. One restores the
+- All 45 committed core plan/image pairs must re-encode byte-identically. The two
+  legacy text String constants were replaced by their literal code-point lists;
+  no image or frozen outcome changed.
+- Refusal expectations include the complete exit, empty stdout and stderr, fixed
+  from the reference codec and the literal host contract before execution. The
+  production baseline, test build and mutant jobs use that same independent
+  expectation; entries and effects must be zero during refusal. Refused fuzz
+  and limit-word images obey the same checks.
+- One hundred and thirty-nine WAT mutants are each killed by a wrong observation. One prints
+  during a magic refusal, which must violate the independent empty-output contract. One restores the
   pre-fix trap at 4 GiB and is killed by that trap, only while every other
   ceiling row stays right; two restore the immediate tests that trapped
   (group `traps`), and four copy or bind past a cell's end (group

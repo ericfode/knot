@@ -294,6 +294,14 @@ def refusal_dump(reason: str) -> dict:
     return {'outcome': 'HostFailure', 'cause': reason}
 
 
+def refusal_expectation(refusal: str) -> tuple[dict, dict]:
+    """The complete host refusal and outcome registers, derived before execution from the reference
+    codec's verdict and SPEC section 11's host contract. Loading writes no stdout."""
+    code = expected_reason(refusal)
+    case = {'outcome': 'Exhausted', 'kind': 2, 'cause': code} if code.startswith('Exhausted 2 ') else {'outcome': 'HostFailure', 'cause': f'image {code}'}
+    return expected_run(case), refusal_dump(code)
+
+
 def shown(result: dict, want: dict) -> dict:
     """The host-visible run, with stdout as its digest where `want` freezes one (a display
     run control's 16 MiB line is frozen by SHA-256)."""
@@ -818,6 +826,10 @@ def compare(kind: str, corpus: list, outcomes: dict) -> dict:
             tally['accepted'] += 1
         else:
             require(observed_reason(g) == expected_reason(ref), f"{kind} {r['label']}: VM {g['stderr']!r}, reference {ref!r}")
+            want, dump = refusal_expectation(ref)
+            require(shown(g, want) == want and all(g['state'][k] == v for k, v in dump.items())
+                    and g['state']['calls'] == 0 and g['effects'] == 0,
+                    f"{kind} {r['label']}: VM {shown(g, want)}, reference and host contract {want}; state {g['state']}, effects {g['effects']}")
             tally['refused'] += 1
             tally['limits'] += ref.startswith('Exhausted')
     return tally
@@ -1296,9 +1308,7 @@ def scope_expected(reference: str | None, plan: dict) -> tuple[dict, dict]:
     evaluation when it admits it, else the refusal, or for a limit of section 4 the exhaustion, that names its first defect."""
     if reference is None:
         return reference_run(plan, 1000)
-    code = expected_reason(reference)
-    case = {'outcome': 'Exhausted', 'kind': 2, 'cause': code} if code.startswith('Exhausted 2 ') else {'outcome': 'HostFailure', 'cause': f'image {code}'}
-    return expected_run(case), refusal_dump(code)
+    return refusal_expectation(reference)
 
 
 def check_scope(section: dict, module: Path, test: Path, where: Path, reg: dict, digest: bytes) -> tuple[dict, list]:
@@ -1474,6 +1484,9 @@ def check_describe(section: dict, module: Path, test: Path, staged, sandbox: Pat
 # ------------------------------------------------------------------ mutants
 # (name, what it breaks, [(old, new)], kill group). Each edit must apply once.
 MUTANTS = [
+    ('loader-refusal-prints', 'a magic refusal prints before it rejects the image',
+     [('(then (call $refuse (global.get $R_magic))))',
+       '(then (call $io_print (i32.const 40) (i32.const 2)) (call $refuse (global.get $R_magic))))')], 'controls'),
     ('arm-selection', 'a tag Case takes the mirrored row',
      [('(local.set $arm (call $w (i32.add (i32.add (local.get $n) (i32.const 7)) (local.get $tag))))',
        '(local.set $arm (call $w (i32.add (i32.add (local.get $n) (i32.const 7)) '
@@ -2057,6 +2070,14 @@ def main(args: list) -> int:
     record['pins'] = pins
     record['shape'] = shapes
 
+    # Every committed core plan reproduces its image; expected outcomes remain frozen separately.
+    record['core_plans'] = []
+    for path in sorted((HERE / 'core').glob('*.plan.json')):
+        image = path.with_name(path.name.removesuffix('.plan.json') + '.kimg')
+        data = codec.encode(json.loads(path.read_text()), digest)
+        require(data == image.read_bytes(), f'{path.relative_to(ROOT)} does not reproduce {image.relative_to(ROOT)}')
+        record['core_plans'].append({'plan': path.relative_to(ROOT).as_posix(), 'image': image.relative_to(ROOT).as_posix(), 'sha256': sha(data)})
+
     # goldens through the host, then the test build
     expected = json.loads((HERE / 'golden/vm-expected.json').read_text())
     golden = HERE / 'golden'
@@ -2312,8 +2333,10 @@ def main(args: list) -> int:
         reference = spec.rejected(data, reg, digest)  # the frozen refusal: the VM owes the reference's first defect
         require(reference is not None and reference.startswith(reason) and message in reference,
                 f'control {label}: the reference codec gives {reference!r}, frozen {reason!r} {message!r}')
+        want, dump = refusal_expectation(reference)
         (malformed / f'c{i}.kimg').write_bytes(data)
-        rows.append({'label': label, 'sha256': sha(data), 'reference': reference, 'argv': argv_for(f'c{i}.kimg', data)})
+        rows.append({'label': label, 'sha256': sha(data), 'reference': reference, 'argv': argv_for(f'c{i}.kimg', data),
+                     'want': want, 'dump': {**dump, 'calls': 0, 'effects': 0}})
     got = pool(lambda r: host(module, malformed, r['argv']), rows)
     dumped = traced(rows, malformed)
     refused = []
@@ -2321,6 +2344,9 @@ def main(args: list) -> int:
         code = expected_reason(r['reference'])
         g.update(state=dumped[r['label']]['state'], booted=dumped[r['label']]['booted'])
         require(clean(g), f"control {r['label']}: {g}")
+        require(shown(g, r['want']) == r['want'], f"control {r['label']}: VM {shown(g, r['want'])}, reference and host contract {r['want']}")
+        require(clean(dumped[r['label']]) and not observed_wrong(r, dumped[r['label']]),
+                f"control {r['label']}: the test build differs from the reference and host contract: {dumped[r['label']]}")
         require(observed_reason(g) == code, f"control {r['label']}: VM {g['stderr']!r}, reference {r['reference']!r}")
         require(all(g['state'][k] == v for k, v in refusal_dump(code).items()),
                 f"control {r['label']}: the VM's outcome registers {g['state']} differ from {refusal_dump(code)}")
@@ -2473,8 +2499,7 @@ def main(args: list) -> int:
     fixture_jobs = [{'id': f"fixture:{r['name']}", 'files': {staged(r['image']): str(sandbox / staged(r['image']))} if r['image'] else {},
                      'argv': [staged(r['image']), *r['argv']], 'want': r['expect']} for r in runs]
     control_jobs = [{'id': f"control:{r['label']}", 'files': {r['argv'][0]: str(malformed / r['argv'][0])},
-                     'argv': r['argv'], 'want': {'exit': g['exit'], 'stdout': g['stdout'], 'stderr': g['stderr']}}
-                    for r, g in zip(rows, got)]
+                     'argv': r['argv'], 'want': r['want'], 'dump': r['dump'], 'trace': 'yields'} for r in rows]
     admitted_jobs = [{'id': f"admitted:{r['label']}", 'files': {r['argv'][0]: str(loaded / r['argv'][0])},
                       'argv': r['argv'], 'want': frozen[r['label']]['expect']} for r in welcome]
     invocation_jobs = [{'id': f'invocation:{label}', 'files': {f'{n}.kimg': str(golden / f'{n}.kimg')},
@@ -2494,8 +2519,9 @@ def main(args: list) -> int:
                     for j, r in zip(control_jobs, rows) if r['label'].startswith(('limit:', 'oversize'))] + \
         [j for j in admitted_jobs if j['id'].startswith('admitted:limit:')]
     word_jobs = [{'id': f"limit-word:{r['label']}", 'files': {r['argv'][0]: str(limit_words / r['argv'][0])},
-                  'argv': r['argv'], 'want': {k: words_seen[r['label']][k] for k in ('exit', 'stdout', 'stderr')},
-                  'dump': {k: words_seen[r['label']]['state'][k] for k in ('outcome', 'cause')}} for r in words_corpus]
+                  'argv': r['argv'], 'want': want, 'dump': dump} for r in words_corpus
+                 for want, dump in [refusal_expectation(r['reference']) if r['reference'] is not None else
+                                    reference_result(codec.decode((limit_words / r['argv'][0]).read_bytes(), digest), r['argv'][1:])]]
     require(len(image_limits) == 13, f'nine limit refusals, three oversize images and arity-at-limit: {[j["id"] for j in image_limits]}')
     groups = {'goldens': goldens_jobs, 'fixtures': fixture_jobs, 'controls': goldens_jobs + control_jobs + admitted_jobs,
               'fuel': [j for j in fixture_jobs if 'fuel' in j['id']],
