@@ -1012,3 +1012,12 @@ Prevention: compare an old branch's host guards with the campaign runner before
 its full native build. A process timeout is unavailable host evidence. It must
 never become a source rejection, mutant kill or claimed compiler pass. This is
 deterministic workflow repair; no provider or live Perch judgment was involved.
+
+The first complete refresh run then passed all fourteen behavior/test gates
+but failed census because `inventory/accepted.json` hashes the five earlier
+gate scripts whose host guards changed. The exact unsuccessful summary is in
+[refresh-pre-census.json](../tests/compiler-closures/receipts/refresh-pre-census.json).
+`census:approve` emitted a blank summary and changed no declaration/import
+policy; `census` refreshed only those five gate hashes. Prevention: run the cheap
+census check immediately after any gate-script edit, before the full native
+corpus. A later isolated census pass cannot be called a full runner pass.

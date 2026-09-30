@@ -99,3 +99,20 @@ All eleven sources run through both compiler lanes; the eight accepted `main`
 calls also compare the evaluator and Wasm against their fixed seed result.
 Regression counts are reported separately from the immutable 42 fixtures and
 the two representation/continuation probes.
+
+## Refresh edges
+
+`refresh.json` and the 32 `refresh/*.bend` sources were committed before the
+refresh differential wiring. `refresh_seed.py` replays their exact source and
+seed hashes, 32 checks, 64 native/Bun builds and 40 seed executions. Twenty
+programs have literal Flag results in both seed lanes; twelve reject in both
+build lanes with their exact check diagnostics. An IO wrapper observes each
+accepted source's `main` without modifying that source. Host/compiler discovery
+failures never count as source rejections or agreement.
+
+Every refresh source runs through checker, evaluator and Fields compiler in
+both Knot lanes. Accepted results also execute on Node and require identical
+native/Bun module bytes. Negative results keep their reviewed Invalid phase/code
+and preserve the output marker. Coverage is reported as a separate refresh
+section and included in the total differential observations. Neither the
+original expectations nor any law or mutant has changed.

@@ -304,6 +304,17 @@ mutants qualify the available monomorphic capability. The laws establish local
 type, capture, lowering and evaluator-step equations; finite corpus agreement
 is separate evidence, not a general compiler-correctness theorem.
 
+### Trust inventory: open proof obligations
+
+Capture-preserving defunctionalization remains an open general proof obligation:
+for any checked monomorphic book and source-constructible function value,
+application in the independent evaluator must agree with execution of its
+lowered constructor/apply dispatcher whenever both computations stay within
+their stated resource bounds. The 24 checked local equations, frozen fixtures,
+semantic mutants and refresh edges are evidence for that obligation; they do
+not discharge it. All existing law statements and proof domains remain required
+and unchanged (campaign D21).
+
 ## Outcomes and budgets
 
 Return stable phase/code diagnostics with source offsets where available:

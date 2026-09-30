@@ -40,6 +40,13 @@ unsafe inhabitant or contradictory assumption. They are not a universal theorem
 of checker soundness, defunctionalization correctness or memory refinement.
 Corpus agreement is a separate finite observation, not a proof by renaming it.
 
+The general capture/application preservation obligation is open under D21 and
+recorded in `src/SPEC.md`'s trust inventory. It relates independent evaluation
+of a source-constructible closure in any checked monomorphic book to execution
+of its lowered constructor/apply dispatcher, within both resource bounds.
+The original 24 laws and their domains are unchanged. The 32 new refresh edges
+add independent two-seed-lane observations; they do not close the obligation.
+
 Each of the five source mutants must typecheck before it builds and executes in
 both compiler lanes. A kill must be the intended wrong enum value, wrong affine
 acceptance, wrong allocation boundary or deep call-stack exhaustion after a

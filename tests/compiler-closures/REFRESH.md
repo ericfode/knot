@@ -31,7 +31,9 @@ seed's clang probe intermittently failed through `/usr/bin/clang`. Resolving the
 actual Xcode compiler and SDK, with a local cached version response, completed
 the freeze. A missing SDK was a host/build fault, not a source verdict.
 
-The next checkpoint wires these sources into the closure differential gate,
-records the current decision and D26 audit, and runs every registered gate.
+The closure differential gate now includes every refresh source in both Knot
+lanes and replays both seed lanes first. It preserves the original assertions.
+The decision audit and complete gate results are recorded in
+[`closures-refresh.md`](../../docs/compiler-campaign/closures-refresh.md).
 Live Perch, integrating main and refreshing shared receipts belong to the
 coordinator under this executor's explicit restrictions.

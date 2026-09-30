@@ -365,6 +365,7 @@ def main():
     frozen = json.loads((HERE / 'expectations.json').read_text())
     probes = json.loads((HERE / 'probes.json').read_text())
     regressions = json.loads((HERE / 'regressions.json').read_text())
+    refresh = json.loads((HERE / 'refresh.json').read_text())
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(),
               'status': 'incomplete', 'profile': PROFILE.removeprefix('--profile='),
               'fixtures': [], 'blocked': []}
@@ -372,7 +373,8 @@ def main():
              COMPILE, HOST, *sorted(HERE.glob('*.py')), *sorted(HERE.glob('*.json')),
              *sorted(HERE.glob('*.md')),
              *sorted(HERE.glob('*.mjs')), *sorted((HERE / 'fixtures').glob('*.bend')),
-             *sorted((HERE / 'probes').glob('*.bend')), *sorted((HERE / 'regressions').glob('*.bend'))]
+             *sorted((HERE / 'probes').glob('*.bend')), *sorted((HERE / 'regressions').glob('*.bend')),
+             *sorted((HERE / 'refresh').glob('*.bend'))]
     record['inputs'] = {relative(p): digest(p) for p in paths}
     try:
         record['seed'] = frozen['seed']
@@ -390,6 +392,11 @@ def main():
                 'frozen corpus coverage changed')
         record['supplemental_reference'] = [seed_probe(p) for p in probes['probes']]
         record['regression_reference'] = [seed_regression(c) for c in regressions['cases']]
+        record['refresh_reference'] = successful(['python3', HERE / 'refresh_seed.py'], timeout=600)
+        refresh_counts = json.loads(record['refresh_reference']['stdout'])
+        require(refresh_counts == {'programs': 32, 'accepted': 20, 'rejected': 12,
+                                   'seed_checks': 32, 'seed_builds': 64, 'seed_runs': 40},
+                ('frozen refresh coverage changed', refresh_counts))
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3', 'wasm2wat')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
@@ -422,6 +429,8 @@ def main():
             run_case(case, probe['calls'], lanes, modules, record)
         for case in regressions['cases']:
             run_case({**case, 'origin': 'regression'}, case['calls'], lanes, modules, record)
+        for case in refresh['cases']:
+            run_case({**case, 'origin': 'refresh'}, case['calls'], lanes, modules, record)
         record['boundaries'] = boundary_probes(probes, lanes, modules)
         record['mutants'] = mutants(frozen, probes)
         require(all(digest(ROOT / path) == value for path, value in record['inputs'].items()),
@@ -434,6 +443,12 @@ def main():
             'regression_seed_calls': sum(len(c['calls']) for c in regressions['cases']),
             'regression_seed_rejections': sum(c['knot']['require'] == 'reject' for c in regressions['cases']),
             'regression_phase_observations': 3 * len(regressions['cases']) * len(LANES),
+            'refresh_fixtures': len(refresh['cases']),
+            'refresh_seed_checks': refresh_counts['seed_checks'],
+            'refresh_seed_builds': refresh_counts['seed_builds'],
+            'refresh_seed_calls': refresh_counts['seed_runs'],
+            'refresh_seed_rejections': refresh_counts['rejected'],
+            'refresh_phase_observations': 3 * len(refresh['cases']) * len(LANES),
             'agreed_fixtures': sum(f['disposition'] == 'agreed' for f in record['fixtures']),
             'rejected_fixtures': sum(f['disposition'] == 'rejected' for f in record['fixtures']),
             'blocked_fixtures': len(record['blocked']),
