@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 from pathlib import Path
+import sys
 import shutil
 import subprocess
 
@@ -14,12 +15,16 @@ HERE=Path(__file__).resolve().parent
 BUILD=ROOT/'.local/compiler-wasm/gate'
 GENERATED=HERE/'generated'
 SEED=ROOT/'scripts/bend-reference'
+SEED_GUARD = ROOT / 'scripts/gates/seed_build.py'
+sys.path.insert(0, str(SEED_GUARD.parent))
+from seed_build import guard_seed_builds
 RECEIPT=HERE/'receipts/wasm.json'
 HOST=ROOT/'scripts/run-wasm.mjs'
 
 def require(condition,detail):
     if not condition: raise AssertionError(detail)
 def digest(p):return hashlib.sha256(p.read_bytes()).hexdigest()
+@guard_seed_builds(SEED)
 def run(argv,timeout=45):
     try:
         p=subprocess.run([str(x) for x in argv],cwd=ROOT,text=True,capture_output=True,timeout=timeout)
@@ -79,7 +84,7 @@ def main():
     record={'date':datetime.datetime.now(datetime.timezone.utc).isoformat(),'status':'incomplete','profile':'knot-enum-1','seed_revision':'574b6d39a235b539eb19a5c532993a0abb3d11ad'}
     try:
         paths=[*sorted((ROOT/'src').glob('*.bend')),ROOT/'src/SPEC.md',ROOT/'src/CONTRACT.json',HOST,HERE/'cases.json',HERE/'make-manifest.py',Path(__file__),*[ROOT/c['file'] for c in manifest['cases']],*[ROOT/c['file'] for c in old['cases'] if c['knot']['exit']!=0]]
-        record['inputs']={str(p.relative_to(ROOT)):digest(p) for p in paths}
+        record['inputs']={str(p.relative_to(ROOT)):digest(p) for p in [*paths, SEED_GUARD]}
         record['tools']={t:successful([t,'--version'])['stdout'].strip() for t in ('bun','node','python3','wasm2wat')}
         require(record['tools']['node']=='v22.22.3',record['tools'])
         require(os.uname().sysname=='Darwin' and os.uname().machine=='arm64',os.uname())

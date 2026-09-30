@@ -958,3 +958,44 @@ actual loaded names before constructing the full oracle or closure audit.
 [BS1's fixed oracle, proof boundary and witnesses](../tests/compiler-baseslice/enum/LAW_REVIEW.md)
 record the corrected representations. No model review or elapsed-effort estimate
 is claimed; Perch calls are coordinator-only for this increment.
+
+## 2026-09-29 — distinguish seed-build hang guards from program budgets
+
+The first baseslice full-gate run failed six gates at their 30–60-second native
+seed-build guards. The serial retry still failed frontend at 30 seconds and
+structural at 45 seconds. These were host build timeouts, before semantic
+observations. Their logs remain in this worktree's ignored
+`.local/gates/run-g0kd4rov/logs/` and `.local/gates/run-049ignie/logs/`.
+
+BS1 already separates compiler-sized seed builds with a 180-second hang guard.
+The shared [seed-build guard](../scripts/gates/seed_build.py) applies that minimum
+only to exact seed-prefix `-o` calls in the six affected harnesses and flat-store.
+Their runtime timeouts, byte/depth/fuel budgets, fixed expectations, proof
+obligations and semantic-mutant requirements remain unchanged. No timeout or
+failed build counts as a semantic kill. The implementation report records the
+fresh full-suite outcome separately from these historical failures.
+
+The census then correctly refused its stale accepted-input inventory. Running
+`npm run census` changed only four gate SHA-256 fields in `accepted.json`;
+approvals, fixture hashes, classifications and all other manifests are identical.
+Regenerating that source metadata does not refresh execution receipts.
+
+The next serial run also exposed one `found no clang` seed discovery failure in
+flat-store; default scheduling reproduced it in structural
+(`.local/gates/run-dp8fuq9y/logs/structural.stderr`). Installed Apple clang 21 and
+twenty direct Bun discovery probes succeeded under the restricted environment.
+That observation establishes neither a compiler defect nor a missing installation.
+The guard permits at most two retries for that exact discovery diagnostic, with
+exit 1 and empty stdout, and retains every failed attempt in `seed_build_retries`.
+Other errors, timeouts and semantic failures are never retried. A persistent
+missing compiler still fails. Every affected receipt hashes the guard.
+
+Eight [guard controls](../scripts/gates/test_seed_build.py) cover successful
+recovery, the three-attempt cap, program/interpreter isolation, other failures,
+timeout preservation and an exact multi-argument seed prefix. All 26 offline
+wrapper tests pass. The failed full-run logs remain evidence; the final report
+records fresh full-suite acceptance, not an aggregate of earlier green gates.
+
+Prevention: give host compiler builds an explicit hang guard distinct from the
+program's deterministic resource contract, and retain classified host failures.
+No provider review or elapsed-effort estimate is claimed.
