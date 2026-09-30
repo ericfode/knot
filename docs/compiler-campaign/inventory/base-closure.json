@@ -396,7 +396,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 87,
+          "declarations": 88,
           "base": 39,
           "base_intrinsics": 9,
           "foreign": 0
@@ -505,7 +505,7 @@
           {
             "key": "Char.to_u32",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/syntax.dotted",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1064,6 +1064,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -1361,6 +1362,23 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -1813,7 +1831,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 87,
+          "declarations": 88,
           "base": 39,
           "base_intrinsics": 8,
           "foreign": 0
@@ -1922,7 +1940,7 @@
           {
             "key": "Char.to_u32",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/syntax.dotted",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -2481,6 +2499,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -2778,6 +2797,23 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -3230,7 +3266,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 67,
+          "declarations": 68,
           "base": 27,
           "base_intrinsics": 9,
           "foreign": 0
@@ -3303,7 +3339,7 @@
           {
             "key": "Char.to_u32",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/syntax.dotted",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3598,6 +3634,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -3801,6 +3838,20 @@
               "Bool.and",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Char.to_u32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -4108,7 +4159,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 101,
+          "declarations": 102,
           "base": 53,
           "base_intrinsics": 9,
           "foreign": 0
@@ -4244,7 +4295,7 @@
           {
             "key": "Char.to_u32",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/syntax.dotted",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4842,6 +4893,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -5133,6 +5185,22 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -5719,7 +5787,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 328,
+          "declarations": 334,
           "base": 72,
           "base_intrinsics": 20,
           "foreign": 6
@@ -6422,8 +6490,9 @@
               "U32",
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
+              "src/catalog.parameter_names",
               "src/catalog.parameters",
+              "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
               "src/core.Signature",
@@ -6676,8 +6745,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -6763,7 +6832,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
+            "via": "src/catalog.scoped_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6871,6 +6940,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.parameter_names",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.parameter_type",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameters",
@@ -6903,14 +6986,15 @@
               "U32",
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
               "src/catalog.parameter_type",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.Node",
+              "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -6985,6 +7069,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.named",
+              "src/core.Datatype",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -7024,7 +7131,7 @@
           {
             "key": "src/catalog.TypeRef",
             "file": "src/catalog.bend",
-            "via": "src/catalog.find_type",
+            "via": "src/catalog.scoped_type",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -7065,9 +7172,11 @@
               "Maybe",
               "Result",
               "U32",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
               "src/core.Datatype",
+              "src/scope.Scope",
+              "src/scope.names",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -7543,6 +7652,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.global_variable",
+            "file": "src/check.bend",
+            "via": "src/check.lookup",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "String.eq",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.let_result",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -7560,6 +7692,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.lookup",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/check.bound",
+              "src/check.global_variable",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/scope.Scope",
+              "src/scope.lookup",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -7824,6 +7978,7 @@
               "src/check.constructor",
               "src/check.expected",
               "src/check.let_result",
+              "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
               "src/check.prepend_argument",
@@ -7841,7 +7996,6 @@
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
-              "src/scope.lookup",
               "src/scope.scrutinee",
               "src/syntax.At",
               "src/syntax.Error",
@@ -8975,6 +9129,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -9576,7 +9731,7 @@
           {
             "key": "src/scope.lookup",
             "file": "src/scope.bend",
-            "via": "src/check.run",
+            "via": "src/check.lookup",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -9611,6 +9766,20 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.names",
+            "file": "src/scope.bend",
+            "via": "src/check.annotation",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -9921,6 +10090,23 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -11743,7 +11929,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 328,
+          "declarations": 334,
           "base": 72,
           "base_intrinsics": 19,
           "foreign": 6
@@ -12446,8 +12632,9 @@
               "U32",
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
+              "src/catalog.parameter_names",
               "src/catalog.parameters",
+              "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
               "src/core.Signature",
@@ -12700,8 +12887,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -12787,7 +12974,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
+            "via": "src/catalog.scoped_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -12895,6 +13082,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.parameter_names",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.parameter_type",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameters",
@@ -12927,14 +13128,15 @@
               "U32",
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
               "src/catalog.parameter_type",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.Node",
+              "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -13009,6 +13211,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "U32",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.named",
+              "src/core.Datatype",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -13048,7 +13273,7 @@
           {
             "key": "src/catalog.TypeRef",
             "file": "src/catalog.bend",
-            "via": "src/catalog.find_type",
+            "via": "src/catalog.scoped_type",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -13089,9 +13314,11 @@
               "Maybe",
               "Result",
               "U32",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
               "src/core.Datatype",
+              "src/scope.Scope",
+              "src/scope.names",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -13567,6 +13794,29 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.global_variable",
+            "file": "src/check.bend",
+            "via": "src/check.lookup",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String",
+              "String.eq",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.let_result",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -13584,6 +13834,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.lookup",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/check.bound",
+              "src/check.global_variable",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/scope.Scope",
+              "src/scope.lookup",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -13848,6 +14120,7 @@
               "src/check.constructor",
               "src/check.expected",
               "src/check.let_result",
+              "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
               "src/check.prepend_argument",
@@ -13865,7 +14138,6 @@
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
-              "src/scope.lookup",
               "src/scope.scrutinee",
               "src/syntax.At",
               "src/syntax.Error",
@@ -14999,6 +15271,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -15600,7 +15873,7 @@
           {
             "key": "src/scope.lookup",
             "file": "src/scope.bend",
-            "via": "src/check.run",
+            "via": "src/check.lookup",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -15635,6 +15908,20 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.names",
+            "file": "src/scope.bend",
+            "via": "src/check.annotation",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -15945,6 +16232,23 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -17767,7 +18071,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 280,
+          "declarations": 286,
           "base": 58,
           "base_intrinsics": 20,
           "foreign": 6
@@ -18169,8 +18473,9 @@
             "dependencies": [
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
+              "src/catalog.parameter_names",
               "src/catalog.parameters",
+              "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.exhausted",
               "src/core.internal",
@@ -18341,8 +18646,8 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.exhausted",
               "src/core.internal",
               "src/core.invalid",
@@ -18400,7 +18705,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
+            "via": "src/catalog.scoped_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18465,6 +18770,16 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.parameter_names",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.parameter_type",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameters",
@@ -18487,8 +18802,8 @@
             "dependencies": [
               "U32.add",
               "U32.is_eq",
-              "src/catalog.find_type",
               "src/catalog.parameter_type",
+              "src/catalog.scoped_type",
               "src/core.exhausted",
               "src/core.internal",
               "src/syntax.bind",
@@ -18543,6 +18858,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/catalog.find_type",
+              "src/catalog.named",
+              "src/core.invalid",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.signature",
             "file": "src/catalog.bend",
             "via": "src/catalog.collect_signatures",
@@ -18588,8 +18918,9 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
+              "src/scope.names",
               "src/syntax.bind"
             ],
             "dynamic_calls": []
@@ -18898,6 +19229,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.global_variable",
+            "file": "src/check.bend",
+            "via": "src/check.lookup",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "String.eq",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.let_result",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -18908,6 +19255,21 @@
               "src/scope.remove",
               "src/scope.sequential",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.lookup",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/check.bound",
+              "src/check.global_variable",
+              "src/scope.lookup",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -19070,6 +19432,7 @@
               "src/check.constructor",
               "src/check.expected",
               "src/check.let_result",
+              "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
               "src/check.prepend_argument",
@@ -19082,7 +19445,6 @@
               "src/patterns.branch",
               "src/scope.find_level",
               "src/scope.live_scope",
-              "src/scope.lookup",
               "src/scope.scrutinee",
               "src/syntax.bind",
               "src/syntax.choose"
@@ -19717,6 +20079,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -20130,7 +20493,7 @@
           {
             "key": "src/scope.lookup",
             "file": "src/scope.bend",
-            "via": "src/check.run",
+            "via": "src/check.lookup",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -20153,6 +20516,16 @@
               "src/scope.contains",
               "src/syntax.choose"
             ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.names",
+            "file": "src/scope.bend",
+            "via": "src/check.annotation",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
             "dynamic_calls": []
           },
           {
@@ -20366,6 +20739,20 @@
               "Bool.and",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "Char.to_u32",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },
@@ -21639,7 +22026,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 366,
+          "declarations": 372,
           "base": 110,
           "base_intrinsics": 23,
           "foreign": 6
@@ -22434,8 +22821,9 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.TypeRef",
-              "src/catalog.find_type",
+              "src/catalog.parameter_names",
               "src/catalog.parameters",
+              "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
               "src/core.Parameter",
@@ -22686,8 +23074,8 @@
               "U32.is_eq",
               "src/catalog.TypeRef",
               "src/catalog.field_type",
-              "src/catalog.find_type",
               "src/catalog.named",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
@@ -22770,7 +23158,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
+            "via": "src/catalog.scoped_type",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22875,6 +23263,20 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/catalog.parameter_names",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/catalog.parameter_type",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameters",
@@ -22908,14 +23310,15 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.TypeRef",
-              "src/catalog.find_type",
               "src/catalog.parameter_type",
+              "src/catalog.scoped_type",
               "src/core.Datatype",
               "src/core.Parameter",
               "src/core.exhausted",
               "src/core.internal",
               "src/syntax.Error",
               "src/syntax.Node",
+              "src/syntax.Token",
               "src/syntax.bind",
               "src/syntax.choose"
             ],
@@ -22984,6 +23387,27 @@
               "src/syntax.Error",
               "src/syntax.Node",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/catalog.scoped_type",
+            "file": "src/catalog.bend",
+            "via": "src/catalog.collect_signatures",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/catalog.TypeRef",
+              "src/catalog.find_type",
+              "src/catalog.named",
+              "src/core.Datatype",
+              "src/core.invalid",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -23068,9 +23492,11 @@
               "Result",
               "U32",
               "src/catalog.TypeRef",
-              "src/catalog.find_type",
+              "src/catalog.scoped_type",
               "src/check.annotation_id",
               "src/core.Datatype",
+              "src/scope.Scope",
+              "src/scope.names",
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
@@ -23537,6 +23963,28 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/check.global_variable",
+            "file": "src/check.bend",
+            "via": "src/check.lookup",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "String.eq",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/core.invalid",
+              "src/core.unsupported",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/check.let_result",
             "file": "src/check.bend",
             "via": "src/check.run",
@@ -23554,6 +24002,28 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/check.lookup",
+            "file": "src/check.bend",
+            "via": "src/check.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "src/check.bound",
+              "src/check.global_variable",
+              "src/core.Binding",
+              "src/core.Signature",
+              "src/scope.Scope",
+              "src/scope.lookup",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
             ],
             "dynamic_calls": []
           },
@@ -23813,6 +24283,7 @@
               "src/check.constructor",
               "src/check.expected",
               "src/check.let_result",
+              "src/check.lookup",
               "src/check.match_body",
               "src/check.pattern",
               "src/check.prepend_argument",
@@ -23832,7 +24303,6 @@
               "src/scope.Scope",
               "src/scope.find_level",
               "src/scope.live_scope",
-              "src/scope.lookup",
               "src/scope.scrutinee",
               "src/syntax.At",
               "src/syntax.Error",
@@ -24958,6 +25428,7 @@
               "src/syntax.bind",
               "src/syntax.choose",
               "src/syntax.column",
+              "src/syntax.dotted",
               "src/syntax.here",
               "src/syntax.identifier",
               "src/syntax.matches",
@@ -25551,7 +26022,7 @@
           {
             "key": "src/scope.lookup",
             "file": "src/scope.bend",
-            "via": "src/check.run",
+            "via": "src/check.lookup",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25584,6 +26055,20 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/scope.names",
+            "file": "src/scope.bend",
+            "via": "src/check.annotation",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/core.Binding",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -25891,6 +26376,22 @@
               "U32",
               "U32.is_ge",
               "U32.is_le"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/syntax.dotted",
+            "file": "src/syntax.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "Char.to_u32",
+              "String",
+              "U32.is_eq"
             ],
             "dynamic_calls": []
           },

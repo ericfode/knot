@@ -32,6 +32,12 @@ def find_type(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Result
           S.choose(Result<S.Error,TypeRef>,String.eq(S.text(token),S.text(name)),u =>
             Done{TypeRef{index,head}},u => find_type(tail,name,U32.add(index,1)))
 
+# An annotation precedes its own binder, but follows every earlier binder.
+# This profile's binders hold values, so a shadowed name cannot denote a type.
+def scoped_type(+types: List<&2,C.Datatype>, +name: S.Token, seen: List<&2,S.Token>) -> Result<S.Error,TypeRef>:
+  S.choose(Result<S.Error,TypeRef>,named(seen,name),u =>
+    C.invalid(TypeRef,"type-shadow",name),u => find_type(types,name,0))
+
 def find_function(sigs: List<&2,C.Signature>, +name: S.Token, +index: U32) -> Result<S.Error,FunctionRef>:
   match sigs:
     case Nil{}: C.invalid(FunctionRef,"unknown-function",name)
@@ -106,15 +112,21 @@ def parameter_type(+token: S.Token, +q: U32, reference: TypeRef) -> Result<S.Err
     case TypeRef{+index,definition}:
       S.bind(Unit,C.Parameter,quantity(token,q,definition),u => Done{C.Parameter{token,q,index}})
 
-def parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+def parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
-        S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+        S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(types,type_name,seen),reference =>
           S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type(name,q,reference),head =>
-            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,parameters(tail,types,U32.add(count,1)),rest => Done{Con{head,rest}}))))
+            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,parameters(tail,types,Con{name,seen},U32.add(count,1)),rest => Done{Con{head,rest}}))))
     case _: C.internal(List<&2,C.Parameter>,"parameter-node")
+
+def parameter_names(nodes: List<&2,S.Node>) -> List<&2,S.Token>:
+  match nodes:
+    case Nil{}: Nil{}
+    case Con{S.Parameter{name,q,type_name},tail}: Con{name,parameter_names(tail)}
+    case _: Nil{}
 
 def signature(token: S.Token, params: List<&2,C.Parameter>, reference: TypeRef) -> C.Signature:
   match reference:
@@ -125,8 +137,8 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
-        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
-          S.bind(TypeRef,List<&2,C.Signature>,find_type(types,result,0),reference =>
+        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,Nil{},0),ps =>
+          S.bind(TypeRef,List<&2,C.Signature>,scoped_type(types,result,parameter_names(params)),reference =>
             S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
               Done{Con{signature(name,ps,reference),rest}}))))
     case Con{S.Datatype{name,data,ctors},tail}: collect_signatures(tail,types,count)
@@ -154,7 +166,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+          S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(types,type_name,seen),reference =>
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))

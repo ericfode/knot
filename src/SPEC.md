@@ -46,6 +46,12 @@ digits, underscores or dots. Keywords cannot be identifiers.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
+  Parameter, result, field and let annotations resolve in lexical scope. A value
+  binder shadowing the annotation's type name reports `Invalid check type-shadow`.
+  Earlier binders are visible, including erased binders; a binder is absent from
+  its own annotation and initializer. Ordinary/reusable typed-let binders require
+  simple names. Erased dotted typed lets are recognized but remain
+  `Unsupported parse dotted-binder`, preserving the seed's different grammar.
 - A body may end in a match on one function parameter. Every constructor of the
   scrutinee type must occur exactly once. Arms can contain bindings and nested
   matches. Constructor patterns have no fields in this profile.
@@ -65,6 +71,9 @@ Constructor names must be unique across the book in this first profile.
 Repeated constructor declarations, including across datatypes, are invalid. Top-level type/function names share a namespace.
 Free names, type/arity mismatches, missing arms,
 affine reuse and live inspection of erased values are invalid.
+Bare declared functions resolve after local values, then report
+`Unsupported check function-reference` until higher-order checking is implemented.
+A local value with the same name retains normal lexical identity.
 
 Duplicate arms are outside this profile and report Unsupported: the pinned
 reference can accept overlapping nullary patterns, choosing the first match.

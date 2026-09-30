@@ -28,11 +28,11 @@ def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
   match reference:
     case G.TypeRef{index,definition}: Done{Some{index}}
 
-def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
-  match token:
-    case None{}: Done{None{}}
-    case Some{name}:
-      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference => annotation_id(reference))
+def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>, scope: E.Scope) -> Result<S.Error,Maybe<&2,U32>>:
+  match token scope:
+    case None{} _: Done{None{}}
+    case Some{name} E.Scope{bindings,next,from,live,smaller}:
+      S.bind(G.TypeRef,Maybe<&2,U32>,G.scoped_type(types,name,E.names(bindings)),reference => annotation_id(reference))
 
 def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match reference wanted:
@@ -66,6 +66,21 @@ def bound(bindings: List<&2,C.Binding>, +token: S.Token) -> Bool:
     case Nil{}: False{}
     case Con{C.Binding{name,level,q,type_id,param,known},tail}:
       Bool.or(String.eq(S.text(name),S.text(token)),bound(tail,token))
+
+# Bare functions resolve globally after local values. Their higher-order type
+# is outside this profile; a resolved declaration is never a free name.
+def global_variable(sigs: List<&2,C.Signature>, +token: S.Token) -> Result<S.Error,C.Binding>:
+  match sigs:
+    case Nil{}: C.invalid(C.Binding,"free-name",token)
+    case Con{C.Signature{name,params,result},+tail}:
+      S.choose(Result<S.Error,C.Binding>,String.eq(S.text(name),S.text(token)),u =>
+        C.unsupported(C.Binding,"function-reference",token),u => global_variable(tail,token))
+
+def lookup(+scope: E.Scope, sigs: List<&2,C.Signature>, +token: S.Token) -> Result<S.Error,C.Binding>:
+  match scope:
+    case E.Scope{bindings,next,from,live,smaller}:
+      S.choose(Result<S.Error,C.Binding>,bound(bindings,token),u =>
+        E.lookup(scope,token),u => global_variable(sigs,token))
 
 def callable(reference: G.FunctionRef, +token: S.Token, +current: U32, scope: E.Scope) -> Result<S.Error,G.FunctionRef>:
   match reference scope:
@@ -174,8 +189,8 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
 def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Scope) -> Result<S.Error,C.Checked>:
   match fuel mode catalog scope:
     case 0n _ _ _: Fail{S.Exhausted{"check",S.At{0,0,0,0}}}
-    case 1n+ +n Expression{S.Variable{+token},+wanted} _ _:
-      S.bind(C.Binding,C.Checked,E.lookup(scope,token),binding =>
+    case 1n+ +n Expression{S.Variable{+token},+wanted} C.Catalog{types,sigs} _:
+      S.bind(C.Binding,C.Checked,lookup(scope,sigs,token),binding =>
         S.bind(C.Checked,C.Checked,variable(binding,token,scope,term => run(n,Rebuild{term},catalog,current,scope)),value => expected(token,wanted,value)))
     case 1n+ +n Expression{S.Constructor{+token,+args},+wanted} C.Catalog{+types,sigs} _:
       S.bind(G.ConstructorRef,C.Checked,G.find_constructor(types,token,0),+reference =>
@@ -187,7 +202,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
           call_body(call,token,wanted,current,scope,params => run(n,Arguments{args,params,token},catalog,current,scope))))
     case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
-        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
+        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann,scope),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))

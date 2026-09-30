@@ -273,7 +273,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case Con{+name,Con{+separator,+tail}}:
           S.choose(Result<S.Error,Parsed>,S.identifier(name),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(separator,":"),u =>
-            run(n,AnnotatedBinding{name,quantity,column},tail),u =>
+            S.choose(Result<S.Error,Parsed>,S.dotted(S.text(name)),u =>
+              S.choose(Result<S.Error,Parsed>,U32.is_eq(quantity,0),u =>
+                unsupported(tokens,"dotted-binder"),u => invalid(tokens,"binding-name")),u =>
+              run(n,AnnotatedBinding{name,quantity,column},tail)),u =>
             S.bind(List<&2,S.Token>,Parsed,expect(Con{separator,tail},"="),rhs =>
               then(run(n,Term{False{}},rhs),value => rest => run(n,BindingTail{name,quantity,None{},value,column},rest)))),u =>
             invalid(tokens,"binding-name"))

@@ -91,6 +91,11 @@ def identifier_text(+s: String) -> Bool:
 def identifier(t: Token) -> Bool:
   identifier_text(text(t))
 
+def dotted(s: String) -> Bool:
+  match s:
+    case SNil{}: False{}
+    case SCon{c,tail}: Bool.or(U32.is_eq(Char.to_u32(c),46),dotted(tail))
+
 def skip_lines(ts: List<&2,Token>) -> List<&2,Token>:
   match ts:
     case Nil{}: Nil{}

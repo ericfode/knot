@@ -53,9 +53,10 @@ foreign and native word-representation bodies. It does not solve higher-order
 flow or specialize generic instances. Static reach also descends into those
 source implementations and proof bodies. The compiler's 72 are **43 source,
 20 JS intrinsics, 6 foreigns, 2 word representations and 1 bodiless File**.
-Native has 44 source / 19 intrinsics: Bool.or has a source implementation there.
+Native has 44 source / 19 intrinsics: String.append has a source implementation
+there, while Bool.or is a seed intrinsic in both lanes.
 The island qualification deliberately tests Bool.or's source body in both Knot
-builds, rather than treating the seed's JS optimization as a required VM leaf.
+builds, rather than treating the seed's optimization as a required VM leaf.
 
 All-src runtime adds Cmp.is_le, Nat.is_le, Nat.sub and String.length to the 72.
 All-src static adds Equal.sym, Nat.is_le, Nat.sub and String.length to the 110.

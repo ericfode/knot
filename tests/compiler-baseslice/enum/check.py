@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import importlib.util
 from pathlib import Path
 import re
 import shutil
@@ -201,6 +202,12 @@ def main():
                         ('compiler lanes emitted different modules', case['name']))
             record['fixtures'].append(row)
         record['mutants'] = [mutate(m, document) for m in MUTANTS]
+        review_path = HERE.parent / 'review/check.py'
+        spec = importlib.util.spec_from_file_location('baseslice_review_check', review_path)
+        review = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(review)
+        record['review'] = review.check(commands, build)
+        record['inputs'].update(record['review']['inputs'])
         calls = sum(len(c.get('calls', [])) for c in document['cases'] if c['require'] == 'agree')
         record['counts'] = {'declarations': len(record['declarations']), 'fixtures': len(record['fixtures']),
                             'agreed_books': 2, 'rejected_books': 4, 'deferred_books': 1,
@@ -209,6 +216,7 @@ def main():
                             'byte_identical_modules': 2, 'execution_lanes': 2,
                             'laws': len(record['proof']['laws']), 'proof_holes': record['proof']['holes'],
                             'mutants': len(record['mutants']), 'output_preservation_checks': 10}
+        record['counts'].update({'review_' + k: v for k, v in record['review']['counts'].items()})
         record['status'] = 'pass'
     except Exception as error:
         record['status'], record['error'] = 'failed', repr(error)

@@ -52,6 +52,11 @@ def lookup(scope: Scope, name: S.Token) -> Result<S.Error,C.Binding>:
   match scope:
     case Scope{bindings,level,from,live,smaller}: find(bindings,name)
 
+def names(bindings: List<&2,C.Binding>) -> List<&2,S.Token>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{token,level,q,type_id,param,known},tail}: Con{token,names(tail)}
+
 def occurrence(known: Maybe<&2,C.Term>, +token: S.Token, +level: U32, +q: U32, +type_id: U32, +live: Bool) -> Result<S.Error,C.Checked>:
   match known:
     case Some{C.Value{origin,source_type,tag}}: Done{C.Checked{C.Value{token,type_id,tag},type_id,Nil{}}}
