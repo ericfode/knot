@@ -1,0 +1,1420 @@
+{
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "status": "passed",
+  "inputs": {
+    "tests/compiler-descent/precheck-fixtures/deep-match.bend": "ec85f95d234d763952a2efc208dfc13b428ee95de9f8859a1f3e7c861f287635",
+    "tests/compiler-descent/precheck-fixtures/default-alias-reuse.bend": "a58c6be37af1985b1f30a00d244bae68cf7f399924570f17463981b121c754d6",
+    "tests/compiler-descent/precheck-fixtures/default-rematch.bend": "a09a4050df3f2eab736e0d237480ec78f48392a48bccc5422b599880a883328d",
+    "tests/compiler-descent/precheck-fixtures/detached-pattern-control.bend": "88d2e64bb4d51230a470700e99f1495fa32cdd2626d02938e33822f63f8eee34",
+    "tests/compiler-descent/precheck-fixtures/detached-pattern.bend": "f97b34472f86e33b315858a109395dce4e9ee07b660545ef713966dc665130a9",
+    "tests/compiler-descent/precheck-fixtures/dotted-binder.bend": "8583b8be9bce45eb8cc71edfa9e1d1f0a12c1ca8a2949386ace911ff665a931b",
+    "tests/compiler-descent/precheck-fixtures/empty-multi-gap.bend": "3b743ec11a606800eb3d53b23fed030979b90ac2ba97dee402ded7474f232e56",
+    "tests/compiler-descent/precheck-fixtures/empty-multi.bend": "6ca9fd5e0721b596dd128262ab61c3eb839fe25f19b42b727e255ed4cba9c21c",
+    "tests/compiler-descent/precheck-fixtures/empty-unused.bend": "a66dc141d74386138f38e243b82a3142b21deceb1cc6a6ea5e2df97c93c477b4",
+    "tests/compiler-descent/precheck-fixtures/empty-zero-row.bend": "b7c76b34f470afb5e53df3d36ab58628e9477ef92dd3797fe847ab3df468764b",
+    "tests/compiler-descent/precheck-fixtures/forward-constructor-value.bend": "59788c5de252f4a3288de816ce5d6f4d5b65739d9f08d65848e0ce13431b7081",
+    "tests/compiler-descent/precheck-fixtures/forward-pattern.bend": "208934010de44d636bfb175c0baea8e9bfe320269862593dab1c0b06e2cd86e0",
+    "tests/compiler-descent/precheck-fixtures/named-binder-reuse.bend": "7be8c7daac12a549fe6164586323500b377d914e4c91d1a670358e73bdd9b84d",
+    "tests/compiler-descent/precheck-fixtures/named-binder-single.bend": "697b084f5b5fa985e16c591c2faeb815cdf0510f52adfaf566bcb25a4d85e1b5",
+    "tests/compiler-descent/precheck-fixtures/promoted-default-reuse.bend": "ed38d0aa02434b486526d15ab8930ba360dc868ed6eb9ec0bc50e51464c664a5",
+    "tests/compiler-descent/precheck-fixtures/refined-alias-original.bend": "404346c5e66c1f105c480b68b775bb8b062bf95bc0393b118198be8631cd088a",
+    "tests/compiler-descent/precheck-fixtures/refined-alias-shadow.bend": "98ca9aa0c338c2d07aaaddfe1948caccb9f764511a86792c9aba5f39880e78ab",
+    "tests/compiler-descent/precheck-fixtures/refined-alias-single.bend": "24068e1203486918c7d86188c45728bac2893094f45b7b84636ad74019ab7bb6",
+    "tests/compiler-descent/precheck-fixtures/shallow-match.bend": "377134be7b1d58eb0ef5d67a41ffcd7be08a18f29987acd4b9d1236cfe5d970a",
+    "tests/compiler-descent/precheck-fixtures/wildcard-drop.bend": "0eb5d9715eab175f77ad6a8158c36f0df0cfb055ea043abbb7130d10067d11a4",
+    "tests/compiler-descent/precheck-fixtures/wildcard-field-drop.bend": "17850a972693f5e11e4c42d5ae52a67b8a0deb8b47cc5e2e003aa7917c3cab36",
+    "tests/compiler-descent/precheck-fixtures/wildcard-field-use.bend": "9e6b9404583f9800574d8717196fb753944247c4a209b39537a328ef1a0825b9",
+    "tests/compiler-descent/precheck-fixtures/wildcard-value.bend": "994c5fe84c89f2972f033d906e669f0a5d4ece29e208306831635a0bc58136f9",
+    "tests/compiler-descent/precheck-freeze.py": "3a8517bff50b2f3010eb5a7f89123cc06de49ac495445ad3a1ba008a5308a7f5",
+    "tests/compiler-descent/precheck-parse.ts": "8ce48d0045d93147126478049586e299cee3dd64cd2f932c3e0addcdcfcd222c"
+  },
+  "seed": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884"
+  },
+  "observations": [
+    {
+      "name": "deep-match",
+      "file": "tests/compiler-descent/precheck-fixtures/deep-match.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/deep-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/deep-match.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "default-alias-reuse",
+      "file": "tests/compiler-descent/precheck-fixtures/default-alias-reuse.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/default-alias-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n10 | \n11>| def f(x: Flag) -> Flag:\n   |       ^\n12 |   match x:\n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-alias-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-alias-reuse"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n11 | \n12>| def f(x: Flag) -> Flag:\n   |       ^\n13 |   match x:\n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-alias-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-alias-reuse.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n11 | \n12>| def f(x: Flag) -> Flag:\n   |       ^\n13 |   match x:\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "default-rematch",
+      "file": "tests/compiler-descent/precheck-fixtures/default-rematch.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/default-rematch.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/default-rematch.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "detached-pattern-control",
+      "file": "tests/compiler-descent/precheck-fixtures/detached-pattern-control.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/detached-pattern-control.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern-control.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "detached-pattern",
+      "file": "tests/compiler-descent/precheck-fixtures/detached-pattern.bend",
+      "parse": {
+        "ok": false,
+        "expected": "':'",
+        "offset": 145
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/detached-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n10 |   match t:\n11>|     case Node {Leaf{On{}}, r}: lm(r)\n   |                          ^\n12 |     case Node{l, r}: lm(l)\n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n11 |   match t:\n12>|     case Node {Leaf{On{}}, r}: lm(r)\n   |                          ^\n13 |     case Node{l, r}: lm(l)\n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/detached-pattern.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : ':'\n- observed : ','\nLocation:\n11 |   match t:\n12>|     case Node {Leaf{On{}}, r}: lm(r)\n   |                          ^\n13 |     case Node{l, r}: lm(l)\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "dotted-binder",
+      "file": "tests/compiler-descent/precheck-fixtures/dotted-binder.bend",
+      "parse": {
+        "ok": false,
+        "expected": "a pattern (a binder or a constructor)",
+        "offset": 90
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/dotted-binder.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n6 |   match x y:\n7>|     case a.b On{}: a.b\n  |          ^^^\n8 |     case _ _: Off{}\n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/dotted-binder.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/dotted-binder"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n7 |   match x y:\n8>|     case a.b On{}: a.b\n  |          ^^^\n9 |     case _ _: Off{}\n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/dotted-binder.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/dotted-binder.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a pattern (a binder or a constructor)\n- observed : a.b\nLocation:\n7 |   match x y:\n8>|     case a.b On{}: a.b\n  |          ^^^\n9 |     case _ _: Off{}\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "empty-multi-gap",
+      "file": "tests/compiler-descent/precheck-fixtures/empty-multi-gap.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/empty-multi-gap.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi-gap.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "empty-multi",
+      "file": "tests/compiler-descent/precheck-fixtures/empty-multi.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/empty-multi.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-multi.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "empty-unused",
+      "file": "tests/compiler-descent/precheck-fixtures/empty-unused.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/empty-unused.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-unused.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "empty-zero-row",
+      "file": "tests/compiler-descent/precheck-fixtures/empty-zero-row.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/empty-zero-row.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/empty-zero-row.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "forward-constructor-value",
+      "file": "tests/compiler-descent/precheck-fixtures/forward-constructor-value.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/forward-constructor-value.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-constructor-value.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "forward-pattern",
+      "file": "tests/compiler-descent/precheck-fixtures/forward-pattern.bend",
+      "parse": {
+        "ok": false,
+        "expected": "a declared constructor (unknown: probe.On)",
+        "offset": 71
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/forward-pattern.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- message  : a declared constructor (unknown: On)\nLocation:\n4 |   match x y:\n5>|     case _ On{}: Off{}\n  |            ^^^^\n6 | \n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-pattern.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-pattern"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: On)\nLocation:\n5 |   match x y:\n6>|     case _ On{}: Off{}\n  |            ^^^^\n7 | \n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-pattern.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/forward-pattern.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- message  : a declared constructor (unknown: On)\nLocation:\n5 |   match x y:\n6>|     case _ On{}: Off{}\n  |            ^^^^\n7 | \n"
+          }
+        }
+      }
+    },
+    {
+      "name": "named-binder-reuse",
+      "file": "tests/compiler-descent/precheck-fixtures/named-binder-reuse.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/named-binder-reuse.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n 9 | \n10>| def f(x: Flag) -> Flag:\n   |       ^\n11 |   match x:\n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-reuse"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n10 | \n11>| def f(x: Flag) -> Flag:\n   |       ^\n12 |   match x:\n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-reuse.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n10 | \n11>| def f(x: Flag) -> Flag:\n   |       ^\n12 |   match x:\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "named-binder-single",
+      "file": "tests/compiler-descent/precheck-fixtures/named-binder-single.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/named-binder-single.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/named-binder-single.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "promoted-default-reuse",
+      "file": "tests/compiler-descent/precheck-fixtures/promoted-default-reuse.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/promoted-default-reuse.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/promoted-default-reuse.js"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "refined-alias-original",
+      "file": "tests/compiler-descent/precheck-fixtures/refined-alias-original.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/refined-alias-original.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n 9 | \n10>| def f(x: Flag) -> Flag:\n   |       ^\n11 |   match x:\n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-original.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-original"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n10 | \n11>| def f(x: Flag) -> Flag:\n   |       ^\n12 |   match x:\n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-original.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-original.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: f\n10 | \n11>| def f(x: Flag) -> Flag:\n   |       ^\n12 |   match x:\n"
+          }
+        }
+      }
+    },
+    {
+      "name": "refined-alias-shadow",
+      "file": "tests/compiler-descent/precheck-fixtures/refined-alias-shadow.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/refined-alias-shadow.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-shadow.js"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "refined-alias-single",
+      "file": "tests/compiler-descent/precheck-fixtures/refined-alias-single.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/refined-alias-single.bend"
+        ],
+        "exit": 0,
+        "stdout": "Off{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/refined-alias-single.js"
+            ],
+            "exit": 0,
+            "stdout": "Off{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "shallow-match",
+      "file": "tests/compiler-descent/precheck-fixtures/shallow-match.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/shallow-match.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/shallow-match.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "wildcard-drop",
+      "file": "tests/compiler-descent/precheck-fixtures/wildcard-drop.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/wildcard-drop.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-drop.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "wildcard-field-drop",
+      "file": "tests/compiler-descent/precheck-fixtures/wildcard-field-drop.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/wildcard-field-drop.bend"
+        ],
+        "exit": 0,
+        "stdout": "On{}\n",
+        "stderr": ""
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop.js"
+            ],
+            "exit": 0,
+            "stdout": "",
+            "stderr": ""
+          },
+          "execution": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-drop.js"
+            ],
+            "exit": 0,
+            "stdout": "On{}\n",
+            "stderr": ""
+          }
+        }
+      }
+    },
+    {
+      "name": "wildcard-field-use",
+      "file": "tests/compiler-descent/precheck-fixtures/wildcard-field-use.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/wildcard-field-use.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\nLocation: f\n 9 |   match c:\n10>|     case Cell{_}: _\n   |                   ^\n11 | \n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-use.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-use"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\nLocation: f\n10 |   match c:\n11>|     case Cell{_}: _\n   |                   ^\n12 | \n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-use.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-field-use.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\nLocation: f\n10 |   match c:\n11>|     case Cell{_}: _\n   |                   ^\n12 | \n"
+          }
+        }
+      }
+    },
+    {
+      "name": "wildcard-value",
+      "file": "tests/compiler-descent/precheck-fixtures/wildcard-value.bend",
+      "parse": {
+        "ok": true
+      },
+      "book": {
+        "argv": [
+          "bun",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+          "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/tests/compiler-descent/precheck-fixtures/wildcard-value.bend"
+        ],
+        "exit": 1,
+        "stdout": "",
+        "stderr": "Error:\n- expected : a defined name\n- observed : _\nContext:\n- x : Flag\nLocation: f\n7 |   match x:\n8>|     case _: _\n  |             ^\n9 | \n"
+      },
+      "lanes": {
+        "native": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-value.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-value"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : _\nContext:\n- x : Flag\nLocation: f\n 8 |   match x:\n 9>|     case _: _\n   |             ^\n10 | \n"
+          }
+        },
+        "bun": {
+          "build": {
+            "argv": [
+              "bun",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-value.bend",
+              "-o",
+              "/Users/ericfode/src/knot/.claude/worktrees/campaign-descent-2/.local/descent-2/precheck-seed/wildcard-value.js"
+            ],
+            "exit": 1,
+            "stdout": "",
+            "stderr": "Error:\n- expected : a defined name\n- observed : _\nContext:\n- x : Flag\nLocation: f\n 8 |   match x:\n 9>|     case _: _\n   |             ^\n10 | \n"
+          }
+        }
+      }
+    }
+  ],
+  "implementation_at_freeze": "3eb80a30263d257c9badd6a94d6c89938d305eac",
+  "baseline_implementation": {
+    "src/LAWS.bend": "b7755dbd1da14516ecdb7484edace511e581e4c8671a287f2d23826264502e6d",
+    "src/PROOF.bend": "b3808807d0ffdfaa14a1cebb5bf532f58836402b1e988c56d3b3c9bea9eca7c4",
+    "src/catalog-LAWS.bend": "b29691c14ea3927fa3390c715f9616c89c75b43973ae550192ae351915d98bf3",
+    "src/catalog-PROOF.bend": "fda25129e3061fc6e2e7e905a95d4cc6d406d985da10316800e011fcd1d07c71",
+    "src/catalog.bend": "0b478dbbc0f07f60ade43c04dd53b9660f6410b1c5dd4d0ef191772d83986098",
+    "src/check-LAWS.bend": "9acd7671abffbc0e874485cf87b88d38bc39f9f75c5681c8ad303ef6ea158c52",
+    "src/check-PROOF.bend": "2fe6bce9d7f4e03042794864e8249ffbd2e9b0d4824453f633b4483ac8bf0a9d",
+    "src/check-cli.bend": "7cbcc66c6586a1a5e5997a8b0771d791219d368a0ebaa1febffa07702c3e5705",
+    "src/check.bend": "e4ffddefefb8369438cc3815c9a52eda59ed08d093778e0cb43c73fcc781cdd7",
+    "src/checked-display.bend": "d2a405f9db0e73c708fc0deca4c46d25720b783a29fe29fb29fb862e97c83a3a",
+    "src/compile-cli.bend": "0dcf1a573669f4f2a73a73d1dec73063ad2ed7ba106313865f8eb5233f1fc079",
+    "src/core.bend": "eea976a956241715c1056fdbe4b3f3c6b4e4734a85fa3feb488629c203d7e973",
+    "src/descent-LAWS.bend": "bee39379c470e11e3230eb10dcd81a34d785e6b78218fa7b3c059e1bfae987fd",
+    "src/descent-PROOF.bend": "d9922c828e3658ad83b90f57f46a10d8a1f20343906eb1a0076dabeb5a4f178b",
+    "src/descent.bend": "c346669e3b4e382bf28ecc59e785b8d564ce4ed7ee1d0f1d84b355e511f845b6",
+    "src/diagnostic.bend": "5ceff091280c1a5e5cd4ca4b609c6520f76435d44ba0e75cd08688e3f0c64354",
+    "src/driver.bend": "4641537cb3b8d82a63ff519007d43ba6efc4f4458e656c12c1b83186a5c72a15",
+    "src/eval-cli.bend": "e98918b85bee9d62067405dafece47766fd5c890098b5b9131aae9e5537d91ee",
+    "src/eval.bend": "8383011adbad891f6afcd8fd90f9bea6cffdf174c691721d66288a99793c8091",
+    "src/fields-LAWS.bend": "19638d07537ea7d166f3660bfa0c462474d29d9108ef1b9be961fddf3950054c",
+    "src/fields-PROOF.bend": "fd8014bac6ff7edc97bacecd54a36274bb5f823966f575a2c2b3a7a8f31a84a6",
+    "src/lex.bend": "1e4668537a254764ecd5b0830511d7b9ee1a21e830d03ae7fea78a1d8578c4b3",
+    "src/matrix-LAWS.bend": "70fb51eca577a0e1ba75850557bcc89cd59b537287c7a91af3d81374a8db359a",
+    "src/matrix-PROOF.bend": "0c4d094574b23a0c15581428f63175d06b1efcd9f92d8c4a643e30514115d7af",
+    "src/matrix.bend": "f343567c3269c4b5aa8ff7da1084a688a1e44e38d7f45c50f9bc07c1982a819d",
+    "src/parse-cli.bend": "7a4feaec7c67c3a8ed7909d46dbef4ca8f5897857b769976f9e2704e67400c90",
+    "src/parse.bend": "2301b90a8787bcd413ba26a27d6360d7c05a3e102f501e39dba097923877c9f7",
+    "src/patterns.bend": "ab3004504ddb2b84905556dd151dc732844771642290c32d9fc44288a2c75a59",
+    "src/recursion-LAWS.bend": "6619665413d5e176660094dbbdeab80ce139607e512d39d0be1d78c4a471c9bf",
+    "src/recursion-PROOF.bend": "006216ebd83c0e34be2d75c84a0513b8b4f37ba98558233b097e238b529830ef",
+    "src/runtime-LAWS.bend": "7217b5155135ed541a111565134f1484993157a1a5c229130bedec3a3fff747a",
+    "src/runtime-PROOF.bend": "747f3fc497bb201d8c94e3e5a5367e24cfa9a56c7aaa73b59d451b35800b6874",
+    "src/scope.bend": "998f8ddafbe22408e04539499c02bd6cc290de4de5a3e58970161c1a72e43708",
+    "src/syntax.bend": "8c9bedfbc7583b6c6009ef8f2f1b1a6d9aa2a085e3f06d467f57bab8b4dfce93",
+    "src/wasm-bytes.bend": "d828d6078ae84973ce2da7d3a5d47ccc7cceb6eeb3300319f142d25eec970aac",
+    "src/wasm.bend": "4557219b40a35431e71de9c98ee38b96fb15fb505cf0e2f93f1100385c89672d"
+  }
+}
