@@ -18,3 +18,18 @@ def L.interned_arrow_is_stable(index,types,name,domain,result):
 
 def L.no_type_budget(mode,tokens,code):
   {==}
+
+def L.adjacent_operator(left,right):
+  {==}
+
+def L.separated_operator(left,right):
+  {==}
+
+def L.arrow_key_ignores_spelling(name):
+  {==}
+
+def L.arrow_key_checks_domain(name):
+  {==}
+
+def L.arrow_key_checks_result(name):
+  {==}

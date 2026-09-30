@@ -61,10 +61,15 @@ def typed(result: Result<S.Error,F.Read>,
     case Fail{e}: Fail{e}
     case Done{F.Read{token,rest}}: next(token,rest)
 
+def lambda_arrow(tokens: List<&2,S.Token>) -> Bool:
+  match tokens:
+    case Con{equal,Con{arrow,tail}}:
+      Bool.and(S.matches(equal,"="),S.matches(arrow,">"))
+    case _: False{}
+
 def lambda_plain(tokens: List<&2,S.Token>) -> Bool:
   match tokens:
-    case Con{name,Con{equal,Con{arrow,tail}}}:
-      Bool.and(S.identifier(name),Bool.and(S.matches(equal,"="),S.matches(arrow,">")))
+    case Con{name,tail}: Bool.and(S.identifier(name),lambda_arrow(S.skip_lines(tail)))
     case _: False{}
 
 def lambda_prefix(+tokens: List<&2,S.Token>) -> Bool:
@@ -72,6 +77,13 @@ def lambda_prefix(+tokens: List<&2,S.Token>) -> Bool:
     case Con{+head,+tail}:
       S.choose(Bool,S.matches(head,"+"),u => lambda_plain(tail),u => lambda_plain(tokens))
     case _: False{}
+
+def lambda_open(tokens: List<&2,S.Token>, next: List<&2,S.Token> -> Result<S.Error,Parsed>) -> Result<S.Error,Parsed>:
+  match tokens:
+    case Con{+equal,Con{+arrow,+tail}}:
+      S.choose(Result<S.Error,Parsed>,Bool.and(lambda_arrow(tokens),S.adjacent(equal,arrow)),u =>
+        next(tail),u => invalid(tokens,"split-arrow"))
+    case _: invalid(tokens,"lambda-binder")
 
 def prepend(head: S.Node, tail: S.Node, rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match tail:
@@ -296,7 +308,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         case _: Done{Parsed{value,tokens}}
     case 1n+ +n LambdaStart{+quantity}:
       match tokens:
-        case Con{token,Con{equal,Con{arrow,tail}}}: run(n,LambdaBody{token,quantity},tail)
+        case Con{+token,tail}:
+          lambda_open(S.skip_lines(tail),body => run(n,LambdaBody{token,quantity},body))
         case _: invalid(tokens,"lambda-binder")
     case 1n+ +n LambdaBody{+token,+quantity}:
       match tokens:
@@ -335,8 +348,8 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
         S.bind(List<&2,S.Token>,Parsed,expect(rest,"="),rhs =>
           then(run(n,Term{False{}},rhs),value => end => run(n,LambdaTail{name,quantity,Some{typ},value,column},end))))
     case 1n+ +n LambdaTail{+token,+quantity,+annotation,+value,+column}:
-      S.bind(List<&2,S.Token>,Parsed,expect(tokens,"\n"),body =>
-        then(run(n,LambdaStatements{column},S.skip_lines(body)),next => rest =>
+      S.bind(List<&2,S.Token>,Parsed,expect(tokens,Bool.pick(String,starts(tokens,";"),";","\n")),body =>
+        then(run(n,LambdaStatements{0},S.skip_lines(body)),next => rest =>
           Done{Parsed{S.Binding{token,quantity,annotation,value,next},rest}}))
     case 1n+ +n Body{+parent}:
       run(n,StartBody{parent},S.skip_lines(tokens))
@@ -386,7 +399,7 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
       match tokens:
         case Con{+dash,Con{+arrow,+tail}}:
-          S.choose(Result<S.Error,Parsed>,Bool.and(S.matches(dash,"-"),S.matches(arrow,">")),u =>
+          S.choose(Result<S.Error,Parsed>,Bool.and(S.adjacent(dash,arrow),Bool.and(S.matches(dash,"-"),S.matches(arrow,">"))),u =>
             typed(F.read(n,F.TypeExpr{},tail,"function-result"),+typ => rest =>
               S.bind(List<&2,S.Token>,Parsed,result_body(rest),body =>
                 then(run(n,Body{0},body),value => end => wrap_function(name,S.Sequence{params},typ,value,end)))),u =>

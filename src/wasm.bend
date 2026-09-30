@@ -87,6 +87,11 @@ def live_types(params: List<&2,C.Parameter>) -> List<&2,U32>:
     case Con{C.Parameter{token,q,type_id},+tail}:
       S.choose(List<&2,U32>,U32.is_eq(q,0),u => live_types(tail),u => Con{127,live_types(tail)})
 
+# Node 22 arm64 Liftoff aborts on wide return_call stack adjustments. Bound both
+# ends conservatively; wide calls retain the ordinary call/return semantics.
+def narrow(params: List<&2,C.Parameter>) -> Bool:
+  U32.is_le(U32.from_nat(List.length(&2,U32,live_types(params))),32)
+
 def instruction(+cap: U32, opcode: U32, index: U32) -> Result<S.Error,B.Builder>:
   W.concat(cap,[W.bytes(cap,[opcode]),W.unsigned(cap,index)])
 
@@ -104,9 +109,12 @@ def called(value: Code, +cap: U32, index: U32) -> Result<S.Error,Code>:
   match value:
     case Code{bytes,next}: code(W.concat(cap,[Done{bytes},instruction(cap,16,index)]),next)
 
-def tail_called(value: Code, +cap: U32, index: U32) -> Result<S.Error,Code>:
+def tail_called(value: Code, +cap: U32, +index: U32, params: List<&2,C.Parameter>) -> Result<S.Error,Code>:
   match value:
-    case Code{bytes,next}: code(W.concat(cap,[Done{bytes},instruction(cap,18,index)]),next)
+    case Code{+bytes,+next}:
+      S.choose(Result<S.Error,Code>,narrow(params),u =>
+        code(W.concat(cap,[Done{bytes},instruction(cap,18,index)]),next),u =>
+        code(W.concat(cap,[Done{bytes},instruction(cap,16,index),W.bytes(cap,[15])]),next))
 
 def call_body(sig: C.Signature, next: List<&2,C.Parameter> -> Result<S.Error,Code>) -> Result<S.Error,Code>:
   match sig:
@@ -153,8 +161,8 @@ def lower(fuel: Nat, mode: Mode, +heap: List<&2,U32>, +functions: List<&2,C.Func
   match fuel mode:
     case 0n _: Fail{S.Exhausted{"emit",S.At{0,0,0,0}}}
     case 1n+ +n Tail{C.Application{token,+index,type_id,+args}}:
-      S.bind(C.Signature,Code,signature(functions,index),sig => call_body(sig,params =>
-        S.bind(Code,Code,lower(n,Arguments{args,params},heap,functions,locals,next,cap),value => tail_called(value,cap,index))))
+      S.bind(C.Signature,Code,signature(functions,index),sig => call_body(sig,+params =>
+        S.bind(Code,Code,lower(n,Arguments{args,params},heap,functions,locals,next,cap),value => tail_called(value,cap,index,params))))
     case 1n+ +n Tail{C.Let{token,+level,q,type_id,+value,+body}}:
       S.choose(Result<S.Error,Code>,U32.is_eq(q,0),u => lower(n,Tail{body},heap,functions,locals,next,cap),u =>
         S.bind(Code,Code,lower(n,Expression{value},heap,functions,locals,next,cap),initial =>
@@ -279,7 +287,7 @@ def entry(function: C.Function, +index: U32, +exports: U32, +tails: Bool, +heap:
         S.bind(B.Builder,Sections,W.unsigned(cap,index),funcs =>
           S.bind(B.Builder,Sections,S.choose(Result<S.Error,B.Builder>,U32.is_lt(index,exports),u =>
             W.concat(cap,[W.name(cap,S.text(token)),W.bytes(cap,[0]),W.unsigned(cap,index)]),u => Done{B.empty(cap)}),names =>
-            S.bind(B.Builder,Sections,S.choose(Result<S.Error,B.Builder>,tails,u =>
+            S.bind(B.Builder,Sections,S.choose(Result<S.Error,B.Builder>,Bool.and(tails,narrow(params)),u =>
               closure_body(parameters(params,0,0,Nil{}),term,U32.is_ge(index,exports),heap,all,depth,cap),u =>
               body(parameters(params,0,0,Nil{}),term,heap,all,depth,cap)),code => Done{Sections{types,funcs,names,code}}))))
 

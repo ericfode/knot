@@ -31,11 +31,16 @@ def annotation_id(reference: G.TypeRef) -> Result<S.Error,Maybe<&2,U32>>:
   match reference:
     case G.TypeRef{index,definition}: Done{Some{index}}
 
-def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>) -> Result<S.Error,Maybe<&2,U32>>:
-  match token:
-    case None{}: Done{None{}}
-    case Some{name}:
-      S.bind(G.TypeRef,Maybe<&2,U32>,G.find_type(types,name,0),reference => annotation_id(reference))
+def binding_names(bindings: List<&2,C.Binding>) -> List<&2,S.Token>:
+  match bindings:
+    case Nil{}: Nil{}
+    case Con{C.Binding{name,level,q,typ,param,known},tail}: Con{name,binding_names(tail)}
+
+def annotation(types: List<&2,C.Datatype>, token: Maybe<&2,S.Token>, scope: E.Scope) -> Result<S.Error,Maybe<&2,U32>>:
+  match token scope:
+    case None{} _: Done{None{}}
+    case Some{name} E.Scope{bindings,next,open,live,smaller}:
+      S.bind(G.TypeRef,Maybe<&2,U32>,G.scoped_type(types,name,binding_names(bindings)),reference => annotation_id(reference))
 
 def constant(reference: G.ConstructorRef, +token: S.Token, wanted: Maybe<&2,U32>) -> Result<S.Error,C.Checked>:
   match reference wanted:
@@ -251,7 +256,7 @@ def run(fuel: Nat, mode: Mode, +catalog: C.Catalog, +current: U32, +scope: E.Sco
             S.bind(C.Checked,C.Checked,H.invoke(function,argument,token,result),value => run(n,Apply{value,tail,token},catalog,current,scope)))))
     case 1n+ +n Expression{S.Binding{+token,+q,ann,+value,+body},+wanted} C.Catalog{+types,sigs} E.Scope{bindings,+next,from,live,smaller}:
       S.choose(Result<S.Error,C.Checked>,U32.is_eq(next,4096),u => C.exhausted(C.Checked,token),u =>
-        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann),target =>
+        S.bind(Maybe<&2,U32>,C.Checked,annotation(types,ann,scope),target =>
           S.bind(C.Checked,C.Checked,run(n,Expression{value,target},catalog,current,E.live_scope(scope,q)),+initial =>
             binding_body(initial,token,q,types,scope,extended =>
               S.bind(C.Checked,C.Checked,run(n,Expression{body,wanted},catalog,current,extended),checked => let_result(initial,checked,token,next,q))))))

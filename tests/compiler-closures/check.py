@@ -374,6 +374,7 @@ def main():
              *sorted(HERE.glob('*.mjs')), *sorted((HERE / 'fixtures').glob('*.bend')),
              *sorted((HERE / 'probes').glob('*.bend')), *sorted((HERE / 'regressions').glob('*.bend')),
              *sorted((HERE / 'refresh').glob('*.bend')), *sorted((HERE / 'prechecks').glob('*.bend'))]
+    paths.extend(sorted((HERE / 'review-r1').glob('*.bend')))
     record['inputs'] = {relative(p): digest(p) for p in paths}
     try:
         record['seed'] = frozen['seed']
@@ -400,6 +401,10 @@ def main():
         require(json.loads(record['precheck_reference']['stdout']) ==
                 {'programs': 26, 'accepted': 6, 'rejected': 20, 'seed_parses': 26,
                  'seed_checks': 26, 'seed_builds': 52}, 'frozen precheck coverage changed')
+        record['review_reference'] = successful(['python3', HERE / 'review_seed.py'], timeout=600)
+        require(json.loads(record['review_reference']['stdout']) ==
+                {'programs': 42, 'accepted': 29, 'rejected': 13, 'seed_checks': 42,
+                 'seed_builds': 84, 'seed_runs': 58}, 'frozen review coverage changed')
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3', 'wasm2wat')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
@@ -439,6 +444,8 @@ def main():
         record['mutants'] = mutants(frozen, probes)
         import precheck_replay
         record['prechecks'] = precheck_replay.replay(lanes)
+        import review_replay
+        record['review_r1'] = review_replay.replay(lanes)
         require(all(digest(ROOT / path) == value for path, value in record['inputs'].items()),
                 'inputs changed while the closure gate ran')
         record['counts'] = {
@@ -471,6 +478,7 @@ def main():
             'proof_entries': len(record['proofs']),
             'checked_laws': sum(len(p['laws']) for p in record['proofs'])}
         record['counts']['prechecks'] = record['prechecks']['counts']
+        record['counts']['review_r1'] = record['review_r1']['counts']
         record['qualification'] = 'blocked-prerequisites' if record['blocked'] else 'complete'
         record['status'] = 'passed'
     except Exception as error:

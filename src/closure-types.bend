@@ -49,7 +49,9 @@ def read(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>, +code: String) -> Res
         case Con{+dash,Con{+arrow,+tail}}:
           S.choose(Result<S.Error,Read>,S.matches(dash,"-"),u =>
             S.choose(Result<S.Error,Read>,S.matches(arrow,">"),u =>
-              then(read(n,Bool.pick(Mode,grouped,TypeGroupedExpr{},TypeExpr{}),tail,code),result => rest => Done{Read{S.Arrow{domain,result},rest}}),u =>
+              S.choose(Result<S.Error,Read>,S.adjacent(dash,arrow),u =>
+                then(read(n,Bool.pick(Mode,grouped,TypeGroupedExpr{},TypeExpr{}),tail,code),result => rest => Done{Read{S.Arrow{domain,result},rest}}),u =>
+                Fail{S.Invalid{"parse","split-arrow",S.at(dash)}}),u =>
               Done{Read{domain,tokens}}),u =>
           S.choose(Result<S.Error,Read>,S.matches(dash,"<"),u =>
             S.choose(Result<S.Error,Read>,S.matches(arrow,"-"),u =>
@@ -96,8 +98,30 @@ def reusable(definition: C.Datatype) -> Bool:
 def find(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Maybe<&2,U32>:
   match types:
     case Nil{}: None{}
-    case Con{head,+tail}:
-      S.choose(Maybe<&2,U32>,String.eq(S.text(token(head)),S.text(name)),u => Some{index},u => find(tail,name,U32.add(index,1)))
+    case Con{C.Datatype{token,data,ctors},+tail}:
+      S.choose(Maybe<&2,U32>,String.eq(S.text(token),S.text(name)),u => Some{index},u => find(tail,name,U32.add(index,1)))
+    case Con{C.Arrow{token,domain,result},tail}: find(tail,name,U32.add(index,1))
+
+# An arrow's key is its resolved pair, never its recursively printed spelling.
+def find_arrow(types: List<&2,C.Datatype>, +domain: U32, +result: U32, +index: U32) -> Maybe<&2,U32>:
+  match types:
+    case Nil{}: None{}
+    case Con{C.Arrow{name,input,output},+tail}:
+      S.choose(Maybe<&2,U32>,Bool.and(U32.is_eq(input,domain),U32.is_eq(output,result)),u => Some{index},u => find_arrow(tail,domain,result,U32.add(index,1)))
+    case Con{head,tail}: find_arrow(tail,domain,result,U32.add(index,1))
+
+def known(value: Maybe<&2,U32>, name: S.Token) -> Result<S.Error,U32>:
+  match value:
+    case None{}: C.invalid(U32,"unknown-type",name)
+    case Some{index}: Done{index}
+
+def lookup(fuel: Nat, +name: S.Token, +types: List<&2,C.Datatype>) -> Result<S.Error,U32>:
+  match fuel name:
+    case 0n _: C.exhausted(U32,name)
+    case 1n+ n S.Token{text,at}: known(find(types,name,0),name)
+    case 1n+ +n S.Arrow{domain,+result}:
+      S.bind(U32,U32,lookup(n,domain,types),domain_id =>
+        S.bind(U32,U32,lookup(n,result,types),result_id => known(find_arrow(types,domain_id,result_id,0),name)))
 
 def found(value: Maybe<&2,U32>, +types: List<&2,C.Datatype>, name: S.Token) -> Result<S.Error,Interned>:
   match value:
@@ -129,7 +153,7 @@ def intern(fuel: Nat, +name: S.Token, +types: List<&2,C.Datatype>) -> Result<S.E
     case 1n+ +n S.Arrow{domain,+result}:
       then_intern(intern(n,domain,types),with_domain => +domain_id =>
         then_intern(intern(n,result,with_domain),+with_result => +result_id =>
-          append(find(with_result,name,0),with_result,name,domain_id,result_id)))
+          append(find_arrow(with_result,domain_id,result_id,0),with_result,name,domain_id,result_id)))
 
 def intern_all(names: List<&2,S.Token>, +types: List<&2,C.Datatype>) -> Result<S.Error,List<&2,C.Datatype>>:
   match names:

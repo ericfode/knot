@@ -1,5 +1,14 @@
 # Closure mechanism review
 
+Review round one adds five checked equations without changing any existing law:
+adjacent and separated operator spans, spelling-independent arrow keys, and
+independent domain/result discrimination. These are local reductions over the
+stated span/ID witnesses, with quantified text or tokens. They establish neither
+general parser soundness nor the open capture/application preservation theorem.
+The 42 expectation-first review controls and five additional mutation controls
+are described in [GATE.md](GATE.md) and
+[the review report](../../docs/compiler-campaign/closures-review-r1.md).
+
 The contract is fixed by the original 42 fixtures and 292 seed calls in
 `expectations.json`, plus the expectation-first `probes.json` and
 `regressions.json` commits. The original fixtures, observations and regeneration

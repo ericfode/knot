@@ -42,3 +42,27 @@ law no_type_budget:
   for code: String
   {F.read(0n,mode,tokens,code)
     == Fail{S.Exhausted{"parse",S.here(tokens)}} : Result<S.Error,F.Read>}
+
+law adjacent_operator:
+  for left: String
+  for right: String
+  {S.adjacent(S.Token{left,S.At{0,1,1,0}},S.Token{right,S.At{1,2,1,1}})
+    == True{} : Bool}
+
+law separated_operator:
+  for left: String
+  for right: String
+  {S.adjacent(S.Token{left,S.At{0,1,1,0}},S.Token{right,S.At{2,3,1,2}})
+    == False{} : Bool}
+
+law arrow_key_ignores_spelling:
+  for name: S.Token
+  {F.find_arrow([C.Arrow{name,0,1}],0,1,0) == Some{0} : Maybe<&2,U32>}
+
+law arrow_key_checks_domain:
+  for name: S.Token
+  {F.find_arrow([C.Arrow{name,0,1}],1,1,0) == None{} : Maybe<&2,U32>}
+
+law arrow_key_checks_result:
+  for name: S.Token
+  {F.find_arrow([C.Arrow{name,0,1}],0,0,0) == None{} : Maybe<&2,U32>}

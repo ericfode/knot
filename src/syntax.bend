@@ -59,6 +59,12 @@ def here(ts: List<&2,Token>) -> At:
 def matches(t: Token, value: String) -> Bool:
   String.eq(text(t),value)
 
+def adjacent(left: Token, right: Token) -> Bool:
+  match left right:
+    case Token{a,At{lo,+end,line,col}} Token{b,At{start,hi,row,column}}:
+      U32.is_eq(end,start)
+    case _ _: False{}
+
 def alpha(+c: U32) -> Bool:
   Bool.or(U32.is_eq(c,95),Bool.or(
     Bool.and(U32.is_ge(c,65),U32.is_le(c,90)),

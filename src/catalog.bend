@@ -24,12 +24,27 @@ def names(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>) -> Result<S.Error,Uni
       S.choose(Result<S.Error,Unit>,named(seen,name),u => C.invalid(Unit,"duplicate-global",name),u => names(tail,Con{name,seen}))
     case _: C.internal(Unit,"declaration-node")
 
-def find_type(types: List<&2,C.Datatype>, +name: S.Token, +index: U32) -> Result<S.Error,TypeRef>:
+def type_at(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
   match types:
-    case Nil{}: C.invalid(TypeRef,"unknown-type",name)
+    case Nil{}: C.internal(C.Datatype,"type-index")
     case Con{+head,+tail}:
-      S.choose(Result<S.Error,TypeRef>,String.eq(S.text(F.token(head)),S.text(name)),u =>
-        Done{TypeRef{index,head}},u => find_type(tail,name,U32.add(index,1)))
+      S.choose(Result<S.Error,C.Datatype>,U32.is_eq(index,0),u => Done{head},u => type_at(tail,U32.sub(index,1)))
+
+def find_type(+types: List<&2,C.Datatype>, name: S.Token, +index: U32) -> Result<S.Error,TypeRef>:
+  S.bind(U32,TypeRef,F.lookup(4096n,name,types),+offset =>
+    S.bind(C.Datatype,TypeRef,type_at(types,offset),definition => Done{TypeRef{U32.add(index,offset),definition}}))
+
+def closed_type(fuel: Nat, +name: S.Token, +seen: List<&2,S.Token>) -> Result<S.Error,Unit>:
+  match fuel name:
+    case 0n _: C.exhausted(Unit,name)
+    case 1n+ n S.Token{text,at}:
+      S.choose(Result<S.Error,Unit>,Bool.and(Bool.not(S.matches(name,"_")),named(seen,name)),u =>
+        C.unsupported(Unit,"dependent-type",name),u => Done{Unit{}})
+    case 1n+ +n S.Arrow{domain,result}:
+      S.bind(Unit,Unit,closed_type(n,domain,seen),u => closed_type(n,result,seen))
+
+def scoped_type(+types: List<&2,C.Datatype>, +name: S.Token, seen: List<&2,S.Token>) -> Result<S.Error,TypeRef>:
+  S.bind(Unit,TypeRef,closed_type(4096n,name,seen),u => find_type(types,name,0))
 
 def find_function(sigs: List<&2,C.Signature>, +name: S.Token, +index: U32) -> Result<S.Error,FunctionRef>:
   match sigs:
@@ -110,15 +125,23 @@ def parameter_type(+token: S.Token, +q: U32, reference: TypeRef) -> Result<S.Err
     case TypeRef{+index,definition}:
       S.bind(Unit,C.Parameter,quantity(token,q,definition),u => Done{C.Parameter{token,q,index}})
 
-def parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+def scoped_parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
-        S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+        S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(types,type_name,seen),reference =>
           S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type(name,q,reference),head =>
-            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,parameters(tail,types,U32.add(count,1)),rest => Done{Con{head,rest}}))))
+            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,scoped_parameters(tail,types,Con{name,seen},U32.add(count,1)),rest => Done{Con{head,rest}}))))
     case _: C.internal(List<&2,C.Parameter>,"parameter-node")
+
+def parameters(nodes: List<&2,S.Node>, types: List<&2,C.Datatype>, count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+  scoped_parameters(nodes,types,Nil{},count)
+
+def parameter_names(params: List<&2,C.Parameter>) -> List<&2,S.Token>:
+  match params:
+    case Nil{}: Nil{}
+    case Con{C.Parameter{name,q,type_id},tail}: Con{name,parameter_names(tail)}
 
 def signature(token: S.Token, params: List<&2,C.Parameter>, reference: TypeRef) -> C.Signature:
   match reference:
@@ -129,8 +152,8 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
-        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),ps =>
-          S.bind(TypeRef,List<&2,C.Signature>,find_type(types,result,0),reference =>
+        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),+ps =>
+          S.bind(TypeRef,List<&2,C.Signature>,scoped_type(types,result,parameter_names(ps)),reference =>
             S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
               Done{Con{signature(name,ps,reference),rest}}))))
     case Con{S.Datatype{name,data,ctors},tail}: collect_signatures(tail,types,count)
@@ -157,7 +180,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+          S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(types,type_name,seen),reference =>
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))
@@ -195,12 +218,6 @@ def catalog(root: S.Node) -> Result<S.Error,C.Catalog>:
                 +types = List.append(&2,C.Datatype,resolved,F.arrows(registry))
                 S.bind(List<&2,C.Signature>,C.Catalog,collect_signatures(nodes,types,0),sigs => Done{C.Catalog{types,sigs}}))))))
     case _: C.internal(C.Catalog,"book-node")
-
-def type_at(types: List<&2,C.Datatype>, +index: U32) -> Result<S.Error,C.Datatype>:
-  match types:
-    case Nil{}: C.internal(C.Datatype,"type-index")
-    case Con{+head,+tail}:
-      S.choose(Result<S.Error,C.Datatype>,U32.is_eq(index,0),u => Done{head},u => type_at(tail,U32.sub(index,1)))
 
 def fields_at(ctors: List<&2,C.Constructor>, +tag: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match ctors:

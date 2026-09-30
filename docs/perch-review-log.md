@@ -1000,7 +1000,7 @@ establish the old resource contract.
 The old branch runner timed out seed-native builds in frontend, checker and
 structural gates before reaching their assertions. The stopped run's exact
 diagnostics and measured gate durations are retained in
-[refresh-host-failures.json](../tests/compiler-closures/receipts/refresh-host-failures.json).
+[refresh-host-failures.json](../tests/compiler-closures/receipts/history/refresh-host-failures.json).
 Current main already provides a fourfold process hang guard, a 1,800-second
 gate ceiling and resolved clang/SDK handling. This refresh ports those host
 controls without changing source budgets, frozen outcomes, laws or mutants.
@@ -1016,7 +1016,7 @@ deterministic workflow repair; no provider or live Perch judgment was involved.
 The first complete refresh run then passed all fourteen behavior/test gates
 but failed census because `inventory/accepted.json` hashes the five earlier
 gate scripts whose host guards changed. The exact unsuccessful summary is in
-[refresh-pre-census.json](../tests/compiler-closures/receipts/refresh-pre-census.json).
+[refresh-pre-census.json](../tests/compiler-closures/receipts/history/refresh-pre-census.json).
 `census:approve` emitted a blank summary and changed no declaration/import
 policy; `census` refreshed only those five gate hashes. Prevention: run the cheap
 census check immediately after any gate-script edit, before the full native
@@ -1030,7 +1030,7 @@ mutant stop at an undeclared-pattern diagnostic instead of its intended wrong
 tree. Constructor visibility now compares original source offsets, independently
 of AST ordering. Its paired forward-pattern and forward-term controls are
 seed-frozen before repair. The first unsuccessful complete run is retained in
-[precheck-first-gates.json](../tests/compiler-closures/receipts/precheck-first-gates.json),
+[precheck-first-gates.json](../tests/compiler-closures/receipts/history/precheck-first-gates.json),
 including the manifest-coverage failure and the new harness's incorrect expected
 value shape. None is a semantic mutant kill or source rejection.
 
@@ -1041,3 +1041,33 @@ Bend file before the whole runner. Native seed builds of accepted standalone
 books need an import-Base wrapper; take syntax verdicts from the seed itself
 before assuming a proposed neighboring control is valid. This is deterministic
 review evidence, with no live Perch/provider judgment or invented timing.
+
+## 2026-09-29 — Closure review operator, scope and host controls
+
+The coordinator's round-one review found token adjacency loss, lexical type
+shadows accepted through the global registry, seed-valid lambda layouts reported
+Invalid, recursively printed signature keys, and a reproducible pinned Node
+Liftoff abort on wide tail calls. Forty-two additional seed controls were frozen
+before repair in `662c88bb`; the pre-repair builds, exact outputs, host controls
+and measured timings are retained in
+[review-r1-before.json](../tests/compiler-closures/receipts/history/review-r1-before.json).
+
+Prevention: pair punctuation probes with contiguous controls; probe type atoms
+under parameters, fields and local/lambda binders; test layout at token and
+statement boundaries; measure unused ordinary signatures as well as closure
+programs; execute wide target signatures on the pinned default engine. A decoded
+module can validate and still trigger a host compiler abort. The new mutant for
+that guard is killed by the unsafe decoded lowering, before invocation; the
+abort is never called a semantic kill.
+
+One manual native build lacked SDK headers and one mutant assertion confused a
+literal backslash-n with the diagnostic's actual newline. Supplying the SDK path
+and asserting the observed diagnostic byte sequence fixed those harness errors.
+No frozen outcome changed. Raw local logs remain under `.local/closures/review-r1/`.
+
+Offline preflight remains structurally blocked. Shared context fitting, pinned
+nonlocal-import context and composition partitioning require the coordinator's
+Perch integration; `perch-cap` owns the fitting changes. Caps, coverage and
+quality bars are retained. The complete before/after counts and precise limits
+are in [the review report](compiler-campaign/closures-review-r1.md). No semantic
+or style provider request was made, and no style axis is reported qualified.

@@ -150,3 +150,27 @@ three semantic mutants in both lanes before requiring their intended wrong
 classification: an unclosed family becomes Unsupported, commas become required,
 or a late constructor pattern becomes Parsed. These counts are separate from
 the 87 existing closure fixtures and five original mutants.
+
+## Review round one
+
+`review-r1.json` and 42 additional sources were frozen in `662c88bb` before
+repair. `review_seed.py` replays 42 checks, 84 native/Bun builds and 58 seed
+executions: 29 accepted controls and 13 rejected programs. No earlier frozen
+expectation, law or mutant is changed. The corpus covers six split/contiguous
+operator pairs, seven lexical type shadows and their controls, eleven lambda
+layouts, three wide partial calls and two ordinary signatures.
+
+`review_replay.py` runs check/eval/Fields compile in both lanes, preserves the
+failure marker, requires all accepted results and identical module bytes, and
+runs wide modules on default Node, forced Liftoff, Node without Liftoff and Bun.
+The conservative lowering guard excludes wide return calls in decoded WAT.
+Timings for three native compilations of each wide ordinary signature are
+recorded separately; the 30-second process guard is not a complexity theorem.
+
+Four type-correct semantic mutants expose split-type acceptance, split-lambda
+acceptance, ignored lexical type shadows and false Invalid semicolon layouts.
+A fifth type-correct mutant restores the unsafe wide `return_call`; its decoded
+lowering violates the host guard before invocation. That is reported separately
+as a lowering-safety kill. A host abort never counts as a semantic kill.
+Five additional local equations check span adjacency and the two components of
+an arrow key. The original 28 equations and all of their domains remain intact.

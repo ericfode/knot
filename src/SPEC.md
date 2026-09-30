@@ -240,12 +240,20 @@ have kind `Type`; reusable function binders and live function fields in a `Data`
 datatype are Invalid. The retained enum profile still reports
 `Unsupported compile closures` for actual closure terms. Select `Fields{}` for
 execution. Arrow metadata alone leaves the old enum modules byte-identical.
+The two characters within `->` and `=>` must occupy adjacent source spans;
+whitespace between them cannot form an arrow. Type atoms resolve in the active
+lexical scope. An earlier parameter, field, lambda binder or local value that
+shadows a type name makes that type occurrence `Unsupported check dependent-type`:
+this profile cannot interpret local values as types. A binder is not visible in
+its own annotation. This guard applies recursively to both arrow components.
 
 Lambdas have the source shapes `x => body` and `+x => body`. They check against
 an expected arrow; an unannotated lambda initializer is Invalid
 `annotation-required`. A promoted binder must have a `Data` domain. The binder
 shadows earlier names. `_` discards its argument without introducing or shadowing
-a name. Lambda bodies can contain bindings and further lambdas;
+a name. A newline may separate a lambda binder from its contiguous `=>`.
+Lambda bodies can contain bindings and further lambdas; binding continuations
+may follow a semicolon or newline, with independent continuation indentation.
 matches in those bodies are Invalid `unmatchable-binder`, as in the seed.
 Closure applications and literal lambdas used as match scrutinees are Invalid
 `computed-scrutinee`.
@@ -291,15 +299,22 @@ checked source program can construct. Forged host function handles are outside
 the enum-only host precondition.
 
 Closure-containing modules use `return_call` in actual tail positions, including
-match arms and let bodies. Calls in arguments and initializers keep `call`.
+match arms and let bodies, when both signatures have at most 32 live parameters.
+Wider callees use `call; return`, and wider callers use ordinary body lowering.
+This conservative guard avoids the pinned Node 22 arm64 Liftoff abort on wide
+tail-call stack adjustments. Erased parameters do not count. Wide calls retain
+value semantics but can exhaust the call stack; no constant-stack guarantee is
+made for them. Calls in arguments and initializers keep `call`.
 The frozen continuation probe constructs and invokes 2,048 continuations under
 a reduced Node stack. This establishes that bounded execution and kills an
 ordinary-call mutant; it is not an unbounded space theorem. The unchanged
 65,536-byte bump arena still limits allocation and provides no reclamation.
 
 The registry admits at most 4,096 interned types, independently of the existing
-256 source datatype limit. Type inventory and type syntax have bounded traversals;
-closure inventory and rewriting share the selected emitter-depth ceiling and
+256 source datatype limit. Type inventory and type syntax have bounded traversals.
+Arrow keys are pairs of resolved domain/result IDs, so lookup and interning do
+not recursively print synthetic signature trees. Nominal lookup skips arrows.
+Closure inventory and rewriting share the selected emitter-depth ceiling and
 report Exhausted if it is insufficient. Lexical-level limits remain 4,096.
 Code identity combines the source function index, source offset and eta ordinal;
 Wasm constructor tags are separate dense ordinals and never encode that identity
