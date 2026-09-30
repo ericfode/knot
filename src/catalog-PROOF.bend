@@ -22,5 +22,8 @@ def L.data_field_preserves_metadata(token,index,data,name,ctors):
     case False{}: {==}
     case True{}: {==}
 
+def L.preceding_field_shadows_global_type(types,at,origin,seen):
+  {==}
+
 def L.field_capability_is_not_acceptance(token,head,tail,rest):
   {==}

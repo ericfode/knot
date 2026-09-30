@@ -25,6 +25,14 @@ law data_field_preserves_metadata:
   for ctors: List<&2,C.Constructor>
   {G.field_type(token,2,data,G.TypeRef{index,C.Datatype{name,True{},ctors}}) == Done{C.Parameter{token,2,index}} : Result<S.Error,C.Parameter>}
 
+law preceding_field_shadows_global_type:
+  for types: List<&2,C.Datatype>
+  for +at: S.At
+  for origin: S.At
+  for seen: List<&2,S.Token>
+  {G.field_reference(types,S.Token{"Flag",at},Con{S.Token{"Flag",origin},seen})
+    == Fail{S.Unsupported{"check","dependent-field-type",at}} : Result<S.Error,G.TypeRef>}
+
 law field_capability_is_not_acceptance:
   for +token: S.Token
   for head: C.Parameter

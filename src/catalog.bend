@@ -147,6 +147,10 @@ def field_type(+token: S.Token, +q: U32, +data: Bool, reference: TypeRef) -> Res
             S.choose(Result<S.Error,C.Parameter>,field_kind(data,q,child),u =>
               Done{C.Parameter{token,q,index}},u => C.invalid(C.Parameter,"data-field-kind",token)))
 
+def field_reference(types: List<&2,C.Datatype>, +name: S.Token, seen: List<&2,S.Token>) -> Result<S.Error,TypeRef>:
+  S.choose(Result<S.Error,TypeRef>,named(seen,name),u =>
+    C.unsupported(TypeRef,"dependent-field-type",name),u => find_type(types,name,0))
+
 def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
   +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
   match nodes:
@@ -154,7 +158,7 @@ def fields(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +data: Bool,
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
         S.choose(Result<S.Error,List<&2,C.Parameter>>,named(seen,name),u => C.invalid(List<&2,C.Parameter>,"duplicate-field",name),u =>
-          S.bind(TypeRef,List<&2,C.Parameter>,find_type(types,type_name,0),reference =>
+          S.bind(TypeRef,List<&2,C.Parameter>,field_reference(types,type_name,seen),reference =>
             S.bind(C.Parameter,List<&2,C.Parameter>,field_type(name,q,data,reference),head =>
               S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,fields(tail,types,data,Con{name,seen},U32.add(count,1)),rest =>
                 Done{Con{head,rest}})))))
