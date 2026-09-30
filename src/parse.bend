@@ -215,7 +215,9 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           S.choose(Result<S.Error,Parsed>,S.matches(head,"<eof>"),u =>
             Done{Parsed{S.Sequence{Nil{}},tokens}},u =>
           S.choose(Result<S.Error,Parsed>,U32.is_eq(S.column(head),0),u =>
-            then(layout_head(S.skip_lines(Con{name,tail}),actual => after => run(n,Header{head,actual},after)),value => rest =>
+            then(S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(head,"def"),S.matches(head,"type")),u =>
+              layout_head(S.skip_lines(Con{name,tail}),actual => after => run(n,Header{head,actual},after)),u =>
+              run(n,Header{head,name},tail)),value => rest =>
               then(run(n,Book{},rest),more => end => prepend(value,more,end))),u =>
             invalid(tokens,"top-level-indentation")))
         case Con{+head,Nil{}}:

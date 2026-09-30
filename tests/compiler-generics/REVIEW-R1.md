@@ -81,3 +81,12 @@ paired with one existing layout primitive and exact boundary laws. Compression,
 Delight, memetic identity, Anticipation and Payoff are all unreviewed by the
 no-live-review instruction. Offline context coverage does not establish any
 numeric style rating or automatic semantic/style pass.
+
+The first full run on `97b4e49a` found a malformed-import diagnostic regression:
+layout normalization advanced past the original newline. Restricting declaration
+name normalization to `def` and `type` restores the frozen span `7:8:2:0`.
+All 30 existing parse-classification controls pass with the correction, and the
+complete layout proof entry still passes. The census is regenerated/current;
+offline preflight still has 29 complete groups, 1,267 units, 51 files, no
+truncation/blockers and no provider requests. The old failing export remains
+separate from the corrected implementation and its next full run.

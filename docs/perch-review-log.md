@@ -1228,3 +1228,10 @@ freeze adjacent valid layouts and detached glued-token negatives on both routes.
 Run those controls before expensive module and mutation builds. No earlier
 expectation or law was weakened, and no live model call or elapsed-time estimate
 is claimed in this entry.
+
+The first full run then caught a diagnostic-span regression on the unchanged
+`local-import-malformed` control: declaration-name normalization crossed into
+`import`, outside this layout capability. Restricting it to `def` and `type`
+restores the original newline diagnostic. The frozen import control and all
+other assertions stay unchanged. Include unsupported declaration kinds in the
+layout exclusion matrix before running the full integration suite.
