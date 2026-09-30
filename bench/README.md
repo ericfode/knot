@@ -139,7 +139,13 @@ manifest/classification/lifecycle/batch tests, then runs the complete hillclimb
 inventory at one sample. Four seed-type-correct semantic mutants (wrong parity
 base, ignored cell, wrong match arm and omitted flip) must compile in both lanes
 and be killed by unchanged runtime expectations. Its own tracked receipt is
-[receipts/verification.json](receipts/verification.json). The compiler gate runner
+[receipts/verification.json](receipts/verification.json). It also checks
+[24 seed-frozen edge programs](fixtures/refresh/CONTRACT.md) in both lanes,
+including empty/singleton inputs, odd/even lengths and enum wraparound. These
+controls remain outside the timed inventory; their evaluator and Wasm results
+and byte-identical lane pairs are in [refresh-edges.json](receipts/refresh-edges.json).
+The [refresh report](REFRESH.md) records the current decisions, exact gate counts
+and coordinator integration work. The compiler gate runner
 is deliberately unchanged under bench-2's ownership instruction; the coordinator
 must register this command if it should run through `npm run gates`.
 

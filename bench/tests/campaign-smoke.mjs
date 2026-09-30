@@ -69,3 +69,6 @@ const receipt = { schemaVersion: 1, status: 'passed', command: 'npm run bench:ve
     runtime: c.status === 'measured' ? c.lanes.native.runtimeStatus ?? 'measured' : undefined })) };
 writeFileSync(path.join(receipts, 'verification.json'), JSON.stringify(receipt, null, 2) + '\n');
 console.log(`Campaign benchmark gate passed: 189 fixture programs, 12 generators, ${result.coverage.measured} measured programs, ${batches} runtime batches >=10 ms, 4 seed-type-correct mutants killed in both lanes.`);
+
+// Share the guarded builds with the independent refresh corpus.
+export { result };

@@ -21,3 +21,4 @@ assert.equal(comparison.insufficient, false);
 console.log('Smoke passed: both compiler lanes, validated artifacts, warm repeated calls, JSON round trip and comparison.');
 
 await import('./campaign-smoke.mjs');
+await import('./refresh-smoke.mjs');
