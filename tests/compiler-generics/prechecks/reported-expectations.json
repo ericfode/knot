@@ -1,0 +1,537 @@
+{
+  "basis": "D7: exact supplied C1 programs and seed-valid layout controls frozen before the header-layout repair; prior expectations unchanged.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_files": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "reported-return-prefix",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/reported-return-prefix.bend",
+      "sha256": "299c7947c7d7a981a79586ab311086deda8a574280f827d11ada86bb8128ba9c",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 91
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n7 | \n8>| def f() -> Flag<:\n  |                 ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "reported-return-equals",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/reported-return-equals.bend",
+      "sha256": "6cdb9f1ec3bf7740502c89900a693ea115f511814cbfb659db2b9a3578a1750d",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 93
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '='\nLocation:\n7 | \n8>| def f() -> Flag<x>=:\n  |                   ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "reported-return-closer",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/reported-return-closer.bend",
+      "sha256": "095b335753e43c94098ba27f09214e33973cc88f8ad48a216b5cf9aae0795e75",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 96
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : '>'\nLocation:\n7 | \n8>| def f() -> Flag<Flag>>:\n  |                      ^\n9 |   On{}\n"
+        }
+      }
+    },
+    {
+      "name": "reported-annotation-prefix",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/reported-annotation-prefix.bend",
+      "sha256": "7b289f0aa74d83ea6cde32363d89a7cda355cc5b6b50998d4b6455ac11a53c72",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 103
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '='\nLocation:\n 8 | def f() -> Flag:\n 9>|   x: Flag< = On{}\n   |            ^\n10 |   x\n"
+        }
+      }
+    },
+    {
+      "name": "reported-split-pattern",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/reported-split-pattern.bend",
+      "sha256": "9bf0f314195f2a1f342f6a454d9c9af126b5c711e57d6c07c1a8c2db106ffed0",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 621
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : '}'\nLocation:\n42 |     case Second\n43>|   {}:\n   |    ^\n44 |       t\n"
+        }
+      }
+    },
+    {
+      "name": "reported-detached-tag-branch",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/reported-detached-tag-branch.bend",
+      "sha256": "3a57659eece1bf1dfe7ae789a8016f5d525e9958d3a5a8bbc9b7682275b59bdd",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "'def', 'type' or 'law'",
+          "begin": 186
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n13 |     case On{}:\n14>|       Second {}\n   |              ^\n15 | \n"
+        }
+      }
+    },
+    {
+      "name": "reported-detached-tag-entry",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/reported-detached-tag-entry.bend",
+      "sha256": "66acbfe944f49488ae2d61dd9c0723ee9c3b2623a5466ea72219ff386026107a",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "'def', 'type' or 'law'",
+          "begin": 449
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : 'def', 'type' or 'law'\n- observed : '{'\nLocation:\n30 | def main() -> Tag<Flag>:\n31>|   TagY {}\n   |        ^\n32 | \n"
+        }
+      }
+    },
+    {
+      "name": "reported-datatype-colon",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "allowed_exits": [
+            0,
+            3
+          ]
+        }
+      },
+      "file": "fixtures/reported-datatype-colon.bend",
+      "sha256": "ce3f50323140ab103b6dd60250c725cf69438f3955a91157d3ae87062583d6dd",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "reported-empty-list",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "[]",
+      "rendered_value": "Nil{}",
+      "tag": 0,
+      "abi": "boxed",
+      "file": "fixtures/reported-empty-list.bend",
+      "sha256": "8f78e510562ae976e93621cb8b8a268f72982db988324552b676ab6971b436f1",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "[]\n",
+          "stderr": ""
+        },
+        "constructor": {
+          "constructor": "Nil",
+          "arity": 0,
+          "display": "[]"
+        }
+      }
+    },
+    {
+      "name": "reported-application-prefix",
+      "expected": {
+        "parse": {
+          "exit": 3
+        },
+        "check": {
+          "exit": 3
+        }
+      },
+      "file": "fixtures/reported-application-prefix.bend",
+      "sha256": "034f6b0a8ed661efb2f39d25ec7df1c11163b1de688dd01a86110364067844ec",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term",
+          "begin": 54
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term\n- observed : ':'\nLocation:\n4 | \n5>| def main() -> List<:\n  |                    ^\n6 |   Nil{}\n"
+        }
+      }
+    },
+    {
+      "name": "reported-result-arrow",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "tag": 1,
+      "abi": "boxed",
+      "file": "fixtures/reported-result-arrow.bend",
+      "sha256": "d4746ca922b03c564a6a5e9e278d7ff4f5a6a9a8216a8ca5a4d099a37c9323fd",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "Second{}\n",
+          "stderr": ""
+        }
+      },
+      "value": "Second{}"
+    },
+    {
+      "name": "reported-monomorphic-colon",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "tag": 2,
+      "abi": "enum",
+      "file": "fixtures/reported-monomorphic-colon.bend",
+      "sha256": "f1d3c4a38ecfc3eb6ad857773025db770d15db49030aaf8fe490c6c7ab795850",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "Blue{}\n",
+          "stderr": ""
+        }
+      },
+      "value": "Blue{}"
+    },
+    {
+      "name": "generic-kind-layout",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "file": "fixtures/generic-kind-layout.bend",
+      "sha256": "e742c4856887844570ee1ff107bf40acd792f6f6e5afa94b58c1e9e3ffd5faff",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "generic-colon-layout",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "file": "fixtures/generic-colon-layout.bend",
+      "sha256": "8825e2a4657866c59235b24f488c8c5bb2699adfc7521ed7dcb52ae18998d34f",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "enum-colon-layout",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "file": "fixtures/enum-colon-layout.bend",
+      "sha256": "8f204df910cb2dbf5585d7f886bcd2c051d2e2d84263af86b580fcd42ac694c2",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "named-arrow-layout",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "file": "fixtures/named-arrow-layout.bend",
+      "sha256": "07c08ddb56381a30c689e8ffc5303877e6607f45446f2185625ea074ed6baaa3",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "applied-arrow-layout",
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "On{}",
+      "tag": 1,
+      "file": "fixtures/applied-arrow-layout.bend",
+      "sha256": "42e8ae1cc3264d6a6ea2d07b13d407e3ee2b1103a8d716ac8d85758b6603dc77",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "On{}\n",
+          "stderr": ""
+        }
+      }
+    },
+    {
+      "name": "missing-generic-colon",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/missing-generic-colon.bend",
+      "sha256": "de34790527594b9e9ec815b693c6247a4ca3601ea82295baa964d1838e5c2c20",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 68
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : 'B'\nLocation:\n5 | type Box<-A: Type> is Type # c\n6>|   Box{value: A}\n  |   ^\n7 | \n"
+        }
+      }
+    },
+    {
+      "name": "missing-result-colon",
+      "expected": {
+        "parse": {
+          "exit": 2
+        },
+        "check": {
+          "exit": 2
+        }
+      },
+      "file": "fixtures/missing-result-colon.bend",
+      "sha256": "36919d2768b59fa11f18f674a856d9582a49524b68bb3904dfa1a99c872917ee",
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "':'",
+          "begin": 66
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : ':'\n- observed : 'O'\nLocation:\n6 |   -> Flag # c\n7>|   On{}\n  |   ^\n8 | \n"
+        }
+      }
+    }
+  ]
+}
