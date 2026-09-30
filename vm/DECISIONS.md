@@ -1411,6 +1411,20 @@ Round 13's list stands in full (D22, D23 and D24, the loader controls and the co
    result types the seed prints: `def main() -> List<Flag>` (seed `[On{}]`),
    `-> Bool & Bool` (`(True{}, False{})`) and `-> Result<Bool,Bool>`
    (`Done{True{}}`).
+   **Review r0 follow-up (2026-09-29).** Confirmed independently and reproduced
+   by `review-r0/io-sequence.bend`: seed check succeeds; seed Bun and native
+   write `alpha\nbeta\n`; both historical CLIs give the same false Invalid.
+   The snapshot and existing goldens are immutable evidence. vm-spec now
+   records every Program's `oracle_availability` separately from the raw
+   verdict: `unavailable`, owner literals/io-check. Only this exact inherited
+   diagnostic and the known Unsupported parameter-type and generic-datatype gaps are admitted;
+   checker/evaluator disagreement, successful evaluation, unrelated Invalid
+   and host failure cannot be mistaken for that lane. Four refusal controls
+   and two killed rule mutants hold the classification; all three new review
+   sources were re-observed in seed check, Bun, native and both snapshot CLIs.
+   The parser fix and any upgraded oracle snapshot remain with literals/io-check
+   and coordinator integration. No existing expectation or seed observation
+   was re-frozen.
 2. **The speed gate needs vm-rc.** The frozen workloads allocate far more than
    they keep live. By SPEC §5's size rule, without release `deep-recursion` alone
    allocates 10^9 Activations of at least 16 bytes (16 GB), `peano` at least

@@ -46,6 +46,7 @@ WITNESSES = GOLDEN / 'witnesses.json'
 CODEC = HERE / 'serializer.py'
 EVALUATOR = HERE / 'evaluate.py'
 RULE = Path(__file__).resolve()
+REVIEW = HERE / 'review-r0'
 
 
 def load(path: Path, text: str | None = None):
@@ -532,6 +533,90 @@ def core_view(name: str, case: dict, plan: dict, shown: dict, source: str, reg: 
     else:
         require(plan['entry'] == 'program', f'{name}: no checked core for a Book plan')
     return f"unavailable: {shown['stderr'].strip()}"
+
+
+def program_oracle(case: dict, shown: dict) -> dict:
+    """Availability of a Program's historical literals lane, separate from its raw verdict.
+
+    The pinned head cannot check IO. Its known false Invalid is preserved as evidence;
+    it supplies neither a checked core nor evaluation agreement (D4, SPEC section 11).
+    Other failures must not hide behind this narrowly identified inherited defect.
+    """
+    ev = case['eval']
+    require(case['lane'] == 'literals' and case['seed']['exit'] == 0,
+            f"{case['name']}: unavailable Program oracle needs a seed-accepted literals case")
+    require(observed(shown) == ev, f"{case['name']}: unavailable Program's checker and evaluator differ")
+    invalid = re.fullmatch(r'Invalid\tparse\tfunction-result\t\d+:\d+:\d+:\d+\n', ev['stderr'])
+    if ev['exit'] == 2 and ev['stdout'] == '' and invalid:
+        reason = 'inherited Invalid parse function-result on seed-accepted IO'
+    else:
+        gap = next((f'Unsupported parse {code}' for code in ('parameter-type', 'generic-datatype')
+                    if unavailable_line(ev, f'Unsupported parse {code}')), None)
+        require(gap is not None,
+                f"{case['name']}: unknown unavailable Program verdict {ev}")
+        reason = gap
+    return {'status': 'unavailable', 'owner': 'literals/io-check', 'reason': reason}
+
+
+def program_oracle_controls() -> list:
+    """Refuse agreement, an unrelated Invalid, a host failure and inconsistent CLI observations."""
+    entry = json.loads((REVIEW / 'expectations.json').read_text())['cases'][0]
+    raw = entry['snapshot']['eval']
+    case = {**entry, 'lane': 'literals', 'seed': entry['seed_native'], 'eval': raw}
+    require(program_oracle(case, entry['snapshot']['check']) == entry['availability'],
+            'review IO lane must remain unavailable, with its owner and precise inherited defect')
+    out = []
+    for label, ev, shown in [
+            ('agreement', {'exit': 0, 'stdout': 'Evaluated\t0\t0\tUnit{}\n', 'stderr': ''}, None),
+            ('other-invalid', {**raw, 'stderr': raw['stderr'].replace('function-result', 'other')}, None),
+            ('host-failure', {'exit': 5, 'stdout': '', 'stderr': 'HostFailure\tio\tabi\n'}, None),
+            ('checker-differs', raw, {**raw, 'stderr': raw['stderr'].replace('13:14', '14:15')})]:
+        try:
+            program_oracle({**case, 'eval': ev}, shown or ev)
+        except AssertionError as refusal:
+            out.append({'control': label, 'refused': str(refusal)})
+            continue
+        raise AssertionError(f'Program oracle control {label} was admitted')
+    return out
+
+
+def review_observations(built: dict) -> dict:
+    """Reproduce the independent review's seed and snapshot witnesses without amending any pin."""
+    rows = {}
+    for entry in json.loads((REVIEW / 'expectations.json').read_text())['cases']:
+        name, source = entry['name'], entry['source']
+        require(sha((ROOT / source).read_bytes()) == entry['sha256'], f'review {name}: source hash')
+        case = {**entry, 'lane': 'literals', 'seed_lane': 'native'}
+        got = {'seed_check': observed(run([SEED, source, '--check-only'], 120)),
+               'seed_bun': observed(run([SEED, source], 120)),
+               'seed_native': observed(seed_observation(case)),
+               'snapshot': {tool: observed(run([built['literals'][tool], '--bundle', '.', source,
+                                               *(['main', EVAL_BUDGET] if tool == 'eval' else [])], 120))
+                            for tool in ('check', 'eval')}}
+        for lane in ('seed_check', 'seed_bun', 'seed_native', 'snapshot'):
+            require(got[lane] == entry[lane], f'review {name}: {lane} drift {got[lane]}')
+        if 'availability' in entry:
+            got['availability'] = program_oracle({**case, 'seed': got['seed_native'],
+                                                  'eval': got['snapshot']['eval']}, got['snapshot']['check'])
+            require(got['availability'] == entry['availability'], f'review {name}: unavailable lane')
+        rows[name] = got
+    controls = program_oracle_controls()
+    mutants = []
+    for name, old, new in [
+            ('false-invalid-is-agreement', "return {'status': 'unavailable', 'owner': 'literals/io-check', 'reason': reason}\n",
+             "return {'status': 'agree', 'owner': 'literals/io-check', 'reason': reason}\n"),
+            ('unknown-failure-is-unavailable', "require(gap is not None,\n",
+             "require(True,\n")]:
+        text = RULE.read_text()
+        require(text.count(old) == 1, f'review oracle mutant {name}: unique anchor')
+        mutant = load(RULE, text.replace(old, new))
+        try:
+            mutant.program_oracle_controls()
+        except AssertionError as refusal:
+            mutants.append({'mutant': name, 'killed': True, 'by': str(refusal)})
+            continue
+        raise AssertionError(f'review oracle mutant {name} survived')
+    return {'fixtures': rows, 'oracle_controls': controls, 'oracle_mutants': mutants}
 
 
 def core_controls(cases: dict, plans: dict, sources: dict, displays: dict, reg: dict) -> list:
@@ -4166,7 +4251,8 @@ def main() -> int:
               'oracles': {lane: b['commit'] for lane, b in built.items()},
               'inputs': {p.relative_to(ROOT).as_posix(): sha(p.read_bytes()) for p in
                          sorted([*HERE.glob('*.md'), *HERE.glob('*.py'), HERE / 'registry.json',
-                                 *GOLDEN.glob('*'), *(HERE / 'oracles').glob('*'), *(HERE / 'bench').glob('*')])
+                                 *GOLDEN.glob('*'), *(HERE / 'oracles').glob('*'), *(HERE / 'bench').glob('*'),
+                                 *REVIEW.glob('*')])
                          if p.is_file()}}
     record['registry'] = check_registry(reg, built)
 
@@ -4231,6 +4317,8 @@ def main() -> int:
                          'features': case['features'], 'image_sha256': sha(data), 'words': len(data) // 4,
                          'plan_matches': view, 'seed': classify(case['seed']), 'eval': classify(case['eval']),
                          'vm': table[name]})
+        if plan['entry'] == 'program':
+            fixtures[-1]['oracle_availability'] = program_oracle(case, displays[name])
 
     strings = plans['result-string']
     for row in fixtures:
@@ -4321,6 +4409,7 @@ def main() -> int:
                                    'from a raw word of an image')
 
     record['bench'] = check_bench(built)
+    record['review_r0'] = review_observations(built)
     boundaries += bench_controls(built)
     witnessed = witness_controls(built)
     boundaries += witness_refusals()

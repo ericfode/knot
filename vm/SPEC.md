@@ -1257,6 +1257,23 @@ answer), and follow §1 by hand as well. `io-bind`, `non-scalar-unprinted`
 and `print-non-scalar-second` keep Base's `IO.bind` (and `IO.pure`) unspecialized,
 so their `A`-typed nodes are `none`.
 
+**Historical IO oracle availability.** Every Program golden's receipt MUST
+record `oracle_availability.status` as `unavailable`, separately from its raw
+`eval` verdict and frozen `eval_lane`. A false `Invalid parse function-result`
+from the hash-pinned literals head is an inherited D4 defect, owned by
+literals/io-check; it is neither source rejection, agreement nor an exhausted
+lane. The snapshot and seed bytes remain unchanged. The owner must report
+Unsupported until it checks IO result types; upgrading that oracle belongs to
+its owner and a reviewed integration increment. The gate permits only the
+identified function-result defect or the already recorded
+`Unsupported parse parameter-type` and `Unsupported parse generic-datatype`,
+and requires the checker and evaluator to
+give the same diagnostic. Other failures cannot use this exception.
+The independent `review-r0/io-sequence.bend` witness preserves `alpha\nbeta\n`
+from both seed lanes, the two historical false-Invalid observations and the
+unavailable disposition. Four refusal controls and two semantic rule mutants
+hold this boundary without changing any golden expectation.
+
 **A Book's unavailable lane.** A Book whose form a pinned head cannot check is
 unavailable the same way, and Unsupported is still never a bound (above). `chr-pattern`,
 the first tags-mode Case on Char (`case Chr{x}`, on an immediate Char and a Big one), and
