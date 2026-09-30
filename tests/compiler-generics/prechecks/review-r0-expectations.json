@@ -1,0 +1,466 @@
+{
+  "basis": "D7: independently reported review-r0 witnesses and annotation controls, seed-frozen before repair. All previous expectations remain unchanged.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_files": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "matched-parent-alias-untyped",
+      "file": "fixtures/matched-parent-alias-untyped.bend",
+      "sha256": "fe30c99c121c05409fc17949aab895436b7942e79f524b71e36159b7d3d7a950",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : Pack{item}\nContext:\n- A    : Data\n- item : A\nLocation: echo\n10 |     case Pack{item}:\n11>|       y = x\n   |           ^\n12 |       y\n"
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tcheck\tannotation-required\t"
+        }
+      }
+    },
+    {
+      "name": "matched-parent-alias-typed",
+      "file": "fixtures/matched-parent-alias-typed.bend",
+      "sha256": "9924ba59aa91eaaaf2e5fe163b7d1426fc6eeae2df3378539bae1d4806e87cfc",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "type-delimiter-21",
+      "file": "fixtures/type-delimiter-21.bend",
+      "sha256": "6a6c3e64986a56a9e04f5352dbbc1239cbaaf61a40e493dcb6e7cc9a7ae2c528",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "result-layout-30",
+      "file": "fixtures/result-layout-30.bend",
+      "sha256": "55ce165b253dc51a9f2de3ea6e782deb48501d4937dadacee8e64c88de666996",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "datatype-layout-37",
+      "file": "fixtures/datatype-layout-37.bend",
+      "sha256": "588e888fbf839a8a165261c2a32a3555b5d92cde8bd634e318b65102866b3dd8",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "datatype-layout-38",
+      "file": "fixtures/datatype-layout-38.bend",
+      "sha256": "3d41096f257b8884971b44e870672c3d235f7ebf4faa310f297e8e067db359d7",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "datatype-layout-39",
+      "file": "fixtures/datatype-layout-39.bend",
+      "sha256": "72ad3e8b60d5fa356804a23b15b4c31faa7d338d8545cd2632f06a5e71b38261",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "datatype-layout-44",
+      "file": "fixtures/datatype-layout-44.bend",
+      "sha256": "39f5c6e1f6229120f6fc17dd503c7d506c176b63523322ed02574fa83539b075",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "function-layout-46",
+      "file": "fixtures/function-layout-46.bend",
+      "sha256": "b341d99cd4d399e07536c2f3faa35bd986de25909056b0f37bb93d12167ba5aa",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "function-layout-47",
+      "file": "fixtures/function-layout-47.bend",
+      "sha256": "d02d6fd874a61b838e1b85129562404983adebdadc50d816ca9077f5bcaf4796",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "function-layout-49",
+      "file": "fixtures/function-layout-49.bend",
+      "sha256": "3df0318c7d0f2d8bc48abb5995314bd27f2edb20050dc664f2210198771c834d",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "function-layout-50",
+      "file": "fixtures/function-layout-50.bend",
+      "sha256": "d2d2371628e8d67bfd77dad2fc9d79b84ec367c058fefc0d29616a60cbd19e07",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "function-layout-52",
+      "file": "fixtures/function-layout-52.bend",
+      "sha256": "9ab15e0c2960c69c9f617b89a010558cfad2175cf66af93bdf89ffff71adf2bd",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "ordinary-generic-alias",
+      "file": "fixtures/ordinary-generic-alias.bend",
+      "sha256": "a44129b39778e9c83b016041fcc6fcd40386dd5277983b3cab1dff137e39499f",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "matched-field-alias",
+      "file": "fixtures/matched-field-alias.bend",
+      "sha256": "12025b1306793d161a8e357ddb0ed1e48a753bcdd2825fa13270f249074c3808",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "run": {
+          "exit": 0,
+          "stdout": "High{}\n",
+          "stderr": ""
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 0
+        }
+      },
+      "value": "High{}"
+    },
+    {
+      "name": "matched-enum-alias-untyped",
+      "file": "fixtures/matched-enum-alias-untyped.bend",
+      "sha256": "386dfd3d025d1912ea8ab0f12a0286a35c51886951a1dbafcd50e49855a88bcc",
+      "seed": {
+        "parse": {
+          "ok": true
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : an annotated term (cannot infer)\n- observed : Low{}\nLocation: echo\n10 |     case Low{}:\n11>|       y = x\n   |           ^\n12 |       y\n"
+        }
+      },
+      "expected": {
+        "parse": {
+          "exit": 0
+        },
+        "check": {
+          "exit": 2,
+          "diagnostic": "Invalid\tcheck\tannotation-required\t"
+        }
+      }
+    }
+  ]
+}
