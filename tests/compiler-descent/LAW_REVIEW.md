@@ -105,3 +105,11 @@ its conflict is classified through the existing residual refusal. Inspection
 remains an independent capability boundary. The quantity primitive, mutant and
 original witness are unchanged. Normal controls and both frozen affine mutations
 are replayed before the serial full-suite qualification.
+
+The guard is admission-only and now returns `Unit` instead of carrying the
+unchanged scope through its result. The scope extension remains `M.alias`'s
+operation. Both lanes replay the normal controls and both fixed affine mutants
+with unchanged outcomes (10 observations); the eight-law proof still checks.
+Direct native builds retain the default O3 flag. No build-time speedup or causal
+effect is claimed from these observations; the final full-suite result decides
+qualification against the unchanged host deadlines.

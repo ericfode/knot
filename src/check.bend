@@ -180,13 +180,13 @@ def rebuilt(value: C.Checked, token: S.Token, +type_id: U32, tag: U32, params: L
     case _: C.internal(C.Checked,"refined-arguments")
 
 # Concrete quantity failures precede the conservative residual-identity refusal.
-def alias_result(result: Result<S.Error,C.Checked>, refusal: Result<S.Error,E.Scope>) -> Result<S.Error,C.Checked>:
+def alias_result(result: Result<S.Error,C.Checked>, refusal: Result<S.Error,Unit>) -> Result<S.Error,C.Checked>:
   match result:
     case Fail{S.Invalid{+phase,+code,+at}}:
       S.choose(Result<S.Error,C.Checked>,String.eq(code,"affine-reuse"),u => Fail{S.Invalid{phase,code,at}},u =>
-        S.bind(E.Scope,C.Checked,refusal,scope => Fail{S.Invalid{phase,code,at}}))
-    case Fail{error}: S.bind(E.Scope,C.Checked,refusal,scope => Fail{error})
-    case Done{value}: S.bind(E.Scope,C.Checked,refusal,scope => Done{value})
+        S.bind(Unit,C.Checked,refusal,u => Fail{S.Invalid{phase,code,at}}))
+    case Fail{error}: S.bind(Unit,C.Checked,refusal,u => Fail{error})
+    case Done{value}: S.bind(Unit,C.Checked,refusal,u => Done{value})
 
 def mode_at(mode: Mode) -> S.At:
   match mode:

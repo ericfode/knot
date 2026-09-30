@@ -72,34 +72,34 @@ def measure(fuel: Nat, mode: Mode, +names: List<&2,S.Token>, +level: U32, +origi
     case 1n+n Term{S.Sequence{nodes}}: measure(n,Nodes{nodes,False{}},names,level,origin)
     case _ _: Done{Usage{0,False{}}}
 
-def admit(usage: Usage, token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scope>:
+def admit(usage: Usage, token: S.Token) -> Result<S.Error,Unit>:
   match usage:
     case Usage{uses,inspects}:
-      S.choose(Result<S.Error,E.Scope>,Bool.or(U32.is_ge(uses,2),inspects),u => C.unsupported(E.Scope,"residual-alias",token),u => Done{scope})
+      S.choose(Result<S.Error,Unit>,Bool.or(U32.is_ge(uses,2),inspects),u => C.unsupported(Unit,"residual-alias",token),u => Done{Unit{}})
 
 # Every counted occurrence consumes the same level. Use the scope's quantity
 # merge before classifying that conflict as an unimplemented residual identity.
-def consumed(result: Result<S.Error,List<&2,U32>>, +usage: Usage, token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scope>:
+def consumed(result: Result<S.Error,List<&2,U32>>, +usage: Usage, token: S.Token) -> Result<S.Error,Unit>:
   match result usage:
-    case Fail{error} _: admit(usage,token,scope)
-    case Done{levels} Usage{uses,inspects}: admit(Usage{0,inspects},token,scope)
+    case Fail{error} _: admit(usage,token)
+    case Done{levels} Usage{uses,inspects}: admit(Usage{0,inspects},token)
 
-def consume(+usage: Usage, +level: U32, +token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scope>:
+def consume(+usage: Usage, +level: U32, +token: S.Token) -> Result<S.Error,Unit>:
   match usage:
     case Usage{+uses,inspects}:
       consumed(E.sequential(
         S.choose(List<&2,U32>,U32.is_ne(uses,0),u => [level],u => Nil{}),
-        S.choose(List<&2,U32>,U32.is_ge(uses,2),u => [level],u => Nil{}),token),usage,token,scope)
+        S.choose(List<&2,U32>,U32.is_ge(uses,2),u => [level],u => Nil{}),token),usage,token)
 
-def guarded(binding: C.Binding, fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, body: S.Node) -> Result<S.Error,E.Scope>:
+def guarded(binding: C.Binding, fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, body: S.Node) -> Result<S.Error,Unit>:
   match binding scope:
     case C.Binding{name,id,q,type_id,param,Some{known}} E.Scope{bindings,next,open,+live,aliases}:
-      S.choose(Result<S.Error,E.Scope>,Bool.and(live,U32.is_eq(q,1)),u =>
-        S.bind(Usage,E.Scope,measure(fuel,Term{body},visible(bindings,level,Nil{}),level,token),usage => consume(usage,level,token,scope)),u => Done{scope})
-    case _ _: Done{scope}
+      S.choose(Result<S.Error,Unit>,Bool.and(live,U32.is_eq(q,1)),u =>
+        S.bind(Usage,Unit,measure(fuel,Term{body},visible(bindings,level,Nil{}),level,token),usage => consume(usage,level,token)),u => Done{Unit{}})
+    case _ _: Done{Unit{}}
 
-def guard(+fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, +body: S.Node) -> Result<S.Error,E.Scope>:
+def guard(+fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, +body: S.Node) -> Result<S.Error,Unit>:
   match scope:
     case E.Scope{+bindings,next,open,live,aliases}:
-      S.bind(C.Binding,E.Scope,E.find_level(bindings,level),binding =>
+      S.bind(C.Binding,Unit,E.find_level(bindings,level),binding =>
         guarded(binding,fuel,scope,token,level,body))

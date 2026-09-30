@@ -1014,3 +1014,12 @@ declarations with six truncated contexts; the proof still has eight filled laws.
 Evidence: failed export `run-3nc_r4bd` and the repair report. Host-build deadlines
 in that parallel export are separate failures, retained rather than treated as
 source refusals; the serial qualification keeps every deadline unchanged.
+
+The first serial attempt also exceeded the frontend's 30-second native build
+deadline. The residual guard's result carried an unchanged scope; returning Unit
+states its admission-only contract and avoids that payload. Both lanes retain
+all 10 focused observations, including both fixed affine mutations, and the
+eight-law proof still checks. Default O3 is retained. A successful individual
+build is not a comparative speedup or full qualification. The superseded,
+already-failed run `run-meomdq__` was stopped after recording its completed gates;
+its unrun gates are not passes. Final qualification rebuilds every gate.
