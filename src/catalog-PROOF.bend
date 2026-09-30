@@ -2,6 +2,9 @@ import Base
 import ./runtime-PROOF.bend as Earlier
 import ./catalog-LAWS.bend as L
 
+def L.empty_datatype_header(token,data):
+  {==}
+
 def L.erased_field_has_no_kind_obligation(data,child):
   match data child:
     case False{} False{}: {==}

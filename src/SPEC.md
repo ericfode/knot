@@ -30,12 +30,16 @@ The retained enum profile accepts ASCII Bend source with LF line endings, spaces
 and indentation. Identifiers use letters/underscore followed by letters,
 digits, underscores or dots. Keywords cannot be identifiers.
 
-- Named, nonempty, monomorphic `type T is Type:` and `type T is Data:`
-  declarations containing nullary constructors such as `Off{}` and `On{}`.
+- Named, monomorphic `type T is Type:` and `type T is Data:` declarations
+  containing zero or more nullary constructors such as `Off{}` and `On{}`.
+  Empty declarations retain their kind and index; no inhabitant is invented.
 - Top-level functions with explicit parameter and result types. A parameter
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
   parameter must have a `Data` type. Dropping an affine parameter is allowed.
 - Variables, constructor applications and fully applied top-level calls.
+  Constructor names touch their opening brace in expressions and patterns;
+  a gap reports `Invalid parse detached-brace`. Constructor declarations
+  retain the seed's separate grammar, which permits that gap.
   Datatypes/constructors may be declared after their uses. A function must be
   defined before its live calls, following the pinned reference's declaration
   events. Forward live calls are invalid even when the graph is acyclic.
@@ -43,6 +47,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
   An optional `: T` annotation supplies the initializer's expected type.
   Constructor initializers require it, as in `x : Flag = On{}`; an unannotated
   variable or call can infer its type from an already known declaration.
+  A matched parent is refined to a constructor and likewise requires an
+  annotation when used as a binding initializer; its former name does not
+  restore variable inference. Annotated parent reconstruction remains valid.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
@@ -103,6 +110,10 @@ now follows declaration checking. Selecting the default enum emission profile
 still reports `Unsupported check constructor-fields` for a checked fielded book.
 Known invalid declarations or bodies can report Invalid first. Declaration
 inspection itself does not imply execution or a structured host ABI.
+Field annotation scope includes preceding field binders. If one shadows the
+annotation name, the monomorphic catalog reports `Unsupported check
+dependent-field-type` before global lookup. A binder is absent from its own
+annotation scope, and later binders do not shadow earlier annotations.
 
 ## Binding and quantity semantics
 

@@ -5,6 +5,12 @@ import ./catalog.bend as G
 import ./check.bend as K
 
 # Auxiliary kind helper laws; public catalog refinement is tested separately.
+law empty_datatype_header:
+  for +token: S.Token
+  for +data: Bool
+  {G.collect_types([S.Datatype{token,data,Nil{}}],0)
+    == Done{[C.Datatype{token,data,Nil{}}]} : Result<S.Error,List<&2,C.Datatype>>}
+
 law erased_field_has_no_kind_obligation:
   for data: Bool
   for child: Bool

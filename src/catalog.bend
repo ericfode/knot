@@ -67,19 +67,14 @@ def constructors(nodes: List<&2,S.Node>, +seen: List<&2,S.Token>, +count: U32) -
           S.bind(List<&2,C.Constructor>,List<&2,C.Constructor>,constructors(tail,Con{token,seen},U32.add(count,1)),rest => Done{Con{C.Constructor{token,Nil{}},rest}})))
     case _: C.internal(List<&2,C.Constructor>,"constructor-declaration-node")
 
-def nonempty(tokens: List<&2,C.Constructor>, +name: S.Token, data: Bool) -> Result<S.Error,C.Datatype>:
-  match tokens:
-    case Nil{}: C.invalid(C.Datatype,"empty-datatype",name)
-    case Con{h,t}: Done{C.Datatype{name,data,Con{h,t}}}
-
 def collect_types(nodes: List<&2,S.Node>, +count: U32) -> Result<S.Error,List<&2,C.Datatype>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Datatype{+name,+data,+ctors},+tail}:
       S.choose(Result<S.Error,List<&2,C.Datatype>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Datatype>,name),u =>
         S.bind(List<&2,C.Constructor>,List<&2,C.Datatype>,constructors(ctors,Nil{},0),cs =>
-          S.bind(C.Datatype,List<&2,C.Datatype>,nonempty(cs,name,data),head =>
-            S.bind(List<&2,C.Datatype>,List<&2,C.Datatype>,collect_types(tail,U32.add(count,1)),rest => Done{Con{head,rest}}))))
+          S.bind(List<&2,C.Datatype>,List<&2,C.Datatype>,collect_types(tail,U32.add(count,1)),rest =>
+            Done{Con{C.Datatype{name,data,cs},rest}})))
     case Con{S.Function{name,params,result,body},tail}: collect_types(tail,count)
     case _: C.internal(List<&2,C.Datatype>,"type-declaration-node")
 
