@@ -281,60 +281,6 @@ class ExecutionTests(unittest.TestCase):
             self.assertEqual('host-failure', got['status'])
 
 
-class HostBuildTests(unittest.TestCase):
-    def test_clang_host_failure_retries_once_and_retains_first_evidence(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            program = ('from pathlib import Path; import sys\n'
-                       'marker = Path("attempted")\n'
-                       'if not marker.exists():\n'
-                       ' marker.write_text("first attempt")\n'
-                       ' sys.stderr.write("Error: bend needs clang (found no clang)\\n")\n'
-                       ' raise SystemExit(1)\n'
-                       'print("# pass 3\\nPASS: eight law rules;")\n')
-            result = run.execute(run.Gate('lint', (sys.executable, '-c', program)),
-                                 root, root, dict(os.environ), 5)
-            self.assertEqual('passed', result['status'])
-            self.assertEqual({'tests': 3, 'law_rules': 8}, result['counts'])
-            self.assertEqual(1, result['retried']['first_exit_code'])
-            self.assertIn('found no clang', (root / result['retried']['first_stderr']).read_text())
-            self.assertNotEqual(result['stderr'], result['retried']['first_stderr'])
-
-    def test_assertion_failure_is_not_retried(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            result = run.execute(run.Gate('lint', (sys.executable, '-c',
-                'import sys; sys.stderr.write("AssertionError: wrong enum result\\n"); sys.exit(1)')),
-                root, root, dict(os.environ), 5)
-            self.assertEqual('failed', result['status'])
-            self.assertEqual(1, result['exit_code'])
-            self.assertNotIn('retried', result)
-            self.assertEqual({}, result['counts'])
-
-    def test_environment_keeps_native_toolchain_and_bounded_host_scale(self):
-        with tempfile.TemporaryDirectory() as tmp, patch.dict(os.environ,
-                {'PATH': '/bin', 'SDKROOT': '/literal/sdk'}, clear=True), \
-                patch.object(run, 'host_cc', return_value='/literal/clang'), \
-                patch.object(run, 'copy_cache'):
-            root = Path(tmp)
-            env, _ = run.environment(root)
-            self.assertEqual('4', env['KNOT_GATE_TIMEOUT_SCALE'])
-            self.assertEqual('1', env['BEND_NO_TELEMETRY'])
-            self.assertEqual('/literal/clang', env['CC'])
-            self.assertEqual('/literal/sdk', env['SDKROOT'])
-            self.assertEqual(str(root / 'bin'), env['PATH'].split(os.pathsep)[0])
-            self.assertIn('exec "/literal/clang" "$@"', (root / 'bin/clang').read_text())
-            self.assertEqual('offline://disabled', env['BEND_HUB'])
-
-    def test_native_tool_discovery_retries_only_a_bounded_number(self):
-        with patch.dict(os.environ, {}, clear=True), patch.object(run.sys, 'platform', 'darwin'), \
-                patch.object(run.os, 'access', return_value=True), \
-                patch.object(run.subprocess, 'run', side_effect=[OSError('host discovery'),
-                    types.SimpleNamespace(returncode=0, stdout='/literal/clang\n')]) as discovery:
-            self.assertEqual('/literal/clang', run.host_cc())
-            self.assertEqual(2, discovery.call_count)
-
-
 class SemanticMutantTests(unittest.TestCase):
     def test_parseable_mutants_are_killed_by_unchanged_literal_expectations(self):
         source = (HERE / 'normalize.py').read_text()

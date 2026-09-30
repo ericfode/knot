@@ -146,47 +146,11 @@ def copy_cache(source: Path, destination: Path, identities: dict, namespace: str
             dest.write_bytes(data)
 
 
-def host_cc() -> str | None:
-    """Resolve the macOS clang shim once, as the current campaign runner does."""
-    if os.environ.get('CC'):
-        return os.environ['CC']
-    if sys.platform != 'darwin':
-        return None
-    for _ in range(3):
-        try:
-            found = subprocess.run(['xcrun', '--find', 'clang'], capture_output=True,
-                                   text=True, timeout=60)
-        except (OSError, subprocess.TimeoutExpired):
-            continue
-        path = found.stdout.strip()
-        if found.returncode == 0 and path and os.access(path, os.X_OK):
-            return path
-    return None
-
-
 def environment(run_dir: Path) -> tuple[dict, dict]:
     # Preserve only host tool discovery; never import credentials, dotenv files,
     # NODE_OPTIONS, shell hooks, or caller-specific Bend/network configuration.
     env = {key: os.environ[key] for key in ('PATH', 'HOME', 'SDKROOT', 'DEVELOPER_DIR',
                                           'SYSTEMROOT') if key in os.environ}
-    cc = host_cc()
-    if cc:
-        env['CC'] = cc
-        if sys.platform == 'darwin' and 'SDKROOT' not in env:
-            try:
-                sdk = subprocess.run(['xcrun', '--show-sdk-path'], capture_output=True,
-                                     text=True, timeout=60).stdout.strip()
-            except (OSError, subprocess.TimeoutExpired):
-                sdk = ''
-            if sdk:
-                env['SDKROOT'] = sdk
-        tools = run_dir / 'bin'
-        tools.mkdir()
-        wrapper = tools / 'clang'
-        sdk_line = f": \"${{SDKROOT:={env['SDKROOT']}}}\"; export SDKROOT\n" if 'SDKROOT' in env else ''
-        wrapper.write_text(f'#!/bin/sh\n{sdk_line}exec "{cc}" "$@"\n')
-        wrapper.chmod(0o755)
-        env['PATH'] = str(tools) + os.pathsep + env.get('PATH', '')
     library = run_dir / 'bend-lib'
     library.mkdir()
     cache = Path(os.environ.get('BEND_LIB', str(Path.home() / '.bend/lib'))).expanduser().resolve()
@@ -204,7 +168,6 @@ def environment(run_dir: Path) -> tuple[dict, dict]:
                dependencies, 'tree-sitter-language-pack')
     temp = run_dir / 'tmp'
     temp.mkdir()
-    env.setdefault('KNOT_GATE_TIMEOUT_SCALE', os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '4'))
     env.update(BEND_NO_TELEMETRY='1', BEND_LIB=str(library), BEND_HUB='offline://disabled',
                BEND_ORIGIN='offline://disabled', PYTHONDONTWRITEBYTECODE='1',
                TREE_SITTER_LANGUAGE_PACK_CACHE_DIR=str(run_dir / 'cache'),
@@ -260,24 +223,9 @@ def counts(root: Path, gate: Gate, stdout: str) -> dict:
     return result
 
 
-HOST_FLAKE = b'bend needs clang'
-
-
 def execute(gate: Gate, root: Path, logs: Path, env: dict, timeout: float) -> dict:
-    result = attempt(gate, root, logs, env, timeout, '')
-    if result['status'] == 'failed' and any(HOST_FLAKE in (logs / result[k]).read_bytes()
-                                            for k in ('stdout', 'stderr') if (logs / result[k]).exists()):
-        first = result
-        result = attempt(gate, root, logs, env, timeout, '.retry')
-        result['retried'] = {'reason': 'host clang discovery failed (found no clang)',
-                             'first_exit_code': first['exit_code'], 'first_stderr': first['stderr'],
-                             'first_seconds': first['seconds']}
-    return result
-
-
-def attempt(gate: Gate, root: Path, logs: Path, env: dict, timeout: float, suffix: str) -> dict:
     start = time.monotonic()
-    name = gate.name.replace(':', '-') + suffix
+    name = gate.name.replace(':', '-')
     stdout, stderr = logs / f'{name}.stdout', logs / f'{name}.stderr'
     result = {'name': gate.name, 'command': list(gate.argv), 'status': 'host-failure',
               'exit_code': None, 'counts': {}, 'stdout': stdout.name, 'stderr': stderr.name}
@@ -384,7 +332,7 @@ def main(argv=None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--refresh', action='store_true', help='copy normalized receipts back after all gates pass')
     parser.add_argument('--jobs', type=int, default=4, help='maximum concurrent gates (default: 4)')
-    parser.add_argument('--timeout', type=float, default=1800, help='per-gate wall limit in seconds (default: 1800)')
+    parser.add_argument('--timeout', type=float, default=900, help='per-gate wall limit in seconds (default: 900)')
     parser.add_argument('--keep-scratch', action='store_true', help='retain the exported sources and build outputs')
     args = parser.parse_args(argv)
     if args.jobs < 1 or not math.isfinite(args.timeout) or args.timeout <= 0:
@@ -423,7 +371,7 @@ def main(argv=None) -> int:
         # Keep process evidence even if a malformed receipt cannot be normalized.
         summary['run']['gates'] = results
         summary['normalized']['gates'] = [
-            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
+            {k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
             for row in results]
         after = {}
         for gate, result in zip(GATES, results):
@@ -437,7 +385,7 @@ def main(argv=None) -> int:
         summary['run']['gates'] = results
         summary['normalized'] = {'status': 'passed' if passed else 'failed',
             'snapshot_sha256': digest(json_bytes(snapshot)), 'dependencies_sha256': digest(json_bytes(dependencies)),
-            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr', 'retried')}
+            'gates': [{k: normalizer.value(v) for k, v in row.items() if k not in ('seconds', 'stdout', 'stderr')}
                       for row in results], 'receipts': receipts,
             'receipt_counts': {kind: sum(r['classification'] == kind for r in receipts)
                                for kind in ('identical', 'volatile-only', 'semantic')}}

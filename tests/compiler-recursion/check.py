@@ -9,7 +9,6 @@ import os
 from pathlib import Path
 import shutil
 import subprocess
-TIMEOUT_SCALE = float(__import__('os').environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only; gates set it under load
 
 ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
@@ -27,7 +26,7 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-def run(argv, timeout=60*TIMEOUT_SCALE):
+def run(argv, timeout=60):
     try:
         p = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
                            capture_output=True, timeout=timeout,
