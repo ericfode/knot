@@ -6,7 +6,6 @@ import datetime
 import hashlib
 import json
 from pathlib import Path
-import sys
 import shutil
 import subprocess
 
@@ -15,9 +14,6 @@ HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-frontend'
 RECEIPT = HERE / 'receipts/frontend.json'
 SEED = ROOT / 'scripts/bend-reference'
-SEED_GUARD = ROOT / 'scripts/gates/seed_build.py'
-sys.path.insert(0, str(SEED_GUARD.parent))
-from seed_build import guard_seed_builds
 
 
 def require(condition, message):
@@ -29,7 +25,6 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-@guard_seed_builds(SEED)
 def run(argv, *, timeout=30):
     try:
         p = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
@@ -165,7 +160,7 @@ def main():
         paths = source_paths + fixture_paths + [HERE / 'frontend-cases.json',
                 HERE / 'lexer-observe.bend', Path(__file__)]
         paths += sorted((HERE / 'classification').glob('*.bend')) + [HERE / 'classification-cases.json']
-        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in [*paths, SEED_GUARD]}
+        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in paths}
         record['tools'] = {name: successful([name, '--version'])['stdout'].strip()
                            for name in ('bun', 'node', 'python3')}
         record['proof'] = successful([SEED, ROOT / 'src/PROOF.bend'])

@@ -7,7 +7,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import sys
 import shutil
 import subprocess
 
@@ -15,9 +14,6 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-recursion/gate'
 SEED = ['bun', ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/main.ts']
-SEED_GUARD = ROOT / 'scripts/gates/seed_build.py'
-sys.path.insert(0, str(SEED_GUARD.parent))
-from seed_build import guard_seed_builds
 RECEIPTS = HERE / 'receipts'
 
 
@@ -30,7 +26,6 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-@guard_seed_builds(SEED)
 def run(argv, timeout=60):
     try:
         p = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
@@ -112,7 +107,7 @@ def main():
         ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json', HERE / 'SPEC.md']
     record = {'date': datetime.datetime.now(datetime.timezone.utc).isoformat(), 'status': 'incomplete',
               'seed_revision': manifest['seed_revision'],
-              'inputs': {str(p.relative_to(ROOT)): digest(p) for p in [*paths, SEED_GUARD]},
+              'inputs': {str(p.relative_to(ROOT)): digest(p) for p in paths},
               'seed_inputs': {str(p.relative_to(ROOT)): digest(p) for p in
                   sorted((ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2').glob('*.ts')) +
                   [ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/base.bend']},

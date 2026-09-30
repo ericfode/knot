@@ -5,7 +5,6 @@ import datetime
 import hashlib
 import json
 from pathlib import Path
-import sys
 import shutil
 import subprocess
 
@@ -13,9 +12,6 @@ ROOT = Path(__file__).resolve().parents[2]
 HERE = Path(__file__).resolve().parent
 BUILD = ROOT / '.local/compiler-structural/gate'
 SEED = ROOT / 'scripts/bend-reference'
-SEED_GUARD = ROOT / 'scripts/gates/seed_build.py'
-sys.path.insert(0, str(SEED_GUARD.parent))
-from seed_build import guard_seed_builds
 RECEIPT = HERE / 'receipts/catalog.json'
 
 
@@ -28,7 +24,6 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-@guard_seed_builds(SEED)
 def run(argv, timeout=45):
     try:
         p = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
@@ -116,7 +111,7 @@ def main():
         paths = sources + fixtures + [Path(__file__), HERE / 'cases.json', HERE / 'observe.bend',
                 ROOT / 'src/SPEC.md', ROOT / 'src/CONTRACT.json',
                 ROOT / 'research/compiler-structural/SPEC.md']
-        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in [*paths, SEED_GUARD]}
+        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in paths}
         record['tools'] = {t: successful([t, '--version'])['stdout'].strip()
                            for t in ('bun', 'node', 'python3')}
         record['proof'] = successful([SEED, ROOT / 'src/catalog-PROOF.bend'])

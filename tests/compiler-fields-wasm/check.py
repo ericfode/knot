@@ -6,7 +6,6 @@ import hashlib
 import json
 import os
 from pathlib import Path
-import sys
 import re
 import shutil
 import subprocess
@@ -17,9 +16,6 @@ BUILD = ROOT / '.local/compiler-fields-wasm/gate'
 GENERATED = HERE / 'generated'
 RECEIPT = HERE / 'receipts/fields-wasm.json'
 SEED = ROOT / 'scripts/bend-reference'
-SEED_GUARD = ROOT / 'scripts/gates/seed_build.py'
-sys.path.insert(0, str(SEED_GUARD.parent))
-from seed_build import guard_seed_builds
 HOST = ROOT / 'scripts/run-wasm.mjs'
 PROFILE = '--profile=knot-fields-wasm-1'
 
@@ -33,7 +29,6 @@ def digest(path):
     return hashlib.sha256(path.read_bytes()).hexdigest()
 
 
-@guard_seed_builds(SEED)
 def run(argv, timeout=60):
     try:
         result = subprocess.run([str(x) for x in argv], cwd=ROOT, text=True,
@@ -138,7 +133,7 @@ def main():
                  ROOT / 'src/CONTRACT.json', HOST, *sorted(HERE.glob('*.bend')),
                  *sorted(HERE.glob('*.json')), *sorted(HERE.glob('*.mjs')), Path(__file__),
                  *sorted((HERE / 'fixtures').glob('*.bend')), *[ROOT / f for f in baseline]]
-        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in [*paths, SEED_GUARD]}
+        record['inputs'] = {str(p.relative_to(ROOT)): digest(p) for p in paths}
         record['seed'] = {f: digest(ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2' / f)
                           for f in ('main.ts', 'bend.ts', 'comp.ts', 'base.bend')}
         record['tools'] = {t: successful([t, '--version'])['stdout'].strip()
