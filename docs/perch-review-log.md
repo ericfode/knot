@@ -1065,6 +1065,14 @@ literal backslash-n with the diagnostic's actual newline. Supplying the SDK path
 and asserting the observed diagnostic byte sequence fixed those harness errors.
 No frozen outcome changed. Raw local logs remain under `.local/closures/review-r1/`.
 
+The full gate also exposed the synthetic 256/257 parameter-list boundary: a
+scope guard changed the low-level list resolver's contract. Raw resolution now
+retains its old behavior, while source signature collection enables lexical
+validation. Both frozen boundary lanes and all fourteen scope controls pass.
+Prevention: run existing direct helper-boundary controls when strengthening
+source validation; source scopes and raw metadata lists have distinct contracts.
+The superseded first run's logs remain evidence, not a passing receipt.
+
 Offline preflight remains structurally blocked. Shared context fitting, pinned
 nonlocal-import context and composition partitioning require the coordinator's
 Perch integration; `perch-cap` owns the fitting changes. Caps, coverage and

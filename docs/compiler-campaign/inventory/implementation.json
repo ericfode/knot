@@ -36142,7 +36142,7 @@
     },
     {
       "file": "src/catalog.bend",
-      "sha256": "548e94e0eb56f3e17ee0127eaf5e25e0d17d8cba364120fdf5fd7c8bfd853e92",
+      "sha256": "4a6939e4bb057bf17edfdd499c640e0a8aecf0e9911567a34b769d03dc33c420",
       "imports": [
         {
           "module": "Base",
@@ -37711,7 +37711,7 @@
           "kind": "definition",
           "lines": [
             128,
-            136
+            137
           ],
           "features": [
             "calls",
@@ -37733,6 +37733,7 @@
             "types.base"
           ],
           "references": [
+            "Bool",
             "Con",
             "Done",
             "List",
@@ -37742,6 +37743,7 @@
             "U32.add",
             "U32.is_eq",
             "src/catalog.TypeRef",
+            "src/catalog.find_type",
             "src/catalog.parameter_type",
             "src/catalog.scoped_parameters",
             "src/catalog.scoped_type",
@@ -37757,6 +37759,7 @@
             "src/syntax.choose"
           ],
           "type_references": [
+            "Bool",
             "List",
             "Result",
             "U32",
@@ -37768,15 +37771,16 @@
           ],
           "captures": [
             {
-              "offset": 7425,
+              "offset": 7441,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 7469,
+              "offset": 7485,
               "names": [
                 "count",
+                "lexical",
                 "name",
                 "q",
                 "seen",
@@ -37786,9 +37790,25 @@
               ]
             },
             {
-              "offset": 7552,
+              "offset": 7575,
+              "names": [
+                "seen",
+                "type_name",
+                "types"
+              ]
+            },
+            {
+              "offset": 7624,
+              "names": [
+                "type_name",
+                "types"
+              ]
+            },
+            {
+              "offset": 7659,
               "names": [
                 "count",
+                "lexical",
                 "name",
                 "q",
                 "seen",
@@ -37797,9 +37817,10 @@
               ]
             },
             {
-              "offset": 7648,
+              "offset": 7755,
               "names": [
                 "count",
+                "lexical",
                 "name",
                 "seen",
                 "tail",
@@ -37807,7 +37828,7 @@
               ]
             },
             {
-              "offset": 7779,
+              "offset": 7894,
               "names": [
                 "head"
               ]
@@ -37817,6 +37838,7 @@
             "references": [
               "U32.add",
               "U32.is_eq",
+              "src/catalog.find_type",
               "src/catalog.parameter_type",
               "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
@@ -37842,8 +37864,8 @@
           "key": "src/catalog.parameters",
           "kind": "definition",
           "lines": [
-            138,
-            139
+            141,
+            142
           ],
           "features": [
             "calls",
@@ -37854,6 +37876,7 @@
             "types.base"
           ],
           "references": [
+            "False",
             "List",
             "Nil",
             "Result",
@@ -37879,6 +37902,7 @@
               "src/catalog.scoped_parameters"
             ],
             "types": [
+              "False",
               "Nil"
             ],
             "dynamic_calls": []
@@ -37890,8 +37914,8 @@
           "key": "src/catalog.parameter_names",
           "kind": "definition",
           "lines": [
-            141,
-            144
+            144,
+            147
           ],
           "features": [
             "calls",
@@ -37938,8 +37962,8 @@
           "key": "src/catalog.signature",
           "kind": "definition",
           "lines": [
-            146,
-            148
+            149,
+            151
           ],
           "features": [
             "constructors",
@@ -37981,8 +38005,8 @@
           "key": "src/catalog.collect_signatures",
           "kind": "definition",
           "lines": [
-            150,
-            160
+            153,
+            163
           ],
           "features": [
             "calls",
@@ -38009,13 +38033,14 @@
             "List",
             "Nil",
             "Result",
+            "True",
             "U32",
             "U32.add",
             "U32.is_eq",
             "src/catalog.TypeRef",
             "src/catalog.collect_signatures",
             "src/catalog.parameter_names",
-            "src/catalog.parameters",
+            "src/catalog.scoped_parameters",
             "src/catalog.scoped_type",
             "src/catalog.signature",
             "src/core.Datatype",
@@ -38041,13 +38066,13 @@
           ],
           "captures": [
             {
-              "offset": 8721,
+              "offset": 8969,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 8765,
+              "offset": 9013,
               "names": [
                 "count",
                 "name",
@@ -38058,7 +38083,7 @@
               ]
             },
             {
-              "offset": 8854,
+              "offset": 9122,
               "names": [
                 "count",
                 "name",
@@ -38068,7 +38093,7 @@
               ]
             },
             {
-              "offset": 8953,
+              "offset": 9221,
               "names": [
                 "count",
                 "name",
@@ -38078,7 +38103,7 @@
               ]
             },
             {
-              "offset": 9075,
+              "offset": 9343,
               "names": [
                 "name",
                 "ps",
@@ -38092,7 +38117,7 @@
               "U32.is_eq",
               "src/catalog.collect_signatures",
               "src/catalog.parameter_names",
-              "src/catalog.parameters",
+              "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.exhausted",
@@ -38105,6 +38130,7 @@
               "Done",
               "Nil",
               "String",
+              "True",
               "U32",
               "src/syntax.Datatype",
               "src/syntax.Function"
@@ -38118,8 +38144,8 @@
           "key": "src/catalog.field_kind",
           "kind": "definition",
           "lines": [
-            164,
-            166
+            167,
+            169
           ],
           "features": [
             "calls",
@@ -38161,8 +38187,8 @@
           "key": "src/catalog.field_type",
           "kind": "definition",
           "lines": [
-            168,
-            174
+            171,
+            177
           ],
           "features": [
             "bindings",
@@ -38208,7 +38234,7 @@
           ],
           "captures": [
             {
-              "offset": 9883,
+              "offset": 10151,
               "names": [
                 "child",
                 "data",
@@ -38218,7 +38244,7 @@
               ]
             },
             {
-              "offset": 9958,
+              "offset": 10226,
               "names": [
                 "index",
                 "q",
@@ -38226,7 +38252,7 @@
               ]
             },
             {
-              "offset": 10006,
+              "offset": 10274,
               "names": [
                 "token"
               ]
@@ -38256,8 +38282,8 @@
           "key": "src/catalog.fields",
           "kind": "definition",
           "lines": [
-            176,
-            187
+            179,
+            190
           ],
           "features": [
             "calls",
@@ -38318,13 +38344,13 @@
           ],
           "captures": [
             {
-              "offset": 10389,
+              "offset": 10657,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 10433,
+              "offset": 10701,
               "names": [
                 "count",
                 "data",
@@ -38337,13 +38363,13 @@
               ]
             },
             {
-              "offset": 10509,
+              "offset": 10777,
               "names": [
                 "name"
               ]
             },
             {
-              "offset": 10569,
+              "offset": 10837,
               "names": [
                 "count",
                 "data",
@@ -38356,7 +38382,7 @@
               ]
             },
             {
-              "offset": 10654,
+              "offset": 10922,
               "names": [
                 "count",
                 "data",
@@ -38368,7 +38394,7 @@
               ]
             },
             {
-              "offset": 10753,
+              "offset": 11021,
               "names": [
                 "count",
                 "data",
@@ -38379,7 +38405,7 @@
               ]
             },
             {
-              "offset": 10880,
+              "offset": 11148,
               "names": [
                 "head"
               ]
@@ -38416,8 +38442,8 @@
           "key": "src/catalog.resolve_constructors",
           "kind": "definition",
           "lines": [
-            189,
-            196
+            192,
+            199
           ],
           "features": [
             "calls",
@@ -38467,7 +38493,7 @@
           ],
           "captures": [
             {
-              "offset": 11306,
+              "offset": 11574,
               "names": [
                 "data",
                 "tail",
@@ -38476,7 +38502,7 @@
               ]
             },
             {
-              "offset": 11411,
+              "offset": 11679,
               "names": [
                 "ps",
                 "token"
@@ -38508,8 +38534,8 @@
           "key": "src/catalog.resolve_types",
           "kind": "definition",
           "lines": [
-            198,
-            206
+            201,
+            209
           ],
           "features": [
             "calls",
@@ -38555,7 +38581,7 @@
           ],
           "captures": [
             {
-              "offset": 11853,
+              "offset": 12121,
               "names": [
                 "data",
                 "headers",
@@ -38564,7 +38590,7 @@
               ]
             },
             {
-              "offset": 11942,
+              "offset": 12210,
               "names": [
                 "cs",
                 "data",
@@ -38597,8 +38623,8 @@
           "key": "src/catalog.catalog",
           "kind": "definition",
           "lines": [
-            210,
-            220
+            213,
+            223
           ],
           "features": [
             "bindings",
@@ -38650,39 +38676,39 @@
           ],
           "captures": [
             {
-              "offset": 12462,
+              "offset": 12730,
               "names": [
                 "nodes"
               ]
             },
             {
-              "offset": 12535,
+              "offset": 12803,
               "names": [
                 "nodes"
               ]
             },
             {
-              "offset": 12614,
+              "offset": 12882,
               "names": [
                 "headers",
                 "nodes"
               ]
             },
             {
-              "offset": 12706,
+              "offset": 12974,
               "names": [
                 "nodes"
               ]
             },
             {
-              "offset": 12800,
+              "offset": 13068,
               "names": [
                 "nodes",
                 "registry"
               ]
             },
             {
-              "offset": 12980,
+              "offset": 13248,
               "names": [
                 "types"
               ]
@@ -38718,8 +38744,8 @@
           "key": "src/catalog.fields_at",
           "kind": "definition",
           "lines": [
-            222,
-            226
+            225,
+            229
           ],
           "features": [
             "calls",
@@ -38765,13 +38791,13 @@
           ],
           "captures": [
             {
-              "offset": 13367,
+              "offset": 13635,
               "names": [
                 "fields"
               ]
             },
             {
-              "offset": 13385,
+              "offset": 13653,
               "names": [
                 "tag",
                 "tail"
@@ -38803,8 +38829,8 @@
           "key": "src/catalog.definition_fields",
           "kind": "definition",
           "lines": [
-            228,
-            231
+            231,
+            234
           ],
           "features": [
             "calls",
@@ -38857,8 +38883,8 @@
           "key": "src/catalog.field_signature",
           "kind": "definition",
           "lines": [
-            233,
-            236
+            236,
+            239
           ],
           "features": [
             "calls",
@@ -38895,7 +38921,7 @@
           ],
           "captures": [
             {
-              "offset": 13938,
+              "offset": 14206,
               "names": [
                 "tag"
               ]
@@ -38919,8 +38945,8 @@
           "key": "src/catalog.has_tag",
           "kind": "definition",
           "lines": [
-            238,
-            241
+            241,
+            244
           ],
           "features": [
             "constructors",
@@ -38964,8 +38990,8 @@
           "key": "src/catalog.constructor_named",
           "kind": "definition",
           "lines": [
-            243,
-            248
+            246,
+            251
           ],
           "features": [
             "calls",
@@ -39027,8 +39053,8 @@
           "key": "src/catalog.arrow_id",
           "kind": "definition",
           "lines": [
-            250,
-            251
+            253,
+            254
           ],
           "features": [
             "calls",

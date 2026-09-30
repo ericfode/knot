@@ -125,18 +125,21 @@ def parameter_type(+token: S.Token, +q: U32, reference: TypeRef) -> Result<S.Err
     case TypeRef{+index,definition}:
       S.bind(Unit,C.Parameter,quantity(token,q,definition),u => Done{C.Parameter{token,q,index}})
 
-def scoped_parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +seen: List<&2,S.Token>, +count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
+def scoped_parameters(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +seen: List<&2,S.Token>, +count: U32, +lexical: Bool) -> Result<S.Error,List<&2,C.Parameter>>:
   match nodes:
     case Nil{}: Done{Nil{}}
     case Con{S.Parameter{+name,+q,+type_name},+tail}:
       S.choose(Result<S.Error,List<&2,C.Parameter>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Parameter>,name),u =>
-        S.bind(TypeRef,List<&2,C.Parameter>,scoped_type(types,type_name,seen),reference =>
+        S.bind(TypeRef,List<&2,C.Parameter>,S.choose(Result<S.Error,TypeRef>,lexical,u =>
+          scoped_type(types,type_name,seen),u => find_type(types,type_name,0)),reference =>
           S.bind(C.Parameter,List<&2,C.Parameter>,parameter_type(name,q,reference),head =>
-            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,scoped_parameters(tail,types,Con{name,seen},U32.add(count,1)),rest => Done{Con{head,rest}}))))
+            S.bind(List<&2,C.Parameter>,List<&2,C.Parameter>,scoped_parameters(tail,types,Con{name,seen},U32.add(count,1),lexical),rest => Done{Con{head,rest}}))))
     case _: C.internal(List<&2,C.Parameter>,"parameter-node")
 
+# Raw parameter-list resolution has no lexical scope. Source declarations opt
+# into the prefix guard in collect_signatures.
 def parameters(nodes: List<&2,S.Node>, types: List<&2,C.Datatype>, count: U32) -> Result<S.Error,List<&2,C.Parameter>>:
-  scoped_parameters(nodes,types,Nil{},count)
+  scoped_parameters(nodes,types,Nil{},count,False{})
 
 def parameter_names(params: List<&2,C.Parameter>) -> List<&2,S.Token>:
   match params:
@@ -152,7 +155,7 @@ def collect_signatures(nodes: List<&2,S.Node>, +types: List<&2,C.Datatype>, +cou
     case Nil{}: Done{Nil{}}
     case Con{S.Function{+name,+params,+result,body},+tail}:
       S.choose(Result<S.Error,List<&2,C.Signature>>,U32.is_eq(count,256),u => C.exhausted(List<&2,C.Signature>,name),u =>
-        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,parameters(params,types,0),+ps =>
+        S.bind(List<&2,C.Parameter>,List<&2,C.Signature>,scoped_parameters(params,types,Nil{},0,True{}),+ps =>
           S.bind(TypeRef,List<&2,C.Signature>,scoped_type(types,result,parameter_names(ps)),reference =>
             S.bind(List<&2,C.Signature>,List<&2,C.Signature>,collect_signatures(tail,types,U32.add(count,1)),rest =>
               Done{Con{signature(name,ps,reference),rest}}))))

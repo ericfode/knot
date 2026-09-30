@@ -49,6 +49,20 @@ host aborts are never semantic kills. Full registered-gate and mutation counts
 will be recorded after the complete suite finishes. The three minor archived
 receipt links in `docs/perch-review-log.md` now resolve through `receipts/history/`.
 
+The first registered run exposed a low-level API regression: its unchanged
+synthetic parameter-list boundary uses a binder with the same spelling as its
+type, without representing a source scope. `catalog.parameters` retains that
+explicit-list contract; source `collect_signatures` selects lexical validation.
+Both original 256/257 native/Bun boundary observations and fourteen scope
+programs pass after the repair. The first run was stopped after its confirmed
+checker failure; its exact logs are archived, never counted as acceptance.
+
+Seven supplemental scratch probes check both ends of the 32-argument boundary
+and a 65-parameter signature with 64 erased arguments. Six agree across the
+seed, native/Bun evaluators and forced-Liftoff Wasm. A 256-argument source agrees
+seed/Wasm with explicit parser depth 4,096; default-depth parsing/evaluation
+reports Exhausted and remains inconclusive, with its bound unchanged.
+
 ## Style and integration remainder
 
 The offline style finding is confirmed and remains an integration dependency.
@@ -72,7 +86,7 @@ quality threshold is weakened.
 Counts repeat shared declarations across groups. Both commands exit 3 and report
 current source freshness. Closure-types has 14 truncated contexts,
 closure-checking has 31 plus its unavailable composition, closure-lowering has
-15, and constructor visibility has one. Closure-checking is 72,730/48,000 bytes
+15, and constructor visibility has one. Closure-checking is 72,998/48,000 bytes
 after repair. Seven global compositions still contain unresolved nonlocal
 imports. Compression/Maximally big brain, Delight, Memetic identity, Anticipation,
 Payoff and composition have no live ratings or distributions; all remain

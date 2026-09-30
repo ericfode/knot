@@ -1,0 +1,38 @@
+{
+  "status": "superseded-after-confirmed-failure",
+  "source_commit": "40db7f0e",
+  "run": "$GATE_RUN",
+  "reason": "Frozen checker synthetic parameter-boundary contract failed; raw and lexical resolution repaired without changing expectations. Restart the complete suite on the repair.",
+  "stopped_pids": [
+    44934,
+    77240,
+    78505,
+    78511,
+    88482
+  ],
+  "completed_logs": {
+    "checker.stderr": "Traceback (most recent call last):\n  File \"$GATE_RUN/worktree/tests/compiler-checker/check.py\", line 112, in <module>\n    if __name__=='__main__': main()\n                             ~~~~^^\n  File \"$GATE_RUN/worktree/tests/compiler-checker/check.py\", line 85, in main\n    r=successful([*command,output]);require(r['stdout'].strip()==bounds_expected,r)\n                                    ~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"$GATE_RUN/worktree/tests/compiler-checker/check.py\", line 18, in require\n    if not condition: raise AssertionError(detail)\n                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^\nAssertionError: {'argv': ['bun', '$GATE_RUN/worktree/.local/compiler-checker/gate/bounds.js'], 'exit': 0, 'stdout': 'Done 256\\nExhausted\\tcheck\\tbudget\\t0:0:1:0\\nDone 256\\nExhausted\\tcheck\\tbudget\\t0:0:1:0\\nUnsupported\\tcheck\\tdependent-type\\t0:0:1:0\\nUnsupported\\tcheck\\tdependent-type\\t0:0:1:0\\nDone 256\\nExhausted\\tcheck\\tbudget\\t0:0:1:0\\n', 'stderr': ''}\n",
+    "wasm.stdout": "Wasm gate passed: 25 source programs, 90 independent reference calls in two lanes, 64 rejection pairs, 44 boundary observations, 7 semantic mutants. $GATE_RUN/worktree/tests/compiler-wasm/receipts/wasm.json\n",
+    "owned-store.stderr": "",
+    "structural.stderr": "",
+    "fields-trust.stdout": "[\n  {\n    entry: \"src/fields-PROOF.bend\",\n    files: 25,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }, {\n    entry: \"src/check-cli.bend\",\n    files: 15,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 16,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/compile-cli.bend\",\n    files: 19,\n    holes: 0,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }\n]\n",
+    "wasm-trust.stderr": "",
+    "fields-trust.stderr": "",
+    "wasm-trust.stdout": "[\n  {\n    entry: \"src/compile-cli.bend\",\n    files: 19,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"File.write_bytes\", \"IO.print\" ],\n  }, {\n    entry: \"src/eval-cli.bend\",\n    files: 16,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ],\n  }, {\n    entry: \"src/runtime-PROOF.bend\",\n    files: 21,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n    runtime: [],\n  }\n]\n",
+    "structural.stdout": "Structural catalog gate passed: 16 seed fixtures, 4 boundary pairs, 7 semantic mutants; $GATE_RUN/worktree/tests/compiler-structural/receipts/catalog.json\n",
+    "wasm.stderr": "",
+    "checker.stdout": "",
+    "owned-store.stdout": "{\"status\": \"pass\", \"case_count\": 3532, \"literal_witnesses\": 15}\n",
+    "structural-trust.stdout": "[\n  {\n    entry: \"src/catalog-PROOF.bend\",\n    files: 23,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }, {\n    entry: \"tests/compiler-structural/observe.bend\",\n    files: 10,\n    foreign: 42,\n    unsafe: [ \"Array.fork\", \"Array.join\" ],\n  }\n] [ \"IO.args\", \"File.open\", \"File.read\", \"File.close\", \"IO.print\" ]\n",
+    "recursion.stdout": "",
+    "flat-store.stderr": "",
+    "fields.stderr": "",
+    "frontend.stdout": "PASS: 14 reference fixtures, two parser lanes, 24 boundary observations, four boundary laws, six classification laws and four semantic mutants; 12 classification fixtures in two lanes, 7 classification mutants, 72 downstream rejection observations\n",
+    "frontend.stderr": "",
+    "flat-store.stdout": "{\"status\": \"pass\", \"module_bytes\": 1050, \"module_sha256\": \"0dfc76faa3a89c6d78f9a30e0a2c8e60de54158bf5181246e9a4106d36f4dbc4\"}\n",
+    "recursion.stderr": "",
+    "structural-trust.stderr": "",
+    "fields.stdout": "Fields gate passed: 40 seed fixtures, 240 native/Bun phase observations, 36 budget probes, 6 host probes, 12 level/inspection observations, 9 semantic mutants; $GATE_RUN/worktree/tests/compiler-fields/receipts/fields.json\n"
+  },
+  "snapshot_sha256": "d502cba2274b4d4109ae96fd2bc8971a6fe6daf1c3a66d067a5887a4c84d909f"
+}

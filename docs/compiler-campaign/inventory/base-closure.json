@@ -7533,7 +7533,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 452,
+          "declarations": 451,
           "base": 72,
           "base_intrinsics": 20,
           "foreign": 6
@@ -8259,6 +8259,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "String",
@@ -8266,7 +8267,7 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.parameter_names",
-              "src/catalog.parameters",
+              "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
@@ -8609,7 +8610,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.scoped_type",
+            "via": "src/catalog.scoped_parameters",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -8750,25 +8751,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.parameters",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/catalog.scoped_parameters",
-              "src/core.Datatype",
-              "src/core.Parameter",
-              "src/syntax.Error",
-              "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.quantity",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameter_type",
@@ -8839,17 +8821,19 @@
           {
             "key": "src/catalog.scoped_parameters",
             "file": "src/catalog.bend",
-            "via": "src/catalog.parameters",
+            "via": "src/catalog.collect_signatures",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "String",
               "U32",
               "U32.add",
               "U32.is_eq",
+              "src/catalog.find_type",
               "src/catalog.parameter_type",
               "src/catalog.scoped_type",
               "src/core.Datatype",
@@ -15994,7 +15978,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 452,
+          "declarations": 451,
           "base": 72,
           "base_intrinsics": 19,
           "foreign": 6
@@ -16720,6 +16704,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "String",
@@ -16727,7 +16712,7 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.parameter_names",
-              "src/catalog.parameters",
+              "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
@@ -17070,7 +17055,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.scoped_type",
+            "via": "src/catalog.scoped_parameters",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -17211,25 +17196,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.parameters",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/catalog.scoped_parameters",
-              "src/core.Datatype",
-              "src/core.Parameter",
-              "src/syntax.Error",
-              "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.quantity",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameter_type",
@@ -17300,17 +17266,19 @@
           {
             "key": "src/catalog.scoped_parameters",
             "file": "src/catalog.bend",
-            "via": "src/catalog.parameters",
+            "via": "src/catalog.collect_signatures",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "String",
               "U32",
               "U32.add",
               "U32.is_eq",
+              "src/catalog.find_type",
               "src/catalog.parameter_type",
               "src/catalog.scoped_type",
               "src/core.Datatype",
@@ -24455,7 +24423,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 393,
+          "declarations": 392,
           "base": 58,
           "base_intrinsics": 20,
           "foreign": 6
@@ -24880,7 +24848,7 @@
               "U32.add",
               "U32.is_eq",
               "src/catalog.parameter_names",
-              "src/catalog.parameters",
+              "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.exhausted",
@@ -25113,7 +25081,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.scoped_type",
+            "via": "src/catalog.scoped_parameters",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -25201,18 +25169,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.parameters",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "src/catalog.scoped_parameters"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.quantity",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameter_type",
@@ -25261,13 +25217,14 @@
           {
             "key": "src/catalog.scoped_parameters",
             "file": "src/catalog.bend",
-            "via": "src/catalog.parameters",
+            "via": "src/catalog.collect_signatures",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
               "U32.add",
               "U32.is_eq",
+              "src/catalog.find_type",
               "src/catalog.parameter_type",
               "src/catalog.scoped_type",
               "src/core.exhausted",
@@ -29925,7 +29882,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 490,
+          "declarations": 489,
           "base": 110,
           "base_intrinsics": 23,
           "foreign": 6
@@ -30742,6 +30699,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "U32",
@@ -30749,7 +30707,7 @@
               "U32.is_eq",
               "src/catalog.TypeRef",
               "src/catalog.parameter_names",
-              "src/catalog.parameters",
+              "src/catalog.scoped_parameters",
               "src/catalog.scoped_type",
               "src/catalog.signature",
               "src/core.Datatype",
@@ -31086,7 +31044,7 @@
           {
             "key": "src/catalog.find_type",
             "file": "src/catalog.bend",
-            "via": "src/catalog.scoped_type",
+            "via": "src/catalog.scoped_parameters",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31224,25 +31182,6 @@
             "dynamic_calls": []
           },
           {
-            "key": "src/catalog.parameters",
-            "file": "src/catalog.bend",
-            "via": "src/catalog.collect_signatures",
-            "kind": "Def",
-            "boundary": "source",
-            "unsafe": false,
-            "dependencies": [
-              "List",
-              "Result",
-              "U32",
-              "src/catalog.scoped_parameters",
-              "src/core.Datatype",
-              "src/core.Parameter",
-              "src/syntax.Error",
-              "src/syntax.Node"
-            ],
-            "dynamic_calls": []
-          },
-          {
             "key": "src/catalog.quantity",
             "file": "src/catalog.bend",
             "via": "src/catalog.parameter_type",
@@ -31311,17 +31250,19 @@
           {
             "key": "src/catalog.scoped_parameters",
             "file": "src/catalog.bend",
-            "via": "src/catalog.parameters",
+            "via": "src/catalog.collect_signatures",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
               "List",
               "Result",
               "U32",
               "U32.add",
               "U32.is_eq",
               "src/catalog.TypeRef",
+              "src/catalog.find_type",
               "src/catalog.parameter_type",
               "src/catalog.scoped_type",
               "src/core.Datatype",
