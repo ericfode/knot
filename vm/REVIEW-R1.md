@@ -11,7 +11,7 @@ were fixed by literal review in `94e54bb0` and `6f988dff` before their repairs.
 | Book description's pending control | Exposed by the complete comparison. The description is the rest of Return to Top(0), so its stopped fallback now retains `Return`, with the same word and state, instead of `Finished(Answered)`. A separately frozen control, checked law and executable mutant hold the boundary. |
 | Seed-accepted empty datatype classified Invalid | Confirmed, inherited, frontend-owner dependency. A fresh seed check prints `All terms check.` and evaluation prints `High{}`. Fresh Knot checker, evaluator and compiler builds all exit 2 with `Invalid check empty-datatype 5:9:1:5`; no artifact is produced. `src/catalog.bend` has blob `107ff05786337ef157f0449a41dcf19695796b8c` here and on vm-spec. The coordinator assigns acceptance to the modules reconciliation round; an unsupported lane must report `Unsupported check empty-datatype`. No frontend edit belongs to this increment. |
 | Historical timestamp-only receipt commit | Retained as history. Replacement model evidence is normalized before staging and must contain semantic changes; no timestamp-only receipt checkpoint is added. |
-| PATH selects Bun 1.3.11 | Repaired. The runner checks PATH's executable against io-host's unchanged Bun 1.3.14 pin before builds or receipt removal. `gates:verify` has 22 passing tests, including wrong-version, missing/failed-probe and no-mutation controls. |
+| PATH selects Bun 1.3.11 | Repaired in review r1. Pre-review C3 required relocating the guard from the shared runner to the owned `vm/run-gates.py` wrapper, which checks PATH against io-host's unchanged Bun 1.3.14 pin before invoking the runner. `vm/test-runtime.py` retains wrong-version, missing/failed-probe and no-mutation controls, and checks argument/exit forwarding. Direct gate commands must select the pinned Bun on PATH. |
 
 ## Deterministic controls
 
@@ -37,7 +37,10 @@ passed all 22 registered gates with exit 0. Their normalized summaries are
 identical, and all 90 normalized receipt files match byte for byte. The runs are
 `.local/gates/run-grme3s31` and `.local/gates/run-mjl8p267`.
 [The review receipt](receipts/review-r1.json) records the exact per-gate counts,
-source/dependency hashes, comparison hashes and finding dispositions.
+source/dependency hashes, comparison hashes and finding dispositions. Pre-review
+C4 removed its local run-directory pointers; run ordinals, observed timings and
+all historical hashes and results remain intact. Current verification is recorded
+in [PRE-REVIEW.md](PRE-REVIEW.md).
 
 The model gate passed 111 goldens, 44 invocations, 108 fuel controls, 212 refusal
 controls, 13 argument controls, 165 admitted controls, 107 audited runs and 45

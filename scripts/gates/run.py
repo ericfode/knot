@@ -238,23 +238,6 @@ def output_names(root: Path, gate: Gate) -> set[str]:
     return {p.relative_to(root).as_posix() for pattern in gate.outputs for p in root.glob(pattern) if p.is_file()}
 
 
-def check_runtime(root: Path, env: dict) -> dict:
-    """Refuse PATH drift before any build, using io-host's unchanged frozen Bun pin."""
-    if not any(gate.name == 'io-host' for gate in GATES):
-        return {}
-    wanted = json.loads((root / 'tests/compiler-io/expectations.json').read_bytes())['seed']['bun']
-    executable = shutil.which('bun', path=env.get('PATH', ''))
-    if executable is None:
-        raise RuntimeError(f'Bun is missing from PATH; io-host requires {wanted}')
-    probe = subprocess.run([executable, '--version'], cwd=root, env=env,
-                           capture_output=True, text=True, timeout=30)
-    actual = probe.stdout.strip()
-    if probe.returncode != 0 or actual != wanted:
-        raise RuntimeError(f'Bun version mismatch: PATH selects {actual!r} at {executable}; '
-                           f'io-host requires {wanted}. Select the pinned runtime before running gates.')
-    return {'bun': {'version': actual, 'executable': executable}}
-
-
 def counts(root: Path, gate: Gate, stdout: str) -> dict:
     if gate.name == 'census':
         record = json.loads(stdout)
@@ -474,7 +457,6 @@ def main(argv=None) -> int:
         snapshot = export(root, scratch)
         (run_dir / 'snapshot.json').write_bytes(json_bytes(snapshot))
         env, dependencies = environment(run_dir)
-        summary['run']['runtimes'] = check_runtime(scratch, env)
         (run_dir / 'dependencies.json').write_bytes(json_bytes(dependencies))
         tracked = set(os.fsdecode(p) for p in git(root, 'ls-files', '-z').split(b'\0') if p)
         expected = {gate.name: output_names(scratch, gate) for gate in GATES}

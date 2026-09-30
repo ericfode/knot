@@ -225,56 +225,8 @@ class WorkspaceTests(unittest.TestCase):
         self.assertEqual(0, summary['run']['gates'][0]['exit_code'])
         self.assertGreater(summary['run']['gates'][0]['seconds'], 0)
 
-    def test_runtime_mismatch_stops_before_scheduling_or_receipt_removal(self):
-        pin = self.root / 'tests/compiler-io/expectations.json'
-        pin.parent.mkdir(parents=True)
-        pin.write_text('{"seed":{"bun":"1.3.14"}}')
-        binary = self.base / 'bun'
-        binary.write_text('#!/bin/sh\necho 1.3.11\n')
-        binary.chmod(0o755)
-        before = run.fingerprint(self.root, run.file_names(self.root))
-        old_cwd = Path.cwd()
-        try:
-            os.chdir(self.root)
-            with patch.object(run, 'GATES', (run.Gate('io-host', (), ('receipt.json',)),)), \
-                 patch.object(run, 'environment', return_value=({'PATH': str(self.base)}, {})), \
-                 patch.object(run, 'schedule') as schedule:
-                stdout = io.StringIO()
-                with contextlib.redirect_stdout(stdout), contextlib.redirect_stderr(io.StringIO()):
-                    self.assertEqual(1, run.main([]))
-                summary = json.loads(stdout.getvalue())
-                schedule.assert_not_called()
-        finally:
-            os.chdir(old_cwd)
-        self.assertEqual('host-failure', summary['normalized']['status'])
-        self.assertIn('io-host requires 1.3.14', summary['error'])
-        self.assertEqual('{}\n', (self.root / 'receipt.json').read_text())
-        self.assertEqual(before, run.fingerprint(self.root, run.file_names(self.root)))
-
 
 class ExecutionTests(unittest.TestCase):
-    def test_runtime_guard_uses_the_frozen_pin_and_selected_path(self):
-        with tempfile.TemporaryDirectory() as tmp:
-            root = Path(tmp)
-            pin = root / 'tests/compiler-io/expectations.json'
-            pin.parent.mkdir(parents=True)
-            pin.write_text('{"seed":{"bun":"1.3.14"}}')
-            binary = root / 'bun'
-            env = {'PATH': str(root), 'BEND_NO_TELEMETRY': '1'}
-            with patch.object(run, 'GATES', (run.Gate('io-host', ()),)):
-                for version, status in (('1.3.14', 0), ('1.3.11', 0), ('1.3.14', 1)):
-                    binary.write_text(f'#!/bin/sh\necho {version}\nexit {status}\n')
-                    binary.chmod(0o755)
-                    if version == '1.3.14' and status == 0:
-                        self.assertEqual({'bun': {'version': '1.3.14', 'executable': str(binary)}},
-                                         run.check_runtime(root, env))
-                    else:
-                        with self.assertRaisesRegex(RuntimeError, 'io-host requires 1.3.14'):
-                            run.check_runtime(root, env)
-                binary.unlink()
-                with self.assertRaisesRegex(RuntimeError, 'Bun is missing from PATH'):
-                    run.check_runtime(root, env)
-
     def test_failure_and_timeout_classifications(self):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
