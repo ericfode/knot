@@ -6,9 +6,11 @@ type Read is Data:
   Read{token: S.Token, rest: List<&2,S.Token>}
 type Mode is Data:
   TypeExpr{}
+  TypeGroupedExpr{}
   TypeAtom{}
-  TypeTail{domain: S.Token}
+  TypeTail{domain: S.Token, grouped: Bool}
   TypeGroup{token: S.Token}
+  TypeFamily{open: S.Token, depth: U32, parens: U32, grouped: Bool}
 type Interned is Data:
   Interned{types: List<&2,C.Datatype>, index: U32}
 
@@ -25,13 +27,15 @@ def read(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>, +code: String) -> Res
   match fuel mode:
     case 0n _: Fail{S.Exhausted{"parse",S.here(tokens)}}
     case 1n+ +n TypeExpr{}:
-      then(read(n,TypeAtom{},tokens,code),domain => rest => read(n,TypeTail{domain},rest,code))
+      then(read(n,TypeAtom{},tokens,code),domain => rest => read(n,TypeTail{domain,False{}},rest,code))
+    case 1n+ +n TypeGroupedExpr{}:
+      then(read(n,TypeAtom{},tokens,code),domain => rest => read(n,TypeTail{domain,True{}},rest,code))
     case 1n+ +n TypeAtom{}:
       match tokens:
         case Con{+head,+tail}:
           S.choose(Result<S.Error,Read>,S.identifier(head),u => Done{Read{head,tail}},u =>
           S.choose(Result<S.Error,Read>,S.matches(head,"("),u =>
-            then(read(n,TypeExpr{},tail,code),token => rest => read(n,TypeGroup{token},rest,code)),u =>
+            then(read(n,TypeGroupedExpr{},tail,code),token => rest => read(n,TypeGroup{token},rest,code)),u =>
             unsupported(Read,tokens,code)))
         case Nil{}: Fail{S.Invalid{"parse",code,S.here(tokens)}}
     case 1n+ +n TypeGroup{+token}:
@@ -40,16 +44,44 @@ def read(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>, +code: String) -> Res
           S.choose(Result<S.Error,Read>,S.matches(head,")"),u => Done{Read{token,tail}},u =>
             unsupported(Read,tokens,code))
         case Nil{}: Fail{S.Invalid{"parse",code,S.here(tokens)}}
-    case 1n+ +n TypeTail{+domain}:
+    case 1n+ +n TypeTail{+domain,+grouped}:
       match tokens:
         case Con{+dash,Con{+arrow,+tail}}:
           S.choose(Result<S.Error,Read>,S.matches(dash,"-"),u =>
             S.choose(Result<S.Error,Read>,S.matches(arrow,">"),u =>
-              then(read(n,TypeExpr{},tail,code),result => rest => Done{Read{S.Arrow{domain,result},rest}}),u =>
-              unsupported(Read,tokens,code)),u =>
-          S.choose(Result<S.Error,Read>,Bool.or(S.matches(dash,"<"),S.matches(dash,"(")),u =>
-            unsupported(Read,tokens,code),u => Done{Read{domain,tokens}}))
+              then(read(n,Bool.pick(Mode,grouped,TypeGroupedExpr{},TypeExpr{}),tail,code),result => rest => Done{Read{S.Arrow{domain,result},rest}}),u =>
+              Done{Read{domain,tokens}}),u =>
+          S.choose(Result<S.Error,Read>,S.matches(dash,"<"),u =>
+            S.choose(Result<S.Error,Read>,S.matches(arrow,"-"),u =>
+              Fail{S.Invalid{"parse",code,S.at(dash)}},u =>
+              read(n,TypeFamily{dash,1,0,grouped},Con{arrow,tail},code)),u =>
+          S.choose(Result<S.Error,Read>,S.matches(dash,"("),u =>
+            unsupported(Read,tokens,code),u => Done{Read{domain,tokens}})))
         case _: Done{Read{domain,tokens}}
+    # A family application is outside this profile. Locate its closing bracket
+    # before refusing it: an unclosed '<' is the seed's untyped comparison.
+    case 1n+ +n TypeFamily{+open,+depth,+parens,+grouped}:
+      match tokens:
+        case Con{+head,Con{+next,+tail}}:
+          S.choose(Result<S.Error,Read>,S.matches(head,"<eof>"),u =>
+            Fail{S.Invalid{"parse",code,S.at(open)}},u =>
+          S.choose(Result<S.Error,Read>,Bool.and(S.matches(head,"-"),S.matches(next,">")),u =>
+            read(n,TypeFamily{open,depth,parens,grouped},tail,code),u =>
+          S.choose(Result<S.Error,Read>,Bool.and(grouped,Bool.and(U32.is_eq(parens,0),S.matches(head,":"))),u =>
+            unsupported(Read,[open],code),u =>
+          S.choose(Result<S.Error,Read>,S.matches(head,"("),u =>
+            read(n,TypeFamily{open,depth,U32.add(parens,1),grouped},Con{next,tail},code),u =>
+          S.choose(Result<S.Error,Read>,S.matches(head,")"),u =>
+            S.choose(Result<S.Error,Read>,U32.is_gt(parens,0),u =>
+              read(n,TypeFamily{open,depth,U32.sub(parens,1),grouped},Con{next,tail},code),u =>
+              Fail{S.Invalid{"parse",code,S.at(open)}}),u =>
+          S.choose(Result<S.Error,Read>,S.matches(head,"<"),u =>
+            read(n,TypeFamily{open,U32.add(depth,1),parens,grouped},Con{next,tail},code),u =>
+          S.choose(Result<S.Error,Read>,S.matches(head,">"),u =>
+            S.choose(Result<S.Error,Read>,U32.is_eq(depth,1),u =>
+              unsupported(Read,[open],code),u => read(n,TypeFamily{open,U32.sub(depth,1),parens,grouped},Con{next,tail},code)),u =>
+            read(n,TypeFamily{open,depth,parens,grouped},Con{next,tail},code))))))))
+        case _: Fail{S.Invalid{"parse",code,S.at(open)}}
 
 def token(definition: C.Datatype) -> S.Token:
   match definition:

@@ -1,5 +1,10 @@
 # Closures refresh: branch verification and integration boundary
 
+This is the historical `0dcc51a0` refresh receipt. Later executor precheck repairs
+are recorded in [closures-prechecks.md](closures-prechecks.md). They preserve
+this frozen corpus and its observations; this document's source-equality audit
+describes the earlier snapshot.
+
 This round starts from `a1d68911` on `campaign/closures`. The 2026-09-29 executor
 instruction forbids merges, rebases and writes to other worktrees. Consequently
 the refresh prompt's main merge is coordinator work; this round does not claim

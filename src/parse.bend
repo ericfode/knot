@@ -1,6 +1,7 @@
 import Base
 import ./syntax.bend as S
 import ./closure-types.bend as F
+import ./parse-visibility.bend as V
 
 type Parsed is Data:
   Parsed{value: S.Node, rest: List<&2,S.Token>}
@@ -119,10 +120,20 @@ def expect(+ts: List<&2,S.Token>, +word: String) -> Result<S.Error,List<&2,S.Tok
 
 def parameter_end(+name: S.Token, +quantity: U32, +typ: S.Token, +rest: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match rest:
-    case Con{h,t}:
-      S.choose(Result<S.Error,Parsed>,S.matches(h,"<"),u =>
-        unsupported(rest,"parameter-type"),u => Done{Parsed{S.Parameter{name,quantity,typ},rest}})
+    case Con{h,t}: Done{Parsed{S.Parameter{name,quantity,typ},rest}}
     case Nil{}: invalid(rest,"parameter")
+
+def plain_parameter(tokens: List<&2,S.Token>) -> Bool:
+  match tokens:
+    case Con{name,Con{colon,tail}}: Bool.and(S.identifier(name),S.matches(colon,":"))
+    case _: False{}
+
+def parameter_prefix(+tokens: List<&2,S.Token>) -> Bool:
+  match tokens:
+    case Con{+head,+tail}:
+      S.choose(Bool,Bool.or(S.matches(head,"+"),Bool.or(S.matches(head,"-"),S.matches(head,"~"))),u =>
+        plain_parameter(tail),u => plain_parameter(tokens))
+    case _: False{}
 
 def parameter_parts(+quantity: U32, +ts: List<&2,S.Token>) -> Result<S.Error,Parsed>:
   match ts:
@@ -252,7 +263,10 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             Done{Parsed{S.Sequence{Con{head,Nil{}}},t}},u =>
           S.choose(Result<S.Error,Parsed>,S.matches(h,","),u =>
             then(run(n,Bool.pick(Mode,parameters,Parameters{close},Arguments{close,pattern}),t),more => rest => prepend(head,more,rest)),u =>
-            invalid(tokens,"argument-separator")))
+          S.choose(Result<S.Error,Parsed>,Bool.and(parameters,parameter_prefix(tokens)),u =>
+            S.choose(Result<S.Error,Parsed>,S.matches(h,"~"),u => invalid(tokens,"template-order"),u =>
+              then(run(n,Parameters{close},tokens),more => rest => prepend(head,more,rest))),u =>
+            invalid(tokens,"argument-separator"))))
         case _: invalid(tokens,"unexpected-end")
     case 1n+ +n Term{+pattern}:
       match tokens:
@@ -417,5 +431,6 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
             unsupported(tokens,"pattern-or-indentation")))
         case _: invalid(tokens,"unexpected-end")
 
-def parse(depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
-  run(depth,Book{},tokens)
+def parse(+depth: Nat, tokens: List<&2,S.Token>) -> Result<S.Error,Parsed>:
+  then(run(depth,Book{},tokens),+root => +rest =>
+    S.bind(Unit,Parsed,V.book(depth,root),u => Done{Parsed{root,rest}}))

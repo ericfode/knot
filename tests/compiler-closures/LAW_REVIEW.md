@@ -78,3 +78,46 @@ Offline preflight records no model ratings or semantic review. See
 negative-parser exclusions, and `receipts/preflight.json` for context limits.
 Live Perch source and law-packet review belongs to the coordinator. None of the
 five style axes or the bounded composition is reported as qualified here.
+
+## Pre-review parser controls, 2026-09-29
+
+The additional `prechecks.json` has 26 independently seed-frozen programs:
+12 malformed syntax controls, eight syntactically valid out-of-profile type
+forms and six accepted books. Its 26 parse/check verdicts and 52 native/Bun
+build observations precede the corresponding repairs. The original fixtures,
+expectations, laws, proof domains and five mutants remain unchanged.
+
+The arrow reader distinguishes an untyped comparison from a closed family
+application before refusing the latter. Grouped typed comparisons retain an
+Unsupported boundary. Parameter separators are optional; a nonleading template
+marker is still Invalid. A separate syntax walk checks braced-pattern
+constructor visibility by comparing original source offsets, independently of
+AST list order. Constructor terms retain forward references. Imported
+constructors need the modules increment's visibility context at integration;
+imports remain Unsupported in this branch.
+
+`src/parse-visibility-PROOF.bend` fills four additional laws: `unknown_pattern`
+and `forward_term` quantify over tokens; `declared_pattern` fixes inhabited
+ordered offsets while quantifying line/column metadata; `empty_book` quantifies
+fuel and the constructor inventory. These are local equations and concrete
+normalization, not a general declaration-visibility or parser-soundness theorem.
+The original 24 closure laws and open capture/application theorem retain their
+full meaning and domains.
+
+The added gate compares all 26 programs in native/Bun parse, check, compile
+and applicable eval lanes, preserves artifacts on refusal, validates emitted
+Wasm and compares successful bytes across lanes. Three additional parseable,
+type-correct mutants must exhibit their intended wrong verdicts in both lanes:
+unclosed-family refusal, required parameter commas and accepted late patterns.
+No build error, timeout, unrelated diagnostic or harness failure counts as a
+kill. The existing reverse-sequence mutant must still reach its wrong-tree
+assertion, which is why visibility uses spans rather than parsed-list order.
+
+The function-result control remains Checked and Built. Its evaluator command
+is deliberately outside the host result ABI and must retain the existing
+`HostFailure invoke function-result` refusal. C1's unconditional classification
+of that refusal as a crash, and its source-span requirement for a host diagnostic,
+are disputed in `docs/compiler-campaign/closures-prechecks.md` with the exact
+seed, two-lane observations and unchanged contract. No host contract is widened
+to remove those findings. Live semantic and five-axis/composition style review
+remain unrun and coordinator-owned.

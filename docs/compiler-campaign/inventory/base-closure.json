@@ -396,9 +396,9 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 9,
+          "declarations": 110,
+          "base": 41,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -633,6 +633,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -645,17 +647,25 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -881,6 +891,141 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -1043,12 +1188,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -1074,6 +1216,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -1111,11 +1272,14 @@
               "List",
               "Nat",
               "Result",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -1130,6 +1294,24 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -1226,6 +1408,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -1335,7 +1518,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1502,7 +1685,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1527,7 +1710,7 @@
           {
             "key": "src/syntax.bind",
             "file": "src/syntax.bend",
-            "via": "src/lex.scan",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -1666,7 +1849,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/parse.Mode",
+            "via": "src/parse-visibility.book",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -1942,7 +2125,7 @@
           {
             "key": "U32.add",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -2030,9 +2213,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.sub",
+            "file": "Base",
+            "via": "src/closure-types.read",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse-visibility.book",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -2050,9 +2245,9 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 100,
-          "base": 40,
-          "base_intrinsics": 8,
+          "declarations": 110,
+          "base": 41,
+          "base_intrinsics": 9,
           "foreign": 0
         },
         "entries": [
@@ -2287,6 +2482,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -2299,17 +2496,25 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -2535,6 +2740,141 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -2697,12 +3037,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -2728,6 +3065,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -2765,11 +3121,14 @@
               "List",
               "Nat",
               "Result",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -2784,6 +3143,24 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -2880,6 +3257,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -2989,7 +3367,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3156,7 +3534,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3181,7 +3559,7 @@
           {
             "key": "src/syntax.bind",
             "file": "src/syntax.bend",
-            "via": "src/lex.scan",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -3320,7 +3698,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/parse.Mode",
+            "via": "src/parse-visibility.book",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -3596,7 +3974,7 @@
           {
             "key": "U32.add",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -3684,9 +4062,21 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.sub",
+            "file": "Base",
+            "via": "src/closure-types.read",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "U32"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse-visibility.book",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -3704,9 +4094,9 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 78,
-          "base": 28,
-          "base_intrinsics": 9,
+          "declarations": 88,
+          "base": 29,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -3824,9 +4214,15 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool.and",
+              "Bool.pick",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.then",
               "src/closure-types.unsupported",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -3950,6 +4346,100 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.constructors"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.inspect",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "src/parse-visibility.declared",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -4053,10 +4543,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/parse.invalid",
-              "src/parse.unsupported",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/parse.invalid"
             ],
             "dynamic_calls": []
           },
@@ -4075,6 +4562,21 @@
               "src/parse.unsupported",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "src/parse.plain_parameter",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -4100,7 +4602,24 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/parse.run"
+              "src/parse-visibility.book",
+              "src/parse.run",
+              "src/parse.then",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -4167,6 +4686,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -4254,7 +4774,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4358,7 +4878,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4368,7 +4888,7 @@
           {
             "key": "src/syntax.bind",
             "file": "src/syntax.bend",
-            "via": "src/lex.scan",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -4654,7 +5174,7 @@
           {
             "key": "U32.add",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -4720,6 +5240,16 @@
             "unsafe": false,
             "dependencies": [],
             "dynamic_calls": []
+          },
+          {
+            "key": "U32.sub",
+            "file": "Base",
+            "via": "src/closure-types.read",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
           }
         ],
         "unresolved": []
@@ -4732,9 +5262,9 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 114,
-          "base": 54,
-          "base_intrinsics": 9,
+          "declarations": 125,
+          "base": 56,
+          "base_intrinsics": 10,
           "foreign": 0
         },
         "entries": [
@@ -5048,6 +5578,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -5060,17 +5592,24 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -5291,6 +5830,136 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -5447,12 +6116,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -5477,6 +6143,24 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -5513,11 +6197,15 @@
               "List",
               "Nat",
               "Result",
+              "Unit",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -5532,6 +6220,23 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -5624,6 +6329,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -5731,7 +6437,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5893,7 +6599,7 @@
           {
             "key": "src/syntax.at",
             "file": "src/syntax.bend",
-            "via": "src/parse.expect",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -5918,7 +6624,7 @@
           {
             "key": "src/syntax.bind",
             "file": "src/syntax.bend",
-            "via": "src/lex.scan",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -6056,7 +6762,7 @@
           {
             "key": "src/syntax.Node",
             "file": "src/syntax.bend",
-            "via": "src/parse.Mode",
+            "via": "src/parse-visibility.book",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -6334,7 +7040,7 @@
           {
             "key": "U32.add",
             "file": "Base",
-            "via": "src/lex.step_at",
+            "via": "src/closure-types.read",
             "kind": "Def",
             "boundary": "intrinsic",
             "unsafe": false,
@@ -6434,9 +7140,22 @@
             "dynamic_calls": []
           },
           {
+            "key": "U32.sub",
+            "file": "Base",
+            "via": "src/closure-types.read",
+            "kind": "Def",
+            "boundary": "intrinsic",
+            "unsafe": false,
+            "dependencies": [
+              "U32",
+              "Word.sub"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "Unit",
             "file": "Base",
-            "via": "src/syntax.choose",
+            "via": "src/parse.parse",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -6562,6 +7281,21 @@
             "unsafe": false,
             "dependencies": [],
             "dynamic_calls": []
+          },
+          {
+            "key": "Word.sub",
+            "file": "Base",
+            "via": "U32.sub",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Nat",
+              "Word",
+              "Word.adc"
+            ],
+            "dynamic_calls": []
           }
         ],
         "unresolved": []
@@ -6575,7 +7309,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 432,
+          "declarations": 441,
           "base": 72,
           "base_intrinsics": 20,
           "foreign": 6
@@ -9689,6 +10423,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -9729,17 +10465,25 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -11342,6 +12086,141 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -11504,12 +12383,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -11535,6 +12411,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -11572,11 +12467,14 @@
               "List",
               "Nat",
               "Result",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -11591,6 +12489,24 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -11687,6 +12603,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -11796,7 +12713,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -14623,7 +15540,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 432,
+          "declarations": 441,
           "base": 72,
           "base_intrinsics": 19,
           "foreign": 6
@@ -17737,6 +18654,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -17777,17 +18696,25 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -19390,6 +20317,141 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "String",
+              "U32",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -19552,12 +20614,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -19583,6 +20642,25 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "String",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -19620,11 +20698,14 @@
               "List",
               "Nat",
               "Result",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -19639,6 +20720,24 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -19735,6 +20834,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -19844,7 +20944,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -22671,7 +23771,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 373,
+          "declarations": 382,
           "base": 58,
           "base_intrinsics": 20,
           "foreign": 6
@@ -24637,9 +25737,15 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool.and",
+              "Bool.pick",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.then",
               "src/closure-types.unsupported",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -25594,6 +26700,100 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_lt"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.constructors"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/parse-visibility.inspect",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "Bool.not",
+              "src/parse-visibility.declared",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -25697,10 +26897,7 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/parse.invalid",
-              "src/parse.unsupported",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/parse.invalid"
             ],
             "dynamic_calls": []
           },
@@ -25719,6 +26916,21 @@
               "src/parse.unsupported",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.or",
+              "src/parse.plain_parameter",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -25744,7 +26956,24 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "src/parse.run"
+              "src/parse-visibility.book",
+              "src/parse.run",
+              "src/parse.then",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool.and",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -25811,6 +27040,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -25898,7 +27128,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -27844,7 +29074,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 470,
+          "declarations": 479,
           "base": 110,
           "base_intrinsics": 23,
           "foreign": 6
@@ -31017,6 +32247,8 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
+              "Bool",
+              "U32",
               "src/syntax.Token"
             ],
             "dynamic_calls": []
@@ -31055,17 +32287,24 @@
             "boundary": "source",
             "unsafe": false,
             "dependencies": [
-              "Bool.or",
+              "Bool",
+              "Bool.and",
+              "Bool.pick",
               "List",
               "Nat",
               "Result",
               "String",
+              "U32.add",
+              "U32.is_eq",
+              "U32.is_gt",
+              "U32.sub",
               "src/closure-types.Mode",
               "src/closure-types.Read",
               "src/closure-types.then",
               "src/closure-types.unsupported",
               "src/syntax.Error",
               "src/syntax.Token",
+              "src/syntax.at",
               "src/syntax.choose",
               "src/syntax.here",
               "src/syntax.identifier",
@@ -32663,6 +33902,136 @@
             "dynamic_calls": []
           },
           {
+            "key": "src/parse-visibility.before",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declared",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "U32.is_lt",
+              "src/syntax.At"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.book",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse.parse",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.collect",
+              "src/parse-visibility.declarations",
+              "src/syntax.Error",
+              "src/syntax.Node"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.collect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/parse-visibility.constructors",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.constructors",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.collect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "src/syntax.Node",
+              "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declarations",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.book",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.inspect",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.bind"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.declared",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.inspect",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "String.eq",
+              "src/parse-visibility.before",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.choose",
+              "src/syntax.text"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse-visibility.inspect",
+            "file": "src/parse-visibility.bend",
+            "via": "src/parse-visibility.declarations",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "Bool.not",
+              "List",
+              "Nat",
+              "Result",
+              "Unit",
+              "src/parse-visibility.declared",
+              "src/syntax.At",
+              "src/syntax.Error",
+              "src/syntax.Node",
+              "src/syntax.Token",
+              "src/syntax.at",
+              "src/syntax.bind",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
             "key": "src/parse.body_end",
             "file": "src/parse.bend",
             "via": "src/parse.run",
@@ -32819,12 +34188,9 @@
               "U32",
               "src/parse.Parsed",
               "src/parse.invalid",
-              "src/parse.unsupported",
               "src/syntax.Error",
               "src/syntax.Node",
-              "src/syntax.Token",
-              "src/syntax.choose",
-              "src/syntax.matches"
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -32849,6 +34215,24 @@
               "src/syntax.Token",
               "src/syntax.choose",
               "src/syntax.identifier",
+              "src/syntax.matches"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.parameter_prefix",
+            "file": "src/parse.bend",
+            "via": "src/parse.run",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.or",
+              "List",
+              "src/parse.plain_parameter",
+              "src/syntax.Token",
+              "src/syntax.choose",
               "src/syntax.matches"
             ],
             "dynamic_calls": []
@@ -32885,11 +34269,15 @@
               "List",
               "Nat",
               "Result",
+              "Unit",
+              "src/parse-visibility.book",
               "src/parse.Mode",
               "src/parse.Parsed",
               "src/parse.run",
+              "src/parse.then",
               "src/syntax.Error",
-              "src/syntax.Token"
+              "src/syntax.Token",
+              "src/syntax.bind"
             ],
             "dynamic_calls": []
           },
@@ -32904,6 +34292,23 @@
               "List",
               "src/syntax.Node",
               "src/syntax.Token"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/parse.plain_parameter",
+            "file": "src/parse.bend",
+            "via": "src/parse.parameter_prefix",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "Bool",
+              "Bool.and",
+              "List",
+              "src/syntax.Token",
+              "src/syntax.identifier",
+              "src/syntax.matches"
             ],
             "dynamic_calls": []
           },
@@ -32996,6 +34401,7 @@
               "src/parse.invalid",
               "src/parse.lambda_prefix",
               "src/parse.parameter",
+              "src/parse.parameter_prefix",
               "src/parse.parameter_type",
               "src/parse.prepend",
               "src/parse.reply",
@@ -33103,7 +34509,7 @@
           {
             "key": "src/parse.then",
             "file": "src/parse.bend",
-            "via": "src/parse.run",
+            "via": "src/parse.parse",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,

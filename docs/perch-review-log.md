@@ -1021,3 +1021,23 @@ gate scripts whose host guards changed. The exact unsuccessful summary is in
 policy; `census` refreshed only those five gate hashes. Prevention: run the cheap
 census check immediately after any gate-script edit, before the full native
 corpus. A later isolated census pass cannot be called a full runner pass.
+
+## 2026-09-29 — Closure precheck parser guards
+
+The first deterministic repair run exposed a misplaced declaration-order
+dependency: checking the already parsed list made the existing reverse-sequence
+mutant stop at an undeclared-pattern diagnostic instead of its intended wrong
+tree. Constructor visibility now compares original source offsets, independently
+of AST ordering. Its paired forward-pattern and forward-term controls are
+seed-frozen before repair. The first unsuccessful complete run is retained in
+[precheck-first-gates.json](../tests/compiler-closures/receipts/precheck-first-gates.json),
+including the manifest-coverage failure and the new harness's incorrect expected
+value shape. None is a semantic mutant kill or source rejection.
+
+Prevention: run existing frontend mutation controls when adding a syntax-tree
+validator; make source-event rules independent of the representation being
+tested. Close the compiler manifest and its transitive imports for every new
+Bend file before the whole runner. Native seed builds of accepted standalone
+books need an import-Base wrapper; take syntax verdicts from the seed itself
+before assuming a proposed neighboring control is valid. This is deterministic
+review evidence, with no live Perch/provider judgment or invented timing.

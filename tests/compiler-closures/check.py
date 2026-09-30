@@ -374,7 +374,7 @@ def main():
              *sorted(HERE.glob('*.md')),
              *sorted(HERE.glob('*.mjs')), *sorted((HERE / 'fixtures').glob('*.bend')),
              *sorted((HERE / 'probes').glob('*.bend')), *sorted((HERE / 'regressions').glob('*.bend')),
-             *sorted((HERE / 'refresh').glob('*.bend'))]
+             *sorted((HERE / 'refresh').glob('*.bend')), *sorted((HERE / 'prechecks').glob('*.bend'))]
     record['inputs'] = {relative(p): digest(p) for p in paths}
     try:
         record['seed'] = frozen['seed']
@@ -397,11 +397,15 @@ def main():
         require(refresh_counts == {'programs': 32, 'accepted': 20, 'rejected': 12,
                                    'seed_checks': 32, 'seed_builds': 64, 'seed_runs': 40},
                 ('frozen refresh coverage changed', refresh_counts))
+        record['precheck_reference'] = successful(['python3', HERE / 'precheck_seed.py'], timeout=600)
+        require(json.loads(record['precheck_reference']['stdout']) ==
+                {'programs': 26, 'accepted': 6, 'rejected': 20, 'seed_parses': 26,
+                 'seed_checks': 26, 'seed_builds': 52}, 'frozen precheck coverage changed')
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()
                            for tool in ('bun', 'node', 'python3', 'wasm2wat')}
         require(record['tools']['node'] == 'v22.22.3', record['tools'])
         record['proofs'] = []
-        for family in ('closure-types', 'closure-check', 'closure'):
+        for family in ('closure-types', 'closure-check', 'closure', 'parse-visibility'):
             entry = ROOT / f'src/{family}-PROOF.bend'
             result = successful([*SEED, entry])
             require(result['stdout'] == 'All terms check.\n' and result['stderr'] == '', result)
@@ -409,7 +413,8 @@ def main():
                               (ROOT / f'src/{family}-LAWS.bend').read_text(), re.M)
             require(laws, (family, 'proof entry needs declared laws'))
             record['proofs'].append({'entry': relative(entry), 'result': result, 'laws': laws})
-        record['proof'] = record['proofs'][-1]['result']
+        record['proof'] = next(p['result'] for p in record['proofs']
+                               if p['entry'] == 'src/closure-PROOF.bend')
         record['builds'], lanes = [], {}
         for lane, suffix, runtime in LANES:
             lanes[lane] = {}
@@ -433,6 +438,8 @@ def main():
             run_case({**case, 'origin': 'refresh'}, case['calls'], lanes, modules, record)
         record['boundaries'] = boundary_probes(probes, lanes, modules)
         record['mutants'] = mutants(frozen, probes)
+        import precheck_replay
+        record['prechecks'] = precheck_replay.replay(lanes)
         require(all(digest(ROOT / path) == value for path, value in record['inputs'].items()),
                 'inputs changed while the closure gate ran')
         record['counts'] = {
@@ -464,6 +471,7 @@ def main():
             'mutant_lane_kills': sum(len(m['lanes']) for m in record['mutants']),
             'proof_entries': len(record['proofs']),
             'checked_laws': sum(len(p['laws']) for p in record['proofs'])}
+        record['counts']['prechecks'] = record['prechecks']['counts']
         record['qualification'] = 'blocked-prerequisites' if record['blocked'] else 'complete'
         record['status'] = 'passed'
     except Exception as error:

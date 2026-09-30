@@ -37,7 +37,9 @@ digits, underscores or dots. Keywords cannot be identifiers.
   has quantity erased (`-x`), affine (`x`), or reusable (`+x`). A reusable
   parameter must have a `Data` type. Dropping an affine parameter is allowed.
 - Variables, constructor applications and fully applied top-level calls.
-  Datatypes/constructors may be declared after their uses. A function must be
+  Datatypes/constructors may be declared after their uses as types or terms.
+  Braced constructor patterns require a preceding constructor declaration,
+  following the seed's parse-time declaration events. A function must be
   defined before its live calls, following the pinned reference's declaration
   events. Forward live calls are invalid even when the graph is acyclic.
 - Sequential local bindings `x = value`, `+x = value`, and `-x = value`.
@@ -86,6 +88,9 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | `~name:` in a function parameter list | `parse` | `template-binder` |
 | Parsed constructor pattern followed by `=` in a body | `parse` | `destructuring-binding` |
 | `import ./...` or `import 0x.../...` | `parse` | `import` |
+| Out-of-profile parameter/field type atom, group, typed comparison or closed family application | `parse` | `parameter-type` |
+| Out-of-profile result type atom, group, typed comparison or closed family application | `parse` | `function-result` |
+| Out-of-profile binding type atom, group, typed comparison or closed family application | `parse` | `binding-type` |
 
 Recognition stops at that prefix; it neither validates the suffix nor loads a
 module. Malformed supported syntax still reports `Invalid`. The reviewed
@@ -95,6 +100,12 @@ syntax errors, fixing complete diagnostics including locations. The hash
 fixture uses a frozen local cache; it does not claim a published package.
 Six checked prefix laws quantify over source locations and unconsumed suffixes;
 they are classification laws, not a parser soundness theorem or feature support.
+The monomorphic arrow reader locates a family's closing `>` before refusing it;
+an unclosed untyped `<` or the `<-` operator in a type position stays Invalid rather
+than being mistaken for an unsupported family application. Parameters and
+fields can be separated by whitespace or commas, as in the seed. A nonleading
+template marker still stays Invalid; optional separators do not move it into
+the leading-template prefix policy.
 
 The parser and catalog now have a separate
 [structural declaration checkpoint](../research/compiler-structural/SPEC.md).

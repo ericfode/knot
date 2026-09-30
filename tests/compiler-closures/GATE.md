@@ -116,3 +116,21 @@ native/Bun module bytes. Negative results keep their reviewed Invalid phase/code
 and preserve the output marker. Coverage is reported as a separate refresh
 section and included in the total differential observations. Neither the
 original expectations nor any law or mutant has changed.
+
+## Pre-review controls
+
+`prechecks.json` is a separate additive corpus frozen in `fc45c5a3` and
+`8a519299`. The gate replays 26 seed parses/checks and 52 native/Bun builds,
+then drives the real parse/check/eval/Fields compile CLIs in both Knot lanes.
+Twelve malformed forms remain Invalid; eight unimplemented valid type prefixes
+remain Unsupported; six accepted books check and build. Host function-result
+observation retains the documented HostFailure. Failed emission preserves the
+marker, successful modules validate and their bytes agree across lanes, and
+the two enum-returning main controls execute on Node against the seed values.
+
+The fourth proof entry, `src/parse-visibility-PROOF.bend`, adds four local laws
+without changing the original 24. `precheck_replay.py` also typechecks/builds
+three semantic mutants in both lanes before requiring their intended wrong
+classification: an unclosed family becomes Unsupported, commas become required,
+or a late constructor pattern becomes Parsed. These counts are separate from
+the 87 existing closure fixtures and five original mutants.

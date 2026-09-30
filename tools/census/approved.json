@@ -3815,6 +3815,10 @@
         {
           "module": "./closure-types.bend",
           "file": "src/closure-types.bend"
+        },
+        {
+          "module": "./parse-visibility.bend",
+          "file": "src/parse-visibility.bend"
         }
       ],
       "declarations": {
@@ -4029,6 +4033,33 @@
         ],
         "src/parse.bend::parameter_end:definition": [
           "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse.bend::plain_parameter:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/parse.bend::parameter_prefix:definition": [
+          "calls",
           "captures",
           "constructors",
           "fields",
@@ -4037,6 +4068,7 @@
           "literals.string",
           "matches",
           "patterns.variable",
+          "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
@@ -4207,10 +4239,14 @@
         ],
         "src/parse.bend::parse:definition": [
           "calls",
+          "captures",
           "constructors",
+          "fields",
           "generics",
+          "lambdas",
           "quantities.affine",
           "quantities.arguments",
+          "quantities.reusable",
           "types.base"
         ]
       }
@@ -7857,6 +7893,7 @@
         "src/closure-types.bend::Mode:datatype": [
           "fields",
           "quantities.affine",
+          "types.base",
           "types.data"
         ],
         "src/closure-types.bend::Interned:datatype": [
@@ -7901,8 +7938,10 @@
           "fields",
           "generics",
           "lambdas",
+          "literals.list",
           "literals.nat",
           "literals.string",
+          "literals.u32",
           "matches",
           "matches.multi",
           "patterns.nested",
@@ -8631,6 +8670,272 @@
           "lambdas",
           "matches",
           "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-visibility-LAWS.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        },
+        {
+          "module": "./parse-visibility.bend",
+          "file": "src/parse-visibility.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-visibility-LAWS.bend::unknown_pattern:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "literals.string",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-visibility-LAWS.bend::forward_term:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.nat",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/parse-visibility-LAWS.bend::declared_pattern:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-visibility-LAWS.bend::empty_book:law": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "laws",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-visibility-PROOF.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./parse-visibility-LAWS.bend",
+          "file": "src/parse-visibility-LAWS.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-visibility-PROOF.bend::L.unknown_pattern:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-visibility-PROOF.bend::L.forward_term:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ],
+        "src/parse-visibility-PROOF.bend::L.declared_pattern:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "proofs",
+          "quantities.arguments",
+          "quantities.reusable",
+          "types.base"
+        ],
+        "src/parse-visibility-PROOF.bend::L.empty_book:law_fill": [
+          "calls",
+          "constructors",
+          "dependent",
+          "equality",
+          "fields",
+          "generics",
+          "literals.nat",
+          "matches",
+          "patterns.variable",
+          "proofs",
+          "quantities.affine",
+          "quantities.arguments",
+          "types.base"
+        ]
+      }
+    },
+    "src/parse-visibility.bend": {
+      "imports": [
+        {
+          "module": "Base",
+          "file": "Base"
+        },
+        {
+          "module": "./syntax.bend",
+          "file": "src/syntax.bend"
+        }
+      ],
+      "declarations": {
+        "src/parse-visibility.bend::before:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "matches",
+          "matches.multi",
+          "patterns.variable",
+          "quantities.affine",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::declared:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "matches",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::constructors:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::collect:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "matches",
+          "patterns.nested",
+          "patterns.variable",
+          "quantities.affine",
+          "quantities.arguments",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::inspect:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.list",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::declarations:definition": [
+          "calls",
+          "captures",
+          "constructors",
+          "fields",
+          "generics",
+          "lambdas",
+          "literals.nat",
+          "literals.string",
+          "literals.u32",
+          "matches",
+          "matches.multi",
+          "patterns.nested",
+          "patterns.variable",
+          "patterns.wildcard",
+          "quantities.affine",
+          "quantities.arguments",
+          "quantities.reusable",
+          "recursion",
+          "types.base"
+        ],
+        "src/parse-visibility.bend::book:definition": [
+          "calls",
+          "constructors",
+          "fields",
+          "generics",
+          "literals.string",
+          "matches",
+          "patterns.variable",
+          "patterns.wildcard",
           "quantities.affine",
           "quantities.arguments",
           "quantities.reusable",
