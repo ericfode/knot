@@ -57,16 +57,20 @@ zero provider requests. Compression, Delight, memetic identity, Anticipation
 and Payoff remain unreviewed. There is no numeric score or automatic style pass.
 The census has 49 files, 738 declarations and 41 classes.
 
-The inherited C1 run compares the starting `d4789f16` against the actual campaign
-base, `c0bd08d0`, rather than the previous repair commit. A committed-head replay
-follows this repair. Alphabet, renderer and recognized-prefix disputes remain
-explicit; the condition ledger is not modified. Helper lanes and manifest
+C1 freshly compares `a65d5f04` against actual campaign base
+`c0bd08d0`: exit 3, 26 remaining conditions, down from 38. All six new Invalid
+demotions are gone. No new unsound-acceptance or crash condition is reported.
+Alphabet, renderer and recognized-prefix disputes remain explicit. Five
+additional minor prefix-table notices remain recorded for contract/vocabulary
+review; the condition ledger is not modified. Helper lanes and manifest
 `d4_targets` are unavailable, and codec rules do not apply. Neither that partial
 review nor an offline preflight is reported as a full semantic review.
 
-Full gate counts and measured under-load acceptance are recorded after running
-`npm run -s gates`. Closures D26 reconciliation, assertion/pin rulings, shared
-receipt refresh and live Perch remain coordinator actions, as specified in
+`npm run -s gates` on `a65d5f04` exits 0: all 21 gates pass. Exact
+counts, measured under-load acceptance and every remaining C1 fingerprint are
+recorded in [PRECHECK-7-GATES.md](PRECHECK-7-GATES.md). Closures D26
+reconciliation, assertion/pin rulings, shared receipt refresh and live Perch
+remain coordinator actions, as specified in
 `MERGE-WITH-CLOSURES.md`, `RULINGS.md` and `BOUNDARY-PINS.md`. The inherited
 monomorphic checker order residual and boxed host export boundary retain their
 existing owners. No merge, push, rebase or other-worktree write occurs here.

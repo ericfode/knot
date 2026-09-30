@@ -672,3 +672,30 @@ and manifest d4_targets are absent; it is not an all-rule pre-review pass.
 General parser/application and declaration-traversal obligations remain open
 under D21. Shared receipts, live Perch and closures integration remain
 coordinator actions.
+
+## Precheck round 7
+
+`a65d5f04` normalizes line tokens before result arrows and datatype
+colons. It preserves every earlier expectation, the required delimiters and
+all adjacency guards. Controls were frozen separately in `71df185d`. Three
+filled boundary laws and three type-correct restoration mutants accompany the
+repair. The owned gate retains 148 fixtures and now kills 25 mutants
+in both lanes, with 8 complete proof entries and 32 precheck controls.
+The additional replay records 256 phase observations, 42 preserved artifacts,
+22 evaluator agreements, 18 actual Wasm value agreements, 11 module pairs,
+one raw seed constructor observation and four boxed module validations.
+
+The full `npm run -s gates` invocation exits 0: all 21 gates pass in
+1001.769125 seconds. Generics takes 613.768600 seconds under
+measured one-minute load 32.942383–61.068848. This is an observed
+under-load completion, not a speedup experiment. All 272 owned receipt
+input hashes match. [PRECHECK-7-GATES.md](PRECHECK-7-GATES.md) retains every
+exact gate count and the normalized evidence hashes;
+[PRECHECK-7.md](PRECHECK-7.md) gives the supplied condition dispositions.
+
+C1 against the campaign base remains partial and exits 3 with recorded
+alphabet/renderer/prefix disputes and minor table-coverage notices. It is not
+a clean pre-review result or a compiler-wide soundness claim. Offline style
+preflight has 28 bounded groups with zero blockers and zero provider requests;
+all five style axes remain unreviewed. Shared receipts, live Perch, closures
+D26 reconciliation and the existing pin rulings remain coordinator actions.
