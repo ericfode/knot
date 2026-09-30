@@ -1,0 +1,66 @@
+{
+  "basis": "D7: line breaks before generic-header closers are seed-rejected; freeze before repairing the adjacency boundary. Earlier controls remain unchanged.",
+  "seed_revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+  "seed_files": {
+    "main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    "bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    "comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    "base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "newline-header-close",
+      "file": "fixtures/newline-header-close.bend",
+      "sha256": "84a6c445fbd972fcde46bec204c1942d679648a0f6748cfd563de6a0e86eef5c",
+      "expected": {
+        "parse": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\tspacing\t"
+        },
+        "check": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\tspacing\t"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term (the keyword 'is' cannot head one)",
+          "begin": 61
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term (the keyword 'is' cannot head one)\n- observed : 'is'\nLocation:\n6 | >\n7>| is Data:\n  | ^^\n8 |   Pack{item: A}\n"
+        }
+      }
+    },
+    {
+      "name": "newline-kind-header-close",
+      "file": "fixtures/newline-kind-header-close.bend",
+      "sha256": "5b1026d8c78b93704e2ea4936f98b7a579feeedadda5cf925ca22e90f446c6ce",
+      "expected": {
+        "parse": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\tspacing\t"
+        },
+        "check": {
+          "exit": 3,
+          "diagnostic": "Unsupported\tparse\tspacing\t"
+        }
+      },
+      "seed": {
+        "parse": {
+          "ok": false,
+          "expected": "a term (the keyword 'is' cannot head one)",
+          "begin": 75
+        },
+        "check": {
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a term (the keyword 'is' cannot head one)\n- observed : 'is'\nLocation:\n6 | >\n7>| is Kind(q):\n  | ^^\n8 |   Pack{item: A}\n"
+        }
+      }
+    }
+  ]
+}
