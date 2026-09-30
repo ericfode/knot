@@ -15,6 +15,7 @@ EXPECT = json.loads((HERE / 'expectations.json').read_text())
 REVIEW = json.loads((HERE / 'review-expectations.json').read_text())
 TESTS = ('tests/perch-context.test.mjs', 'tests/perch-context-integration.test.mjs',
          'tests/perch-context-mutants.test.mjs')
+TIMEOUT = 120 * float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))  # harness hang guard only; the runner scales it under load
 
 
 def digest(path):
@@ -23,7 +24,7 @@ def digest(path):
 
 def run(argv):
     result = subprocess.run(argv, cwd=ROOT, env={**os.environ, 'BEND_NO_TELEMETRY': '1'},
-                            text=True, capture_output=True, timeout=120)
+                            text=True, capture_output=True, timeout=TIMEOUT)
     if result.returncode:
         raise RuntimeError(f'{argv}: exit {result.returncode}\n{result.stdout}\n{result.stderr}')
     return result.stdout

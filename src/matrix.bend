@@ -19,16 +19,11 @@ def flat_fields(nodes: List<&2,S.Node>) -> Bool:
     case Con{S.Promotion{token},tail}: flat_fields(tail)
     case _: False{}
 
-def named(tokens: List<&2,S.Token>, +token: S.Token) -> Bool:
-  match tokens:
-    case Nil{}: False{}
-    case Con{head,tail}: Bool.or(String.eq(S.text(head),S.text(token)),named(tail,token))
-
 def flat_rows(rows: List<&2,S.Node>, +seen: List<&2,S.Token>) -> Bool:
   match rows:
     case Nil{}: True{}
     case Con{S.Arm{arm,S.Constructor{+token,fields},body},tail}:
-      Bool.and(flat_fields(fields),Bool.and(Bool.not(named(seen,token)),flat_rows(tail,Con{token,seen})))
+      Bool.and(flat_fields(fields),Bool.and(Bool.not(G.named(seen,token)),flat_rows(tail,Con{token,seen})))
     case _: False{}
 
 def flat(value: S.Node, rows: List<&2,S.Node>) -> Bool:
@@ -98,7 +93,7 @@ def constructors(rows: List<&2,S.Node>, +seen: List<&2,S.Token>) -> List<&2,S.To
   match rows:
     case Nil{}: Nil{}
     case Con{S.Arm{arm,S.Sequence{Con{S.Constructor{+token,args},rest}},body},+tail}:
-      S.choose(List<&2,S.Token>,named(seen,token),u => constructors(tail,seen),u =>
+      S.choose(List<&2,S.Token>,G.named(seen,token),u => constructors(tail,seen),u =>
         Con{token,constructors(tail,Con{token,seen})})
     case Con{head,tail}: constructors(tail,seen)
 

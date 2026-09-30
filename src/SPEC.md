@@ -61,10 +61,12 @@ digits, underscores or dots. Keywords cannot be identifiers.
   type from an already known declaration: a residual or default-row binder
   (the seed types it `Flag<> - Off{}`), a field never split, a later parameter
   and a call on a rebuilt binder.
-  After another statement a marker touches its name: the seed reads `+ u` there
-  as an operator on the previous value, so it reports `Invalid parse
-  detached-marker`. First in a body, and in a parameter list, a marker may be
-  spaced.
+  After another statement a marker touches its name: the seed reads a spaced `+`
+  or `-` there as an operator on the previous value. When a name and `=` or `:`
+  follow it (`+ u : F = ..`) the seed rejects the pair and Knot reports `Invalid
+  parse detached-marker`; any other operand is a term Knot does not read, and it
+  reports `Unsupported parse operator`. First in a body, and in a parameter list,
+  a marker may be spaced.
   A binding is visible in the remainder of its body, not in its own initializer.
   Shadowing creates a new binding. Repeated parameter names also shadow earlier
   parameters, as in the pinned seed. Reusable bindings require `Data` values.
@@ -185,17 +187,23 @@ enum grammar. Each reports exit 3 with a stable `Unsupported` phase/code:
 | A `def` or `type` on the line of a body's end | `parse` | `same-line-declaration` |
 | A name or a numeral (or in a pattern a marking `+`) after an argument, without a comma | `parse` | `argument-whitespace` |
 | A promotion of a promotion (`++y`, `+ +y`) | `parse` | `repeated-promotion` |
-| An arm body that starts with a name, `+`, `-` or `match` on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
-| A term suffix where a term ends (a body, a let's value, an expression argument): an infix operator, a call, an index, an offload `!(`, a lambda after a name; a `+name` term; a line that starts with an operator, `!(` or `=>` | `parse` | `term-form` |
+| An arm body that starts with a term (a name, `match`, `+`, `-`, `(`, `[`, a numeral or `?`) on the line after its `case`, at the case's column or below it; a later statement at another column | `parse` | `body-indentation` |
+| An operator token that continues a term: a token of the seed's infix table, spaced or glued, after a body, a let's value (on its line, or a line that starts with it), an argument or a scrutinee | `parse` | `operator` |
+| Another term suffix where a term ends: a call, an index, an offload `!(`, a lambda after a name; a `+name` term; a line that starts with `!(` or `=>`; a touching `+name` or a hole `?name` after an expression argument | `parse` | `term-form` |
 | A let's value that starts on the line after its `=` with any term (a name was already covered) | `parse` | `line-break` |
 
 After a term the seed reads an infix operator (each of its table: `->`, `&`, `|`, `||`, `&&`, comparisons, `<>`, `++`,
 `<&>`, `.|.`, `.^.`, `.&.`, shifts, arithmetic), a call, an index, an offload `!(` and, after a name, a lambda `=>`;
 `+name` and `+(name)` are a promoted variable, also across the line break after the `+`, and a line that starts with an operator, `!(` or `=>` continues the term before it.
 A body the lowering discards is parsed and never checked, and a live one needs a target the program defines (`def
-Bool.or`, `def Pair`), so the parser leaves each unread: `Unsupported parse term-form`, never Invalid. It keeps
-`Invalid` where the seed rejects everywhere: a closer, `==`, `=>` after a constructor, a `+` or `-` touching a name
-(a marker), a lone `.` or `!`, a `(` or `[` at a line's start, an erased `-name`, and a constructor line of a type.
+Bool.or`, `def Pair`), so the parser leaves each unread and never reports Invalid for it: an operator token is `Unsupported
+parse operator`, the seed's sugar that Knot does not model (a live row rejects it "for its type", which is no syntax claim);
+any other unmodeled form is `Unsupported parse term-form`. After an expression argument `x +y` and the glued `x+y` are the
+same tokens to the seed, a promoted term `+y` (`term-form`; `operator` when the `+` touches the argument), and `?y` is a hole
+(`term-form`); `@y`, `\y`, `-y` and a closer are no term, and stay `Invalid parse argument-separator`, as does anything after
+a pattern's field, which the seed always validates. `Invalid` also stays where the seed rejects everywhere: a closer, `==`, `=>` after a
+constructor, a `+` or `-` touching a name (a marker) after a complete body, a lone `.` or `!`, a `[` or `(` where only a
+declaration may start, an erased `-name`, and a constructor line of a type.
 
 The seed reads a line break inside call or constructor arguments and inside a let
 as whitespace, arguments separated by whitespace alone as arguments, and a second
@@ -206,13 +214,11 @@ selfhost suite's `layout` need), as do an unindented def body (the frontend gate
 pins it Invalid, though the seed accepts it), a call with fewer arguments than
 parameters that the seed reads as an unused partial application (`Invalid check
 call-arity`), a global function used as a value (`Invalid check free-name`) and a
-Nat literal pattern as a let binder at another column, a constructor line of a type declaration at another
-column, a spaced `+` or `-` that starts the line after a let's value (the seed continues the value with an
-operator; round 10's `detached_marker` law pins `Invalid parse detached-marker`) and a term that starts with `?`, `@` or `\`, or a `+`
-marker, as the next argument after whitespace. An arm body that starts
-with a name, `+`, `-` or `match` and sits at or below its `case` column, and a
-later statement at another column, are `Unsupported parse body-indentation`; an
-empty arm stays invalid. Recognition stops at that prefix; it neither validates
+Nat literal pattern as a let binder at another column and a constructor line of a type declaration at another
+column. An arm body that starts with a term (a name, `match`, `+`, `-`, `(`, `[`, a numeral or `?`) and sits at
+or below its `case` column, and a later statement at another column, are `Unsupported parse body-indentation`: the seed
+takes any term as a body and checks no column. A closer, a separator, a keyword, `!`, `@` and a backslash start no term and
+stay `Invalid`; so does an empty arm. Recognition stops at that prefix; it neither validates
 the suffix nor loads a module. Malformed supported syntax still reports `Invalid`. The reviewed
 [classification fixtures](../tests/subsets/classification-cases.json) retain six
 seed-accepted programs (local and hash imports separately) and six nearby
@@ -379,7 +385,15 @@ function; lexical levels are limited to 4,096 per branch scope. Exceeding any
 of these bounds is exhaustion. Each expanded source match has 4096 matrix
 visits, including leaves and empty remainders. `Expansion` returns the unused
 counter from each positive branch to its negative branch. The counter is never
-divided; the bound covers total expansion separately from recursion depth. Catalog passes and
+divided; the bound covers total expansion separately from recursion depth. The checked
+core has a bound of its own. Core `Case` has no default arm, so a terminal default is checked
+once and copied into every remaining constructor's branch, and every consumer of the core (display,
+evaluation, emission) reads each copy: a match's core grows as the product of its columns'
+constructors, though the expansion visits far fewer matrices. A source match whose core exceeds 65,536
+nodes (one unit per node, every copy counted) is `Exhausted check budget`, decided when the match has
+been checked and before any consumer reads it (`src/check.bend::core_budget`, `weight`, `budgeted`).
+Each source match starts its own core budget, and a nested match counts inside the match that holds it.
+Catalog passes and
 environment/set scans are structural list traversals bounded by the catalog
 limits and source cap. Lookup
 and affine-set merging are deliberately simple linear/quadratic algorithms.
@@ -443,7 +457,7 @@ evidence named here, not on a proof.
 
 | Law | Status | Witnessed by |
 | --- | --- | --- |
-| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf. The total form is **false at the implemented quota**: the frozen control `tests/compiler-nest/controls/matrix-work.bend` (13 columns, a first row of 13 `_` with body `On{}`, which the seed evaluates to `On{}`) reports `Exhausted check budget`, because expansion splits on a constructor head in any row even when the first row is irrefutable (`T(n+1)=2+2T(n)`, 24,574 visits against 4,096). That `Exhausted` is Knot's cost model applied to a seed-accepted program, a resource limit under D4. The total obligation holds only relative to sufficient work, and stays undischargeable as stated until expansion selects an irrefutable first row without splitting, which changes that frozen control and needs coordinator review | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz |
+| Irrefutable first row: a matrix whose first row is irrefutable lowers to that row's body | Unproved general law in its total form, which includes that the lowering succeeds. Its partial-correctness part is proved: `src/lowering-LAWS.bend::irrefutable_first_row_selected` shows that every *successful* `M.expand` selects the body at every leaf. The total form is **false at the implemented quota**: the frozen control `tests/compiler-nest/controls/matrix-work.bend` (13 columns, a first row of 13 `_` with body `On{}`, which the seed evaluates to `On{}`) reports `Exhausted check budget`, because expansion splits on a constructor head in any row even when the first row is irrefutable (`T(n+1)=2+2T(n)`, 24,574 visits against 4,096). That `Exhausted` is Knot's cost model applied to a seed-accepted program, a resource limit under D4. The total obligation holds only relative to sufficient work, and stays undischargeable as stated until expansion selects an irrefutable first row without splitting, which changes that frozen control and needs coordinator review. A second cost counterexample is `default-dd9x5-first`: an irrefutable first row over nine five-constructor columns is seed-accepted but exceeds the 65,536-node core budget | The ground-instance laws `irrefutable_lowering_witness` and `irrefutable_first_row_witness`, the helper laws `first_row_selected`, `irrefutable_specialization` and `irrefutable_default`, the `first-match-*`, `wildcard-default`, `unreachable-after-wildcard` and `variable-*` fixtures, and the 3,000-program seed fuzz |
 | Exhaustive matrix: an exhaustive matrix lowers to a tree with no missing branch | Unproved general law | The ground-instance law `exhaustive_matrix_witness`, the remainder helper laws (`remainder_omits_split`, `remainder_keeps_other`, `remainder_drops_split_rows`, `irrefutable_remainder`), the `multi-*`, `nested-*`, `rec-*-nested` and `empty-*` fixtures, and the 3,000-program seed fuzz |
 
 ## Required evidence

@@ -46,8 +46,13 @@ reach every row of its column.
 
 Each generated decision has one scrutinee and flat positive field binders. The
 checker checks both branches before coalescing the binary spine into existing
-core `Case` trees. A terminal default is checked once and then shared across its
-remaining runtime constructors, with their field layouts. Aliases share lexical levels;
+core `Case` trees. A terminal default is checked once and then copied into every
+remaining runtime constructor's branch, with their field layouts: core `Case` has no default
+arm, so a match's core grows as the product of its columns' constructors, and every consumer
+of the core reads each copy. The core of a source match is bounded, one unit per node with every
+copy counted, at 65,536 units; more is `Exhausted check budget`, before any consumer reads it.
+The bound is checked on the finished match, so a nested match counts inside the match that holds
+it. Aliases share lexical levels;
 matching refines every name for that level. Reconstruction uses the live field
 obligations, including through nested aliases. Promotion can make affine Data
 reusable; it cannot make erased fields live. The evaluator and both Wasm

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Round-13 regressions: operators, `+name` and holes after a term, term openers at another column, and the core budget.
 
-`round13.py` replays the 206 seed-frozen fixtures in both compiler lanes, runs the reviewer's 684-cell class grid and
+`round13.py` replays the 210 seed-frozen fixtures in both compiler lanes, runs the reviewer's 684-cell class grid and
 64-form zoo in both lanes, and kills the mutants that restore each misclassification (Invalid where the seed accepts, a
 code that names the wrong thing) and each bound that a repair added. The Bun lane's own fault on a large module
 (`memory fault (machine stack overflow?)`) is classified as Exhausted (host), not as a disagreement.
@@ -108,6 +108,14 @@ MUTANTS = [
     {'name': 'budget-counts-no-bodies', 'file': 'check.bend', 'old': 'case C.Branch{tag,fields,body}: [body]',
      'new': 'case C.Branch{tag,fields,body}: Nil{}',
      'witness': 'default-dd7x4-heavy', 'phase': 'check', 'wrong': ACCEPTED},
+    # Admit a one-byte brace gap at this call site only; the return-arrow predicate stays intact.
+    {'name': 'brace-gap-one-byte', 'file': 'parse.bend', 'old': 'S.touches(name,open),u =>',
+     'new': 'brace_touch(name,open),u =>',
+     'helper': ('def brace_touch(name: S.Token, open: S.Token) -> Bool:\n'
+                '  match name open:\n'
+                '    case S.Token{s,S.At{a,+b,i,j}} S.Token{t,S.At{+c,d,k,l}}:\n'
+                '      Bool.or(U32.is_eq(b,c),U32.is_eq(U32.add(b,1),c))\n\n'),
+     'witness': 'w1-flat-space', 'phase': 'check', 'wrong': ACCEPTED},
 ]
 
 
@@ -165,7 +173,10 @@ def run_mutants(record, pool, mutants):
         target = directory / mutation['file']
         text = target.read_text()
         gate.require(text.count(mutation['old']) == 1, ('mutation anchor', mutation['name']))
-        target.write_text(text.replace(mutation['old'], mutation['new']))
+        text = text.replace(mutation['old'], mutation['new'])
+        if 'helper' in mutation:
+            text = text.replace('def invalid(', mutation['helper'] + 'def invalid(', 1)
+        target.write_text(text)
         entry = directory / 'check-cli.bend'
         proof = gate.successful([*gate.SEED, entry, '--check-only'])
         gate.require(proof['stdout'].strip() == 'All terms check.', proof)
@@ -174,6 +185,8 @@ def run_mutants(record, pool, mutants):
         item = {'name': mutation['name'], 'file': mutation['file'], 'old': mutation['old'], 'new': mutation['new'],
                 'mutated_sha256': gate.digest(target), 'typecheck': proof, 'witness': mutation['witness'],
                 'expected': expected, 'lanes': {}}
+        if 'helper' in mutation:
+            item['helper'] = mutation['helper']
         for lane, suffix, runtime in [('native', '', []), ('bun', '.js', ['bun'])]:
             output = directory / ('mutant' + suffix)
             build = gate.successful([*gate.SEED, entry, '-o', output])
@@ -202,7 +215,7 @@ def main():
     manifest = json.loads((HERE / 'round13-expectations.json').read_text())
     frozen = json.loads((HERE / 'round13-grid.json').read_text())
     pool = {c['name']: c for c in manifest['fixtures']}
-    for earlier in ('round10', 'round11', 'round12'):
+    for earlier in ('round6', 'round10', 'round11', 'round12'):
         for c in json.loads((HERE / f'{earlier}-expectations.json').read_text())['fixtures']:
             pool.setdefault(c['name'], c)
     paths = [*sorted((gate.ROOT / 'src').glob('*.bend')), *sorted(HERE.glob('*.py')),

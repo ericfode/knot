@@ -20,7 +20,7 @@ by group, and the seed decides only acceptance and, for a group it rejects, the 
 - The whole program (finding 4): the seed compiles a match as a decision tree with shared defaults, so a
   wildcard row costs it nothing per column and it answers each program below in a few milliseconds.
 
-The reviewed Knot outcomes (the coordinator's code ruling, D26): `Unsupported parse operator` for an operator
+The reviewed Knot outcomes (the coordinator's code ruling): `Unsupported parse operator` for an operator
 token that continues a term (`+`, `-`, `++`, `->`, `*`, `<=`, ... after a value, on the next line or glued);
 `Unsupported parse term-form` for another unmodeled term form (a touching `+name` after an argument, a hole);
 `Unsupported parse body-indentation` for a body or statement that starts with a term at another column;

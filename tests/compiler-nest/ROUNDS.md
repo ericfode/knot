@@ -143,6 +143,26 @@ constructor, a marker that touches a name, a lone `.` or `!`, a `(` or `[` at a 
 stay Invalid. `round12.py` checks both lanes, evaluator and Wasm agreement, rejection in every phase, all proof entries,
 that the oracle's wrapper writes publish by rename, 26 mutants and `fuzz12.py`, 3,000 fixed-seed programs in two
 families (plus: fielded matches with `+` in any row and slot; suffix: terms, suffixes, gaps and sites) compared with the
-seed: 0 false acceptances and 0 false Invalid. Open and not drawn: a spaced `+` or `-` that starts the line after a let's
-value (round 10's `detached_marker` law pins Invalid) and a term that starts with `?`, `@` or `\`, or a marker `+a`, as the next
-argument after whitespace.
+seed: 0 false acceptances and 0 false Invalid. It left two families open and undrawn (a spaced `+` or `-` that starts the
+line after a let's value, and a `+name` or `?` term as the next argument); round 13 found both seed-accepted and Invalid
+and repairs them, and `fuzz12.py` draws them from then on.
+
+`round13-expectations.json` freezes 210 round-13 fixtures and 13 seed calls, and `round13-grid.json` the reviewer's
+684-cell class grid (57 terms at three columns, one and two scrutinees, an arm body and a statement after a let) and
+64-form zoo, generated from `round13_seed.py` before the repairs. The coordinator's code ruling settles one
+vocabulary: an operator token that continues a term (a token of the seed's infix table, spaced or glued or at a
+line's start, after a body, a let's value, an argument or a scrutinee) is `Unsupported parse operator`, the seed's sugar
+that Knot does not model; every other unmodeled form (a call, an index, an offload, a lambda, a `+name` term, a hole)
+is `Unsupported parse term-form`; `Invalid` stays only where the seed rejects for the reason the diagnostic names.
+A spaced `+` or `-` that starts the line after a let's value is Invalid only for the marker gap (a name, then `=` or
+`:`), and `operator` otherwise; `+name` and a hole after an expression argument are `term-form` (`operator` when the `+`
+touches the argument), while `@`, a backslash, `-name` and a closer stay Invalid; an arm body or a later statement that
+starts with `(`, `[`, a numeral or `?` at another column is `body-indentation`. 57 earlier pins (one round-10,
+three round-11, 52 round-12 and the promoted call) moved by the ruling, each in its own commit before the repair.
+The checked core of a source match is bounded at 65,536 nodes, every copy of a default counted (a terminal default
+is copied into each remaining constructor's branch, so the core grows as the product of the columns'
+constructors): dd5x5's 373 bytes make 7,811 nodes and pass, dd7x5 needs 195,311 and dd9x5 or dd10x5 a great deal
+more, and `Exhausted check budget` is answered before any consumer reads the core. The Bun lane's own fault on a
+large module is classified `Exhausted (host)`. `round13.py` checks both lanes, evaluator and Wasm agreement, rejection
+in every phase, all proof entries, the grid and the zoo, and 25 mutants (including a brace-only one-byte gap); `fuzz12.py` draws the shapes of both
+findings (3,000 programs in three families) and finds 0 false acceptances and 0 false Invalid.
