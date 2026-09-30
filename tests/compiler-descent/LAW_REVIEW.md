@@ -73,7 +73,7 @@ or matrix law is claimed. The required general matrix laws above remain open
 under D21. The residual guard is conservative; Default-core integration remains
 required for complete support.
 
-The bounded offline style preflight prepares all 52 changed/new declarations in
+The bounded offline style preflight prepares all 54 changed/new declarations in
 nine files with zero provider calls. Its fixed task is available (2,208 bytes).
 Six contexts truncate, and the composition exceeds 48 KB with one unavailable
 collaborator. Conceptual compression, Delight, Memetic identity, Anticipation and
@@ -97,3 +97,11 @@ guard to the remaining results. Both lanes preserve that immutable diagnostic
 and refuse default alias duplication/rematching. The source-manifest completeness
 assertion also caught four omitted files; three new groups and the required local
 import closures restore coverage without changing any test.
+
+Nest's frozen affine mutant then exposed duplicate quantity enforcement: the
+independent residual guard masked the mutation of `E.sequential`. Each counted
+residual occurrence now contributes the same level to the canonical scope merge;
+its conflict is classified through the existing residual refusal. Inspection
+remains an independent capability boundary. The quantity primitive, mutant and
+original witness are unchanged. Normal controls and both frozen affine mutations
+are replayed before the serial full-suite qualification.

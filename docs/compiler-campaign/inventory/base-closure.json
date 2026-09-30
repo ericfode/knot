@@ -6039,7 +6039,7 @@
         "mode": "runtime",
         "target": "js",
         "totals": {
-          "declarations": 410,
+          "declarations": 412,
           "base": 78,
           "base_intrinsics": 20,
           "foreign": 6
@@ -10993,7 +10993,7 @@
           {
             "key": "src/residual.admit",
             "file": "src/residual.bend",
-            "via": "src/residual.guarded",
+            "via": "src/residual.consumed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -11009,6 +11009,48 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consume",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "U32.is_ge",
+              "U32.is_ne",
+              "src/residual.Usage",
+              "src/residual.consumed",
+              "src/scope.Scope",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consumed",
+            "file": "src/residual.bend",
+            "via": "src/residual.consume",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/residual.Usage",
+              "src/residual.admit",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -11067,7 +11109,7 @@
               "U32.is_eq",
               "src/core.Binding",
               "src/residual.Mode",
-              "src/residual.admit",
+              "src/residual.consume",
               "src/residual.measure",
               "src/residual.visible",
               "src/scope.Scope",
@@ -11191,7 +11233,7 @@
           {
             "key": "src/residual.Usage",
             "file": "src/residual.bend",
-            "via": "src/residual.admit",
+            "via": "src/residual.consume",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -13615,7 +13657,7 @@
         "mode": "runtime",
         "target": "native",
         "totals": {
-          "declarations": 410,
+          "declarations": 412,
           "base": 78,
           "base_intrinsics": 19,
           "foreign": 6
@@ -18569,7 +18611,7 @@
           {
             "key": "src/residual.admit",
             "file": "src/residual.bend",
-            "via": "src/residual.guarded",
+            "via": "src/residual.consumed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -18585,6 +18627,48 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consume",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "U32.is_ge",
+              "U32.is_ne",
+              "src/residual.Usage",
+              "src/residual.consumed",
+              "src/scope.Scope",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consumed",
+            "file": "src/residual.bend",
+            "via": "src/residual.consume",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/residual.Usage",
+              "src/residual.admit",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -18643,7 +18727,7 @@
               "U32.is_eq",
               "src/core.Binding",
               "src/residual.Mode",
-              "src/residual.admit",
+              "src/residual.consume",
               "src/residual.measure",
               "src/residual.visible",
               "src/scope.Scope",
@@ -18767,7 +18851,7 @@
           {
             "key": "src/residual.Usage",
             "file": "src/residual.bend",
-            "via": "src/residual.admit",
+            "via": "src/residual.consume",
             "kind": "ADT",
             "boundary": "source",
             "unsafe": false,
@@ -21191,7 +21275,7 @@
         "mode": "execution",
         "target": "js",
         "totals": {
-          "declarations": 351,
+          "declarations": 353,
           "base": 61,
           "base_intrinsics": 20,
           "foreign": 6
@@ -24256,7 +24340,7 @@
           {
             "key": "src/residual.admit",
             "file": "src/residual.bend",
-            "via": "src/residual.guarded",
+            "via": "src/residual.consumed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -24265,6 +24349,34 @@
               "U32.is_ge",
               "src/core.unsupported",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consume",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "U32.is_ge",
+              "U32.is_ne",
+              "src/residual.consumed",
+              "src/scope.sequential",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consumed",
+            "file": "src/residual.bend",
+            "via": "src/residual.consume",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "src/residual.admit"
             ],
             "dynamic_calls": []
           },
@@ -24306,7 +24418,7 @@
             "dependencies": [
               "Bool.and",
               "U32.is_eq",
-              "src/residual.admit",
+              "src/residual.consume",
               "src/residual.measure",
               "src/residual.visible",
               "src/syntax.bind",
@@ -26063,7 +26175,7 @@
         "mode": "static",
         "target": "js",
         "totals": {
-          "declarations": 445,
+          "declarations": 447,
           "base": 113,
           "base_intrinsics": 23,
           "foreign": 6
@@ -31063,7 +31175,7 @@
           {
             "key": "src/residual.admit",
             "file": "src/residual.bend",
-            "via": "src/residual.guarded",
+            "via": "src/residual.consumed",
             "kind": "Def",
             "boundary": "source",
             "unsafe": false,
@@ -31077,6 +31189,48 @@
               "src/syntax.Error",
               "src/syntax.Token",
               "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consume",
+            "file": "src/residual.bend",
+            "via": "src/residual.guarded",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "U32.is_ge",
+              "U32.is_ne",
+              "src/residual.Usage",
+              "src/residual.consumed",
+              "src/scope.Scope",
+              "src/scope.sequential",
+              "src/syntax.Error",
+              "src/syntax.Token",
+              "src/syntax.choose"
+            ],
+            "dynamic_calls": []
+          },
+          {
+            "key": "src/residual.consumed",
+            "file": "src/residual.bend",
+            "via": "src/residual.consume",
+            "kind": "Def",
+            "boundary": "source",
+            "unsafe": false,
+            "dependencies": [
+              "List",
+              "Result",
+              "U32",
+              "src/residual.Usage",
+              "src/residual.admit",
+              "src/scope.Scope",
+              "src/syntax.Error",
+              "src/syntax.Token"
             ],
             "dynamic_calls": []
           },
@@ -31137,7 +31291,7 @@
               "src/core.Binding",
               "src/residual.Mode",
               "src/residual.Usage",
-              "src/residual.admit",
+              "src/residual.consume",
               "src/residual.measure",
               "src/residual.visible",
               "src/scope.Scope",

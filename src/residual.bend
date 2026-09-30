@@ -77,11 +77,25 @@ def admit(usage: Usage, token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scop
     case Usage{uses,inspects}:
       S.choose(Result<S.Error,E.Scope>,Bool.or(U32.is_ge(uses,2),inspects),u => C.unsupported(E.Scope,"residual-alias",token),u => Done{scope})
 
+# Every counted occurrence consumes the same level. Use the scope's quantity
+# merge before classifying that conflict as an unimplemented residual identity.
+def consumed(result: Result<S.Error,List<&2,U32>>, +usage: Usage, token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scope>:
+  match result usage:
+    case Fail{error} _: admit(usage,token,scope)
+    case Done{levels} Usage{uses,inspects}: admit(Usage{0,inspects},token,scope)
+
+def consume(+usage: Usage, +level: U32, +token: S.Token, scope: E.Scope) -> Result<S.Error,E.Scope>:
+  match usage:
+    case Usage{+uses,inspects}:
+      consumed(E.sequential(
+        S.choose(List<&2,U32>,U32.is_ne(uses,0),u => [level],u => Nil{}),
+        S.choose(List<&2,U32>,U32.is_ge(uses,2),u => [level],u => Nil{}),token),usage,token,scope)
+
 def guarded(binding: C.Binding, fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, body: S.Node) -> Result<S.Error,E.Scope>:
   match binding scope:
     case C.Binding{name,id,q,type_id,param,Some{known}} E.Scope{bindings,next,open,+live,aliases}:
       S.choose(Result<S.Error,E.Scope>,Bool.and(live,U32.is_eq(q,1)),u =>
-        S.bind(Usage,E.Scope,measure(fuel,Term{body},visible(bindings,level,Nil{}),level,token),usage => admit(usage,token,scope)),u => Done{scope})
+        S.bind(Usage,E.Scope,measure(fuel,Term{body},visible(bindings,level,Nil{}),level,token),usage => consume(usage,level,token,scope)),u => Done{scope})
     case _ _: Done{scope}
 
 def guard(+fuel: Nat, +scope: E.Scope, +token: S.Token, +level: U32, +body: S.Node) -> Result<S.Error,E.Scope>:

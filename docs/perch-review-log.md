@@ -1003,3 +1003,14 @@ when adding a source, and freeze concrete-error precedence alongside capability
 refusals. The final bounded preflight has 52 declarations, still six truncated
 contexts and no live ratings. Evidence: `LAW_REVIEW.md` in the descent gate and
 the executor repair report; failed export `run-06fqujan` remains under `.local/gates`.
+
+The next full run passed nest's normal controls but exposed a masked frozen
+affine mutant: changing `E.sequential` left a second quantity policy in the residual
+guard. Residual occurrence sets now use that same scope merge before classification;
+the original mutation/witness and the new residual mutation/witness remain fixed.
+Future quantity repairs should replay mutations of the shared primitive as well
+as ordinary controls before broad gate builds. The final preflight covers 54
+declarations with six truncated contexts; the proof still has eight filled laws.
+Evidence: failed export `run-3nc_r4bd` and the repair report. Host-build deadlines
+in that parallel export are separate failures, retained rather than treated as
+source refusals; the serial qualification keeps every deadline unchanged.

@@ -122,9 +122,9 @@
   "totals": {
     "compiler": {
       "files": 40,
-      "declarations": 607,
-      "unique_declarations": 511,
-      "definitions": 368,
+      "declarations": 609,
+      "unique_declarations": 513,
+      "definitions": 370,
       "classes": 40
     },
     "frontend_files": {
@@ -69338,7 +69338,7 @@
     },
     {
       "file": "src/residual.bend",
-      "sha256": "38b085af9147fac57c6f4a01ab10cf2a8852dcfc00d172a2f2cce666280cb418",
+      "sha256": "2acba6b6a29a2d67c4da75e4dd8818145b8e39ca86fa4495c883535539f708c6",
       "imports": [
         {
           "module": "Base",
@@ -70095,13 +70095,153 @@
           }
         },
         {
+          "id": "src/residual.bend::consumed:definition",
+          "name": "consumed",
+          "key": "src/residual.consumed",
+          "kind": "definition",
+          "lines": [
+            82,
+            85
+          ],
+          "features": [
+            "calls",
+            "constructors",
+            "fields",
+            "generics",
+            "literals.u32",
+            "matches",
+            "matches.multi",
+            "patterns.variable",
+            "patterns.wildcard",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Done",
+            "Fail",
+            "List",
+            "Result",
+            "U32",
+            "src/residual.Usage",
+            "src/residual.admit",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/residual.Usage",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [],
+          "execution": {
+            "references": [
+              "src/residual.admit"
+            ],
+            "types": [
+              "Done",
+              "Fail",
+              "U32",
+              "src/residual.Usage"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
+          "id": "src/residual.bend::consume:definition",
+          "name": "consume",
+          "key": "src/residual.consume",
+          "kind": "definition",
+          "lines": [
+            87,
+            92
+          ],
+          "features": [
+            "calls",
+            "captures",
+            "constructors",
+            "fields",
+            "generics",
+            "lambdas",
+            "literals.list",
+            "literals.u32",
+            "matches",
+            "patterns.variable",
+            "quantities.affine",
+            "quantities.arguments",
+            "quantities.reusable",
+            "types.base"
+          ],
+          "references": [
+            "Con",
+            "List",
+            "Nil",
+            "Result",
+            "U32",
+            "U32.is_ge",
+            "U32.is_ne",
+            "src/residual.Usage",
+            "src/residual.consumed",
+            "src/scope.Scope",
+            "src/scope.sequential",
+            "src/syntax.Error",
+            "src/syntax.Token",
+            "src/syntax.choose"
+          ],
+          "type_references": [
+            "List",
+            "Result",
+            "U32",
+            "src/residual.Usage",
+            "src/scope.Scope",
+            "src/syntax.Error",
+            "src/syntax.Token"
+          ],
+          "captures": [
+            {
+              "offset": 4884,
+              "names": [
+                "level"
+              ]
+            },
+            {
+              "offset": 4958,
+              "names": [
+                "level"
+              ]
+            }
+          ],
+          "execution": {
+            "references": [
+              "U32.is_ge",
+              "U32.is_ne",
+              "src/residual.consumed",
+              "src/scope.sequential",
+              "src/syntax.choose"
+            ],
+            "types": [
+              "Con",
+              "Nil",
+              "U32",
+              "src/residual.Usage"
+            ],
+            "dynamic_calls": []
+          }
+        },
+        {
           "id": "src/residual.bend::guarded:definition",
           "name": "guarded",
           "key": "src/residual.guarded",
           "kind": "definition",
           "lines": [
-            80,
-            85
+            94,
+            99
           ],
           "features": [
             "calls",
@@ -70133,7 +70273,7 @@
             "src/core.Binding",
             "src/residual.Term",
             "src/residual.Usage",
-            "src/residual.admit",
+            "src/residual.consume",
             "src/residual.measure",
             "src/residual.visible",
             "src/scope.Scope",
@@ -70155,7 +70295,7 @@
           ],
           "captures": [
             {
-              "offset": 4546,
+              "offset": 5333,
               "names": [
                 "bindings",
                 "body",
@@ -70166,14 +70306,15 @@
               ]
             },
             {
-              "offset": 4647,
+              "offset": 5434,
               "names": [
+                "level",
                 "scope",
                 "token"
               ]
             },
             {
-              "offset": 4682,
+              "offset": 5477,
               "names": [
                 "scope"
               ]
@@ -70183,7 +70324,7 @@
             "references": [
               "Bool.and",
               "U32.is_eq",
-              "src/residual.admit",
+              "src/residual.consume",
               "src/residual.measure",
               "src/residual.visible",
               "src/syntax.bind",
@@ -70207,8 +70348,8 @@
           "key": "src/residual.guard",
           "kind": "definition",
           "lines": [
-            87,
-            91
+            101,
+            105
           ],
           "features": [
             "calls",
@@ -70248,7 +70389,7 @@
           ],
           "captures": [
             {
-              "offset": 4966,
+              "offset": 5761,
               "names": [
                 "body",
                 "fuel",
