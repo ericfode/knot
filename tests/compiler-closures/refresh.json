@@ -1,0 +1,2357 @@
+{
+  "suite": "compiler-closures-refresh",
+  "basis": "32 new edge programs for the 2026-09-29 refresh. Literal contracts and enum results are reviewed against the pinned seed before corrective implementation; existing suites stay unchanged. Each seed program is checked and built in native and Bun lanes.",
+  "seed": {
+    "version": "2.0.29",
+    "revision": "574b6d39a235b539eb19a5c532993a0abb3d11ad",
+    "entry": ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts"
+  },
+  "seed_files": {
+    ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts": "0a6c19ee942ec4fadcf7daaa69ca1cfd395a5ee8ef130df72b548291def93884",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/bend.ts": "09d2cc5c5d757f1a694dd126ccbac72ef2374cfe948d9d51c2b08247c5d2581e",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/comp.ts": "0cf866b28ff273d47970b3c16e82288e9676ce9f0ea3fce49877a82ce4a6301b",
+    ".toolchain/bend-2.0.29-574b6d3/bend2/base.bend": "22eea83911e2395f63594fea7c10ac0c1e5b548251681fc97cd7667e0eb7031b"
+  },
+  "cases": [
+    {
+      "name": "capture-reverse-reference",
+      "file": "refresh/capture-reverse-reference.bend",
+      "intent": "capture reverse reference",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "397d20dbcbbd6a5121a5b2c9278eff26563bd155b5319a5a56b9a497b303d61e",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/capture-reverse-reference.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/capture-reverse-reference.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/capture-reverse-reference.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/capture-reverse-reference.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "capture-function",
+      "file": "refresh/capture-function.bend",
+      "intent": "capture function",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "a8d1c5bb190f126d529bb3eb156cc2ac54571308838472dfa062a926c42facd2",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/capture-function.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-function.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-function"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/capture-function"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-function.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-function.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/capture-function.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/capture-function.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/capture-function.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "capture-higher-order",
+      "file": "refresh/capture-higher-order.bend",
+      "intent": "capture higher order",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "146777dd80a6179fede3f8a026694c661c231e72532e294ca1396fc31436de7a",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/capture-higher-order.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-higher-order.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-higher-order"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/capture-higher-order"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/capture-higher-order.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/capture-higher-order.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/capture-higher-order.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/capture-higher-order.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/capture-higher-order.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "shadow-named-function",
+      "file": "refresh/shadow-named-function.bend",
+      "intent": "shadow named function",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "882e5287e95df24f1761e0067ee4351071a82cee9e748bde2fd4a478c3536c46",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/shadow-named-function.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/shadow-named-function.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/shadow-named-function"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/shadow-named-function"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/shadow-named-function.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/shadow-named-function.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/shadow-named-function.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/shadow-named-function.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/shadow-named-function.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "lambda-let-shadow",
+      "file": "refresh/lambda-let-shadow.bend",
+      "intent": "lambda let shadow",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "b66003c8207ab37091eabf429209a3456ac1f73c0f9e1a471197edc7aff248dc",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-let-shadow.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/lambda-let-shadow.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/lambda-let-shadow.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/lambda-let-shadow.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "lambda-three-shadows",
+      "file": "refresh/lambda-three-shadows.bend",
+      "intent": "lambda three shadows",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "541229d24dec82afe0dacf299172a635103c324670651263e6ad488360e65974",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-three-shadows.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/lambda-three-shadows.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/lambda-three-shadows.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/lambda-three-shadows.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "partial-higher-order",
+      "file": "refresh/partial-higher-order.bend",
+      "intent": "partial higher order",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "2ddf32994d4ef055d4f300fe802b63531b65ae4ef56bebdbf4f6b4c8952d4ece",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/partial-higher-order.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/partial-higher-order.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-higher-order"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/partial-higher-order"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/partial-higher-order.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-higher-order.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/partial-higher-order.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/partial-higher-order.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/partial-higher-order.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "partial-three-stages",
+      "file": "refresh/partial-three-stages.bend",
+      "intent": "partial three stages",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "3eb7da7525cc4bcbc02f5b910d48622611dbd0ab6281b4f359168928acf3b620",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/partial-three-stages.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/partial-three-stages.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-three-stages"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/partial-three-stages"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/partial-three-stages.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-three-stages.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/partial-three-stages.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/partial-three-stages.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/partial-three-stages.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "discard-function-domain",
+      "file": "refresh/discard-function-domain.bend",
+      "intent": "discard function domain",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "3c461faa5659eb741f3ad73bbd7711b36e0c78b711f610d8f64a7a7b4186ec93",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/discard-function-domain.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/discard-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/discard-function-domain"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/discard-function-domain"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/discard-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/discard-function-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/discard-function-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/discard-function-domain.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/discard-function-domain.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "empty-named-application",
+      "file": "refresh/empty-named-application.bend",
+      "intent": "empty named application",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "b4aafa096c32e130823b574d6ebc21b6db604d91fec771c56fb46906458283b3",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/empty-named-application.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/empty-named-application.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/empty-named-application"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/empty-named-application"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/empty-named-application.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/empty-named-application.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/empty-named-application.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/empty-named-application.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/empty-named-application.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "closure-field-capture",
+      "file": "refresh/closure-field-capture.bend",
+      "intent": "closure field capture",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "bd9bdd1268b4f09b316b908292747e9a3e7657873c639504cbd52d95392f2e03",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/closure-field-capture.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/closure-field-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/closure-field-capture"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/closure-field-capture"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/closure-field-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/closure-field-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/closure-field-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/closure-field-capture.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/closure-field-capture.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "lambda-function-domain",
+      "file": "refresh/lambda-function-domain.bend",
+      "intent": "lambda function domain",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "28e8aa965f93250681921f6a856a73b2dba94e820954c0d16bdcaea90179099a",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-function-domain.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-function-domain"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/lambda-function-domain"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-function-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/lambda-function-domain.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/lambda-function-domain.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/lambda-function-domain.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "lambda-returned-partial",
+      "file": "refresh/lambda-returned-partial.bend",
+      "intent": "lambda returned partial",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "807ee34cea8e71c61e2f9762ea89eefd60ebb2a060e9234ed4f81d26a3e6249d",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-returned-partial.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/lambda-returned-partial.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/lambda-returned-partial.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/lambda-returned-partial.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "erased-function-preserves-live",
+      "file": "refresh/erased-function-preserves-live.bend",
+      "intent": "erased function preserves live",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "efffb70518ddc504b7851ccf42305ed072db74408cff5d3325629b787c6ea183",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/erased-function-preserves-live.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/erased-function-preserves-live.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/erased-function-preserves-live.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/erased-function-preserves-live.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "erased-lambda-capture",
+      "file": "refresh/erased-lambda-capture.bend",
+      "intent": "erased lambda capture",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "f29a6af7eca23ed9ec629f23fca4383eb80084187d208437a115fa1a5fb91e56",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/erased-lambda-capture.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/erased-lambda-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/erased-lambda-capture.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/erased-lambda-capture.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "closure-capture-after-let",
+      "file": "refresh/closure-capture-after-let.bend",
+      "intent": "closure capture after let",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "9a76cf8f1a3402bb146ded09d6164d5b968acd949343d72571645dd30fcbd128",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/closure-capture-after-let.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/closure-capture-after-let.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/closure-capture-after-let.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/closure-capture-after-let.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "promoted-capture-three-sites",
+      "file": "refresh/promoted-capture-three-sites.bend",
+      "intent": "promoted capture three sites",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "ab92a176a8d48a12c3b71ffce47e02f58918263b55b2c07d2b50cb4e63ef5df0",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/promoted-capture-three-sites.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/promoted-capture-three-sites.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/promoted-capture-three-sites.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/promoted-capture-three-sites.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "distinct-arrow-domains",
+      "file": "refresh/distinct-arrow-domains.bend",
+      "intent": "distinct arrow domains",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "dfa16cb2b17be768703c4579f1c2a3a8888ab1ce0fc489b6f6ac6247c43b1793",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/distinct-arrow-domains.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/distinct-arrow-domains.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/distinct-arrow-domains.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/distinct-arrow-domains.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "named-returned-closure",
+      "file": "refresh/named-returned-closure.bend",
+      "intent": "named returned closure",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "Off",
+            "tag": 0
+          }
+        }
+      ],
+      "source_sha256": "79c6b75d1a67325bf8db45e41d7fb3108111834321bcd78c0b7b12a4b8872321",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/named-returned-closure.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/named-returned-closure.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/named-returned-closure"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/named-returned-closure"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/named-returned-closure.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/named-returned-closure.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/named-returned-closure.js"
+              ],
+              "exit": 0,
+              "stdout": "Off{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/named-returned-closure.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/named-returned-closure.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "nested-function-capture",
+      "file": "refresh/nested-function-capture.bend",
+      "intent": "nested function capture",
+      "knot": {
+        "require": "agree"
+      },
+      "calls": [
+        {
+          "entry": "main",
+          "ordinals": [],
+          "result": {
+            "type": "Flag",
+            "constructor": "On",
+            "tag": 1
+          }
+        }
+      ],
+      "source_sha256": "c2f194f230100d9ca132dbf53e6bbed93844e309b319bb6b506a3b970add218f",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/nested-function-capture.bend",
+            "--check-only"
+          ],
+          "exit": 0,
+          "stdout": "All terms check.\n",
+          "stderr": ""
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/nested-function-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/nested-function-capture"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                ".local/compiler-closures/refresh-seed/nested-function-capture"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                ".local/compiler-closures/refresh-seed/nested-function-capture.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/nested-function-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "",
+              "stderr": ""
+            },
+            "run": {
+              "argv": [
+                "bun",
+                ".local/compiler-closures/refresh-seed/nested-function-capture.js"
+              ],
+              "exit": 0,
+              "stdout": "On{}\n",
+              "stderr": ""
+            }
+          }
+        },
+        "wrapper": {
+          "file": ".local/compiler-closures/refresh-seed/nested-function-capture.bend",
+          "source": "import Base\nimport ../../../tests/compiler-closures/refresh/nested-function-capture.bend as F\n\ndef show(x: F.Flag) -> IO(Unit):\n  match x:\n    case F.Off{}: IO.print(\"Off{}\")\n    case F.On{}: IO.print(\"On{}\")\n\ndef main() -> IO(Unit):\n  show(F.main())\n"
+        }
+      }
+    },
+    {
+      "name": "reusable-partial-binding",
+      "file": "refresh/reusable-partial-binding.bend",
+      "intent": "reusable partial binding",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "calls": [],
+      "source_sha256": "1e60a54fba506f84ca62c94161a8e1ae30726b42e1f925ff80879aede2d736c3",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/reusable-partial-binding.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n21 | def main() -> Flag:\n22>|   +f : Flag -> Flag = xor(On{})\n   |   ^^^\n23 |   f(Off{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/reusable-partial-binding.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/reusable-partial-binding"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n21 | def main() -> Flag:\n22>|   +f : Flag -> Flag = xor(On{})\n   |   ^^^\n23 |   f(Off{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/reusable-partial-binding.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/reusable-partial-binding.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n21 | def main() -> Flag:\n22>|   +f : Flag -> Flag = xor(On{})\n   |   ^^^\n23 |   f(Off{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "function-field-reuse",
+      "file": "refresh/function-field-reuse.bend",
+      "intent": "function field reuse",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "calls": [],
+      "source_sha256": "ebf81a3133d3f168b58e8c5720f44e4356f83728da282fb8a6f4aec053aef407",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/function-field-reuse.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : f\n- observed : f (consumed more than once)\nLocation: use\n25 |   match box:\n26>|     case Box{f}: f(f(Off{}))\n   |              ^\n27 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/function-field-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/function-field-reuse"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : f\n- observed : f (consumed more than once)\nLocation: use\n25 |   match box:\n26>|     case Box{f}: f(f(Off{}))\n   |              ^\n27 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/function-field-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/function-field-reuse.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : f\n- observed : f (consumed more than once)\nLocation: use\n25 |   match box:\n26>|     case Box{f}: f(f(Off{}))\n   |              ^\n27 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "erased-function-live",
+      "file": "refresh/erased-function-live.bend",
+      "intent": "erased function live",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\terased-live\t"
+      },
+      "calls": [],
+      "source_sha256": "8445722f8443c41da30e4cdbcfd4e2b388d2c1197aceba8a377a8ef7af22bb2f",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/erased-function-live.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : -f\n- observed : f\nLocation: use\n20 | \n21>| def use(-f: Flag -> Flag) -> Flag:\n   |          ^\n22 |   f(Off{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/erased-function-live.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-function-live"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : -f\n- observed : f\nLocation: use\n20 | \n21>| def use(-f: Flag -> Flag) -> Flag:\n   |          ^\n22 |   f(Off{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/erased-function-live.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-function-live.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : -f\n- observed : f\nLocation: use\n20 | \n21>| def use(-f: Flag -> Flag) -> Flag:\n   |          ^\n22 |   f(Off{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "promoted-function-domain",
+      "file": "refresh/promoted-function-domain.bend",
+      "intent": "promoted function domain",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\treusable-type\t"
+      },
+      "calls": [],
+      "source_sha256": "b58d7bce55410a8d14468410928258d4bea2bcbd415931971082104b462aca78",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/promoted-function-domain.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n24 | def main() -> Flag:\n25>|   use(+f => f(Off{}))\n   |       ^^^\n26 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/promoted-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/promoted-function-domain"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n24 | def main() -> Flag:\n25>|   use(+f => f(Off{}))\n   |       ^^^\n26 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/promoted-function-domain.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/promoted-function-domain.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Data\n- observed : Type\nLocation: main\n24 | def main() -> Flag:\n25>|   use(+f => f(Off{}))\n   |       ^^^\n26 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "higher-order-result-mismatch",
+      "file": "refresh/higher-order-result-mismatch.bend",
+      "intent": "higher order result mismatch",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\ttype-mismatch\t"
+      },
+      "calls": [],
+      "source_sha256": "ece3be6028c9a6c1302000d484c3c7ef060e6374dfd6ce7c4392af1f7de00fa3",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/higher-order-result-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : @_:Flag -> Flag\nContext:\n- f : @_:Flag -> Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(f => f)\n   |            ^\n26 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/higher-order-result-mismatch.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/higher-order-result-mismatch"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Flag\n- observed : @_:Flag -> Flag\nContext:\n- f : @_:Flag -> Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(f => f)\n   |            ^\n26 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/higher-order-result-mismatch.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/higher-order-result-mismatch.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Flag\n- observed : @_:Flag -> Flag\nContext:\n- f : @_:Flag -> Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(f => f)\n   |            ^\n26 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "partial-capture-reuse",
+      "file": "refresh/partial-capture-reuse.bend",
+      "intent": "partial capture reuse",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "calls": [],
+      "source_sha256": "8d3065f0489d5313ab20c821746c7948c2fa1b352b61d6866ca534cee50feee9",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/partial-capture-reuse.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nLocation: use\n20 | \n21>| def use(a: Flag) -> Flag:\n   |         ^\n22 |   xor(a)(a)\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/partial-capture-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-capture-reuse"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nLocation: use\n20 | \n21>| def use(a: Flag) -> Flag:\n   |         ^\n22 |   xor(a)(a)\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/partial-capture-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/partial-capture-reuse.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a\n- observed : a (consumed more than once)\nLocation: use\n20 | \n21>| def use(a: Flag) -> Flag:\n   |         ^\n22 |   xor(a)(a)\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "over-applied-enum-result",
+      "file": "refresh/over-applied-enum-result.bend",
+      "intent": "over applied enum result",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tnot-callable\t"
+      },
+      "calls": [],
+      "source_sha256": "1cb3845c1a33ba3d943ae1e1f7485e717763cb72f7c4c338dda0d5df621a5f39",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/over-applied-enum-result.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a function type\n- observed : Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert(Off{},On{})\n   |   ^^^^^^^^^^^^^^^^^^\n23 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/over-applied-enum-result.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/over-applied-enum-result"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a function type\n- observed : Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert(Off{},On{})\n   |   ^^^^^^^^^^^^^^^^^^\n23 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/over-applied-enum-result.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/over-applied-enum-result.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a function type\n- observed : Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert(Off{},On{})\n   |   ^^^^^^^^^^^^^^^^^^\n23 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "function-result-mismatch",
+      "file": "refresh/function-result-mismatch.bend",
+      "intent": "function result mismatch",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tcall-arity\t"
+      },
+      "calls": [],
+      "source_sha256": "773e9ca048d5ea427dd7780a844035160f45d596562433ae92e97be7ddcb3ce3",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/function-result-mismatch.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert\n   |   ^^^^^^\n23 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/function-result-mismatch.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/function-result-mismatch"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert\n   |   ^^^^^^\n23 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/function-result-mismatch.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/function-result-mismatch.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : Flag\n- observed : @x:Flag -> Flag\nLocation: main\n21 | def main() -> Flag:\n22>|   invert\n   |   ^^^^^^\n23 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "match-after-closure-let",
+      "file": "refresh/match-after-closure-let.bend",
+      "intent": "match after closure let",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tunmatchable-binder\t"
+      },
+      "calls": [],
+      "source_sha256": "e74eb1e28a6995622d7c70037558c3b01b6a9a6dfc2decbe0c6c4e0bcea22a1a",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/match-after-closure-let.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n22 |   f : Flag -> Flag = x => x\n23>|   match a:\n   |         ^\n24 |     case Off{}: f(On{})\n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/match-after-closure-let.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/match-after-closure-let"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n22 |   f : Flag -> Flag = x => x\n23>|   match a:\n   |         ^\n24 |     case Off{}: f(On{})\n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/match-after-closure-let.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/match-after-closure-let.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- message  : a match on a parameter or field (this name is a def or a consumed binder: give the value its own def)\nLocation:\n22 |   f : Flag -> Flag = x => x\n23>|   match a:\n   |         ^\n24 |     case Off{}: f(On{})\n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "lambda-affine-argument-reuse",
+      "file": "refresh/lambda-affine-argument-reuse.bend",
+      "intent": "lambda affine argument reuse",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\taffine-reuse\t"
+      },
+      "calls": [],
+      "source_sha256": "2e29b8fae1ff4fd073c82c0e3a34faff56cc8ab265f65ec65c8c9a6bd97a422a",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-affine-argument-reuse.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: main\n21 | def main() -> Flag:\n22>|   apply(x => xor(x,x),On{})\n   |         ^\n23 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/lambda-affine-argument-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-affine-argument-reuse"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: main\n21 | def main() -> Flag:\n22>|   apply(x => xor(x,x),On{})\n   |         ^\n23 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/lambda-affine-argument-reuse.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-affine-argument-reuse.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : x\n- observed : x (consumed more than once)\nLocation: main\n21 | def main() -> Flag:\n22>|   apply(x => xor(x,x),On{})\n   |         ^\n23 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "erased-lambda-free-name",
+      "file": "refresh/erased-lambda-free-name.bend",
+      "intent": "erased lambda free name",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tfree-name\t"
+      },
+      "calls": [],
+      "source_sha256": "539ba34aa483fd92f19b268d4907687e6ef6f12500b424bb109474a8eb5d5631",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/erased-lambda-free-name.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : ghost\nContext:\n- x : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   forget(x => ghost)\n   |               ^^^^^\n26 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/erased-lambda-free-name.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-lambda-free-name"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a defined name\n- observed : ghost\nContext:\n- x : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   forget(x => ghost)\n   |               ^^^^^\n26 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/erased-lambda-free-name.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/erased-lambda-free-name.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a defined name\n- observed : ghost\nContext:\n- x : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   forget(x => ghost)\n   |               ^^^^^\n26 | \n"
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "lambda-discard-nested-free-name",
+      "file": "refresh/lambda-discard-nested-free-name.bend",
+      "intent": "lambda discard nested free name",
+      "knot": {
+        "require": "reject",
+        "exit": 2,
+        "diagnostic": "Invalid\tcheck\tfree-name\t"
+      },
+      "calls": [],
+      "source_sha256": "a7cee0bdfeb0987abb6b3dfd2577463dffaa3e4e84252b9776d9357c7d4147da",
+      "seed": {
+        "check_only": {
+          "argv": [
+            "bun",
+            ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+            "tests/compiler-closures/refresh/lambda-discard-nested-free-name.bend",
+            "--check-only"
+          ],
+          "exit": 1,
+          "stdout": "",
+          "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\n- _ : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(_ => _ => _)\n   |                 ^\n26 | \n"
+        },
+        "lanes": {
+          "native": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/lambda-discard-nested-free-name.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-discard-nested-free-name"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\n- _ : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(_ => _ => _)\n   |                 ^\n26 | \n"
+            }
+          },
+          "bun": {
+            "build": {
+              "argv": [
+                "bun",
+                ".toolchain/bend-2.0.29-574b6d3/bend2/main.ts",
+                "tests/compiler-closures/refresh/lambda-discard-nested-free-name.bend",
+                "-o",
+                ".local/compiler-closures/refresh-seed/lambda-discard-nested-free-name.js"
+              ],
+              "exit": 1,
+              "stdout": "",
+              "stderr": "Error:\n- expected : a defined name\n- observed : _^\nContext:\n- _ : Flag\n- _ : Flag\nLocation: main\n24 | def main() -> Flag:\n25>|   use(_ => _ => _)\n   |                 ^\n26 | \n"
+            }
+          }
+        }
+      }
+    }
+  ]
+}
