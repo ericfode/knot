@@ -1627,3 +1627,15 @@ Judgment: confirmed stale generated evidence.
 Change and why: `npm run -s census` updates exactly the check.py SHA-256 in `inventory/accepted.json` and that inventory's dependent SHA-256 in `inventory/selfhost.json`. No census policy, classification, fixture outcome or compiler expectation changes.
 Clean / broken / held-out evidence and deterministic checks: inspect the two one-line diffs; `npm run -s census:check` exits 0 on the refreshed artifacts.
 Remaining uncertainty / next trigger: run the complete gate command again. Prevention: after changing the context gate's check.py, regenerate and check census inventories before exporting a full gate run.
+
+
+## 2026-09-29 — perch-cap receipt-refresh correction
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, receipt checkpoint `a822604d`.
+Evidence links and usage receipt IDs: retained normalized context receipt from `.local/gates/run-n1fcd36r/normalized/tests/perch-context/receipts/context.json`.
+Waste or missed behavior / measured effort (or unknown): the runner had removed its scratch source before the refresh lookup. The shell continued after that failed lookup and committed the older local receipt. Effort unknown.
+Rule + hash / requested and resolved model (or unknown): no model call; deterministic receipt handling.
+Judgment: confirmed operator error; the prior commit's input-validation claim is superseded here.
+Change and why: copy the retained fresh normalized receipt only after its 65-test status and every input SHA-256 match the current worktree. Keep the earlier commit and correct it in a new one.
+Clean / broken / held-out evidence and deterministic checks: all recorded input hashes now match; 47 controls and 18 mutants passed in the exported gate. Compiler group observations remain unchanged.
+Remaining uncertainty / next trigger: run the complete gate command against the refreshed census and context receipt. Prevention: use `set -e` for dependent validation/commit commands and the retained normalized path after gate cleanup.
