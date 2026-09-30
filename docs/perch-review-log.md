@@ -1639,3 +1639,15 @@ Judgment: confirmed operator error; the prior commit's input-validation claim is
 Change and why: copy the retained fresh normalized receipt only after its 65-test status and every input SHA-256 match the current worktree. Keep the earlier commit and correct it in a new one.
 Clean / broken / held-out evidence and deterministic checks: all recorded input hashes now match; 47 controls and 18 mutants passed in the exported gate. Compiler group observations remain unchanged.
 Remaining uncertainty / next trigger: run the complete gate command against the refreshed census and context receipt. Prevention: use `set -e` for dependent validation/commit commands and the retained normalized path after gate cleanup.
+
+
+## 2026-09-29 — perch-cap round 1: final deterministic disposition
+
+Date / scope / source revision or working-copy hashes: 2026-09-29, executable inputs at `8a265822`; evidence-only commits follow.
+Evidence links and usage receipt IDs: [full report](compiler-campaign/perch-cap-review-round1.md), [exact gate/measurement artifact](compiler-campaign/perch-cap-review-round1-measurements.json), `.local/gates/run-_a32vyij/summary.json`.
+Waste or missed behavior / measured effort (or unknown): final full gate execution measured 450.800934 seconds; no repair-effort estimate is inferred from it.
+Rule + hash / requested and resolved model (or unknown): rubric unchanged; 0 provider/live Perch requests.
+Judgment: both major and all four minor r0 findings fixed; none disputed.
+Change and why: complete-state canonicalization, exact recomputed savings/scalar ties, original minimum boundary with honest contract limits, and reproducible Bun/scratch-HEAD selection.
+Clean / broken / held-out evidence and deterministic checks: 20/20 registered gates exit 0; context 47 controls/18 mutants; lint 192 tests/8 law rules; wrapper verification 20 tests; catalog 57 rules. All 974 main manifest hashes and the complete preflight receipt are byte-identical. Final receipt classes are 65 identical, 21 volatile-only and 2 bootstrap semantic; only the owned context receipt is refreshed.
+Remaining uncertainty / next trigger: coordinator integration, shared bootstrap receipt refresh, motivating-branch reconciliation and live calibration. Contract omissions withhold qualification; ordinary names-only contexts remain advisory.
