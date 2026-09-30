@@ -1909,3 +1909,23 @@ Remaining uncertainty / next trigger:
   - Two agents printed held-out head names.
   - Dev keeps the post-cutoff vm-spec tip `63e63203` and vm-model `07e6db73` (reviewed 18:37Z), as the design did.
   - The two post-review tips `60e80693` and `2c1f3d70` were reserved for held-out before any search.
+
+
+## 2026-09-29 — nest round 13: missed D4 classes and default-copy cost
+
+[REVIEW-13](../tests/compiler-nest/receipts/REVIEW-13.md) records three confirmed false-Invalid families that the
+previous generator excluded, and an exponential core-reader cost that the matrix-visit counter did not bound.
+The fixes freeze the seed first, use one operator/term-form vocabulary, draw those families in fuzz12, and bound
+every default copy at 65,536 core nodes. The class grid and zoo remain independent precision controls. The two
+D21 general laws remain open; budget exhaustion is no source rejection. Live Perch was not called.
+
+Mutation procedure: type-check the implementation before testing a proof failure, and require the failure in the
+law file. `falsify.py` now commits that procedure for rounds 12 and 13. A new brace-only mutant initially used affine
+U32 fields twice, then targeted `touch-pattern-inner-space` (a valid inner space, so it survived). Reusable fields
+and the frozen `w1-flat-space` witness (`On {}`, seed-rejected) produce the intended semantic kill in both lanes.
+Choose the seed-rejected gap witness before building the mutant; preserve a separate valid touching-brace control.
+The original round-6 shifted predicate still fails at the return arrow; the new call-site mutant avoids that side effect.
+
+Census approval records every declaration separately. The corpus-budget driver reports Unsupported `src` files
+separately, rather than treating a lexer/parser stop as proof that a compiler-sized core fits. Per-file style preflight
+blockers remain distinct from the complete manifest groups; no style axis is rated by an offline preflight.

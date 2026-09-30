@@ -1,0 +1,3834 @@
+{
+  "status": "passed",
+  "source_checkpoint": "9645422d",
+  "command": "BEND_NO_TELEMETRY=1 npm run -s gates",
+  "snapshot_sha256": "5e5ee66bcb316d68be4eddf6ca491efca7ded389de82fd8d45e7baa60e9ef668",
+  "dependencies_sha256": "39d56207556fdd957f299f4aa5999f4dbd8b33785ab0fd3901db68e7f3b6387d",
+  "measured_seconds": 3178.592336,
+  "gates": [
+    {
+      "command": [
+        "python3",
+        "tests/subsets/check_frontend.py"
+      ],
+      "counts": {
+        "boundaries": 24,
+        "fixtures": 14,
+        "lane_observations": 28,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "frontend",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-checker/check.py"
+      ],
+      "counts": {
+        "bound_observations": 16,
+        "bounds": 2,
+        "budgets": 10,
+        "fixtures": 49,
+        "lane_observations": 98,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "checker",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-structural/check.py"
+      ],
+      "counts": {
+        "bounds": 4,
+        "fixtures": 16,
+        "lane_observations": 64,
+        "mutants": 7
+      },
+      "exit_code": 0,
+      "name": "structural",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields/check.py"
+      ],
+      "counts": {
+        "bound_observations": 12,
+        "bounds": 2,
+        "budgets": 36,
+        "fixtures": 40,
+        "host_boundaries": 6,
+        "lane_observations": 240,
+        "mutants": 9
+      },
+      "exit_code": 0,
+      "name": "fields",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 44,
+        "execution_lanes": 2,
+        "fixtures": 25,
+        "mutants": 7,
+        "reference_calls": 90,
+        "rejects": 62
+      },
+      "exit_code": 0,
+      "name": "wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-wasm/trust.ts"
+      ],
+      "counts": {
+        "entries": 3,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "wasm-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-fields/trust.ts"
+      ],
+      "counts": {
+        "entries": 4,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "fields-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "bun",
+        "tests/compiler-structural/trust.ts"
+      ],
+      "counts": {
+        "entries": 2,
+        "proof_holes": 0
+      },
+      "exit_code": 0,
+      "name": "structural-trust",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/owned-store/check.py"
+      ],
+      "counts": {
+        "cases": 3532,
+        "execution_lanes": 2,
+        "literal_witnesses": 15,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "owned-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "research/flat-store/check.py"
+      ],
+      "counts": {
+        "bun": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        },
+        "mutants": 9,
+        "native": {
+          "installed_boundary_states": 2,
+          "instances": 3534,
+          "lifecycle_checks": 7,
+          "observations": 13621
+        }
+      },
+      "exit_code": 0,
+      "name": "flat-store",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-recursion/check.py"
+      ],
+      "counts": {
+        "fixtures": 19,
+        "mutants": 3
+      },
+      "exit_code": 0,
+      "name": "recursion",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-fields-wasm/check.py"
+      ],
+      "counts": {
+        "boundaries": 30,
+        "fixtures": 8,
+        "mutants": 4
+      },
+      "exit_code": 0,
+      "name": "fields-wasm",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "node",
+        "tools/census/census.mjs",
+        "--check"
+      ],
+      "counts": {
+        "classes": 41,
+        "declarations": 876,
+        "files": 35
+      },
+      "exit_code": 0,
+      "name": "census",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/perch-context/check.py"
+      ],
+      "counts": {
+        "fixtures": 33,
+        "mutants": 8
+      },
+      "exit_code": 0,
+      "name": "perch-context",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "npm",
+        "run",
+        "-s",
+        "lint:verify"
+      ],
+      "counts": {
+        "law_rules": 8,
+        "tests": 168
+      },
+      "exit_code": 0,
+      "name": "lint:verify",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-bootstrap/check.py"
+      ],
+      "counts": {
+        "corpus": 1981,
+        "mutants": 54,
+        "reached": 2,
+        "stages": 8
+      },
+      "exit_code": 0,
+      "name": "bootstrap",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-classification/check.py"
+      ],
+      "counts": {
+        "fixtures": 17,
+        "mutants": 6
+      },
+      "exit_code": 0,
+      "name": "classification",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/check.py"
+      ],
+      "counts": {
+        "accepted_books": 25,
+        "boundaries": 24,
+        "boundary_observations": 24,
+        "check_observations": 76,
+        "enum_hash_checks": 100,
+        "evaluation_values": 386,
+        "fixtures": 38,
+        "matched_frozen_outcomes": 38,
+        "mutants": 6,
+        "rejected_phase_observations": 78,
+        "seed_entry_calls": 174,
+        "seed_fixtures": 40,
+        "semantic_kills": 12,
+        "unmet_frozen_outcomes": 2,
+        "unmet_phase_observations": 12,
+        "wasm_values": 386
+      },
+      "exit_code": 0,
+      "name": "nest",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/review.py"
+      ],
+      "counts": {
+        "accepted_books": 15,
+        "check_observations": 58,
+        "evaluator_values": 98,
+        "fixtures": 29,
+        "fuzz_evaluator_values": 221,
+        "fuzz_false_acceptances": 0,
+        "fuzz_false_invalid": 0,
+        "fuzz_programs": 3000,
+        "mutants": 7,
+        "rejected_phase_observations": 112,
+        "seed_calls": 49,
+        "seed_fixtures": 29,
+        "semantic_kills": 14,
+        "wasm_values": 98
+      },
+      "exit_code": 0,
+      "name": "nest-review",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tests/compiler-io/host-check.py"
+      ],
+      "counts": {
+        "cli_runs": 6,
+        "conformance_runs": 86,
+        "errno": [
+          2,
+          9,
+          20,
+          21,
+          22,
+          92
+        ],
+        "fixtures": 20,
+        "host_boundaries": 22,
+        "mutants": 6,
+        "review": {
+          "empty_write": 4,
+          "mutants": 3,
+          "oracle_controls": 14,
+          "secret_paths": 21,
+          "seed_runs": 12
+        },
+        "seed_fixtures": 40,
+        "seed_runs": 109,
+        "stress": {
+          "left_binds": 100000,
+          "right_binds": 100000
+        }
+      },
+      "exit_code": 0,
+      "name": "io-host",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "-B",
+        "tests/compiler-io-abi-2/check.py"
+      ],
+      "counts": {
+        "case_mode": "insensitive",
+        "fixtures": 43,
+        "host_boundaries": 25,
+        "mutants": 5,
+        "mutants_killed": 5,
+        "parity": 153,
+        "read_observations": 21,
+        "reference_observations": 64,
+        "seed_exhausted": 2,
+        "seed_observations": 61
+      },
+      "exit_code": 0,
+      "name": "io-abi-2",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-selfhost/check.py"
+      ],
+      "counts": {
+        "blocked": 63,
+        "cases": 65,
+        "d4_gaps": 1,
+        "judge_mutants": 20,
+        "mutants": 3,
+        "passed": 2
+      },
+      "exit_code": 0,
+      "name": "selfhost",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round3.py"
+      ],
+      "counts": {
+        "accepted_books": 32,
+        "check_observations": 122,
+        "evaluator_values": 164,
+        "findings": {
+          "dotted-binder": 20,
+          "empty-binding": 25,
+          "line-broken-header": 16
+        },
+        "fixtures": 61,
+        "mutants": 11,
+        "rejected_phase_observations": 232,
+        "seed_calls": 82,
+        "seed_fixtures": 61,
+        "semantic_kills": 22,
+        "wasm_values": 164
+      },
+      "exit_code": 0,
+      "name": "nest-round3",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round4.py"
+      ],
+      "counts": {
+        "accepted_books": 8,
+        "check_observations": 28,
+        "evaluator_values": 64,
+        "fixtures": 14,
+        "mutants": 4,
+        "rejected_phase_observations": 48,
+        "seed_calls": 32,
+        "seed_fixtures": 14,
+        "semantic_kills": 8,
+        "wasm_values": 64
+      },
+      "exit_code": 0,
+      "name": "nest-round4",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round6.py"
+      ],
+      "counts": {
+        "accepted_books": 11,
+        "check_observations": 70,
+        "evaluator_values": 118,
+        "findings": {
+          "control": 11,
+          "joined-line": 5,
+          "main-era": 11,
+          "new-row": 7,
+          "tab": 1
+        },
+        "fixtures": 35,
+        "mutants": 5,
+        "rejected_phase_observations": 192,
+        "seed_calls": 59,
+        "seed_fixtures": 35,
+        "semantic_kills": 10,
+        "wasm_values": 118
+      },
+      "exit_code": 0,
+      "name": "nest-round6",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round7.py"
+      ],
+      "counts": {
+        "accepted_books": 20,
+        "check_observations": 70,
+        "evaluator_values": 268,
+        "findings": {
+          "control": 19,
+          "let-kind": 1,
+          "let-promotion": 12,
+          "parameter-alias": 2,
+          "parameter-kind": 1
+        },
+        "fixtures": 35,
+        "generated_evaluator_values": 1836,
+        "generated_false_acceptances": 0,
+        "generated_false_invalid": 0,
+        "generated_programs": 1500,
+        "generated_seed_outcomes": {
+          "Accepted": 780,
+          "Invalid": 720
+        },
+        "mutants": 3,
+        "rejected_phase_observations": 120,
+        "seed_calls": 134,
+        "seed_fixtures": 35,
+        "semantic_kills": 6,
+        "wasm_values": 268
+      },
+      "exit_code": 0,
+      "name": "nest-round7",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round8.py"
+      ],
+      "counts": {
+        "accepted_books": 21,
+        "check_observations": 74,
+        "evaluator_values": 292,
+        "findings": {
+          "data-control": 4,
+          "default-scrutinee": 2,
+          "destructured-promotion": 17,
+          "kind-at-binding": 14
+        },
+        "fixtures": 37,
+        "generated_evaluator_values": 375,
+        "generated_false_acceptances": 0,
+        "generated_false_invalid": 0,
+        "generated_knot_outcomes": {
+          "Accepted": 1148,
+          "Invalid": 1796,
+          "Unsupported": 56
+        },
+        "generated_programs": 3000,
+        "generated_promotes_type": 1334,
+        "generated_seed_outcomes": {
+          "Accepted": 1161,
+          "Invalid": 1839
+        },
+        "mutants": 5,
+        "rejected_phase_observations": 128,
+        "seed_calls": 150,
+        "seed_fixtures": 37,
+        "semantic_kills": 10,
+        "wasm_values": 292
+      },
+      "exit_code": 0,
+      "name": "nest-round8",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round9.py"
+      ],
+      "counts": {
+        "accepted_books": 18,
+        "check_observations": 160,
+        "evaluator_values": 188,
+        "findings": {
+          "dotted-binder-stopgap": 8,
+          "inferable-control": 17,
+          "layout-stopgap": 7,
+          "let-of-refined-binder": 47,
+          "literal-control": 1
+        },
+        "fixtures": 80,
+        "mutants": 12,
+        "rejected_phase_observations": 496,
+        "seed_calls": 111,
+        "seed_fixtures": 80,
+        "semantic_kills": 24,
+        "wasm_values": 188
+      },
+      "exit_code": 0,
+      "name": "nest-round9",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round10.py"
+      ],
+      "counts": {
+        "accepted_books": 43,
+        "check_observations": 304,
+        "evaluator_values": 686,
+        "findings": {
+          "argument-control": 1,
+          "argument-operator": 1,
+          "argument-pattern": 1,
+          "argument-promotion": 1,
+          "argument-whitespace": 8,
+          "arrow-control": 4,
+          "arrow-gap": 6,
+          "body-layout": 7,
+          "body-layout-control": 2,
+          "let-break": 10,
+          "let-break-control": 2,
+          "marker-control": 17,
+          "marker-gap": 12,
+          "plus-row-control": 22,
+          "plus-row-gap": 45,
+          "repeated-promotion": 7,
+          "repeated-promotion-control": 1,
+          "unsupported-control": 5
+        },
+        "fixtures": 152,
+        "mutants": 22,
+        "rejected_phase_observations": 872,
+        "seed_calls": 624,
+        "seed_fixtures": 152,
+        "semantic_kills": 44,
+        "wasm_values": 686
+      },
+      "exit_code": 0,
+      "name": "nest-round10",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round11.py"
+      ],
+      "counts": {
+        "accepted_books": 62,
+        "check_observations": 660,
+        "evaluator_values": 656,
+        "findings": {
+          "argument-comma": 1,
+          "argument-numeral": 4,
+          "arity-fields": 12,
+          "arity-ok": 3,
+          "arity-width": 9,
+          "dead-arity-down": 7,
+          "dead-arity-up": 7,
+          "dead-bare": 7,
+          "dead-call": 7,
+          "dead-count-up": 7,
+          "dead-deep-arity": 7,
+          "dead-deep-unknown": 7,
+          "dead-edge-arity-up": 2,
+          "dead-edge-bare": 2,
+          "dead-edge-unknown": 2,
+          "dead-lax": 8,
+          "dead-let-ok": 5,
+          "dead-ok": 12,
+          "dead-plus-ctor": 7,
+          "dead-plus-dtype": 7,
+          "dead-plus-let": 4,
+          "dead-unknown": 7,
+          "dead-wide": 2,
+          "dead-wide-ok": 1,
+          "header-invalid": 2,
+          "header-ok": 1,
+          "header-operator": 3,
+          "header-term": 2,
+          "layout-canonical": 2,
+          "layout-case-at-match": 2,
+          "layout-case-first-at-match": 2,
+          "layout-case-left-of-match": 2,
+          "layout-case-margin": 2,
+          "layout-declaration": 3,
+          "layout-declaration-deep": 2,
+          "layout-declaration-glued": 4,
+          "layout-invalid": 3,
+          "layout-later-at-case": 2,
+          "layout-later-deeper": 2,
+          "layout-later-shallower": 2,
+          "layout-later-untyped": 2,
+          "layout-match-body": 2,
+          "layout-minus-body": 2,
+          "layout-plain-split": 8,
+          "layout-plus-body": 2,
+          "layout-plus-body-shallow": 2,
+          "layout-same-line": 6,
+          "layout-split-colon-comment": 2,
+          "layout-split-colon-erased": 2,
+          "layout-split-colon-plus": 2,
+          "nat-column": 22,
+          "nat-column3": 4,
+          "nat-first": 2,
+          "nat-ok": 5,
+          "paren-break": 11,
+          "paren-break-argument": 2,
+          "paren-break-live": 1,
+          "paren-break-rejected": 5,
+          "paren-same-line-accepted": 2,
+          "paren-same-line-live": 2,
+          "paren-same-line-row": 1,
+          "plusd-constructor": 4,
+          "plusd-datatype": 17,
+          "plusd-ok": 13,
+          "plusd-order-after": 1,
+          "shadow": 15,
+          "shadow-fields": 2,
+          "shadow-later-type": 1,
+          "shadow-ok": 10,
+          "shadow-signature": 7
+        },
+        "fixtures": 330,
+        "mutants": 23,
+        "rejected_phase_observations": 2144,
+        "seed_calls": 328,
+        "seed_fixtures": 330,
+        "semantic_kills": 46,
+        "wasm_values": 656
+      },
+      "exit_code": 0,
+      "name": "nest-round11",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round11.py",
+        "--sweep"
+      ],
+      "counts": {
+        "evaluator_values": 1330,
+        "false_acceptances": 0,
+        "false_invalid": 0,
+        "fixtures": 0,
+        "knot_outcomes": {
+          "Accepted": 1330,
+          "Invalid": 2810,
+          "Unsupported": 1960
+        },
+        "mutants": 18,
+        "programs": 6100,
+        "seed_outcomes": {
+          "Accepted": 2131,
+          "Invalid": 3969
+        },
+        "semantic_kills": 36
+      },
+      "exit_code": 0,
+      "name": "nest-sweep11",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round12.py"
+      ],
+      "counts": {
+        "accepted_books": 23,
+        "check_observations": 322,
+        "evaluator_values": 458,
+        "false_acceptances": 0,
+        "false_invalid": 0,
+        "findings": {
+          "plusfirst": 32,
+          "suffix": 129
+        },
+        "fixtures": 161,
+        "knot_outcomes": {
+          "Accepted": 647,
+          "Invalid": 1211,
+          "Unsupported": 1142
+        },
+        "mutants": 26,
+        "programs": 3000,
+        "rejected_phase_observations": 1104,
+        "seed_calls": 229,
+        "seed_fixtures": 161,
+        "seed_outcomes": {
+          "Accepted": 1265,
+          "Invalid": 1735
+        },
+        "semantic_kills": 52,
+        "sweep_evaluator_values": 647,
+        "wasm_values": 458
+      },
+      "exit_code": 0,
+      "name": "nest-round12",
+      "status": "passed"
+    },
+    {
+      "command": [
+        "python3",
+        "tests/compiler-nest/round13.py"
+      ],
+      "counts": {
+        "accepted_books": 3,
+        "check_observations": 420,
+        "evaluator_values": 6,
+        "findings": {
+          "argterm": 40,
+          "bodystart": 96,
+          "default": 9,
+          "letop": 65
+        },
+        "fixtures": 210,
+        "grid_cells": 684,
+        "host_exhausted_modules": 1,
+        "mutants": 25,
+        "rejected_phase_observations": 1656,
+        "seed_calls": 13,
+        "seed_fixtures": 210,
+        "semantic_kills": 50,
+        "wasm_values": 5,
+        "zoo_forms": 64
+      },
+      "exit_code": 0,
+      "name": "nest-round13",
+      "status": "passed"
+    }
+  ],
+  "receipt_drift": {
+    "identical": 64,
+    "semantic": 30,
+    "volatile-only": 9
+  },
+  "gates_verify_tests": 21,
+  "convergence": {
+    "round11": {
+      "classes": {
+        "dead:default": {
+          "knot-Invalid": 81,
+          "knot-Unsupported": 20,
+          "seed-Accepted": 3,
+          "seed-Invalid": 98
+        },
+        "dead:dup": {
+          "knot-Accepted": 21,
+          "knot-Invalid": 127,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 22,
+          "seed-Invalid": 143
+        },
+        "dead:field": {
+          "knot-Accepted": 19,
+          "knot-Invalid": 154,
+          "knot-Unsupported": 26,
+          "seed-Accepted": 20,
+          "seed-Invalid": 179
+        },
+        "dead:let": {
+          "knot-Accepted": 13,
+          "knot-Invalid": 114,
+          "knot-Unsupported": 16,
+          "seed-Accepted": 15,
+          "seed-Invalid": 128
+        },
+        "dead:live": {
+          "knot-Accepted": 9,
+          "knot-Invalid": 139,
+          "knot-Unsupported": 14,
+          "seed-Accepted": 9,
+          "seed-Invalid": 153
+        },
+        "dead:multi": {
+          "knot-Accepted": 13,
+          "knot-Invalid": 116,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 14,
+          "seed-Invalid": 132
+        },
+        "dead:single": {
+          "knot-Accepted": 25,
+          "knot-Invalid": 166,
+          "knot-Unsupported": 31,
+          "seed-Accepted": 25,
+          "seed-Invalid": 197
+        },
+        "dead:wide": {
+          "knot-Accepted": 34,
+          "knot-Invalid": 76,
+          "seed-Accepted": 34,
+          "seed-Invalid": 76
+        },
+        "dead:wide-live": {
+          "knot-Invalid": 52,
+          "seed-Invalid": 52
+        },
+        "gaps:1col:literal": {
+          "knot-Invalid": 26,
+          "knot-Unsupported": 75,
+          "seed-Accepted": 11,
+          "seed-Invalid": 90
+        },
+        "gaps:1col:plain": {
+          "knot-Accepted": 64,
+          "knot-Invalid": 131,
+          "knot-Unsupported": 21,
+          "seed-Accepted": 70,
+          "seed-Invalid": 146
+        },
+        "gaps:2col:literal": {
+          "knot-Invalid": 67,
+          "knot-Unsupported": 220,
+          "seed-Accepted": 33,
+          "seed-Invalid": 254
+        },
+        "gaps:2col:plain": {
+          "knot-Accepted": 92,
+          "knot-Invalid": 166,
+          "knot-Unsupported": 36,
+          "seed-Accepted": 103,
+          "seed-Invalid": 191
+        },
+        "gaps:3col:literal": {
+          "knot-Invalid": 30,
+          "knot-Unsupported": 173,
+          "seed-Accepted": 29,
+          "seed-Invalid": 174
+        },
+        "gaps:3col:plain": {
+          "knot-Accepted": 26,
+          "knot-Invalid": 53,
+          "knot-Unsupported": 20,
+          "seed-Accepted": 34,
+          "seed-Invalid": 65
+        },
+        "layout:multi:erased": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 24,
+          "seed-Accepted": 19,
+          "seed-Invalid": 7
+        },
+        "layout:multi:flag": {
+          "knot-Accepted": 17,
+          "knot-Unsupported": 65,
+          "seed-Accepted": 64,
+          "seed-Invalid": 18
+        },
+        "layout:multi:marked": {
+          "knot-Accepted": 4,
+          "knot-Unsupported": 51,
+          "seed-Accepted": 44,
+          "seed-Invalid": 11
+        },
+        "layout:multi:match": {
+          "knot-Accepted": 7,
+          "knot-Unsupported": 20,
+          "seed-Accepted": 20,
+          "seed-Invalid": 7
+        },
+        "layout:multi:plain": {
+          "knot-Accepted": 8,
+          "knot-Unsupported": 47,
+          "seed-Accepted": 40,
+          "seed-Invalid": 15
+        },
+        "layout:multi:plain-split": {
+          "knot-Unsupported": 48,
+          "seed-Accepted": 38,
+          "seed-Invalid": 10
+        },
+        "layout:multi:same-line": {
+          "knot-Unsupported": 69,
+          "seed-Accepted": 60,
+          "seed-Invalid": 9
+        },
+        "layout:multi:split": {
+          "knot-Unsupported": 53,
+          "seed-Accepted": 46,
+          "seed-Invalid": 7
+        },
+        "layout:multi:two": {
+          "knot-Accepted": 4,
+          "knot-Unsupported": 48,
+          "seed-Accepted": 42,
+          "seed-Invalid": 10
+        },
+        "layout:single:erased": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 27,
+          "seed-Accepted": 22,
+          "seed-Invalid": 6
+        },
+        "layout:single:flag": {
+          "knot-Accepted": 13,
+          "knot-Unsupported": 64,
+          "seed-Accepted": 60,
+          "seed-Invalid": 17
+        },
+        "layout:single:marked": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 49,
+          "seed-Accepted": 39,
+          "seed-Invalid": 12
+        },
+        "layout:single:match": {
+          "knot-Accepted": 5,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 15,
+          "seed-Invalid": 7
+        },
+        "layout:single:plain": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 46,
+          "seed-Accepted": 33,
+          "seed-Invalid": 15
+        },
+        "layout:single:plain-split": {
+          "knot-Unsupported": 62,
+          "seed-Accepted": 50,
+          "seed-Invalid": 12
+        },
+        "layout:single:same-line": {
+          "knot-Unsupported": 50,
+          "seed-Accepted": 42,
+          "seed-Invalid": 8
+        },
+        "layout:single:split": {
+          "knot-Unsupported": 50,
+          "seed-Accepted": 35,
+          "seed-Invalid": 15
+        },
+        "layout:single:two": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 43,
+          "seed-Accepted": 34,
+          "seed-Invalid": 11
+        },
+        "names:field:+:both:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:field:+:constructor:annotated": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:field:+:constructor:call": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:field:+:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:field:+:datatype:annotated": {
+          "knot-Invalid": 11,
+          "seed-Invalid": 11
+        },
+        "names:field:+:datatype:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:field:+:datatype:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:field:+:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:field:+:other:annotated": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 2,
+          "seed-Accepted": 8,
+          "seed-Invalid": 2
+        },
+        "names:field:+:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:field:+:other:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:field:bare:both:annotated": {
+          "knot-Invalid": 6,
+          "seed-Invalid": 6
+        },
+        "names:field:bare:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:field:bare:constructor:annotated": {
+          "knot-Invalid": 16,
+          "seed-Invalid": 16
+        },
+        "names:field:bare:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:field:bare:constructor:none": {
+          "knot-Invalid": 8,
+          "seed-Invalid": 8
+        },
+        "names:field:bare:datatype:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 1,
+          "seed-Accepted": 6,
+          "seed-Invalid": 1
+        },
+        "names:field:bare:datatype:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:field:bare:later:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:field:bare:later:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:field:bare:other:annotated": {
+          "knot-Accepted": 11,
+          "knot-Invalid": 9,
+          "seed-Accepted": 11,
+          "seed-Invalid": 9
+        },
+        "names:field:bare:other:call": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "names:field:bare:other:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:later:+:later:annotated": {
+          "knot-Accepted": 15,
+          "knot-Invalid": 1,
+          "seed-Accepted": 15,
+          "seed-Invalid": 1
+        },
+        "names:later:+:later:call": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:later:+:later:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:later:+:other:annotated": {
+          "knot-Accepted": 10,
+          "knot-Invalid": 2,
+          "seed-Accepted": 10,
+          "seed-Invalid": 2
+        },
+        "names:later:+:other:call": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:later:+:other:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:later:bare:later:annotated": {
+          "knot-Accepted": 12,
+          "knot-Invalid": 9,
+          "seed-Accepted": 12,
+          "seed-Invalid": 9
+        },
+        "names:later:bare:later:call": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:later:bare:later:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:later:bare:other:annotated": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 2,
+          "seed-Accepted": 8,
+          "seed-Invalid": 2
+        },
+        "names:later:bare:other:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:let:erased:datatype:annotated": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 3,
+          "seed-Accepted": 8,
+          "seed-Invalid": 3
+        },
+        "names:let:erased:datatype:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:let:erased:later:annotated": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:let:erased:other:annotated": {
+          "knot-Accepted": 15,
+          "knot-Invalid": 4,
+          "seed-Accepted": 15,
+          "seed-Invalid": 4
+        },
+        "names:let:erased:other:call": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:let:erased:other:none": {
+          "knot-Accepted": 10,
+          "seed-Accepted": 10
+        },
+        "names:let:marked:datatype:annotated": {
+          "knot-Invalid": 16,
+          "seed-Invalid": 16
+        },
+        "names:let:marked:datatype:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:let:marked:datatype:none": {
+          "knot-Invalid": 6,
+          "seed-Invalid": 6
+        },
+        "names:let:marked:later:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 1,
+          "seed-Accepted": 6,
+          "seed-Invalid": 1
+        },
+        "names:let:marked:other:annotated": {
+          "knot-Accepted": 12,
+          "knot-Invalid": 7,
+          "seed-Accepted": 12,
+          "seed-Invalid": 7
+        },
+        "names:let:marked:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:let:marked:other:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:let:plain:datatype:annotated": {
+          "knot-Accepted": 14,
+          "knot-Invalid": 8,
+          "seed-Accepted": 14,
+          "seed-Invalid": 8
+        },
+        "names:let:plain:datatype:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:let:plain:datatype:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:let:plain:later:annotated": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 2,
+          "seed-Accepted": 3,
+          "seed-Invalid": 2
+        },
+        "names:let:plain:other:annotated": {
+          "knot-Accepted": 12,
+          "knot-Invalid": 3,
+          "seed-Accepted": 12,
+          "seed-Invalid": 3
+        },
+        "names:let:plain:other:call": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:let:plain:other:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:let:typed:datatype:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 3,
+          "seed-Accepted": 6,
+          "seed-Invalid": 3
+        },
+        "names:let:typed:datatype:call": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 1,
+          "seed-Accepted": 2,
+          "seed-Invalid": 1
+        },
+        "names:let:typed:datatype:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:let:typed:later:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:let:typed:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:let:typed:other:annotated": {
+          "knot-Accepted": 21,
+          "knot-Invalid": 7,
+          "seed-Accepted": 21,
+          "seed-Invalid": 7
+        },
+        "names:let:typed:other:call": {
+          "knot-Accepted": 6,
+          "seed-Accepted": 6
+        },
+        "names:let:typed:other:none": {
+          "knot-Accepted": 8,
+          "seed-Accepted": 8
+        },
+        "names:nested:+:both:annotated": {
+          "knot-Invalid": 7,
+          "seed-Invalid": 7
+        },
+        "names:nested:+:both:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:nested:+:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:nested:+:constructor:annotated": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "names:nested:+:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:nested:+:constructor:none": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:nested:+:datatype:annotated": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "names:nested:+:datatype:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:nested:+:datatype:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:nested:+:later:annotated": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 1,
+          "seed-Accepted": 2,
+          "seed-Invalid": 1
+        },
+        "names:nested:+:later:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:nested:+:other:annotated": {
+          "knot-Accepted": 5,
+          "knot-Invalid": 3,
+          "seed-Accepted": 5,
+          "seed-Invalid": 3
+        },
+        "names:nested:+:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:nested:+:other:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:nested:bare:both:annotated": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:nested:bare:both:none": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:nested:bare:constructor:annotated": {
+          "knot-Invalid": 15,
+          "seed-Invalid": 15
+        },
+        "names:nested:bare:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:nested:bare:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:nested:bare:datatype:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 4,
+          "seed-Accepted": 6,
+          "seed-Invalid": 4
+        },
+        "names:nested:bare:datatype:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:nested:bare:datatype:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:nested:bare:later:annotated": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 1,
+          "seed-Accepted": 4,
+          "seed-Invalid": 1
+        },
+        "names:nested:bare:later:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:nested:bare:other:annotated": {
+          "knot-Accepted": 16,
+          "knot-Invalid": 7,
+          "seed-Accepted": 16,
+          "seed-Invalid": 7
+        },
+        "names:nested:bare:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:nested:bare:other:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:+:both:annotated": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:param:+:both:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:+:constructor:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 1,
+          "seed-Accepted": 6,
+          "seed-Invalid": 1
+        },
+        "names:param:+:constructor:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:param:+:datatype:annotated": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 8,
+          "seed-Accepted": 8,
+          "seed-Invalid": 8
+        },
+        "names:param:+:datatype:none": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 1,
+          "seed-Accepted": 4,
+          "seed-Invalid": 1
+        },
+        "names:param:+:later:annotated": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 1,
+          "seed-Accepted": 2,
+          "seed-Invalid": 1
+        },
+        "names:param:+:other:annotated": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 2,
+          "seed-Accepted": 3,
+          "seed-Invalid": 2
+        },
+        "names:param:+:other:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:param:-:constructor:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:-:datatype:annotated": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 3,
+          "seed-Accepted": 3,
+          "seed-Invalid": 3
+        },
+        "names:param:-:datatype:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:both:annotated": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:both:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:both:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:param:bare:constructor:annotated": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 2,
+          "seed-Accepted": 4,
+          "seed-Invalid": 2
+        },
+        "names:param:bare:constructor:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:param:bare:datatype:annotated": {
+          "knot-Accepted": 9,
+          "knot-Invalid": 17,
+          "seed-Accepted": 9,
+          "seed-Invalid": 17
+        },
+        "names:param:bare:datatype:call": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 2,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "names:param:bare:datatype:none": {
+          "knot-Accepted": 5,
+          "knot-Invalid": 3,
+          "seed-Accepted": 5,
+          "seed-Invalid": 3
+        },
+        "names:param:bare:later:annotated": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:other:annotated": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 2,
+          "seed-Accepted": 4,
+          "seed-Invalid": 2
+        },
+        "names:param:bare:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:param:bare:other:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2a:+:both:annotated": {
+          "knot-Invalid": 7,
+          "seed-Invalid": 7
+        },
+        "names:row2a:+:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2a:+:constructor:annotated": {
+          "knot-Invalid": 17,
+          "seed-Invalid": 17
+        },
+        "names:row2a:+:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2a:+:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:row2a:+:datatype:annotated": {
+          "knot-Invalid": 8,
+          "seed-Invalid": 8
+        },
+        "names:row2a:+:datatype:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2a:+:datatype:none": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2a:+:later:annotated": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2a:+:later:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:row2a:+:other:annotated": {
+          "knot-Accepted": 10,
+          "knot-Invalid": 5,
+          "seed-Accepted": 10,
+          "seed-Invalid": 5
+        },
+        "names:row2a:+:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2a:+:other:none": {
+          "knot-Accepted": 8,
+          "seed-Accepted": 8
+        },
+        "names:row2a:bare:both:annotated": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "names:row2a:bare:both:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2a:bare:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2a:bare:constructor:annotated": {
+          "knot-Invalid": 21,
+          "seed-Invalid": 21
+        },
+        "names:row2a:bare:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2a:bare:constructor:none": {
+          "knot-Invalid": 8,
+          "seed-Invalid": 8
+        },
+        "names:row2a:bare:datatype:annotated": {
+          "knot-Accepted": 5,
+          "knot-Invalid": 4,
+          "seed-Accepted": 5,
+          "seed-Invalid": 4
+        },
+        "names:row2a:bare:datatype:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2a:bare:datatype:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2a:bare:later:annotated": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2a:bare:later:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2a:bare:other:annotated": {
+          "knot-Accepted": 15,
+          "knot-Invalid": 6,
+          "seed-Accepted": 15,
+          "seed-Invalid": 6
+        },
+        "names:row2a:bare:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2a:bare:other:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:row2b:+:both:annotated": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "names:row2b:+:both:none": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row2b:+:constructor:annotated": {
+          "knot-Invalid": 14,
+          "seed-Invalid": 14
+        },
+        "names:row2b:+:constructor:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2b:+:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:row2b:+:datatype:annotated": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:row2b:+:datatype:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2b:+:datatype:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2b:+:later:annotated": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 3,
+          "seed-Accepted": 3,
+          "seed-Invalid": 3
+        },
+        "names:row2b:+:later:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2b:+:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2b:+:other:annotated": {
+          "knot-Accepted": 14,
+          "knot-Invalid": 9,
+          "seed-Accepted": 14,
+          "seed-Invalid": 9
+        },
+        "names:row2b:+:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2b:+:other:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:row2b:bare:both:annotated": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "names:row2b:bare:both:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2b:bare:both:none": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "names:row2b:bare:constructor:annotated": {
+          "knot-Invalid": 13,
+          "seed-Invalid": 13
+        },
+        "names:row2b:bare:constructor:call": {
+          "knot-Invalid": 10,
+          "seed-Invalid": 10
+        },
+        "names:row2b:bare:constructor:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row2b:bare:datatype:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 2,
+          "seed-Accepted": 6,
+          "seed-Invalid": 2
+        },
+        "names:row2b:bare:datatype:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2b:bare:datatype:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:row2b:bare:later:annotated": {
+          "knot-Accepted": 7,
+          "knot-Invalid": 2,
+          "seed-Accepted": 7,
+          "seed-Invalid": 2
+        },
+        "names:row2b:bare:later:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2b:bare:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row2b:bare:other:annotated": {
+          "knot-Accepted": 11,
+          "knot-Invalid": 5,
+          "seed-Accepted": 11,
+          "seed-Invalid": 5
+        },
+        "names:row2b:bare:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row2b:bare:other:none": {
+          "knot-Accepted": 5,
+          "seed-Accepted": 5
+        },
+        "names:row:+:both:annotated": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "names:row:+:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row:+:constructor:annotated": {
+          "knot-Invalid": 18,
+          "seed-Invalid": 18
+        },
+        "names:row:+:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row:+:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:row:+:datatype:annotated": {
+          "knot-Invalid": 12,
+          "seed-Invalid": 12
+        },
+        "names:row:+:datatype:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row:+:datatype:none": {
+          "knot-Invalid": 6,
+          "seed-Invalid": 6
+        },
+        "names:row:+:later:annotated": {
+          "knot-Accepted": 6,
+          "knot-Invalid": 1,
+          "seed-Accepted": 6,
+          "seed-Invalid": 1
+        },
+        "names:row:+:later:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row:+:later:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:row:+:other:annotated": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 9,
+          "seed-Accepted": 8,
+          "seed-Invalid": 9
+        },
+        "names:row:+:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row:+:other:none": {
+          "knot-Accepted": 6,
+          "seed-Accepted": 6
+        },
+        "names:row:bare:both:annotated": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "names:row:bare:both:none": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:row:bare:constructor:annotated": {
+          "knot-Invalid": 25,
+          "seed-Invalid": 25
+        },
+        "names:row:bare:constructor:call": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "names:row:bare:constructor:none": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "names:row:bare:datatype:annotated": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 5,
+          "seed-Accepted": 2,
+          "seed-Invalid": 5
+        },
+        "names:row:bare:datatype:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row:bare:datatype:none": {
+          "knot-Accepted": 11,
+          "seed-Accepted": 11
+        },
+        "names:row:bare:later:annotated": {
+          "knot-Accepted": 5,
+          "knot-Invalid": 2,
+          "seed-Accepted": 5,
+          "seed-Invalid": 2
+        },
+        "names:row:bare:later:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row:bare:later:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:row:bare:other:annotated": {
+          "knot-Accepted": 20,
+          "knot-Invalid": 5,
+          "seed-Accepted": 20,
+          "seed-Invalid": 5
+        },
+        "names:row:bare:other:call": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:row:bare:other:none": {
+          "knot-Accepted": 11,
+          "seed-Accepted": 11
+        },
+        "names:scrutinee:+:constructor:annotated": {
+          "knot-Accepted": 8,
+          "seed-Accepted": 8
+        },
+        "names:scrutinee:+:constructor:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:scrutinee:+:constructor:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:scrutinee:+:datatype:annotated": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 2,
+          "seed-Accepted": 2,
+          "seed-Invalid": 2
+        },
+        "names:scrutinee:+:datatype:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:scrutinee:+:other:annotated": {
+          "knot-Accepted": 9,
+          "seed-Accepted": 9
+        },
+        "names:scrutinee:+:other:call": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:scrutinee:+:other:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:scrutinee:bare:both:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:scrutinee:bare:both:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:scrutinee:bare:constructor:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:scrutinee:bare:constructor:none": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:scrutinee:bare:datatype:annotated": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 4,
+          "seed-Accepted": 3,
+          "seed-Invalid": 4
+        },
+        "names:scrutinee:bare:datatype:none": {
+          "knot-Accepted": 6,
+          "seed-Accepted": 6
+        },
+        "names:scrutinee:bare:later:annotated": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:scrutinee:bare:other:annotated": {
+          "knot-Accepted": 16,
+          "seed-Accepted": 16
+        },
+        "names:scrutinee:bare:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:scrutinee:bare:other:none": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:typefield:+:both:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:typefield:+:constructor:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:typefield:+:constructor:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:+:constructor:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:+:datatype:annotated": {
+          "knot-Accepted": 14,
+          "knot-Invalid": 4,
+          "seed-Accepted": 14,
+          "seed-Invalid": 4
+        },
+        "names:typefield:+:datatype:call": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "names:typefield:+:datatype:none": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:typefield:+:later:annotated": {
+          "knot-Accepted": 3,
+          "seed-Accepted": 3
+        },
+        "names:typefield:+:other:annotated": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:typefield:+:other:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:+:other:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:-:both:annotated": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:typefield:-:both:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:-:constructor:annotated": {
+          "knot-Accepted": 2,
+          "seed-Accepted": 2
+        },
+        "names:typefield:-:datatype:annotated": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 2,
+          "seed-Accepted": 2,
+          "seed-Invalid": 2
+        },
+        "names:typefield:-:datatype:call": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "names:typefield:-:later:annotated": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:bare:both:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:bare:constructor:annotated": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:typefield:bare:constructor:call": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:bare:constructor:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "names:typefield:bare:datatype:annotated": {
+          "knot-Accepted": 11,
+          "knot-Invalid": 6,
+          "seed-Accepted": 11,
+          "seed-Invalid": 6
+        },
+        "names:typefield:bare:datatype:call": {
+          "knot-Accepted": 4,
+          "seed-Accepted": 4
+        },
+        "names:typefield:bare:datatype:none": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 4,
+          "seed-Accepted": 4,
+          "seed-Invalid": 4
+        },
+        "names:typefield:bare:other:annotated": {
+          "knot-Accepted": 6,
+          "seed-Accepted": 6
+        },
+        "names:typefield:bare:other:none": {
+          "knot-Accepted": 1,
+          "seed-Accepted": 1
+        },
+        "parens:1col:dead:call": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 6,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 8,
+          "seed-Invalid": 18
+        },
+        "parens:1col:dead:name": {
+          "knot-Accepted": 9,
+          "knot-Invalid": 20,
+          "knot-Unsupported": 14,
+          "seed-Accepted": 13,
+          "seed-Invalid": 30
+        },
+        "parens:1col:dead:paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 24,
+          "seed-Accepted": 7,
+          "seed-Invalid": 18
+        },
+        "parens:1col:live:call": {
+          "knot-Invalid": 17,
+          "knot-Unsupported": 18,
+          "seed-Invalid": 35
+        },
+        "parens:1col:live:name": {
+          "knot-Accepted": 7,
+          "knot-Invalid": 19,
+          "knot-Unsupported": 11,
+          "seed-Accepted": 9,
+          "seed-Invalid": 28
+        },
+        "parens:1col:live:paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 2,
+          "seed-Invalid": 16
+        },
+        "parens:2col:dead:call": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 7,
+          "knot-Unsupported": 14,
+          "seed-Accepted": 1,
+          "seed-Invalid": 21
+        },
+        "parens:2col:dead:call-name": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 22,
+          "knot-Unsupported": 31,
+          "seed-Accepted": 8,
+          "seed-Invalid": 46
+        },
+        "parens:2col:dead:call-paren": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 23,
+          "seed-Accepted": 5,
+          "seed-Invalid": 20
+        },
+        "parens:2col:dead:name": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 12,
+          "knot-Unsupported": 3,
+          "seed-Accepted": 5,
+          "seed-Invalid": 14
+        },
+        "parens:2col:dead:name-paren": {
+          "knot-Invalid": 6,
+          "knot-Unsupported": 19,
+          "seed-Accepted": 4,
+          "seed-Invalid": 21
+        },
+        "parens:2col:dead:paren": {
+          "knot-Unsupported": 8,
+          "seed-Accepted": 2,
+          "seed-Invalid": 6
+        },
+        "parens:2col:live:call": {
+          "knot-Invalid": 7,
+          "knot-Unsupported": 11,
+          "seed-Invalid": 18
+        },
+        "parens:2col:live:call-name": {
+          "knot-Invalid": 25,
+          "knot-Unsupported": 30,
+          "seed-Invalid": 55
+        },
+        "parens:2col:live:call-paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 23,
+          "seed-Invalid": 24
+        },
+        "parens:2col:live:name": {
+          "knot-Accepted": 7,
+          "knot-Invalid": 25,
+          "knot-Unsupported": 14,
+          "seed-Accepted": 9,
+          "seed-Invalid": 37
+        },
+        "parens:2col:live:name-paren": {
+          "knot-Invalid": 9,
+          "knot-Unsupported": 32,
+          "seed-Accepted": 8,
+          "seed-Invalid": 33
+        },
+        "parens:2col:live:paren": {
+          "knot-Unsupported": 9,
+          "seed-Invalid": 9
+        },
+        "parens:3col:dead:call": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2,
+          "seed-Invalid": 2
+        },
+        "parens:3col:dead:call-name": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 6,
+          "knot-Unsupported": 19,
+          "seed-Accepted": 2,
+          "seed-Invalid": 24
+        },
+        "parens:3col:dead:call-name-paren": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 4,
+          "knot-Unsupported": 17,
+          "seed-Accepted": 3,
+          "seed-Invalid": 19
+        },
+        "parens:3col:dead:call-paren": {
+          "knot-Unsupported": 10,
+          "seed-Accepted": 2,
+          "seed-Invalid": 8
+        },
+        "parens:3col:dead:name": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 1,
+          "knot-Unsupported": 4,
+          "seed-Accepted": 2,
+          "seed-Invalid": 4
+        },
+        "parens:3col:dead:name-paren": {
+          "knot-Invalid": 6,
+          "knot-Unsupported": 15,
+          "seed-Accepted": 2,
+          "seed-Invalid": 19
+        },
+        "parens:3col:dead:paren": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "parens:3col:live:call": {
+          "knot-Unsupported": 4,
+          "seed-Invalid": 4
+        },
+        "parens:3col:live:call-name": {
+          "knot-Invalid": 17,
+          "knot-Unsupported": 13,
+          "seed-Invalid": 30
+        },
+        "parens:3col:live:call-name-paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 11,
+          "seed-Invalid": 12
+        },
+        "parens:3col:live:call-paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 11,
+          "seed-Invalid": 12
+        },
+        "parens:3col:live:name": {
+          "knot-Invalid": 5,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 8
+        },
+        "parens:3col:live:name-paren": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 11,
+          "seed-Accepted": 2,
+          "seed-Invalid": 10
+        },
+        "parens:3col:live:paren": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "widths:ctor:dead:1": {
+          "knot-Invalid": 40,
+          "seed-Invalid": 40
+        },
+        "widths:ctor:dead:2": {
+          "knot-Accepted": 37,
+          "seed-Accepted": 37
+        },
+        "widths:ctor:dead:3": {
+          "knot-Invalid": 33,
+          "seed-Invalid": 33
+        },
+        "widths:ctor:live:1": {
+          "knot-Invalid": 46,
+          "seed-Invalid": 46
+        },
+        "widths:ctor:live:2": {
+          "knot-Accepted": 29,
+          "seed-Accepted": 29
+        },
+        "widths:ctor:live:3": {
+          "knot-Invalid": 47,
+          "seed-Invalid": 47
+        },
+        "widths:flat:live:1": {
+          "knot-Invalid": 43,
+          "seed-Invalid": 43
+        },
+        "widths:flat:live:2": {
+          "knot-Accepted": 33,
+          "seed-Accepted": 33
+        },
+        "widths:flat:live:3": {
+          "knot-Invalid": 35,
+          "seed-Invalid": 35
+        },
+        "widths:nested:dead:1": {
+          "knot-Invalid": 25,
+          "seed-Invalid": 25
+        },
+        "widths:nested:dead:2": {
+          "knot-Accepted": 32,
+          "seed-Accepted": 32
+        },
+        "widths:nested:dead:3": {
+          "knot-Invalid": 36,
+          "seed-Invalid": 36
+        },
+        "widths:nested:live:1": {
+          "knot-Invalid": 18,
+          "seed-Invalid": 18
+        },
+        "widths:nested:live:2": {
+          "knot-Accepted": 25,
+          "seed-Accepted": 25
+        },
+        "widths:nested:live:3": {
+          "knot-Invalid": 24,
+          "seed-Invalid": 24
+        },
+        "widths:width:dead:-1": {
+          "knot-Invalid": 17,
+          "seed-Invalid": 17
+        },
+        "widths:width:dead:0": {
+          "knot-Accepted": 16,
+          "seed-Accepted": 16
+        },
+        "widths:width:dead:1": {
+          "knot-Invalid": 40,
+          "seed-Invalid": 40
+        },
+        "widths:width:dead:2": {
+          "knot-Invalid": 29,
+          "seed-Invalid": 29
+        },
+        "widths:width:live:-1": {
+          "knot-Invalid": 14,
+          "seed-Invalid": 14
+        },
+        "widths:width:live:0": {
+          "knot-Accepted": 16,
+          "seed-Accepted": 16
+        },
+        "widths:width:live:1": {
+          "knot-Invalid": 48,
+          "seed-Invalid": 48
+        },
+        "widths:width:live:2": {
+          "knot-Invalid": 17,
+          "seed-Invalid": 17
+        }
+      },
+      "evaluator_values": 1330,
+      "failures": [],
+      "false_acceptances": 0,
+      "false_invalid": 0,
+      "families": {
+        "dead": {
+          "knot-Accepted": 134,
+          "knot-Invalid": 1025,
+          "knot-Unsupported": 141,
+          "seed-Accepted": 142,
+          "seed-Invalid": 1158
+        },
+        "gaps": {
+          "knot-Accepted": 182,
+          "knot-Invalid": 473,
+          "knot-Unsupported": 545,
+          "seed-Accepted": 280,
+          "seed-Invalid": 920
+        },
+        "layout": {
+          "knot-Accepted": 67,
+          "knot-Unsupported": 833,
+          "seed-Accepted": 703,
+          "seed-Invalid": 197
+        },
+        "names": {
+          "knot-Accepted": 722,
+          "knot-Invalid": 578,
+          "seed-Accepted": 722,
+          "seed-Invalid": 578
+        },
+        "parens": {
+          "knot-Accepted": 37,
+          "knot-Invalid": 222,
+          "knot-Unsupported": 441,
+          "seed-Accepted": 96,
+          "seed-Invalid": 604
+        },
+        "widths": {
+          "knot-Accepted": 188,
+          "knot-Invalid": 512,
+          "seed-Accepted": 188,
+          "seed-Invalid": 512
+        }
+      },
+      "generator_sha256": "dba2736723dcdb26c0ff9d0e3a5b3af0e4086c8fc3b8ece601249e4ebf926320",
+      "knot_outcomes": {
+        "Accepted": 1330,
+        "Invalid": 2810,
+        "Unsupported": 1960
+      },
+      "observations_sha256": "27b2691ab2499f8459eb077e58b5634688f09c70c7595112b7eedb961caec0e1",
+      "programs": 6100,
+      "random_seed": 1313166149,
+      "seed_outcomes": {
+        "Accepted": 2131,
+        "Invalid": 3969
+      }
+    },
+    "round12": {
+      "classes": {
+        "plus:1col:first-row:data": {
+          "knot-Accepted": 64,
+          "knot-Invalid": 16,
+          "seed-Accepted": 64,
+          "seed-Invalid": 16
+        },
+        "plus:1col:first-row:type": {
+          "knot-Accepted": 52,
+          "knot-Invalid": 62,
+          "seed-Accepted": 52,
+          "seed-Invalid": 62
+        },
+        "plus:1col:later-row:data": {
+          "knot-Accepted": 55,
+          "knot-Invalid": 27,
+          "seed-Accepted": 55,
+          "seed-Invalid": 27
+        },
+        "plus:1col:later-row:type": {
+          "knot-Accepted": 65,
+          "knot-Invalid": 89,
+          "seed-Accepted": 65,
+          "seed-Invalid": 89
+        },
+        "plus:1col:no-plus:data": {
+          "knot-Accepted": 98,
+          "knot-Invalid": 74,
+          "seed-Accepted": 98,
+          "seed-Invalid": 74
+        },
+        "plus:1col:no-plus:type": {
+          "knot-Accepted": 151,
+          "knot-Invalid": 266,
+          "seed-Accepted": 151,
+          "seed-Invalid": 266
+        },
+        "plus:2col:first-row:data": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 17,
+          "seed-Accepted": 8,
+          "seed-Invalid": 17
+        },
+        "plus:2col:first-row:type": {
+          "knot-Accepted": 49,
+          "knot-Invalid": 114,
+          "seed-Accepted": 49,
+          "seed-Invalid": 114
+        },
+        "plus:2col:later-row:data": {
+          "knot-Accepted": 10,
+          "knot-Invalid": 3,
+          "seed-Accepted": 10,
+          "seed-Invalid": 3
+        },
+        "plus:2col:later-row:type": {
+          "knot-Accepted": 32,
+          "knot-Invalid": 91,
+          "seed-Accepted": 32,
+          "seed-Invalid": 91
+        },
+        "plus:2col:no-plus:data": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 11,
+          "seed-Accepted": 3,
+          "seed-Invalid": 11
+        },
+        "plus:2col:no-plus:type": {
+          "knot-Accepted": 25,
+          "knot-Invalid": 118,
+          "seed-Accepted": 25,
+          "seed-Invalid": 118
+        },
+        "start:body:multi:dead": {
+          "knot-Accepted": 8,
+          "knot-Invalid": 35,
+          "knot-Unsupported": 60,
+          "seed-Accepted": 41,
+          "seed-Invalid": 62
+        },
+        "start:body:multi:live": {
+          "knot-Accepted": 3,
+          "knot-Unsupported": 6,
+          "seed-Accepted": 9
+        },
+        "start:body:single:dead": {
+          "knot-Accepted": 4,
+          "knot-Invalid": 23,
+          "knot-Unsupported": 57,
+          "seed-Accepted": 41,
+          "seed-Invalid": 43
+        },
+        "start:body:single:live": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 3,
+          "seed-Accepted": 4
+        },
+        "start:stmt:multi:dead": {
+          "knot-Accepted": 3,
+          "knot-Invalid": 25,
+          "knot-Unsupported": 63,
+          "seed-Accepted": 45,
+          "seed-Invalid": 46
+        },
+        "start:stmt:multi:live": {
+          "knot-Unsupported": 7,
+          "seed-Accepted": 7
+        },
+        "start:stmt:single:dead": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 26,
+          "knot-Unsupported": 65,
+          "seed-Accepted": 36,
+          "seed-Invalid": 57
+        },
+        "start:stmt:single:live": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 8,
+          "seed-Accepted": 9
+        },
+        "suffix:call:blank:arg:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:call:blank:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:call:blank:inline:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:call:blank:let:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:blank:nested:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:blank:single:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:call:break:arg:dead": {
+          "knot-Unsupported": 6,
+          "seed-Accepted": 4,
+          "seed-Invalid": 2
+        },
+        "suffix:call:break:arg:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:break:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:call:break:inline:dead": {
+          "knot-Unsupported": 7,
+          "seed-Accepted": 1,
+          "seed-Invalid": 6
+        },
+        "suffix:call:break:inline:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:break:let:dead": {
+          "knot-Unsupported": 9,
+          "seed-Accepted": 1,
+          "seed-Invalid": 8
+        },
+        "suffix:call:break:nested:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 5,
+          "seed-Invalid": 6
+        },
+        "suffix:call:break:own:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 6,
+          "seed-Invalid": 7
+        },
+        "suffix:call:break:single:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:call:comment:arg:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:call:comment:arg:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:comment:inline:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 4,
+          "seed-Invalid": 5
+        },
+        "suffix:call:comment:inline:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:comment:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:comment:let:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:comment:own:dead": {
+          "knot-Unsupported": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:call:comment:single:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:call:comment:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:arg:dead": {
+          "knot-Unsupported": 5,
+          "seed-Accepted": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:call:none:arg:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:body:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:call:none:inline:dead": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 6,
+          "seed-Accepted": 5,
+          "seed-Invalid": 2
+        },
+        "suffix:call:none:inline:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:let:dead": {
+          "knot-Unsupported": 6,
+          "seed-Accepted": 4,
+          "seed-Invalid": 2
+        },
+        "suffix:call:none:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:nested:dead": {
+          "knot-Accepted": 2,
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 3,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:none:own:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:call:none:single:dead": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:call:space:arg:dead": {
+          "knot-Unsupported": 10,
+          "seed-Accepted": 6,
+          "seed-Invalid": 4
+        },
+        "suffix:call:space:arg:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 4,
+          "seed-Invalid": 6
+        },
+        "suffix:call:space:body:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 4,
+          "seed-Invalid": 6
+        },
+        "suffix:call:space:inline:dead": {
+          "knot-Accepted": 5,
+          "knot-Invalid": 2,
+          "knot-Unsupported": 10,
+          "seed-Accepted": 10,
+          "seed-Invalid": 7
+        },
+        "suffix:call:space:inline:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:call:space:let:dead": {
+          "knot-Accepted": 1,
+          "knot-Unsupported": 15,
+          "seed-Accepted": 9,
+          "seed-Invalid": 7
+        },
+        "suffix:call:space:let:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:call:space:nested:dead": {
+          "knot-Unsupported": 5,
+          "seed-Accepted": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:call:space:nested:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:space:own:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 6,
+          "seed-Accepted": 5,
+          "seed-Invalid": 2
+        },
+        "suffix:call:space:own:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 5,
+          "seed-Invalid": 6
+        },
+        "suffix:call:space:single:dead": {
+          "knot-Accepted": 2,
+          "knot-Unsupported": 4,
+          "seed-Accepted": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:call:space:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:arg:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:blank:body:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:inline:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:let:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:nested:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:blank:own:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:blank:single:dead": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:break:arg:dead": {
+          "knot-Unsupported": 10,
+          "seed-Accepted": 1,
+          "seed-Invalid": 9
+        },
+        "suffix:junk:break:arg:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:break:body:live": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:break:inline:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 4
+        },
+        "suffix:junk:break:let:dead": {
+          "knot-Invalid": 4,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 6
+        },
+        "suffix:junk:break:let:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:break:own:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 5,
+          "seed-Invalid": 6
+        },
+        "suffix:junk:break:own:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:break:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:break:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:comment:arg:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:comment:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:comment:inline:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:comment:inline:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:comment:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:comment:let:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:comment:nested:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:comment:own:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:comment:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:none:arg:dead": {
+          "knot-Accepted": 1,
+          "knot-Invalid": 4,
+          "seed-Accepted": 1,
+          "seed-Invalid": 4
+        },
+        "suffix:junk:none:arg:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:junk:none:body:live": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:none:inline:dead": {
+          "knot-Invalid": 6,
+          "seed-Invalid": 6
+        },
+        "suffix:junk:none:let:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:none:let:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 5
+        },
+        "suffix:junk:none:nested:dead": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:none:single:dead": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "suffix:junk:space:arg:dead": {
+          "knot-Invalid": 11,
+          "seed-Invalid": 11
+        },
+        "suffix:junk:space:arg:live": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:junk:space:body:live": {
+          "knot-Invalid": 5,
+          "seed-Invalid": 5
+        },
+        "suffix:junk:space:inline:dead": {
+          "knot-Invalid": 9,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 10
+        },
+        "suffix:junk:space:inline:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:junk:space:let:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 4,
+          "seed-Invalid": 5
+        },
+        "suffix:junk:space:let:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:space:nested:dead": {
+          "knot-Invalid": 7,
+          "seed-Invalid": 7
+        },
+        "suffix:junk:space:nested:live": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:space:own:dead": {
+          "knot-Invalid": 10,
+          "seed-Invalid": 10
+        },
+        "suffix:junk:space:own:live": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:junk:space:single:dead": {
+          "knot-Invalid": 5,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 6
+        },
+        "suffix:junk:space:single:live": {
+          "knot-Invalid": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-hole:blank:arg:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:blank:inline:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:blank:own:dead": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:break:arg:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:opener-hole:break:inline:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:break:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:break:nested:dead": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:break:own:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-hole:break:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-hole:comment:arg:dead": {
+          "knot-Unsupported": 4,
+          "seed-Accepted": 4
+        },
+        "suffix:opener-hole:comment:body:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:comment:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:comment:nested:dead": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-hole:comment:own:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:comment:single:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:none:arg:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-hole:none:arg:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:none:inline:dead": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:none:inline:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:none:let:dead": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-hole:none:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:none:nested:dead": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:none:single:dead": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-hole:space:arg:dead": {
+          "knot-Unsupported": 8,
+          "seed-Accepted": 5,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:space:body:live": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:space:inline:dead": {
+          "knot-Invalid": 6,
+          "seed-Invalid": 6
+        },
+        "suffix:opener-hole:space:inline:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:space:let:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-hole:space:nested:dead": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:space:own:dead": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:space:own:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-hole:space:single:dead": {
+          "knot-Invalid": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-hole:space:single:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:blank:arg:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:opener-plus:blank:arg:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:blank:inline:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:blank:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:break:arg:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:opener-plus:break:body:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:break:inline:dead": {
+          "knot-Unsupported": 8,
+          "seed-Accepted": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-plus:break:inline:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:break:let:dead": {
+          "knot-Unsupported": 4,
+          "seed-Accepted": 1,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-plus:break:own:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:opener-plus:break:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:break:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:comment:arg:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:opener-plus:comment:inline:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-plus:comment:let:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:comment:own:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:opener-plus:comment:single:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:arg:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 3
+        },
+        "suffix:opener-plus:none:body:live": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:none:inline:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:inline:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:let:dead": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:nested:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:opener-plus:none:nested:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:own:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:none:single:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:space:arg:dead": {
+          "knot-Unsupported": 4,
+          "seed-Accepted": 4
+        },
+        "suffix:opener-plus:space:arg:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:space:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-plus:space:inline:dead": {
+          "knot-Invalid": 4,
+          "knot-Unsupported": 5,
+          "seed-Accepted": 5,
+          "seed-Invalid": 4
+        },
+        "suffix:opener-plus:space:inline:live": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:space:let:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:opener-plus:space:let:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:opener-plus:space:nested:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:opener-plus:space:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:opener-plus:space:own:dead": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:blank:arg:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:operator:blank:arg:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:blank:body:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:blank:inline:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:operator:blank:inline:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:blank:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:operator:blank:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:blank:nested:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:operator:blank:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:blank:own:dead": {
+          "knot-Unsupported": 4,
+          "seed-Accepted": 4
+        },
+        "suffix:operator:blank:own:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:blank:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:operator:break:arg:dead": {
+          "knot-Unsupported": 19,
+          "seed-Accepted": 19
+        },
+        "suffix:operator:break:arg:live": {
+          "knot-Unsupported": 6,
+          "seed-Invalid": 6
+        },
+        "suffix:operator:break:body:live": {
+          "knot-Unsupported": 9,
+          "seed-Invalid": 9
+        },
+        "suffix:operator:break:inline:dead": {
+          "knot-Unsupported": 24,
+          "seed-Accepted": 24
+        },
+        "suffix:operator:break:inline:live": {
+          "knot-Unsupported": 7,
+          "seed-Invalid": 7
+        },
+        "suffix:operator:break:let:dead": {
+          "knot-Unsupported": 13,
+          "seed-Accepted": 13
+        },
+        "suffix:operator:break:let:live": {
+          "knot-Unsupported": 6,
+          "seed-Invalid": 6
+        },
+        "suffix:operator:break:nested:dead": {
+          "knot-Unsupported": 5,
+          "seed-Accepted": 5
+        },
+        "suffix:operator:break:nested:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:break:own:dead": {
+          "knot-Unsupported": 12,
+          "seed-Accepted": 12
+        },
+        "suffix:operator:break:own:live": {
+          "knot-Unsupported": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:operator:break:single:dead": {
+          "knot-Unsupported": 11,
+          "seed-Accepted": 11
+        },
+        "suffix:operator:break:single:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:operator:comment:arg:dead": {
+          "knot-Unsupported": 9,
+          "seed-Accepted": 9
+        },
+        "suffix:operator:comment:arg:live": {
+          "knot-Unsupported": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:operator:comment:body:live": {
+          "knot-Unsupported": 6,
+          "seed-Invalid": 6
+        },
+        "suffix:operator:comment:inline:dead": {
+          "knot-Unsupported": 5,
+          "seed-Accepted": 5
+        },
+        "suffix:operator:comment:inline:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:comment:let:dead": {
+          "knot-Unsupported": 9,
+          "seed-Accepted": 9
+        },
+        "suffix:operator:comment:let:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:operator:comment:nested:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 3
+        },
+        "suffix:operator:comment:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:comment:own:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:operator:comment:own:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:comment:single:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 3
+        },
+        "suffix:operator:comment:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:arg:dead": {
+          "knot-Unsupported": 9,
+          "seed-Accepted": 8,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:arg:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:none:body:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:operator:none:inline:dead": {
+          "knot-Unsupported": 14,
+          "seed-Accepted": 12,
+          "seed-Invalid": 2
+        },
+        "suffix:operator:none:inline:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:let:dead": {
+          "knot-Unsupported": 10,
+          "seed-Accepted": 6,
+          "seed-Invalid": 4
+        },
+        "suffix:operator:none:let:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:operator:none:nested:dead": {
+          "knot-Unsupported": 6,
+          "seed-Accepted": 5,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:own:dead": {
+          "knot-Unsupported": 8,
+          "seed-Accepted": 5,
+          "seed-Invalid": 3
+        },
+        "suffix:operator:none:own:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:single:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 7,
+          "seed-Accepted": 7,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:none:single:live": {
+          "knot-Unsupported": 4,
+          "seed-Invalid": 4
+        },
+        "suffix:operator:space:arg:dead": {
+          "knot-Unsupported": 28,
+          "seed-Accepted": 28
+        },
+        "suffix:operator:space:arg:live": {
+          "knot-Unsupported": 5,
+          "seed-Invalid": 5
+        },
+        "suffix:operator:space:body:live": {
+          "knot-Unsupported": 17,
+          "seed-Invalid": 17
+        },
+        "suffix:operator:space:inline:dead": {
+          "knot-Unsupported": 36,
+          "seed-Accepted": 36
+        },
+        "suffix:operator:space:inline:live": {
+          "knot-Unsupported": 10,
+          "seed-Invalid": 10
+        },
+        "suffix:operator:space:let:dead": {
+          "knot-Unsupported": 25,
+          "seed-Accepted": 25
+        },
+        "suffix:operator:space:let:live": {
+          "knot-Unsupported": 11,
+          "seed-Invalid": 11
+        },
+        "suffix:operator:space:nested:dead": {
+          "knot-Unsupported": 12,
+          "seed-Accepted": 12
+        },
+        "suffix:operator:space:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:operator:space:own:dead": {
+          "knot-Unsupported": 18,
+          "seed-Accepted": 18
+        },
+        "suffix:operator:space:own:live": {
+          "knot-Unsupported": 5,
+          "seed-Invalid": 5
+        },
+        "suffix:operator:space:single:dead": {
+          "knot-Unsupported": 12,
+          "seed-Accepted": 12
+        },
+        "suffix:operator:space:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:alone:arg:dead": {
+          "knot-Unsupported": 7,
+          "seed-Accepted": 6,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:alone:body:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 4,
+          "seed-Invalid": 6
+        },
+        "suffix:plus-term:alone:inline:dead": {
+          "knot-Invalid": 3,
+          "knot-Unsupported": 5,
+          "seed-Accepted": 5,
+          "seed-Invalid": 3
+        },
+        "suffix:plus-term:alone:inline:live": {
+          "knot-Invalid": 4,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 5
+        },
+        "suffix:plus-term:alone:let:dead": {
+          "knot-Unsupported": 4,
+          "seed-Accepted": 3,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:alone:let:live": {
+          "knot-Unsupported": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:plus-term:alone:nested:dead": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 3,
+          "seed-Accepted": 3,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:alone:own:dead": {
+          "knot-Invalid": 5,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 5
+        },
+        "suffix:plus-term:alone:own:live": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:alone:single:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:blank:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:blank:nested:dead": {
+          "knot-Invalid": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:blank:own:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:plus-term:blank:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:break:arg:dead": {
+          "knot-Unsupported": 6,
+          "seed-Accepted": 5,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:break:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 3
+        },
+        "suffix:plus-term:break:inline:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:plus-term:break:inline:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 4
+        },
+        "suffix:plus-term:break:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:break:nested:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:plus-term:break:nested:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:break:own:dead": {
+          "knot-Invalid": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:break:single:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:comment:body:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:comment:inline:dead": {
+          "knot-Invalid": 3,
+          "knot-Unsupported": 3,
+          "seed-Accepted": 3,
+          "seed-Invalid": 3
+        },
+        "suffix:plus-term:comment:let:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:plus-term:comment:own:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:none:arg:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:none:body:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:none:inline:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:plus-term:none:let:dead": {
+          "knot-Unsupported": 3,
+          "seed-Accepted": 1,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:none:nested:dead": {
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1
+        },
+        "suffix:plus-term:none:own:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:none:own:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:space:arg:dead": {
+          "knot-Unsupported": 9,
+          "seed-Accepted": 4,
+          "seed-Invalid": 5
+        },
+        "suffix:plus-term:space:arg:live": {
+          "knot-Unsupported": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:space:body:live": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 3,
+          "seed-Invalid": 4
+        },
+        "suffix:plus-term:space:inline:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:space:inline:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 2,
+          "seed-Invalid": 4
+        },
+        "suffix:plus-term:space:let:dead": {
+          "knot-Unsupported": 5,
+          "seed-Accepted": 3,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:space:let:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:space:nested:dead": {
+          "knot-Invalid": 1,
+          "knot-Unsupported": 1,
+          "seed-Accepted": 1,
+          "seed-Invalid": 1
+        },
+        "suffix:plus-term:space:own:dead": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2,
+          "seed-Invalid": 2
+        },
+        "suffix:plus-term:space:own:live": {
+          "knot-Invalid": 2,
+          "knot-Unsupported": 1,
+          "seed-Invalid": 3
+        },
+        "suffix:plus-term:space:single:dead": {
+          "knot-Unsupported": 2,
+          "seed-Accepted": 2
+        },
+        "suffix:plus-term:space:single:live": {
+          "knot-Unsupported": 1,
+          "seed-Invalid": 1
+        }
+      },
+      "evaluator_values": 647,
+      "failures": [],
+      "false_acceptances": 0,
+      "false_invalid": 0,
+      "families": {
+        "plus": {
+          "knot-Accepted": 612,
+          "knot-Invalid": 888,
+          "seed-Accepted": 612,
+          "seed-Invalid": 888
+        },
+        "start": {
+          "knot-Accepted": 22,
+          "knot-Invalid": 109,
+          "knot-Unsupported": 269,
+          "seed-Accepted": 192,
+          "seed-Invalid": 208
+        },
+        "suffix": {
+          "knot-Accepted": 13,
+          "knot-Invalid": 214,
+          "knot-Unsupported": 873,
+          "seed-Accepted": 461,
+          "seed-Invalid": 639
+        }
+      },
+      "generator_sha256": "bad3858c94ea99f386d6d7a95ac08ed11c181564320ea1ec9c56afb1f0b5bf25",
+      "knot_outcomes": {
+        "Accepted": 647,
+        "Invalid": 1211,
+        "Unsupported": 1142
+      },
+      "observations_sha256": "cf843d4bb2ab58be4aa8cfacd41dd3f4ab0c5c2609ed17d7423a538305fb29b9",
+      "programs": 3000,
+      "random_seed": 1313166150,
+      "seed_outcomes": {
+        "Accepted": 1265,
+        "Invalid": 1735
+      }
+    },
+    "round13_grid": {
+      "cells": 684,
+      "outcomes": {
+        "seed-Accepted knot-Unsupported lex literal": 24,
+        "seed-Accepted knot-Unsupported parse body-indentation": 222,
+        "seed-Rejected knot-Invalid parse body-indentation": 306,
+        "seed-Rejected knot-Unsupported lex non-ascii": 12,
+        "seed-Rejected knot-Unsupported parse body-indentation": 78,
+        "seed-Rejected knot-Unsupported parse operator": 36,
+        "seed-Rejected knot-Unsupported parse term-form": 6
+      }
+    },
+    "round13_zoo": {
+      "cells": 64,
+      "outcomes": {
+        "seed-Accepted knot-Accepted": 11,
+        "seed-Accepted knot-Unsupported lex literal": 2,
+        "seed-Accepted knot-Unsupported lex whitespace": 1,
+        "seed-Accepted knot-Unsupported parse destructuring-binding": 1,
+        "seed-Accepted knot-Unsupported parse line-break": 1,
+        "seed-Accepted knot-Unsupported parse operator": 9,
+        "seed-Accepted knot-Unsupported parse term-form": 12,
+        "seed-Rejected knot-Invalid lex name": 2,
+        "seed-Rejected knot-Invalid parse body-indentation": 1,
+        "seed-Rejected knot-Invalid parse detached-brace": 1,
+        "seed-Rejected knot-Invalid parse end-of-body": 10,
+        "seed-Rejected knot-Unsupported lex non-ascii": 2,
+        "seed-Rejected knot-Unsupported parse binding-type": 1,
+        "seed-Rejected knot-Unsupported parse operator": 1,
+        "seed-Rejected knot-Unsupported parse pattern-or-indentation": 1,
+        "seed-Rejected knot-Unsupported parse term-form": 8
+      }
+    }
+  }
+}

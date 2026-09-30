@@ -201,8 +201,8 @@ continues at any token that is no closer, separator or keyword. The seed reads a
 term, never as the arguments of the term before it (`parse_term_ops` returns at `parse_nl` and `(`); a header joins
 its lines, so the parser read `h`, break, `(a)` as the call `h(a)`: one column where the seed has two. That was a
 false acceptance on the round-10 tip too (a dead nested match whose row has one pattern) and, with this round's
-audit, a false Invalid where the row has two; exhaustive gap search found it (below). A token that can start no statement (`case`,
-`def`, `)`) at another column stays `Invalid body-indentation`, an empty arm stays Invalid, and a closer or a
+audit, a false Invalid where the row has two; exhaustive gap search found it (below). A token that can start no seed term (`case`, `def`, `)`) at another column stays `Invalid body-indentation`.
+Round 13 corrects the other side of this boundary: `(`, `[`, numerals and `?` can start a term and are Unsupported, an empty arm stays Invalid, and a closer or a
 keyword in a header stays `Invalid expected-:`; five fixtures pin that.
 
 - **Fixtures, 95** (`layout-*`, `header-*`, `argument-*`, `paren-*`), in single and multi-scrutinee form, with the
@@ -318,7 +318,7 @@ reports the same `Invalid` for a program with one scrutinee.
 
 - **A def header's parameters and a type's fields with a line break or extra whitespace** (the literals-layout
   increment's `layout-def-header`). 72 of the 115 programs below.
-- **Term suffixes the term parser lacks (fixed in round 12: `Unsupported parse term-form`).** An infix operator (`On{} || Off{}`, `On{} -> Off{}`, `a & b`,
+- **Term suffixes the term parser lacks (fixed in round 12; round 13 names operators `Unsupported parse operator`, other forms `term-form`).** An infix operator (`On{} || Off{}`, `On{} -> Off{}`, `a & b`,
   `a <> b`), a chained call `g(a)(a)`, an index `a[0n]` and `g!(a)` after a complete term. In a discarded body
   or let the seed parses and never checks them; a live one needs a target the program defines (`def Pair`,
   `def Bool.and`, a `Con` constructor). Knot answers `Invalid parse end-of-body` (`expected-` at a let's line

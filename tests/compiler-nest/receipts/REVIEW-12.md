@@ -221,19 +221,20 @@ of the first row is still `reusable-type`. The D21 proof mirrors the new pattern
 - **Sensitivity.** On the round-11 tip 112 of the 161 frozen fixtures fail (15 of the 32 first-row fixtures, 97 of the 129 suffix
   fixtures).
 
-## Open D4 families (seed-accepted, Knot Invalid; not drawn by `fuzz12.py`)
+## D4 families after review round 13
 
-Named so that the next reviewer's fuzz does not rediscover them; each is main-era.
+The first two families left open by this historical round were branch-introduced for multi-scrutinee matches:
+the merge base stopped at Unsupported before their bodies. Round 13 repairs them and draws them in `fuzz12.py`.
+A spaced operator after a let's value is `Unsupported parse operator` except for a marker gap (a name, then `=`
+or `:`), which stays Invalid. A touching `+name` or a hole after an expression argument is `term-form`; a glued
+`x+y` is `operator`. `@`, a backslash, `-name` and closers there are seed-rejected precision controls.
+An arm body or later statement starting with `(`, `[`, a numeral or `?` at another column is now Unsupported.
+See [REVIEW-13](REVIEW-13.md) for the frozen grid, mutants and the bounded default copies.
 
-- **A spaced `+` or `-` that starts the line after a let's value** (`u : Flag = a`, then `- a`): the seed continues the value with an
-  operator; `Invalid parse detached-marker` is pinned by round 10's law `detached_marker`, which normalizes over an abstract tail.
-  Refining it (Unsupported unless a let follows) would amend that law, so it is left for a coordinator ruling.
-- **A term that starts the next argument after whitespace and is no name, numeral or parenthesis** (a hole `? a`, `@`, `\`, or a `+`
-  marker: `h(a +b)`, pinned `Invalid argument-separator` by round 10's `argspace-promoted-call`).
-- **`match c():`** (a zero-argument call of a parameter reads as the parameter; `Invalid check computed-scrutinee`).
-- The families of REVIEW-11 that are not term suffixes: the def-header and type-field layout (literals-layout), a def body at
-  column 0, partial application, a global function as a value (`-v = main`), a Nat literal as a let binder at another column,
-  a constructor line of a type declaration at another column and a lone marker line after a let's value.
+Still open: `match c():` (computed-scrutinee); def-header and type-field layout (literals-layout); a def body at
+column 0; unused partial application; a global function as a value; a Nat literal let binder or type constructor
+line at another column. Flat single-scrutinee cases already failed on main, but a multi-scrutinee or wildcard row
+can newly reach these checker gaps. They need the coordinator's owners/rulings, not a blanket main-era label.
 
 ## Gates
 
@@ -275,8 +276,9 @@ nest-round11: passed (658.03s)
 nest-round12: passed (826.06s)
 ```
 
-The regenerated receipts: 64 identical, 9 volatile-only, 29 semantic. The semantic ones are the older gates' receipts, which record
-build and input hashes and the worktree path of their `argv` (refresh them after the merge, as before); the regenerated
+The regenerated receipts: 64 identical, 9 volatile-only, 29 semantic. The semantic receipts include changed observations, counts and mutant effects as well as hashes and paths.
+Thirteen of fourteen nest-owned receipts differ in content; the reviewer's drift audit attributes each change to
+a recorded commit. These are historical receipts to regenerate after merge. The regenerated
 `round12.json` differs from the committed one only in those `argv` paths (its counts, the sweep's observation hash and all 225 input
 hashes are equal). The message of `6ba71564` says the direct run was at `960f6347`; it started at 08:47 on `6d287718` plus
 uncommitted documents, before `abbd048f` and `960f6347` existed, and the equal hashes are what make the receipt stand.

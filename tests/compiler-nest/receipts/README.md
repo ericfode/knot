@@ -2,8 +2,27 @@
 
 This is the historical first-round handoff from `57a0c01`. Its default-region,
 budget and empty-emission claims were corrected in
-[review round 2](REVIEW-2.md). Current evidence is `nest.json`, `review.json` and
-the round-2 gate report; the original frozen expectations remain unchanged.
+[review round 2](REVIEW-2.md). That round's evidence is `nest.json`, `review.json` and
+the round-2 gate report; the original frozen expectations remain unchanged. Later rounds are recorded in
+[REVIEW-3](REVIEW-3.md) to [REVIEW-13](REVIEW-13.md): each round's gate writes `roundN.json` beside them, and the
+receipts of the older gates record the hashes of the inputs they ran on, so the coordinator refreshes them after a
+merge (`npm run gates:refresh`).
+
+
+The remainder below is the historical first-round report; its counts describe that checkpoint. Current round-13
+verification is in [REVIEW-13](REVIEW-13.md), `round13.json`, `round13-gates.json` and `round13-budget-corpus.json`. Earlier receipts
+retain their original source hashes and observations until the coordinator regenerates them after merge.
+
+Reproduce the law falsification with `python3 -B tests/compiler-nest/falsify.py round12` and
+`python3 -B tests/compiler-nest/falsify.py --write round13`. The driver first checks each mutant's implementation
+without the laws, then requires a failed proof in its law file. Round 12's old receipt predates the operator ruling;
+its let-suffix mutant now fails `call_ends_a_let`. The new receipt records the current round-13 laws.
+
+Measure the bootstrap corpus with `python3 -B tests/compiler-nest/budget_corpus.py`: compare the 65,536-node
+checker against a 1,048,576-node control on all pre-round-13 files, run the new stress fixtures only on the
+production bound, and report each top-level `src/*.bend` outcome. Unsupported source cannot establish that its
+core fits; qualification on the whole compiler awaits literals, generics and modules.
+
 
 The implementation is verified within the authorized bounded scope: all 15
 registered gates pass, and the runner exits 0. Frozen nest conformance is
