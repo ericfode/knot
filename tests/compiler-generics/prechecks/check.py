@@ -8,6 +8,10 @@ HERE = Path(__file__).resolve().parent
 
 def rows(gate):
     document = json.loads((HERE / 'expectations.json').read_text())
+    reported = json.loads((HERE / 'reported-expectations.json').read_text())
+    gate.require(all(document[key] == reported[key] for key in ('seed_revision', 'seed_files')),
+                 'reported probes use the same pinned seed')
+    document['cases'] += reported['cases']
     result = []
     for case in document['cases']:
         source = HERE / case['file']
@@ -50,7 +54,8 @@ def replay(gate, lanes):
     gate.require(len(observations) == len(probes), 'seed parser observation inventory')
     record = {'fixtures': [], 'seed_parse_observations': len(probes), 'seed_check_observations': 0,
               'seed_runs': 0, 'lane_observations': 0, 'preserved_artifacts': 0,
-              'evaluator_agreements': 0, 'wasm_agreements': 0, 'byte_identical_modules': 0}
+              'evaluator_agreements': 0, 'wasm_agreements': 0, 'byte_identical_modules': 0,
+              'seed_constructor_observations': 0, 'boxed_module_validations': 0}
     for probe, path, seed_parse in zip(probes, paths, observations):
         case, source = probe['control'], probe['source']
         gate.require(seed_parse == case['seed']['parse'], (case['name'], 'seed parse drift', seed_parse))
@@ -63,6 +68,12 @@ def replay(gate, lanes):
             gate.require({k: seed_run[k] for k in ('exit', 'stdout', 'stderr')} == case['seed']['run'],
                          (case['name'], 'seed value drift', seed_run))
             record['seed_runs'] += 1
+        if 'constructor' in case['seed']:
+            raw = gate.successful(['bun', HERE / 'seed-value.ts',
+                  (gate.ROOT / '.toolchain/bend-2.0.29-574b6d3/bend2/bend.ts').resolve(), path])
+            gate.require(json.loads(raw['stdout']) == case['seed']['constructor'],
+                         (case['name'], 'seed constructor drift', raw))
+            record['seed_constructor_observations'] += 1
         row = {'name': case['name'], 'sha256': case['sha256'], 'seed_parse': seed_parse,
                'seed_check': seed_check, 'lanes': {}}
         modules = []
@@ -81,15 +92,32 @@ def replay(gate, lanes):
             if 'value' in case:
                 gate.checked(actual['check'])
                 gate.compiled(actual['compile'], output)
-                gate.require(re.fullmatch(r'Evaluated\t\d+\t1\tOn\{\}\n', actual['eval']['stdout']), actual)
-                host = gate.run(['node', gate.HOST, gate.PROFILE, output, 'main'])
-                gate.require(host['exit'] == 0 and host['stderr'] == ''
-                             and json.loads(host['stdout']) == {'validated': True, 'export': 'main',
-                                 'arguments': [], 'result': 1, 'bytes': output.stat().st_size}, host)
-                actual['wasm'] = host
+                tag = case.get('tag', 1)
+                rendered = case.get('rendered_value', case['value'])
+                gate.require(re.fullmatch(r'Evaluated\t\d+\t' + str(tag) + r'\t' +
+                                          re.escape(rendered) + r'\n', actual['eval']['stdout']), actual)
+                if case.get('abi', 'enum') == 'enum':
+                    host = gate.run(['node', gate.HOST, gate.PROFILE, output, 'main'])
+                    gate.require(host['exit'] == 0 and host['stderr'] == ''
+                                 and json.loads(host['stdout']) == {'validated': True, 'export': 'main',
+                                     'arguments': [], 'result': tag, 'bytes': output.stat().st_size}, host)
+                    actual['wasm'] = host
+                    record['wasm_agreements'] += 1
+                else:
+                    # A cell address is not an enum ordinal. Validate the module
+                    # without pretending this host ABI decodes the boxed value.
+                    validation = gate.successful(['node', '--input-type=module', '-e',
+                        'import fs from "node:fs"; const b = fs.readFileSync(process.argv[1]); '
+                        'if (!WebAssembly.validate(b)) throw new Error("invalid Wasm"); '
+                        'const m = await WebAssembly.compile(b); '
+                        'if (WebAssembly.Module.imports(m).length) throw new Error("unexpected imports"); '
+                        'console.log(JSON.stringify({validated:true,bytes:b.length}));', output])
+                    gate.require(json.loads(validation['stdout']) ==
+                                 {'validated': True, 'bytes': output.stat().st_size}, validation)
+                    actual['wasm_validation'] = validation
+                    record['boxed_module_validations'] += 1
                 modules.append(output.read_bytes())
                 record['evaluator_agreements'] += 1
-                record['wasm_agreements'] += 1
             else:
                 gate.require(actual['check']['exit'] != 0, (case['name'], 'unmodeled control must not execute'))
                 gate.require(output.read_bytes() == gate.MARKER, (case['name'], 'artifact changed'))

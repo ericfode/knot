@@ -91,3 +91,25 @@ repair the inherited monomorphic checker residual. Visibility uses original
 source offsets; the existing reverse-sequence mutant must still reach its
 unchanged Parsed observation. The additional unordered-event mutant attacks
 that offset comparison directly.
+
+## Header layout — current reported probes
+
+`parse.bend::run` normalizes existing line tokens at three header boundaries:
+the result arrow after parameters, the monomorphic kind colon and the generic
+kind colon. It still expects the delimiter and applies the shared adjacency
+guard to the arrow. This uses the existing layout primitive without adding a
+frontend helper or changing the depth obligation.
+
+`parse-layout-LAWS.bend` states three boundary equations, filled by
+`parse-layout-PROOF.bend`. The generic-colon proof partitions the remaining
+token list into empty, singleton and longer tails; it retains its full stated
+domain. These are universal boundary equations, not a seed-parser refinement
+theorem. The existing D21 parser obligations remain required.
+
+The independently frozen reported probes include both accepted headers and
+missing-colon twins. Three new type-correct mutants restore the Invalid
+demotions, with the generic-kind and applied-result variants as additional
+witnesses. The List control checks the seed's raw empty constructor as well as
+its sugared display; boxed Wasm validation is not enum-value agreement.
+`prechecks/REPORTED.md` records the fixed reading contract and evidence limits.
+Live semantic and all five style axes remain unreviewed by user instruction.

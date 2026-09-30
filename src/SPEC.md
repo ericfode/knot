@@ -157,8 +157,11 @@ The parse CLI additionally checks constructor declaration order before printing
 constructors retain forward references. `parse.bend::parse` remains the syntax
 tree builder; the checker retains its own generic pattern-order validation and
 its existing check-phase diagnostics. This does not repair the inherited
-monomorphic checker residual described above. Result colons may follow line
-breaks for both named and applied types, as in the seed.
+monomorphic checker residual described above. Result arrows and datatype/result
+colons may follow line breaks and comments, as in the seed. Layout does not
+replace the required delimiter or glue the arrow's two symbols. Three filled
+header-layout laws preserve parsing at those boundaries, including refusals;
+they do not establish general parser soundness.
 
 ## Binding and quantity semantics
 

@@ -54,7 +54,7 @@ SOURCES = (HERE, HERE / 'supplemental', HERE / 'boundaries', HERE / 'dispatch-bo
            HERE / 'pattern-order', HERE / 'spacing', HERE / 'token-gaps', HERE / 'host-boundaries')
 PROOFS = ('src/PROOF.bend', 'src/types-PROOF.bend', 'src/type-erasure-PROOF.bend',
           'src/catalog-PROOF.bend', 'src/generic-catalog-PROOF.bend',
-          'src/type-parse-PROOF.bend', 'src/parse-order-PROOF.bend')
+          'src/type-parse-PROOF.bend', 'src/parse-order-PROOF.bend', 'src/parse-layout-PROOF.bend')
 MARKER = b'Existing artifact: semantic rejection must preserve these bytes.\n'
 # Harness hang guard only, as in the other gates; the runner scales it under load.
 TIMEOUT_SCALE = float(os.environ.get('KNOT_GATE_TIMEOUT_SCALE', '1'))
@@ -169,6 +169,20 @@ MUTANTS = (
      'old': 'U32.is_lt(p,r)', 'new': 'True{}',
      'witness': 'late-box-pattern', 'also_witnesses': ['late-flag-pattern'], 'phase': 'parse',
      'actual': {'exit': 0, 'contains': 'Parsed\t'}},
+    {'name': 'datatype-colon-layout-invalid', 'file': 'parse.bend',
+     'old': 'expect(S.skip_lines(tail),":")', 'new': 'expect(tail,":")',
+     'witness': 'enum-colon-layout', 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-:\t'}},
+    {'name': 'generic-colon-layout-invalid', 'file': 'parse.bend',
+     'old': 'type_then(T.expression(n,tokens),kind => rest =>\n        S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),":"),body =>',
+     'new': 'type_then(T.expression(n,tokens),kind => rest =>\n        S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>',
+     'witness': 'generic-colon-layout', 'also_witnesses': ['generic-kind-layout'], 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\texpected-:\t'}},
+    {'name': 'result-arrow-layout-invalid', 'file': 'parse.bend',
+     'old': 'run(n,FunctionTail{name,params},S.skip_lines(rest))',
+     'new': 'run(n,FunctionTail{name,params},rest)',
+     'witness': 'named-arrow-layout', 'also_witnesses': ['applied-arrow-layout'], 'phase': 'check',
+     'actual': {'exit': 2, 'diagnostic': 'Invalid\tparse\tfunction-result\t'}},
 )
 MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'wrong-quantity-meet', 'missing-arity-check', 'bare-quantity-default',
@@ -177,7 +191,8 @@ MUTANT_NAMES = {'skipped-substitution', 'erased-argument-live',
                 'pattern-order-forward', 'quantity-gap-glued', 'meet-gap-glued', 'close-gap-glued',
                 'term-token-gap-glued', 'abstract-type-zero', 'late-pattern-parsed',
                 'tilde-type-unsupported', 'double-equals-unsupported', 'multiline-result-invalid',
-                'constructor-event-unordered'}
+                'constructor-event-unordered', 'datatype-colon-layout-invalid',
+                'generic-colon-layout-invalid', 'result-arrow-layout-invalid'}
 
 
 def require(condition, detail):
@@ -577,7 +592,8 @@ def coverage(record):
         **{'precheck_' + key: probes.get(key, 0) for key in (
             'seed_parse_observations', 'seed_check_observations', 'seed_runs',
             'lane_observations', 'preserved_artifacts', 'evaluator_agreements',
-            'wasm_agreements', 'byte_identical_modules')},
+            'wasm_agreements', 'byte_identical_modules', 'seed_constructor_observations',
+            'boxed_module_validations')},
     }
 
 
@@ -594,7 +610,8 @@ def main():
             inputs += [directory / 'expectations.json', directory / 'regen.py',
                        *sorted((directory / 'fixtures').glob('*.bend'))]
         inputs += [HERE / 'prechecks' / name for name in
-                   ('expectations.json', 'seed-parse.ts', 'check.py', 'README.md', 'SPEC.md')]
+                   ('expectations.json', 'reported-expectations.json', 'seed-parse.ts', 'seed-value.ts',
+                    'check.py', 'README.md', 'SPEC.md', 'REPORTED.md')]
         inputs += sorted((HERE / 'prechecks/fixtures').glob('*.bend'))
         record['inputs'] = {str(path.relative_to(ROOT)): digest(path) for path in inputs}
         record['tools'] = {tool: successful([tool, '--version'])['stdout'].strip()

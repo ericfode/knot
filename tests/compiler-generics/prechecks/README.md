@@ -17,3 +17,11 @@ Unsupported and cannot execute. `expected-:` remains an established diagnostic
 code: a colon inside field three does not change the four tab-separated fields.
 The disposition report records the exact existing pins and the precheck's
 extra alphabet restriction. No prior expectation is amended here.
+
+The current report adds 19 separately frozen controls in
+`reported-expectations.json`: all ten complete reported source hashes, two
+further generated header witnesses, five accepted layout controls and two
+missing-colon negatives. `REPORTED.md` records the contract and the raw seed
+constructor evidence for `[]` versus `Nil{}`. Both manifests run through the
+same replay. Boxed outputs are evaluated, with byte-identical validated Wasm;
+only closed enum controls count as Wasm value agreements.

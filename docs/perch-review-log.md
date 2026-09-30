@@ -1185,3 +1185,19 @@ actual colon, and derive constructor visibility from original source offsets.
 The first census test run overlapped harness edits and rejected stale generated
 hashes (73/75); after regeneration it passes 75/75. Preserve literal controls
 and complete mutations before regenerating inventories and testing them.
+
+## Generics header layout, reported C1 probes (2026-09-29)
+
+The previous result-colon repair left two header boundaries unnormalized:
+datatype colons and result arrows after a parameter list. C1 compared against
+the campaign base, rather than the immediately preceding repair commit, and
+exposed seed-valid programs still reported Invalid. Controls are frozen in
+`tests/compiler-generics/prechecks/reported-expectations.json` by `71df185d`.
+The repair adds three boundary laws and three mutation controls without changing
+any earlier expectation. Future layout repairs should cover named/applied
+results and monomorphic/generic kinds, before and after each header delimiter.
+The first generic-colon proof did not normalize an unknown list tail; a complete
+empty/singleton/longer partition proves the unchanged law. No theorem was narrowed.
+The diagnostic-alphabet and List-rendering findings are checked against actual
+TSV and raw-constructor observations, not answered by changing frozen protocol
+pins. No live Perch/provider call or elapsed-time claim is made here.

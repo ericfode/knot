@@ -310,20 +310,20 @@ def run(fuel: Nat, mode: Mode, +tokens: List<&2,S.Token>) -> Result<S.Error,Pars
           run(n,TypeKind{name},kind))),u =>
       S.choose(Result<S.Error,Parsed>,S.matches(keyword,"def"),u =>
         S.bind(List<&2,S.Token>,Parsed,expect(tokens,"("),args =>
-          then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},rest))),u =>
+          then(run(n,Parameters{")"},args),params => rest => run(n,FunctionTail{name,params},S.skip_lines(rest)))),u =>
         unsupported(Con{keyword,tokens},"declaration-form"))),u => invalid(tokens,"declaration-name")))
     case 1n+ +n TypeKind{+name}:
       match tokens:
         case Con{+kind,+tail}:
           S.choose(Result<S.Error,Parsed>,Bool.or(S.matches(kind,"Type"),S.matches(kind,"Data")),u =>
-            S.bind(List<&2,S.Token>,Parsed,expect(tail,":"),body =>
+            S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(tail),":"),body =>
               then(run(n,Constructors{0,0},S.skip_lines(body)),ctors => rest => wrap_type(name,S.matches(kind,"Data"),ctors,rest))),u =>
           S.choose(Result<S.Error,Parsed>,S.matches(kind,"Kind"),u =>
             run(n,GenericKind{name,S.Sequence{Nil{}}},tokens),u => unsupported(tokens,"kind")))
         case _: invalid(tokens,"kind")
     case 1n+ +n GenericKind{+name,+params}:
       type_then(T.expression(n,tokens),kind => rest =>
-        S.bind(List<&2,S.Token>,Parsed,expect(rest,":"),body =>
+        S.bind(List<&2,S.Token>,Parsed,expect(S.skip_lines(rest),":"),body =>
           then(run(n,Constructors{0,0},S.skip_lines(body)),ctors => end =>
             wrap_generic(name,params,kind,ctors,end))))
     case 1n+ +n FunctionTail{+name,S.Sequence{+params}}:
